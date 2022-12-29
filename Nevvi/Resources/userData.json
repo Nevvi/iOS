@@ -1,0 +1,36 @@
+{
+    "id": "49259105-818b-4e85-881b-e12122c4d272",
+    "firstName": "Tylerrr",
+    "lastName": "Standal",
+    "email": "tyler.cobb@nevvi.net",
+    "emailConfirmed": true,
+    "birthday": "1994-04-08",
+    "phoneNumber": "+16129631237",
+    "phoneNumberConfirmed": true,
+    "onboardingCompleted": true,
+    "address": {
+        "street": "114 W 86th Street Apt 6C",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": 10024
+    },
+    "profileImage": "https://nevvi-user-images-dev.s3.amazonaws.com/users/49259105-818b-4e85-881b-e12122c4d272/images/ty_and_lo_wedding_1.jpeg",
+    "permissionGroups": [
+        {
+            "name": "ALL",
+            "fields": []
+        },
+        {
+            "name": "Contact Info",
+            "fields": [
+                "email",
+                "phoneNumber"
+            ]
+        }
+    ],
+    "blockedUsers": [],
+    "createDate": "2022-12-07T14:20:03.144Z",
+    "createBy": "HARDCODED_FOR_NOW",
+    "updateDate": "2022-12-28T22:10:15.495Z",
+    "updateBy": "HARDCODED_FOR_NOW"
+}

@@ -11,6 +11,25 @@
 		04B948FE295DEA5C00703523 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FD295DEA5C00703523 /* ContentView.swift */; };
 		04B94900295DEA5E00703523 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B948FF295DEA5E00703523 /* Assets.xcassets */; };
 		04B94903295DEA5E00703523 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B94902295DEA5E00703523 /* Preview Assets.xcassets */; };
+		04B94910295DEAD800703523 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9490F295DEAD800703523 /* User.swift */; };
+		04B94912295DEAFC00703523 /* CircleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94911295DEAFC00703523 /* CircleImage.swift */; };
+		04B94914295DEB1100703523 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94913295DEB1100703523 /* ModelData.swift */; };
+		04B94916295DEB7E00703523 /* userData.json in Resources */ = {isa = PBXBuildFile; fileRef = 04B94915295DEB7E00703523 /* userData.json */; };
+		04B94918295DEB9900703523 /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94917295DEB9900703523 /* Connection.swift */; };
+		04B9491A295DEBCE00703523 /* ConnectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94919295DEBCE00703523 /* ConnectionList.swift */; };
+		04B9491C295DEBE600703523 /* ConnectionDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9491B295DEBE600703523 /* ConnectionDetail.swift */; };
+		04B9491E295DEBF700703523 /* ConnectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9491D295DEBF700703523 /* ConnectionRow.swift */; };
+		04B94920295DEDA100703523 /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9491F295DEDA000703523 /* Address.swift */; };
+		04B94922295DEDAF00703523 /* PermissionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94921295DEDAF00703523 /* PermissionGroup.swift */; };
+		04B94928295DEEB500703523 /* URLSessionExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94927295DEEB500703523 /* URLSessionExtensions.swift */; };
+		04B9492B295DF0BA00703523 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9492A295DF0BA00703523 /* Account.swift */; };
+		04B9492D295DF25200703523 /* connectionData.json in Resources */ = {isa = PBXBuildFile; fileRef = 04B9492C295DF25200703523 /* connectionData.json */; };
+		04B94931295DFBBA00703523 /* Authorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94930295DFBBA00703523 /* Authorization.swift */; };
+		04B94934295E01F500703523 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94933295E01F500703523 /* Login.swift */; };
+		04B94939295E059300703523 /* UIColorExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94938295E059300703523 /* UIColorExtensions.swift */; };
+		04B9493C295E070000703523 /* AccountStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9493B295E070000703523 /* AccountStore.swift */; };
+		04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9493D295E09E400703523 /* AuthorizationStore.swift */; };
+		04B94942295E0B6500703523 /* GenericError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94941295E0B6500703523 /* GenericError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +38,25 @@
 		04B948FD295DEA5C00703523 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		04B948FF295DEA5E00703523 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		04B94902295DEA5E00703523 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		04B9490F295DEAD800703523 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		04B94911295DEAFC00703523 /* CircleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleImage.swift; sourceTree = "<group>"; };
+		04B94913295DEB1100703523 /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
+		04B94915295DEB7E00703523 /* userData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = userData.json; sourceTree = "<group>"; };
+		04B94917295DEB9900703523 /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		04B94919295DEBCE00703523 /* ConnectionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionList.swift; sourceTree = "<group>"; };
+		04B9491B295DEBE600703523 /* ConnectionDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionDetail.swift; sourceTree = "<group>"; };
+		04B9491D295DEBF700703523 /* ConnectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionRow.swift; sourceTree = "<group>"; };
+		04B9491F295DEDA000703523 /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
+		04B94921295DEDAF00703523 /* PermissionGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGroup.swift; sourceTree = "<group>"; };
+		04B94927295DEEB500703523 /* URLSessionExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionExtensions.swift; sourceTree = "<group>"; };
+		04B9492A295DF0BA00703523 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		04B9492C295DF25200703523 /* connectionData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = connectionData.json; sourceTree = "<group>"; };
+		04B94930295DFBBA00703523 /* Authorization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authorization.swift; sourceTree = "<group>"; };
+		04B94933295E01F500703523 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
+		04B94938295E059300703523 /* UIColorExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtensions.swift; sourceTree = "<group>"; };
+		04B9493B295E070000703523 /* AccountStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStore.swift; sourceTree = "<group>"; };
+		04B9493D295E09E400703523 /* AuthorizationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStore.swift; sourceTree = "<group>"; };
+		04B94941295E0B6500703523 /* GenericError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,8 +89,12 @@
 		04B948FA295DEA5C00703523 /* Nevvi */ = {
 			isa = PBXGroup;
 			children = (
+				04B9493A295E06F400703523 /* Stores */,
+				04B94926295DEE9E00703523 /* Extensions */,
+				04B9490B295DEA9400703523 /* Resources */,
+				04B9490A295DEA8700703523 /* Views */,
+				04B94909295DEA7E00703523 /* Model */,
 				04B948FB295DEA5C00703523 /* NevviApp.swift */,
-				04B948FD295DEA5C00703523 /* ContentView.swift */,
 				04B948FF295DEA5E00703523 /* Assets.xcassets */,
 				04B94901295DEA5E00703523 /* Preview Content */,
 			);
@@ -65,6 +107,109 @@
 				04B94902295DEA5E00703523 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		04B94909295DEA7E00703523 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				04B94940295E0B5900703523 /* Errors */,
+				04B9492F295DFBA300703523 /* Authorization */,
+				04B9490F295DEAD800703523 /* User.swift */,
+				04B94911295DEAFC00703523 /* CircleImage.swift */,
+				04B94913295DEB1100703523 /* ModelData.swift */,
+				04B94917295DEB9900703523 /* Connection.swift */,
+				04B9491F295DEDA000703523 /* Address.swift */,
+				04B94921295DEDAF00703523 /* PermissionGroup.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		04B9490A295DEA8700703523 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				04B94932295DFF7700703523 /* Authorization */,
+				04B94929295DF0AE00703523 /* Account */,
+				04B9490E295DEAC100703523 /* Connections */,
+				04B9490C295DEA9E00703523 /* Helpers */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		04B9490B295DEA9400703523 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				04B94915295DEB7E00703523 /* userData.json */,
+				04B9492C295DF25200703523 /* connectionData.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		04B9490C295DEA9E00703523 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				04B948FD295DEA5C00703523 /* ContentView.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		04B9490E295DEAC100703523 /* Connections */ = {
+			isa = PBXGroup;
+			children = (
+				04B94919295DEBCE00703523 /* ConnectionList.swift */,
+				04B9491B295DEBE600703523 /* ConnectionDetail.swift */,
+				04B9491D295DEBF700703523 /* ConnectionRow.swift */,
+			);
+			path = Connections;
+			sourceTree = "<group>";
+		};
+		04B94926295DEE9E00703523 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				04B94927295DEEB500703523 /* URLSessionExtensions.swift */,
+				04B94938295E059300703523 /* UIColorExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		04B94929295DF0AE00703523 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				04B9492A295DF0BA00703523 /* Account.swift */,
+			);
+			path = Account;
+			sourceTree = "<group>";
+		};
+		04B9492F295DFBA300703523 /* Authorization */ = {
+			isa = PBXGroup;
+			children = (
+				04B94930295DFBBA00703523 /* Authorization.swift */,
+			);
+			path = Authorization;
+			sourceTree = "<group>";
+		};
+		04B94932295DFF7700703523 /* Authorization */ = {
+			isa = PBXGroup;
+			children = (
+				04B94933295E01F500703523 /* Login.swift */,
+			);
+			path = Authorization;
+			sourceTree = "<group>";
+		};
+		04B9493A295E06F400703523 /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				04B9493B295E070000703523 /* AccountStore.swift */,
+				04B9493D295E09E400703523 /* AuthorizationStore.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		04B94940295E0B5900703523 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				04B94941295E0B6500703523 /* GenericError.swift */,
+			);
+			path = Errors;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -126,6 +271,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				04B94903295DEA5E00703523 /* Preview Assets.xcassets in Resources */,
+				04B9492D295DF25200703523 /* connectionData.json in Resources */,
+				04B94916295DEB7E00703523 /* userData.json in Resources */,
 				04B94900295DEA5E00703523 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,8 +284,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04B94922295DEDAF00703523 /* PermissionGroup.swift in Sources */,
 				04B948FE295DEA5C00703523 /* ContentView.swift in Sources */,
+				04B94918295DEB9900703523 /* Connection.swift in Sources */,
+				04B94912295DEAFC00703523 /* CircleImage.swift in Sources */,
+				04B94914295DEB1100703523 /* ModelData.swift in Sources */,
+				04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */,
+				04B94931295DFBBA00703523 /* Authorization.swift in Sources */,
+				04B94942295E0B6500703523 /* GenericError.swift in Sources */,
+				04B9493C295E070000703523 /* AccountStore.swift in Sources */,
+				04B94934295E01F500703523 /* Login.swift in Sources */,
+				04B94920295DEDA100703523 /* Address.swift in Sources */,
+				04B94939295E059300703523 /* UIColorExtensions.swift in Sources */,
+				04B9491C295DEBE600703523 /* ConnectionDetail.swift in Sources */,
+				04B9491E295DEBF700703523 /* ConnectionRow.swift in Sources */,
+				04B94928295DEEB500703523 /* URLSessionExtensions.swift in Sources */,
 				04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */,
+				04B9491A295DEBCE00703523 /* ConnectionList.swift in Sources */,
+				04B9492B295DF0BA00703523 /* Account.swift in Sources */,
+				04B94910295DEAD800703523 /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
