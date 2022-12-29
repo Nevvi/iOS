@@ -22,8 +22,8 @@ struct NevviApp: App {
             .environmentObject(modelData)
             .onAppear {
                 // hacky way of restoring auth on app load
-//                authStore.load()
-//                accountStore.authorization = authStore.authorization
+                authStore.load()
+                accountStore.authorization = authStore.authorization
              }
         }
     }
