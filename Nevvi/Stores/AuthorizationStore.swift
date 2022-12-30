@@ -12,7 +12,10 @@ import LocalAuthentication
 class AuthorizationStore: ObservableObject {
     
     @Published var authorization: Authorization? = nil
+    
     @Published var loggingIn: Bool = false
+    @Published var signingUp: Bool = false
+    @Published var confirming: Bool = false
     
     enum BiometricType {
         case none
@@ -22,6 +25,8 @@ class AuthorizationStore: ObservableObject {
     
     enum AuthorizationError: Error, LocalizedError, Identifiable {
         case invalidCredentials
+        case invalidSignup
+        case invalidConfirmation
         case deniedAccess
         case noFaceIdEnrolled
         case noFingerPrintEnrolled
@@ -36,7 +41,11 @@ class AuthorizationStore: ObservableObject {
         var errorDescription: String? {
             switch self {
             case .invalidCredentials:
-                return NSLocalizedString("Invalid credentials", comment: "")
+                return NSLocalizedString("Either the email or password you entered is incorrect. Please try again.", comment: "")
+            case .invalidSignup:
+                return NSLocalizedString("Invalid credentials for signup", comment: "")
+            case .invalidConfirmation:
+                return NSLocalizedString("Invalid confirmation code. Please try again.", comment: "")
             case .deniedAccess:
                 return NSLocalizedString("You have denied access. Turn on Face ID in app settings", comment: "")
             case .noFaceIdEnrolled:
@@ -115,8 +124,17 @@ class AuthorizationStore: ObservableObject {
         return URL(string: "https://api.development.nevvi.net/authentication/v1/login")!
     }
     
+    private func signupUrl() throws -> URL {
+        return URL(string: "https://api.development.nevvi.net/authentication/v1/register")!
+    }
+    
+    private func confirmUrl() throws -> URL {
+        return URL(string: "https://api.development.nevvi.net/authentication/v1/confirm")!
+    }
+    
     func login(email: String, password: String, callback: @escaping (Result<Authorization, AuthorizationError>) -> Void) {
         do {
+            print("Logging in")
             self.loggingIn = true
             let request = Credentials(username: email.lowercased(), password: password)
             URLSession.shared.postData(for: try self.loginUrl(), for: request) { (result: Result<Authorization, Error>) in
@@ -134,5 +152,67 @@ class AuthorizationStore: ObservableObject {
             print(error)
             callback(.failure(AuthorizationError.unknown))
         }
+    }
+    
+    func signUp(email: String, password: String, callback: @escaping (Result<SignupResponse, AuthorizationError>) -> Void) {
+        do {
+            self.signingUp = true
+            let request = SignupRequest(email: email.lowercased(), password: password)
+            URLSession.shared.postData(for: try self.signupUrl(), for: request) { (result: Result<SignupResponse, Error>) in
+                switch result {
+                case .success(let response):
+                    callback(.success(response))
+                case .failure(let error):
+                    print(error)
+                    callback(.failure(AuthorizationError.invalidSignup))
+                }
+                self.signingUp = false
+            }
+        } catch(let error) {
+            print(error)
+            callback(.failure(AuthorizationError.unknown))
+        }
+    }
+    
+    func confirmAccount(email: String, code: String, callback: @escaping (Result<ConfirmResponse, AuthorizationError>) -> Void) {
+        do {
+            self.confirming = true
+            let request = ConfirmRequest(username: email.lowercased(), confirmationCode: code)
+            URLSession.shared.postData(for: try self.confirmUrl(), for: request) { (result: Result<ConfirmResponse, Error>) in
+                switch result {
+                case .success(let response):
+                    callback(.success(response))
+                case .failure(let error):
+                    print(error)
+                    callback(.failure(AuthorizationError.invalidConfirmation))
+                }
+                self.confirming = false
+            }
+        } catch(let error) {
+            print(error)
+            callback(.failure(AuthorizationError.unknown))
+        }
+    }
+    
+    struct SignupRequest: Encodable {
+        var email: String
+        var password: String
+    }
+    
+    struct SignupResponse: Decodable {
+        var id: String
+        var isConfirmed: Bool
+        var codeDeliveryDestination: String
+        var codeDeliveryMedium: String
+        var codeDeliveryAttribute: String
+    }
+    
+    struct ConfirmRequest: Encodable {
+        var username: String
+        var confirmationCode: String
+    }
+    
+    struct ConfirmResponse: Decodable {
+        
     }
 }

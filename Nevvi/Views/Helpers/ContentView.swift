@@ -12,15 +12,19 @@ struct ContentView: View {
     
     var body: some View {
         if (accountStore.user != nil) {
-            TabView {
-                Account(user: accountStore.user!).tabItem() {
-                    Image(systemName: "person.fill")
-                    Text("Account")
+            if (accountStore.user!.onboardingCompleted) {
+                TabView {
+                    Account(user: accountStore.user!).tabItem() {
+                        Image(systemName: "person.fill")
+                        Text("Account")
+                    }
+                    ConnectionList().tabItem() {
+                        Image(systemName: "person.3.fill")
+                        Text("Connections")
+                    }
                 }
-                ConnectionList().tabItem() {
-                    Image(systemName: "person.3.fill")
-                    Text("Connections")
-                }
+            } else {
+                OnboardingCarousel(accountStore: self.accountStore)
             }
         } else {
             // TODO - better loading view

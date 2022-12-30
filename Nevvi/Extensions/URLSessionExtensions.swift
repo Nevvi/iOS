@@ -54,6 +54,19 @@ extension URLSession {
         execute(request: request, completion: completion)
     }
     
+    func patchData<T: Decodable>(for url: URL, for body: Encodable, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
+        var request = URLRequest(url: url)
+        do {
+            request.httpMethod = "PATCH"
+            request.httpBody = try JSONEncoder().encode(body)
+            request.setValue(authToken, forHTTPHeaderField: "Authorization")
+        } catch(let error) {
+            completion(.failure(error))
+        }
+            
+        execute(request: request, completion: completion)
+    }
+    
     private func execute<T: Decodable>(request: URLRequest, completion: @escaping (Result<T, Error>) -> Void) {
         self.dataTask(with: request) { (data, response, error) in
             DispatchQueue.main.async{

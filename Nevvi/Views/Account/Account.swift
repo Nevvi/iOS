@@ -11,7 +11,7 @@ struct Account: View {
     @State var user: User
 
     var body: some View {
-        Text(self.user.firstName)
+        Text(self.user.firstName!)
     }
 
 }

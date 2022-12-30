@@ -11,13 +11,13 @@ import CoreLocation
 
 struct User: Hashable, Codable {
     var id: String
-    var firstName: String
-    var lastName: String
+    var firstName: String?
+    var lastName: String?
     var email: String
     var emailConfirmed: Bool
-    var phoneNumber: String
-    var phoneNumberConfirmed: Bool
-    var birthday: String
+    var phoneNumber: String?
+    var phoneNumberConfirmed: Bool?
+    var birthday: String?
     var onboardingCompleted: Bool
     var blockedUsers: [String]
     var address: Address

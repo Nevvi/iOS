@@ -34,6 +34,12 @@
 		04B9494C295E712200703523 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 04B9494B295E712200703523 /* SwiftKeychainWrapper */; };
 		04B9494E295E718A00703523 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9494D295E718A00703523 /* Credentials.swift */; };
 		04B94950295E731E00703523 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9494F295E731E00703523 /* KeychainStore.swift */; };
+		04B94953295F21D200703523 /* CreateAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94952295F21D200703523 /* CreateAccount.swift */; };
+		04B94955295F2E8F00703523 /* OnboardingCarousel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94954295F2E8F00703523 /* OnboardingCarousel.swift */; };
+		04B9495B295F386F00703523 /* OnboardingViewOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9495A295F386E00703523 /* OnboardingViewOne.swift */; };
+		04B9495D295F3B1800703523 /* OnboardingViewTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9495C295F3B1800703523 /* OnboardingViewTwo.swift */; };
+		04B9495F295F3BE000703523 /* OnboardingViewThree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9495E295F3BE000703523 /* OnboardingViewThree.swift */; };
+		04B94961295F3FD100703523 /* OnboardingViewFour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94960295F3FD100703523 /* OnboardingViewFour.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -65,6 +71,12 @@
 		04B94946295E57C500703523 /* UIApplicationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtensions.swift; sourceTree = "<group>"; };
 		04B9494D295E718A00703523 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
 		04B9494F295E731E00703523 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
+		04B94952295F21D200703523 /* CreateAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateAccount.swift; sourceTree = "<group>"; };
+		04B94954295F2E8F00703523 /* OnboardingCarousel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingCarousel.swift; sourceTree = "<group>"; };
+		04B9495A295F386E00703523 /* OnboardingViewOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewOne.swift; sourceTree = "<group>"; };
+		04B9495C295F3B1800703523 /* OnboardingViewTwo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewTwo.swift; sourceTree = "<group>"; };
+		04B9495E295F3BE000703523 /* OnboardingViewThree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewThree.swift; sourceTree = "<group>"; };
+		04B94960295F3FD100703523 /* OnboardingViewFour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewFour.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +149,7 @@
 		04B9490A295DEA8700703523 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				04B94959295F385D00703523 /* Onboarding */,
 				04B94932295DFF7700703523 /* Authorization */,
 				04B94929295DF0AE00703523 /* Account */,
 				04B9490E295DEAC100703523 /* Connections */,
@@ -203,6 +216,7 @@
 			isa = PBXGroup;
 			children = (
 				04B94933295E01F500703523 /* Login.swift */,
+				04B94952295F21D200703523 /* CreateAccount.swift */,
 			);
 			path = Authorization;
 			sourceTree = "<group>";
@@ -223,6 +237,18 @@
 				04B94941295E0B6500703523 /* GenericError.swift */,
 			);
 			path = Errors;
+			sourceTree = "<group>";
+		};
+		04B94959295F385D00703523 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				04B94954295F2E8F00703523 /* OnboardingCarousel.swift */,
+				04B9495A295F386E00703523 /* OnboardingViewOne.swift */,
+				04B9495C295F3B1800703523 /* OnboardingViewTwo.swift */,
+				04B9495E295F3BE000703523 /* OnboardingViewThree.swift */,
+				04B94960295F3FD100703523 /* OnboardingViewFour.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -325,14 +351,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				04B94922295DEDAF00703523 /* PermissionGroup.swift in Sources */,
+				04B94953295F21D200703523 /* CreateAccount.swift in Sources */,
 				04B948FE295DEA5C00703523 /* ContentView.swift in Sources */,
 				04B94918295DEB9900703523 /* Connection.swift in Sources */,
 				04B9494E295E718A00703523 /* Credentials.swift in Sources */,
 				04B94912295DEAFC00703523 /* CircleImage.swift in Sources */,
+				04B94955295F2E8F00703523 /* OnboardingCarousel.swift in Sources */,
 				04B94914295DEB1100703523 /* ModelData.swift in Sources */,
 				04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */,
 				04B94947295E57C500703523 /* UIApplicationExtensions.swift in Sources */,
 				04B94931295DFBBA00703523 /* Authorization.swift in Sources */,
+				04B9495F295F3BE000703523 /* OnboardingViewThree.swift in Sources */,
+				04B9495B295F386F00703523 /* OnboardingViewOne.swift in Sources */,
 				04B94950295E731E00703523 /* KeychainStore.swift in Sources */,
 				04B94942295E0B6500703523 /* GenericError.swift in Sources */,
 				04B9493C295E070000703523 /* AccountStore.swift in Sources */,
@@ -341,8 +371,10 @@
 				04B94939295E059300703523 /* UIColorExtensions.swift in Sources */,
 				04B9491C295DEBE600703523 /* ConnectionDetail.swift in Sources */,
 				04B9491E295DEBF700703523 /* ConnectionRow.swift in Sources */,
+				04B94961295F3FD100703523 /* OnboardingViewFour.swift in Sources */,
 				04B94928295DEEB500703523 /* URLSessionExtensions.swift in Sources */,
 				04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */,
+				04B9495D295F3B1800703523 /* OnboardingViewTwo.swift in Sources */,
 				04B9491A295DEBCE00703523 /* ConnectionList.swift in Sources */,
 				04B9492B295DF0BA00703523 /* Account.swift in Sources */,
 				04B94910295DEAD800703523 /* User.swift in Sources */,
