@@ -10,8 +10,15 @@ import SwiftUI
 struct Login: View {
     @State private var email = ""
     @State private var password = ""
+    @State private var error: AuthorizationStore.AuthorizationError?
+    @State private var storeCredentials: Bool = false
     
     @ObservedObject var authStore: AuthorizationStore
+    
+    var loginDisabled: Bool {
+        self.email.isEmpty || self.password.isEmpty
+    }
+    
     private var callback: (Authorization) -> Void
     
     init(authStore: AuthorizationStore, callback: @escaping (Authorization) -> Void) {
@@ -30,6 +37,7 @@ struct Login: View {
         VStack(alignment: .leading, spacing: 15) {
             TextField("Email", text: self.$email)
               .padding()
+              .keyboardType(.emailAddress)
               .background(.white)
               .cornerRadius(20.0)
                           
@@ -41,20 +49,62 @@ struct Login: View {
             
         Button(action: self.signIn) {
             Text("Sign In")
-              .font(.headline)
-              .foregroundColor(.white)
-              .padding()
-              .frame(width: 300, height: 50)
-              .background(Color.green)
-              .cornerRadius(15.0)
+                .disabled(self.loginDisabled)
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding()
+                .frame(width: 300, height: 50)
+                .background(Color.green)
+                .cornerRadius(15.0)
         }
           
-        Spacer()
+        if self.authStore.loggingIn {
+            ProgressView().padding(20)
+        } else if self.authStore.biometricType() != .none {
+              Button {
+                  self.authStore.requestBiometricUnlock {(result: Result<Credentials, AuthorizationStore.AuthorizationError>) in
+                      switch result {
+                      case .success(let credentials):
+                          self.email = credentials.username
+                          self.password = credentials.password
+                          self.signIn()
+                      case .failure(let error):
+                          self.error = error
+                      }
+                  }
+              } label: {
+                  Image(systemName: self.authStore.biometricType() == .face ? "faceid" : "touchid")
+                      .resizable()
+                      .frame(width: 50, height: 50)
+              }.padding(20)
+          }
+          
+          Spacer()
+          
+//        Image("LaunchScreen")
+//            .onTapGesture {
+//                UIApplication.shared.endEditing()
+//            }
           
         Text("Dont have an account? Sign Up")
               .padding()
               .foregroundColor(.white)
           
+      }
+      .autocapitalization(.none)
+      .disabled(self.authStore.loggingIn)
+      .alert(item: self.$error) { error in
+          if error == .credentialsNotSaved {
+              return Alert(title: Text("Credentials not saved"),
+                           message: Text(error.localizedDescription),
+                           primaryButton: .default(Text("OK"), action: {
+                               self.storeCredentials = true
+                           }),
+                           secondaryButton: .cancel())
+          } else {
+              return Alert(title: Text("Invalid login"), message: Text(error.localizedDescription))
+          }
+        
       }
       .background(
         LinearGradient(
@@ -67,12 +117,17 @@ struct Login: View {
     }
     
     func signIn() {
-        self.authStore.login(email: email, password: password) { (result: Result<Authorization, Error>) in
+        self.authStore.login(email: email, password: password) { (result: Result<Authorization, AuthorizationStore.AuthorizationError>) in
             switch result {
             case .success(let authorization):
+                if self.storeCredentials && KeychainStore.saveCredentials(Credentials(username: email, password: password)) {
+                    self.storeCredentials = false
+                }
                 self.callback(authorization)
             case .failure(let error):
-                print(error)
+                self.email = ""
+                self.password = ""
+                self.error = error
             }
         }
     }

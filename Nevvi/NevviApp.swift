@@ -15,16 +15,15 @@ struct NevviApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(
-                authStore: authStore,
-                accountStore: accountStore
-            )
-            .environmentObject(modelData)
-            .onAppear {
-                // hacky way of restoring auth on app load
-                authStore.load()
-                accountStore.authorization = authStore.authorization
-             }
+            if (self.authStore.authorization != nil) {
+                ContentView(accountStore: self.accountStore)
+                    .environmentObject(modelData)
+            } else {
+                Login(authStore: authStore) { (auth: Authorization) in
+                    // hacky way of restoring auth on login
+                    self.accountStore.authorization = auth
+                }
+            }
         }
     }
 }

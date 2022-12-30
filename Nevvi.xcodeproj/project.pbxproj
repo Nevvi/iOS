@@ -30,6 +30,10 @@
 		04B9493C295E070000703523 /* AccountStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9493B295E070000703523 /* AccountStore.swift */; };
 		04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9493D295E09E400703523 /* AuthorizationStore.swift */; };
 		04B94942295E0B6500703523 /* GenericError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94941295E0B6500703523 /* GenericError.swift */; };
+		04B94947295E57C500703523 /* UIApplicationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94946295E57C500703523 /* UIApplicationExtensions.swift */; };
+		04B9494C295E712200703523 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 04B9494B295E712200703523 /* SwiftKeychainWrapper */; };
+		04B9494E295E718A00703523 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9494D295E718A00703523 /* Credentials.swift */; };
+		04B94950295E731E00703523 /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9494F295E731E00703523 /* KeychainStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +61,10 @@
 		04B9493B295E070000703523 /* AccountStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountStore.swift; sourceTree = "<group>"; };
 		04B9493D295E09E400703523 /* AuthorizationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorizationStore.swift; sourceTree = "<group>"; };
 		04B94941295E0B6500703523 /* GenericError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericError.swift; sourceTree = "<group>"; };
+		04B94945295E4E9500703523 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		04B94946295E57C500703523 /* UIApplicationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplicationExtensions.swift; sourceTree = "<group>"; };
+		04B9494D295E718A00703523 /* Credentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
+		04B9494F295E731E00703523 /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04B9494C295E712200703523 /* SwiftKeychainWrapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +98,7 @@
 		04B948FA295DEA5C00703523 /* Nevvi */ = {
 			isa = PBXGroup;
 			children = (
+				04B94945295E4E9500703523 /* Info.plist */,
 				04B9493A295E06F400703523 /* Stores */,
 				04B94926295DEE9E00703523 /* Extensions */,
 				04B9490B295DEA9400703523 /* Resources */,
@@ -167,6 +177,7 @@
 			children = (
 				04B94927295DEEB500703523 /* URLSessionExtensions.swift */,
 				04B94938295E059300703523 /* UIColorExtensions.swift */,
+				04B94946295E57C500703523 /* UIApplicationExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -183,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				04B94930295DFBBA00703523 /* Authorization.swift */,
+				04B9494D295E718A00703523 /* Credentials.swift */,
 			);
 			path = Authorization;
 			sourceTree = "<group>";
@@ -200,6 +212,7 @@
 			children = (
 				04B9493B295E070000703523 /* AccountStore.swift */,
 				04B9493D295E09E400703523 /* AuthorizationStore.swift */,
+				04B9494F295E731E00703523 /* KeychainStore.swift */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -222,12 +235,16 @@
 				04B948F4295DEA5C00703523 /* Sources */,
 				04B948F5295DEA5C00703523 /* Frameworks */,
 				04B948F6295DEA5C00703523 /* Resources */,
+				04B94951295E78B500703523 /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Nevvi;
+			packageProductDependencies = (
+				04B9494B295E712200703523 /* SwiftKeychainWrapper */,
+			);
 			productName = Nevvi;
 			productReference = 04B948F8295DEA5C00703523 /* Nevvi.app */;
 			productType = "com.apple.product-type.application";
@@ -256,6 +273,9 @@
 				Base,
 			);
 			mainGroup = 04B948EF295DEA5C00703523;
+			packageReferences = (
+				04B9494A295E712200703523 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
+			);
 			productRefGroup = 04B948F9295DEA5C00703523 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -279,6 +299,26 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		04B94951295E78B500703523 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "BUILD_APP_DIR=\"$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.app\"\n\nif [ $CONFIGURATION == \"Release\" ]; then\n    rm -rf \"$BUILD_APP_DIR/Settings.bundle\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		04B948F4295DEA5C00703523 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -287,10 +327,13 @@
 				04B94922295DEDAF00703523 /* PermissionGroup.swift in Sources */,
 				04B948FE295DEA5C00703523 /* ContentView.swift in Sources */,
 				04B94918295DEB9900703523 /* Connection.swift in Sources */,
+				04B9494E295E718A00703523 /* Credentials.swift in Sources */,
 				04B94912295DEAFC00703523 /* CircleImage.swift in Sources */,
 				04B94914295DEB1100703523 /* ModelData.swift in Sources */,
 				04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */,
+				04B94947295E57C500703523 /* UIApplicationExtensions.swift in Sources */,
 				04B94931295DFBBA00703523 /* Authorization.swift in Sources */,
+				04B94950295E731E00703523 /* KeychainStore.swift in Sources */,
 				04B94942295E0B6500703523 /* GenericError.swift in Sources */,
 				04B9493C295E070000703523 /* AccountStore.swift in Sources */,
 				04B94934295E01F500703523 /* Login.swift in Sources */,
@@ -427,6 +470,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -434,6 +478,8 @@
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Nevvi/Info.plist;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -463,6 +509,8 @@
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Nevvi/Info.plist;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -491,7 +539,7 @@
 				04B94905295DEA5E00703523 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		04B94906295DEA5E00703523 /* Build configuration list for PBXNativeTarget "Nevvi" */ = {
 			isa = XCConfigurationList;
@@ -500,9 +548,28 @@
 				04B94908295DEA5E00703523 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		04B9494A295E712200703523 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		04B9494B295E712200703523 /* SwiftKeychainWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04B9494A295E712200703523 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;
+			productName = SwiftKeychainWrapper;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 04B948F0295DEA5C00703523 /* Project object */;
 }
