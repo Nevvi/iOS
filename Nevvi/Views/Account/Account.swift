@@ -11,8 +11,25 @@ struct Account: View {
     @State var user: User
 
     var body: some View {
-        Text(self.user.firstName!)
-    }
+        VStack {
+            ZStack(alignment: .bottomTrailing) {
+                AsyncImage(url: URL(string: self.user.profileImage), content: { image in
+                    image.resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(maxWidth: 100, maxHeight: 100)
+                        .clipShape(Circle())
+                }, placeholder: {
+                    ProgressView()
+                })
+                
+                Image(systemName: "plus")
+                    .foregroundColor(.white)
+                    .frame(width: 25, height: 25)
+                    .background(Color.blue)
+                    .clipShape(Circle())
+                }
+            }
+        }
 
 }
 

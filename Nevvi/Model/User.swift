@@ -22,10 +22,5 @@ struct User: Hashable, Codable {
     var blockedUsers: [String]
     var address: Address
     var permissionGroups: [PermissionGroup]
-    
-
-    private var profileImage: String
-    var image: Image {
-        Image(profileImage)
-    }
+    var profileImage: String
 }
