@@ -85,10 +85,6 @@ struct Login: View {
                     NavigationLink("Create account") {
                         CreateAccount(authStore: self.authStore, callback: self.callback)
                     }.padding()
-                    
-                    NavigationLink("Confirm account") {
-                        CreateAccount(authStore: self.authStore, callback: self.callback, showConfirmationCode: true)
-                    }.padding()
                 }
                 .foregroundColor(.white)
                 

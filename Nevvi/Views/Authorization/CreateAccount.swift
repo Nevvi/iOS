@@ -80,12 +80,6 @@ struct CreateAccount: View {
                             .background(Color.green)
                             .cornerRadius(15.0)
                     }.disabled(self.confirmAccountDisabled)
-                    
-                    if self.authStore.confirming {
-                        ProgressView().padding(20)
-                    }
-                    
-                    Spacer()
                 } else {
                     VStack(alignment: .leading, spacing: 15) {
                         TextField("Email", text: self.$email)
@@ -109,34 +103,28 @@ struct CreateAccount: View {
                             .background(Color.green)
                             .cornerRadius(15.0)
                     }.disabled(self.createAccountDisabled)
-                    
-                    if self.authStore.signingUp {
-                        ProgressView().padding(20)
-                    }
-                    
-                    Spacer()
-
-                    VStack {
-                        Text("Have an account?")
-                        
-                        HStack {
-                            Button("Confirm") {
-                                self.showConfirmationCode = true
-                            }.padding()
-                            
-                            NavigationLink("Login") {
-                                Login(authStore: self.authStore, callback: self.callback)
-                            }.padding()
-                        }
-                    }
-                    .padding()
-                    .foregroundColor(.white)
                 }
+                
+                if self.authStore.signingUp || self.authStore.confirming {
+                    ProgressView().padding(20)
+                }
+                
+                Spacer()
+
+                Button(self.showConfirmationCode ? "Create account" : "Need to confirm an account?") {
+                    self.showConfirmationCode = !self.showConfirmationCode
+                }
+                .padding()
+                .foregroundColor(.white)
             }
             .autocapitalization(.none)
             .disabled(self.authStore.signingUp)
             .alert(item: self.$error) { error in
-                return Alert(title: Text("Failed to create account"), message: Text(error.localizedDescription))
+                if self.showConfirmationCode {
+                    return Alert(title: Text("Failed to confirm account"), message: Text(error.localizedDescription))
+                } else {
+                    return Alert(title: Text("Failed to create account"), message: Text(error.localizedDescription))
+                }
             }
             .background(
                 LinearGradient(
