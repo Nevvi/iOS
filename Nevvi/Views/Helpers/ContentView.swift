@@ -14,7 +14,7 @@ struct ContentView: View {
         if (accountStore.user != nil) {
             if (accountStore.user!.onboardingCompleted) {
                 TabView {
-                    Account(user: accountStore.user!).tabItem() {
+                    Account(accountStore: self.accountStore, user: accountStore.user!).tabItem() {
                         Image(systemName: "person.fill")
                         Text("Account")
                     }

@@ -17,7 +17,7 @@ struct User: Hashable, Codable {
     var emailConfirmed: Bool
     var phoneNumber: String?
     var phoneNumberConfirmed: Bool?
-    var birthday: String?
+    var birthday: Date?
     var onboardingCompleted: Bool
     var blockedUsers: [String]
     var address: Address

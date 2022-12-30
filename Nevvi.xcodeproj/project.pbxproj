@@ -40,6 +40,9 @@
 		04B9495D295F3B1800703523 /* OnboardingViewTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9495C295F3B1800703523 /* OnboardingViewTwo.swift */; };
 		04B9495F295F3BE000703523 /* OnboardingViewThree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9495E295F3BE000703523 /* OnboardingViewThree.swift */; };
 		04B94961295F3FD100703523 /* OnboardingViewFour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94960295F3FD100703523 /* OnboardingViewFour.swift */; };
+		04B94963295F814100703523 /* OperatorOverloads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94962295F814100703523 /* OperatorOverloads.swift */; };
+		04B94965295F8FDB00703523 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94964295F8FDB00703523 /* StringExtensions.swift */; };
+		04B94967295F972500703523 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B94966295F972500703523 /* ImagePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +80,9 @@
 		04B9495C295F3B1800703523 /* OnboardingViewTwo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewTwo.swift; sourceTree = "<group>"; };
 		04B9495E295F3BE000703523 /* OnboardingViewThree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewThree.swift; sourceTree = "<group>"; };
 		04B94960295F3FD100703523 /* OnboardingViewFour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewFour.swift; sourceTree = "<group>"; };
+		04B94962295F814100703523 /* OperatorOverloads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorOverloads.swift; sourceTree = "<group>"; };
+		04B94964295F8FDB00703523 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		04B94966295F972500703523 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +177,7 @@
 			isa = PBXGroup;
 			children = (
 				04B948FD295DEA5C00703523 /* ContentView.swift */,
+				04B94966295F972500703523 /* ImagePicker.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -191,6 +198,8 @@
 				04B94927295DEEB500703523 /* URLSessionExtensions.swift */,
 				04B94938295E059300703523 /* UIColorExtensions.swift */,
 				04B94946295E57C500703523 /* UIApplicationExtensions.swift */,
+				04B94962295F814100703523 /* OperatorOverloads.swift */,
+				04B94964295F8FDB00703523 /* StringExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -353,6 +362,7 @@
 				04B94922295DEDAF00703523 /* PermissionGroup.swift in Sources */,
 				04B94953295F21D200703523 /* CreateAccount.swift in Sources */,
 				04B948FE295DEA5C00703523 /* ContentView.swift in Sources */,
+				04B94963295F814100703523 /* OperatorOverloads.swift in Sources */,
 				04B94918295DEB9900703523 /* Connection.swift in Sources */,
 				04B9494E295E718A00703523 /* Credentials.swift in Sources */,
 				04B94912295DEAFC00703523 /* CircleImage.swift in Sources */,
@@ -361,6 +371,7 @@
 				04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */,
 				04B94947295E57C500703523 /* UIApplicationExtensions.swift in Sources */,
 				04B94931295DFBBA00703523 /* Authorization.swift in Sources */,
+				04B94965295F8FDB00703523 /* StringExtensions.swift in Sources */,
 				04B9495F295F3BE000703523 /* OnboardingViewThree.swift in Sources */,
 				04B9495B295F386F00703523 /* OnboardingViewOne.swift in Sources */,
 				04B94950295E731E00703523 /* KeychainStore.swift in Sources */,
@@ -371,6 +382,7 @@
 				04B94939295E059300703523 /* UIColorExtensions.swift in Sources */,
 				04B9491C295DEBE600703523 /* ConnectionDetail.swift in Sources */,
 				04B9491E295DEBF700703523 /* ConnectionRow.swift in Sources */,
+				04B94967295F972500703523 /* ImagePicker.swift in Sources */,
 				04B94961295F3FD100703523 /* OnboardingViewFour.swift in Sources */,
 				04B94928295DEEB500703523 /* URLSessionExtensions.swift in Sources */,
 				04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */,
