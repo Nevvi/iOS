@@ -9,8 +9,10 @@ import Foundation
 import Combine
 
 final class ModelData: ObservableObject {
-    @Published var connections: [Connection] = load("connectionData.json")
+    @Published var connectionResponse: ConnectionResponse = load("connectionResponse.json")
+    @Published var connection: Connection = load("connectionData.json")
     @Published var user: User = load("userData.json")
+    @Published var requests: [ConnectionRequest] = load("requestsData.json")
 }
 
 func load<T: Decodable>(_ filename: String) -> T {

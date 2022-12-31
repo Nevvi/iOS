@@ -59,7 +59,7 @@ struct Login: View {
                 }.disabled(self.loginDisabled)
                 
                 if self.authStore.loggingIn {
-                    ProgressView().padding(20)
+                    ProgressView().padding(45)
                 } else if self.authStore.biometricType() != .none {
                     Button {
                         self.authStore.requestBiometricUnlock {(result: Result<Credentials, AuthorizationStore.AuthorizationError>) in
@@ -76,7 +76,8 @@ struct Login: View {
                         Image(systemName: self.authStore.biometricType() == .face ? "faceid" : "touchid")
                             .resizable()
                             .frame(width: 50, height: 50)
-                    }.padding(20)
+                            .foregroundColor(.white)
+                    }.padding(30)
                 }
                 
                 Spacer()

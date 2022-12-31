@@ -1,14 +1,16 @@
-[
-    {
-        "id": "8555e26c-de2b-4497-af11-70d2332dc0a9",
-        "firstName": "Tyler",
-        "lastName": "Cobb",
-        "profileImage": "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
+{
+    "id": "759a30e6-23f6-4898-b23a-8c8fb0095279",
+    "firstName": "Kathy",
+    "lastName": "Larrea",
+    "email": "Kathy1larrea@gmail.com",
+    "phoneNumber": "+16513667495",
+    "address": {
+        "street": "1835 Randolph Ave, Apt 5",
+        "city": "Saint Paul",
+        "state": "MN",
+        "zipCode": 55105
     },
-    {
-        "id": "d94d17ac-def7-4998-890c-ddf41e73bbd9",
-        "firstName": "Tyler",
-        "lastName": "Standal",
-        "profileImage": "https://nevvi-user-images.s3.amazonaws.com/users/d94d17ac-def7-4998-890c-ddf41e73bbd9/images/ty_and_lo_wedding_1.jpeg"
-    }
-]
+    "profileImage": "https://nevvi-user-images-dev.s3.amazonaws.com/users/759a30e6-23f6-4898-b23a-8c8fb0095279/images/2B39DEBB-72FF-47B1-97AB-1CD53D7FFFC3.jpeg",
+    "birthday": "1992-08-04",
+    "permissionGroup": "Contact Info"
+}

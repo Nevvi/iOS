@@ -84,9 +84,9 @@ struct Account: View {
                     
                     Spacer()
                     
-                    if self.user.phoneNumberConfirmed != nil && !self.user.phoneNumberConfirmed! {
+                    if self.user.phoneNumber != nil && self.user.phoneNumberConfirmed != nil && !self.user.phoneNumberConfirmed! {
                         Button {
-                            // TODO - confirm phone
+                            // TODO - confirm phone in sheet?
                         } label: {
                             Text("Verify")
                         }
@@ -130,7 +130,20 @@ struct Account: View {
             }
             .padding()
             
-            
+            Button(action: {
+                print("Updating!")
+            }, label: {
+                Text("Update")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 40)
+                    .padding(.vertical, 12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .foregroundColor(Color(UIColor(hexString: "#49C5B6")))
+                    )
+            })
+            .padding()
         }
         .padding(27.5)
         .sheet(isPresented: self.$showPicker) {
@@ -140,8 +153,8 @@ struct Account: View {
                     case .failure(let error):
                         self.error = error
                         self.showError = true
-                    case .success(_):
-                        print("Success!")
+                    case .success(let user):
+                        self.user = user
                     }
                 }
             }, sourceType: .photoLibrary)

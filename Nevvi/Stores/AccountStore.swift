@@ -15,6 +15,14 @@ class AccountStore: ObservableObject {
     @Published var saving: Bool = false
     @Published var savingImage: Bool = false
     
+    init() {
+        
+    }
+    
+    init(user: User) {
+        self.user = user
+    }
+    
     private func url() throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")

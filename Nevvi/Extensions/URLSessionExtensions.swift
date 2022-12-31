@@ -43,6 +43,19 @@ extension URLSession {
         execute(request: request, completion: completion)
     }
     
+    func postData<T: Decodable>(for url: URL, for body: Encodable, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
+        var request = URLRequest(url: url)
+        do {
+            request.httpMethod = "POST"
+            request.httpBody = try JSONEncoder().encode(body)
+            request.setValue(authToken, forHTTPHeaderField: "Authorization")
+        } catch(let error) {
+            completion(.failure(error))
+        }
+            
+        execute(request: request, completion: completion)
+    }
+    
     func postData<T: Decodable>(for url: URL, for body: Encodable, completion: @escaping (Result<T, Error>) -> Void) {
         var request = URLRequest(url: url)
         do {
@@ -70,8 +83,8 @@ extension URLSession {
     
     func postImage<T: Decodable>(for url: URL, for image: UIImage, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
         let request = MultipartFormDataRequest(url: url)
-        var smallerImage = resizeImage(image: image, newWidth: 200)
-        var fileName = "IMG_\(Int.random(in: 1000000..<10000000)).png"
+        let smallerImage = resizeImage(image: image, newWidth: 200)
+        let fileName = "IMG_\(Int.random(in: 1000000..<10000000)).png"
         request.addDataField(named: "file", data: smallerImage.pngData()!, mimeType: "image/png", fileName: fileName)
         
         var urlRequest = request.asURLRequest()

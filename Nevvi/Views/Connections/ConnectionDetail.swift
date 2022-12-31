@@ -8,36 +8,118 @@
 import SwiftUI
 
 struct ConnectionDetail: View {
-    @EnvironmentObject var modelData: ModelData
-    var connection: Connection
-
-    var connectionIndex: Int {
-       modelData.connections.firstIndex(where: { $0.id == connection.id })!
-    }
+    @ObservedObject var connectionStore: ConnectionStore
     
+    @State var showSettings = false
+
     var body: some View {
-        ScrollView {
-            CircleImage(image: connection.image)
-                .offset(y: -130)
-                .padding(.bottom, -130)
-            
-            VStack(alignment: .leading) {
+        if self.connectionStore.loading == false && self.connectionStore.connection != nil {
+            ScrollView {
                 HStack {
-                    Text(connection.firstName).font(.title)
-                    Text(connection.lastName).font(.title)
+                    Spacer()
+                    Button {
+                        self.showSettings = true
+                    } label: {
+                        Image(systemName: "gearshape.fill")
+                            .renderingMode(.template)
+                            .foregroundColor(.black)
+                    }
+                    .padding([.trailing], 25)
+                    .padding([.top], -25)
                 }
-            }.padding()
+    
+                AsyncImage(url: URL(string: self.connectionStore.connection!.profileImage), content: { image in
+                    image.resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(maxWidth: 100, maxHeight: 100)
+                        .clipShape(Circle())
+                }, placeholder: {
+                    ProgressView()
+                        .padding(35)
+                })
+                
+                if self.connectionStore.connection!.email != nil {
+                    VStack(alignment: .leading) {
+                        Text("Email")
+                            .foregroundColor(.secondary)
+                            .fontWeight(.light)
+                            .font(.system(size: 14))
+                        
+                        
+                        Text(self.connectionStore.connection!.email!)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding()
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                    }
+                    .padding([.leading, .trailing])
+                    .padding([.bottom], 8)
+                }
+                
+                if self.connectionStore.connection!.phoneNumber != nil {
+                    VStack(alignment: .leading) {
+                        Text("Phone Number")
+                            .foregroundColor(.secondary)
+                            .fontWeight(.light)
+                            .font(.system(size: 14))
+                        
+                        Text(self.connectionStore.connection!.phoneNumber!)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding()
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                    }
+                    .padding([.leading, .trailing])
+                    .padding([.bottom], 8)
+                }
+                
+                if self.connectionStore.connection!.address != nil {
+                    VStack(alignment: .leading) {
+                        Text("Street Address")
+                            .foregroundColor(.secondary)
+                            .fontWeight(.light)
+                            .font(.system(size: 14))
+                        
+                        Text(self.connectionStore.connection!.address!.street!)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding()
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                    }
+                    .padding([.leading, .trailing])
+                    .padding([.bottom], 8)
+                }
+                
+                if self.connectionStore.connection!.birthday != nil {
+                    VStack(alignment: .leading) {
+                        Text("Birthday")
+                            .foregroundColor(.secondary)
+                            .fontWeight(.light)
+                            .font(.system(size: 14))
+                        
+                        Text(self.connectionStore.connection!.birthdayStr!)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding()
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                    }
+                    .padding([.leading, .trailing])
+                    .padding([.bottom], 8)
+                }
+            }
+            .navigationTitle("\(self.connectionStore.connection!.firstName) \(self.connectionStore.connection!.lastName)")
+            .navigationBarTitleDisplayMode(.inline)
+            .sheet(isPresented: self.$showSettings) {
+                Text("You'll be able to update connection settings here")
+            }
+        } else  {
+            ProgressView()
         }
-        .navigationTitle(connection.firstName)
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 struct ConnectionDetail_Previews: PreviewProvider {
     static let modelData = ModelData()
+    static let connectionStore = ConnectionStore(connection: modelData.connection)
 
     static var previews: some View {
-       ConnectionDetail(connection: modelData.connections[0])
-           .environmentObject(modelData)
+        ConnectionDetail(connectionStore: connectionStore)
+            .environmentObject(modelData)
     }
 }

@@ -90,7 +90,6 @@ class AuthorizationStore: ObservableObject {
         let canEvaluate = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
         
         if let error = error {
-            print(error.code)
             switch error.code {
             case -6:
                 completion(.failure(.deniedAccess))
