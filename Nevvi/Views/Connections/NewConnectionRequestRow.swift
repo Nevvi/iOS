@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NewConnectionRequestRow: View {
-    var myUser: User
+    @ObservedObject var accountStore: AccountStore
     var requestCallback: (String, String) -> Void
     
     @State var user: Connection
@@ -47,7 +47,7 @@ struct NewConnectionRequestRow: View {
                         .font(.title2)
                         .padding([.top])
                                         
-                    CheckboxGroup(items: self.myUser.permissionGroups.map({ (group: PermissionGroup) in
+                    CheckboxGroup(items: self.accountStore.permissionGroups.map({ (group: PermissionGroup) in
                         return CheckboxItem(name: group.name, value: group.name)
                     }), selectedItem: self.$selectedPermissionGroup)
                     .padding([.leading, .trailing])
@@ -75,8 +75,10 @@ struct NewConnectionRequestRow: View {
 
 struct ConnectionRequest_Previews: PreviewProvider {
     static let modelData = ModelData()
+    static let accountStore = AccountStore(user: modelData.user)
+    
     static var previews: some View {
-        NewConnectionRequestRow(myUser: modelData.user,
+        NewConnectionRequestRow(accountStore: accountStore,
                           requestCallback: { (id: String, group: String) in
             print(id, group)
         }, user: modelData.connectionResponse.users[0])

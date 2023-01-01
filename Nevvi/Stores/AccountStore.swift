@@ -7,20 +7,50 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 class AccountStore: ObservableObject {
     var authorization: Authorization? = nil
     
-    @Published var user: User? = nil
     @Published var saving: Bool = false
     @Published var savingImage: Bool = false
+    
+    @Published var id: String = ""
+    @Published var firstName: String = ""
+    @Published var lastName: String = ""
+    @Published var email: String = ""
+    @Published var emailConfirmed: Bool = false
+    @Published var phoneNumber: String = ""
+    @Published var phoneNumberConfirmed: Bool = false
+    @Published var birthday: Date = Date()
+    @Published var onboardingCompleted: Bool = false
+    @Published var blockedUsers: [String] = []
+    @Published var address: AddressViewModel = AddressViewModel()
+    @Published var permissionGroups: [PermissionGroup] = []
+    @Published var profileImage: String = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
     
     init() {
         
     }
     
     init(user: User) {
-        self.user = user
+        self.update(user: user)
+    }
+    
+    func update(user: User) {
+        self.id = user.id
+        self.firstName = user.firstName == nil ? "" : user.firstName!
+        self.lastName = user.lastName == nil ? "" : user.lastName!
+        self.email = user.email
+        self.emailConfirmed = user.emailConfirmed
+        self.phoneNumber = user.phoneNumber == nil ? "" : user.phoneNumber!
+        self.phoneNumberConfirmed = user.phoneNumberConfirmed == nil ? false : user.phoneNumberConfirmed!
+        self.birthday = user.birthday == nil ? Date() : user.birthday!
+        self.onboardingCompleted = user.onboardingCompleted
+        self.blockedUsers = user.blockedUsers
+        self.address.update(address: user.address)
+        self.permissionGroups = user.permissionGroups
+        self.profileImage = user.profileImage
     }
     
     private func url() throws -> URL {
@@ -65,7 +95,7 @@ class AccountStore: ObservableObject {
             URLSession.shared.fetchData(for: try self.url(), for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
-                    self.user = user
+                    self.update(user: user)
                 case .failure(let error):
                     print(error)
                 }
@@ -75,15 +105,40 @@ class AccountStore: ObservableObject {
         }
     }
     
-    func update(firstName: String, lastName: String, callback: @escaping (Result<User, Error>) -> Void) {
+    func save(callback: @escaping (Result<User, Error>) -> Void) {
         do {
             self.saving = true
             let idToken: String? = self.authorization?.idToken
-            let request = PatchRequest(firstName: firstName, lastName: lastName)
+            
+            let request = PatchRequest(firstName: self.firstName,
+                                       lastName: self.lastName,
+                                       address: self.address.toModel(),
+                                       birthday: self.birthday.yyyyMMdd())
+            
             URLSession.shared.patchData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
-                    self.user = user
+                    self.update(user: user)
+                    callback(.success(user))
+                case .failure(let error):
+                    callback(.failure(error))
+                }
+                self.saving = false
+            }
+        } catch(let error) {
+            print("Failed to save user", error)
+            callback(.failure(error))
+        }
+    }
+    
+    func update(request: PatchRequest, callback: @escaping (Result<User, Error>) -> Void) {
+        do {
+            self.saving = true
+            let idToken: String? = self.authorization?.idToken
+            URLSession.shared.patchData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
+                switch result {
+                case .success(let user):
+                    self.update(user: user)
                     callback(.success(user))
                 case .failure(let error):
                     callback(.failure(error))
@@ -104,7 +159,7 @@ class AccountStore: ObservableObject {
             URLSession.shared.patchData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
-                    self.user = user
+                    self.update(user: user)
                     callback(.success(user))
                 case .failure(let error):
                     callback(.failure(error))
@@ -125,7 +180,7 @@ class AccountStore: ObservableObject {
             URLSession.shared.postImage(for: try self.imageUrl(), for: image, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
-                    self.user = user
+                    self.update(user: user)
                     callback(.success(user))
                 case .failure(let error):
                     callback(.failure(error))
@@ -179,8 +234,10 @@ class AccountStore: ObservableObject {
     }
     
     struct PatchRequest: Encodable {
-        var firstName: String
-        var lastName: String
+        var firstName: String?
+        var lastName: String?
+        var address: Address?
+        var birthday: String?
     }
     
     struct CompleteOnboardingRequest: Encodable {

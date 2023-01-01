@@ -14,17 +14,25 @@ struct ContentView: View {
     @ObservedObject var usersStore: UsersStore
     
     var body: some View {
-        if (accountStore.user != nil) {
-            if (accountStore.user!.onboardingCompleted) {
+        if (!accountStore.id.isEmpty) {
+            if (accountStore.onboardingCompleted) {
                 TabView {
-                    ConnectionList(connections: self.connectionsStore.connections, connectionStore: self.connectionStore).tabItem() {
+                    RefreshableView(onRefresh: {
+                        self.connectionsStore.load()
+                    }, view: ConnectionList(connectionsStore: self.connectionsStore, connectionStore: self.connectionStore).tabItem() {
                         Image(systemName: "person.3.fill")
                         Text("Connections")
+                    }).onAppear {
+                        self.connectionsStore.load()
                     }
                     
-                    ConnectionRequestList(accountStore: self.accountStore, requests: self.connectionsStore.requests).tabItem() {
+                    RefreshableView(onRefresh: {
+                        self.connectionsStore.loadRequests()
+                    }, view: ConnectionRequestList(accountStore: self.accountStore, connectionsStore: self.connectionsStore).tabItem() {
                         Image(systemName: "person.fill.questionmark")
                         Text("Requests")
+                    }).onAppear {
+                        self.connectionsStore.loadRequests()
                     }
                     
                     ConnectionSearch(accountStore: self.accountStore, usersStore: self.usersStore).tabItem() {
@@ -32,10 +40,12 @@ struct ContentView: View {
                         Text("Search")
                     }
                     
-                    Account(accountStore: self.accountStore, user: accountStore.user!).tabItem() {
+                    RefreshableView(onRefresh: {
+                        self.accountStore.load()
+                    }, view: Account(accountStore: self.accountStore).tabItem() {
                         Image(systemName: "person.fill")
                         Text("Account")
-                    }
+                    })
                 }
             } else {
                 OnboardingCarousel(accountStore: self.accountStore)
@@ -43,9 +53,6 @@ struct ContentView: View {
         } else {
             // TODO - better loading view
             ProgressView().onAppear {
-                // TODO - race condition where account is loaded first
-                self.connectionsStore.load()
-                self.connectionsStore.loadRequests()
                 self.accountStore.load()
             }
         }
@@ -55,10 +62,10 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static let modelData = ModelData()
     static var previews: some View {
-        ContentView(accountStore: AccountStore(),
-                    connectionStore: ConnectionStore(),
-                    connectionsStore: ConnectionsStore(),
-                    usersStore: UsersStore()
+        ContentView(accountStore: AccountStore(user: modelData.user),
+                    connectionStore: ConnectionStore(connection: modelData.connection),
+                    connectionsStore: ConnectionsStore(connections: modelData.connectionResponse.users, requests: modelData.requests),
+                    usersStore: UsersStore(users: modelData.connectionResponse.users)
         ).environmentObject(modelData)
     }
 }

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct Account: View {
     @ObservedObject var accountStore: AccountStore
-    @State var user: User
     
     @State private var phoneVerificationCode: String = ""
     @State private var showPhoneVerification: Bool = false
@@ -23,7 +22,7 @@ struct Account: View {
         VStack {
             VStack {
                 ZStack(alignment: .bottomTrailing) {
-                    AsyncImage(url: URL(string: self.user.profileImage), content: { image in
+                    AsyncImage(url: URL(string: self.accountStore.profileImage), content: { image in
                         image.resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(maxWidth: 100, maxHeight: 100)
@@ -42,7 +41,7 @@ struct Account: View {
                     self.showPicker = true
                 }
                 
-                Text(self.user.email)
+                Text(self.accountStore.email)
                     .foregroundColor(.secondary)
                     .font(.system(size: 14))
             }.padding(30)
@@ -53,7 +52,7 @@ struct Account: View {
                     .fontWeight(.light)
                     .font(.system(size: 14))
                 
-                TextField("Jane", text: self.$user.firstName ?? "")
+                TextField("Jane", text: self.$accountStore.firstName)
                     .padding()
                     .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                     .textInputAutocapitalization(.never)
@@ -68,7 +67,7 @@ struct Account: View {
                     .fontWeight(.light)
                     .font(.system(size: 14))
                 
-                TextField("Doe", text: self.$user.lastName ?? "")
+                TextField("Doe", text: self.$accountStore.lastName)
                     .padding()
                     .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                     .textInputAutocapitalization(.never)
@@ -86,7 +85,7 @@ struct Account: View {
                     
                     Spacer()
                     
-                    if self.user.phoneNumber != nil && self.user.phoneNumberConfirmed != nil && !self.user.phoneNumberConfirmed! {
+                    if !self.accountStore.phoneNumber.isEmpty && !self.accountStore.phoneNumberConfirmed {
                         Button {
                             self.accountStore.verifyPhone { (result: Result<AccountStore.VerifyPhoneResponse, Error>) in
                                 switch result {
@@ -105,7 +104,7 @@ struct Account: View {
                     }
                 }
                 
-                TextField("555-555-5555", text: self.$user.phoneNumber ?? "")
+                TextField("555-555-5555", text: self.$accountStore.phoneNumber)
                     .padding()
                     .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                     .textInputAutocapitalization(.never)
@@ -120,7 +119,7 @@ struct Account: View {
                     .fontWeight(.light)
                     .font(.system(size: 14))
                 
-                TextField("111 Hollywood Ave", text: self.$user.address.street ?? "")
+                TextField("111 Hollywood Ave", text: self.$accountStore.address.street)
                     .padding()
                     .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                     .textInputAutocapitalization(.never)
@@ -130,9 +129,7 @@ struct Account: View {
             .padding([.bottom], 8)
             
             VStack(alignment: .leading) {
-                DatePicker("Birthday",
-                           selection: self.$user.birthday ?? Date(),
-                           displayedComponents: [.date]
+                DatePicker("Birthday", selection: self.$accountStore.birthday, displayedComponents: [.date]
                 )
                 .foregroundColor(.secondary)
                 .fontWeight(.light)
@@ -141,7 +138,15 @@ struct Account: View {
             .padding()
             
             Button(action: {
-                print("Updating!")
+                self.accountStore.save { (result: Result<User, Error>) in
+                    switch result {
+                    case .failure(let error):
+                        self.error = error
+                        self.showError = true
+                    case .success(_):
+                        print("Success!")
+                    }
+                }
             }, label: {
                 Text("Update")
                     .font(.headline)
@@ -150,10 +155,10 @@ struct Account: View {
                     .padding(.vertical, 12)
                     .background(
                         RoundedRectangle(cornerRadius: 20)
-                            .foregroundColor(Color(UIColor(hexString: "#49C5B6")))
+                            .foregroundColor(self.accountStore.saving ? .gray : Color(UIColor(hexString: "#49C5B6")))
                     )
             })
-            .padding()
+            .padding().disabled(self.accountStore.saving)
         }
         .padding(27.5)
         .sheet(isPresented: self.$showPicker) {
@@ -164,7 +169,7 @@ struct Account: View {
                         self.error = error
                         self.showError = true
                     case .success(let user):
-                        self.user = user
+                        self.accountStore.update(user: user)
                     }
                 }
             }, sourceType: .photoLibrary)
@@ -189,8 +194,8 @@ struct Account: View {
                     self.accountStore.confirmPhone(code: self.phoneVerificationCode) { (result: Result<AccountStore.ConfirmPhoneResponse, Error>) in
                         switch result {
                         case .success(_):
-                            // TODO - load this new value more dynamically instead of manual?
-                            self.user.phoneNumberConfirmed = true
+                            // TODO - load this new value more dynamically instead of hard code?
+                            self.accountStore.phoneNumberConfirmed = true
                             self.showPhoneVerification = false
                         case .failure(let error):
                             self.error = error
@@ -210,7 +215,7 @@ struct Account: View {
                             .foregroundColor(.white)
                             .padding()
                             .frame(width: 300, height: 50)
-                            .background(Color.green)
+                            .background(self.phoneVerificationCode.count != 6 ? .gray : Color.green)
                             .cornerRadius(15.0)
                     }
                 }.disabled(self.phoneVerificationCode.count != 6)
@@ -228,9 +233,10 @@ struct Account: View {
 
 struct AccountView_Previews: PreviewProvider {
     static let modelData = ModelData()
+    static let accountStore = AccountStore(user: modelData.user)
 
     static var previews: some View {
-        Account(accountStore: AccountStore(), user: modelData.user)
+        Account(accountStore: accountStore)
            .environmentObject(modelData)
     }
 }

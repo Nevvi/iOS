@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ConnectionList: View {
-    @State var connections: [Connection]
+    @ObservedObject var connectionsStore: ConnectionsStore
     @ObservedObject var connectionStore: ConnectionStore
     
     @State private var toBeDeleted: IndexSet?
@@ -17,7 +17,7 @@ struct ConnectionList: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(connections) { connection in
+                ForEach(self.connectionsStore.connections) { connection in
                     NavigationLink {
                         NavigationLazyView(
                             ConnectionDetail(connectionStore: self.connectionStore)
@@ -53,7 +53,10 @@ struct ConnectionList: View {
 
 struct ConnectionList_Previews: PreviewProvider {
     static let modelData = ModelData()
+    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users, requests: modelData.requests)
+    static let connectionStore = ConnectionStore()
+    
     static var previews: some View {
-        ConnectionList(connections: modelData.connectionResponse.users, connectionStore: ConnectionStore()).environmentObject(modelData)
+        ConnectionList(connectionsStore: connectionsStore, connectionStore: connectionStore).environmentObject(modelData)
     }
 }

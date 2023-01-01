@@ -9,14 +9,13 @@ import SwiftUI
 
 struct ConnectionRequestList: View {
     @ObservedObject var accountStore: AccountStore
-    
-    @State var requests: [ConnectionRequest]
+    @ObservedObject var connectionsStore: ConnectionsStore
     
     var body: some View {
         NavigationView {
             List {
-                ForEach(self.requests, id: \.requestingUserId) { request in
-                    ActionableConnectionRequestRow(myUser: self.accountStore.user!, approvalCallback: { (id: String, group: String) in
+                ForEach(self.connectionsStore.requests, id: \.requestingUserId) { request in
+                    ActionableConnectionRequestRow(accountStore: self.accountStore, approvalCallback: { (id: String, group: String) in
                         print(id, group)
                     }, request: request)
                 }
@@ -27,9 +26,10 @@ struct ConnectionRequestList: View {
 
 struct ConnectionRequestList_Previews: PreviewProvider {
     static let modelData = ModelData()
+    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users, requests: modelData.requests)
     static let accountStore = AccountStore(user: modelData.user)
     
     static var previews: some View {
-        ConnectionRequestList(accountStore: accountStore, requests: modelData.requests).environmentObject(modelData)
+        ConnectionRequestList(accountStore: accountStore, connectionsStore: connectionsStore).environmentObject(modelData)
     }
 }

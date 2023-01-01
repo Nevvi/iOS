@@ -46,22 +46,24 @@ struct OnboardingViewThree: View {
             Spacer()
 
             Button(action: {
-                self.accountStore.update(firstName: self.firstName, lastName: self.lastName) { _ in
+                let request = AccountStore.PatchRequest(firstName: firstName, lastName: lastName)
+                self.accountStore.update(request: request) { _ in
                     self.primaryClick()
                 }
             }, label: {
                 Text("Update")
-                    .disabled(self.buttonDisabled)
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding(.horizontal, 50)
                     .padding(.vertical, 16)
                     .background(
                         RoundedRectangle(cornerRadius: 20)
-                            .foregroundColor(Color(UIColor(hexString: "#49C5B6")))
+                            .foregroundColor(self.buttonDisabled ? .gray : Color(UIColor(hexString: "#49C5B6")))
                     )
             })
             .shadow(radius: 10)
+            .disabled(buttonDisabled)
+            
         }
         .disabled(self.accountStore.saving)
         .padding()

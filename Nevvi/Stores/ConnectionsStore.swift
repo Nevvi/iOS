@@ -18,6 +18,17 @@ class ConnectionsStore : ObservableObject {
     @Published var requests: [ConnectionRequest] = []
     @Published var requestCount: Int = 0
     
+    init() {
+        
+    }
+    
+    init(connections: [Connection], requests: [ConnectionRequest]) {
+        self.connections = connections
+        self.connectionCount = connections.count
+        
+        self.requests = requests
+        self.requestCount = requests.count
+    }
     
     private func url() throws -> URL {
         if (self.authorization == nil) {
@@ -39,6 +50,7 @@ class ConnectionsStore : ObservableObject {
     
     func load() {
         do {
+            print("Loading connections")
             self.loading = true
             let idToken: String? = self.authorization?.idToken
             URLSession.shared.fetchData(for: try self.url(), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
@@ -46,6 +58,7 @@ class ConnectionsStore : ObservableObject {
                 case .success(let response):
                     self.connections = response.users
                     self.connectionCount = response.count
+                    print("Got connections", response)
                 case .failure(let error):
                     print(error)
                 }
