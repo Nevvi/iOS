@@ -11,6 +11,8 @@ struct Account: View {
     @ObservedObject var accountStore: AccountStore
     @State var user: User
     
+    @State private var phoneVerificationCode: String = ""
+    @State private var showPhoneVerification: Bool = false
     @State private var showPicker: Bool = false
     @State private var newProfileImage = UIImage()
     
@@ -86,7 +88,15 @@ struct Account: View {
                     
                     if self.user.phoneNumber != nil && self.user.phoneNumberConfirmed != nil && !self.user.phoneNumberConfirmed! {
                         Button {
-                            // TODO - confirm phone in sheet?
+                            self.accountStore.verifyPhone { (result: Result<AccountStore.VerifyPhoneResponse, Error>) in
+                                switch result {
+                                case .success(_):
+                                    self.showPhoneVerification = true
+                                case .failure(let error):
+                                    self.error = error
+                                    self.showError = true
+                                }
+                            }
                         } label: {
                             Text("Verify")
                         }
@@ -159,10 +169,59 @@ struct Account: View {
                 }
             }, sourceType: .photoLibrary)
         }
-        .alert(isPresented: self.$showError) {
-            Alert(title: Text("Failed to update user"), message: Text(self.error!.localizedDescription))
+        .sheet(isPresented: self.$showPhoneVerification) {
+            VStack(alignment: .center) {
+                Text("Please enter the confirmation code we texted to you")
+                    .multilineTextAlignment(.center)
+                    .padding([.top], 50)
+                
+                Spacer()
+                
+                TextField("Code", text: self.$phoneVerificationCode)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .keyboardType(.numberPad)
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                
+                Spacer()
+                
+                Button {
+                    self.accountStore.confirmPhone(code: self.phoneVerificationCode) { (result: Result<AccountStore.ConfirmPhoneResponse, Error>) in
+                        switch result {
+                        case .success(_):
+                            // TODO - load this new value more dynamically instead of manual?
+                            self.user.phoneNumberConfirmed = true
+                            self.showPhoneVerification = false
+                        case .failure(let error):
+                            self.error = error
+                            self.showError = true
+                        }
+                    }
+                } label: {
+                    if self.accountStore.saving {
+                        ProgressView()
+                            .padding()
+                            .frame(width: 300, height: 50)
+                            .background(Color.green)
+                            .cornerRadius(15.0)
+                    } else {
+                        Text("Confirm Phone")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(width: 300, height: 50)
+                            .background(Color.green)
+                            .cornerRadius(15.0)
+                    }
+                }.disabled(self.phoneVerificationCode.count != 6)
+            }
+            .padding(40)
+            .disabled(self.accountStore.saving)
+            .presentationDetents([.medium])
         }
-        
+        .alert(isPresented: self.$showError) {
+            Alert(title: Text("Something went wrong"), message: Text(self.error!.localizedDescription))
+        }
     }
 
 }

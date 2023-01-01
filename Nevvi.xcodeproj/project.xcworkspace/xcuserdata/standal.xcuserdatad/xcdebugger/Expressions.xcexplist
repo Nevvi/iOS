@@ -28,6 +28,14 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "NSURLSession.postData&lt;&#x3c4;_0_0&gt;(for:for:for:completion:):URLSessionExtensions.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "accessToken">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in NSURLSession.fetchData&lt;&#x3c4;_0_0&gt;(for:completion:):URLSessionExtensions.swift">
       </ContextState>
       <ContextState

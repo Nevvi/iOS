@@ -6,7 +6,7 @@
     "emailConfirmed": true,
     "birthday": "1994-04-08",
     "phoneNumber": "+16129631237",
-    "phoneNumberConfirmed": true,
+    "phoneNumberConfirmed": false,
     "onboardingCompleted": true,
     "address": {
         "street": "114 W 86th Street Apt 6C",

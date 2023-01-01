@@ -56,6 +56,23 @@ extension URLSession {
         execute(request: request, completion: completion)
     }
     
+    func postData<T: Decodable>(for url: URL, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue(authToken, forHTTPHeaderField: "Authorization")
+
+        execute(request: request, completion: completion)
+    }
+    
+    func postData<T: Decodable>(for url: URL, for authToken: String, for accessToken: String, completion: @escaping (Result<T, Error>) -> Void) {
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue(authToken, forHTTPHeaderField: "Authorization")
+        request.setValue(accessToken, forHTTPHeaderField: "AccessToken")
+
+        execute(request: request, completion: completion)
+    }
+    
     func postData<T: Decodable>(for url: URL, for body: Encodable, completion: @escaping (Result<T, Error>) -> Void) {
         var request = URLRequest(url: url)
         do {

@@ -67,6 +67,7 @@ struct CreateAccount: View {
                         
                         TextField("Code", text: self.$confirmationCode)
                             .padding()
+                            .keyboardType(.numberPad)
                             .background(.white)
                             .cornerRadius(20.0)
                     }.padding(40)
