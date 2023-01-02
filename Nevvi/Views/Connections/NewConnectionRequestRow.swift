@@ -45,13 +45,14 @@ struct NewConnectionRequestRow: View {
                 VStack {
                     Text("Which permission group should \(self.user.firstName) belong to?")
                         .font(.title2)
-                        .padding([.top])
-                                        
-                    CheckboxGroup(items: self.accountStore.permissionGroups.map({ (group: PermissionGroup) in
-                        return CheckboxItem(name: group.name, value: group.name)
-                    }), selectedItem: self.$selectedPermissionGroup)
-                    .padding([.leading, .trailing])
+                        .padding([.top, .leading, .trailing])
                     
+                    Picker("Which permission group should \(self.user.firstName) belong to?", selection: self.$selectedPermissionGroup) {
+                        ForEach(self.accountStore.permissionGroups, id: \.name) {
+                            Text($0.name)
+                        }
+                    }
+                    .pickerStyle(.inline)
                     
                     Button(action: {
                         self.requestCallback(self.user.id, self.selectedPermissionGroup)

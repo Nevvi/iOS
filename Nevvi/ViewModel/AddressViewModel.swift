@@ -13,6 +13,10 @@ class AddressViewModel : ObservableObject {
     @Published var state: String = ""
     @Published var zipCode: Int = -1
     
+    var isEmpty: Bool {
+        return self.street.isEmpty && self.city.isEmpty && self.state.isEmpty
+    }
+    
     func update(address: Address) {
         self.street = address.street != nil ? address.street! : ""
         self.city = address.city != nil ? address.city! : ""

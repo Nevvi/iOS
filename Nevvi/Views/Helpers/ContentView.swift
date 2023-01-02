@@ -19,7 +19,7 @@ struct ContentView: View {
                 TabView {
                     RefreshableView(onRefresh: {
                         self.connectionsStore.load()
-                    }, view: ConnectionList(connectionsStore: self.connectionsStore, connectionStore: self.connectionStore).tabItem() {
+                    }, view: ConnectionList(accountStore: self.accountStore, usersStore: self.usersStore, connectionsStore: self.connectionsStore, connectionStore: self.connectionStore).tabItem() {
                         Image(systemName: "person.3.fill")
                         Text("Connections")
                     }).onAppear {
@@ -33,11 +33,6 @@ struct ContentView: View {
                         Text("Requests")
                     }).onAppear {
                         self.connectionsStore.loadRequests()
-                    }
-                    
-                    ConnectionSearch(accountStore: self.accountStore, usersStore: self.usersStore).tabItem() {
-                        Image(systemName: "magnifyingglass")
-                        Text("Search")
                     }
                     
                     RefreshableView(onRefresh: {

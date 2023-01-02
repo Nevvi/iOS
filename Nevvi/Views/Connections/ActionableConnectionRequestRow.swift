@@ -45,10 +45,12 @@ struct ActionableConnectionRequestRow: View {
                         .font(.title2)
                         .padding([.top, .leading, .trailing])
                                         
-                    CheckboxGroup(items: self.accountStore.permissionGroups.map({ (group: PermissionGroup) in
-                        return CheckboxItem(name: group.name, value: group.name)
-                    }), selectedItem: self.$selectedPermissionGroup)
-                    .padding([.leading, .trailing])
+                    Picker("Which permission group should this new connection belong to?", selection: self.$selectedPermissionGroup) {
+                        ForEach(self.accountStore.permissionGroups, id: \.name) {
+                            Text($0.name)
+                        }
+                    }
+                    .pickerStyle(.inline)
                     
                     
                     Button(action: {
