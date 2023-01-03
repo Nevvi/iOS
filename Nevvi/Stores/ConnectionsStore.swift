@@ -14,6 +14,7 @@ class ConnectionsStore : ObservableObject {
     @Published var connections: [Connection] = []
     @Published var connectionCount: Int = 0
     
+    @Published var deletingRequest: Bool = false
     @Published var loadingRequests: Bool = false
     @Published var requests: [ConnectionRequest] = []
     @Published var requestCount: Int = 0
@@ -30,13 +31,19 @@ class ConnectionsStore : ObservableObject {
         self.requestCount = requests.count
     }
     
-    private func url() throws -> URL {
+    private func url(nameFilter: String?) throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections")!
+        var urlString = "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections"
+        
+        if nameFilter != nil && nameFilter!.count >= 3 {
+            urlString = "\(urlString)?name=\(nameFilter!)"
+        }
+        
+        return URL(string: urlString)!
     }
     
     private func requestsUrl() throws -> URL {
@@ -48,11 +55,24 @@ class ConnectionsStore : ObservableObject {
         return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/requests/pending")!
     }
     
+    private func deleteRequestUrl() throws -> URL {
+        if (self.authorization == nil) {
+            throw GenericError("Not logged in")
+        }
+        
+        let userId: String? = self.authorization?.id
+        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/requests/deny")!
+    }
+    
     func load() {
+        self.load(nameFilter: nil)
+    }
+    
+    func load(nameFilter: String?) {
         do {
             self.loading = true
             let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.url(), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+            URLSession.shared.fetchData(for: try self.url(nameFilter: nameFilter), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     self.connections = response.users
@@ -83,5 +103,32 @@ class ConnectionsStore : ObservableObject {
         } catch(let error) {
             print("Failed to load connections", error)
         }
+    }
+    
+    func denyRequest(otherUserId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
+        do {
+            self.deletingRequest = true
+            let idToken: String? = self.authorization?.idToken
+            let request = DenyRequest(otherUserId: otherUserId)
+            URLSession.shared.postData(for: try self.deleteRequestUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<DeleteResponse, Error>) in
+                switch result {
+                case .success(_):
+                    callback(.success(true))
+                case .failure(let error):
+                    callback(.failure(error))
+                }
+                self.deletingRequest = false
+            }
+        } catch(let error) {
+            print("Failed to delete connection request", error)
+        }
+    }
+    
+    struct DenyRequest : Encodable {
+        var otherUserId: String
+    }
+    
+    struct DeleteResponse : Decodable {
+        
     }
 }

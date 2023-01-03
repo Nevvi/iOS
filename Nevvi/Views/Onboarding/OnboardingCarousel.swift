@@ -9,7 +9,7 @@ import SwiftUI
 
 struct OnboardingCarousel: View {
     @State var index = 0
-    @ObservedObject var accountStore: AccountStore
+    @EnvironmentObject var accountStore: AccountStore
     
     var body: some View {
         VStack{
@@ -33,6 +33,7 @@ struct OnboardingCarousel: View {
 
 struct Onboarding_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingCarousel(accountStore: AccountStore())
+        OnboardingCarousel()
+            .environmentObject(AccountStore(user: ModelData().user))
     }
 }

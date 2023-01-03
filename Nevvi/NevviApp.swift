@@ -20,11 +20,10 @@ struct NevviApp: App {
     var body: some Scene {
         WindowGroup {
             if (self.authStore.authorization != nil) {
-                ContentView(accountStore: self.accountStore,
-                            connectionStore: self.connectionStore,
+                ContentView(connectionStore: self.connectionStore,
                             connectionsStore: self.connectionsStore,
                             usersStore: self.usersStore)
-                    .environmentObject(modelData)
+                    .environmentObject(accountStore)
             } else {
                 Login(authStore: authStore) { (auth: Authorization) in
                     // hacky way of restoring auth on login

@@ -10,7 +10,8 @@ import SwiftUI
 struct ConnectionDetail: View {
     @Environment(\.presentationMode) private var presentationMode
     
-    @ObservedObject var accountStore: AccountStore
+    @EnvironmentObject var accountStore: AccountStore
+    
     @ObservedObject var connectionStore: ConnectionStore
     
     @State var showSettings = false
@@ -18,15 +19,19 @@ struct ConnectionDetail: View {
     var body: some View {
         if self.connectionStore.loading == false && !self.connectionStore.id.isEmpty {
             ScrollView {
-                AsyncImage(url: URL(string: self.connectionStore.profileImage), content: { image in
-                    image.resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(maxWidth: 100, maxHeight: 100)
-                        .clipShape(Circle())
-                }, placeholder: {
-                    ProgressView()
-                        .padding(35)
-                })
+                VStack {
+                    AsyncImage(url: URL(string: self.connectionStore.profileImage), content: { image in
+                        image.resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(maxWidth: 100, maxHeight: 100)
+                            .clipShape(Circle())
+                    }, placeholder: {
+                        ProgressView()
+                            .padding(35)
+                    })
+                    
+                    Text("\(self.connectionStore.firstName) \(self.connectionStore.lastName)")
+                }.padding()
                 
                 if !self.connectionStore.email.isEmpty {
                     VStack(alignment: .leading) {
@@ -93,7 +98,6 @@ struct ConnectionDetail: View {
                     .padding([.bottom], 8)
                 }
             }
-            .navigationTitle("\(self.connectionStore.firstName) \(self.connectionStore.lastName)")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button {
                     self.showSettings = true
@@ -106,7 +110,7 @@ struct ConnectionDetail: View {
             .sheet(isPresented: self.$showSettings) {
                 ZStack {
                     VStack {
-                        Text("\(self.connectionStore.firstName)'s connection settings")
+                        Text("Your settings with \(self.connectionStore.firstName)")
                             .font(.title2)
                             .fontWeight(.semibold)
                             .padding([.top], 50)
@@ -115,16 +119,20 @@ struct ConnectionDetail: View {
                         
                         VStack {
                             Text("Permission Group")
-                                .font(.system(size: 20))
+                                .foregroundColor(.secondary)
+                                .fontWeight(.light)
+                                .font(.system(size: 14))
                                                         
                             Menu {
                                 Picker("Which permission group should \(self.connectionStore.firstName) belong to?", selection: self.$connectionStore.permissionGroup) {
                                     ForEach(self.accountStore.permissionGroups, id: \.name) {
-                                        Text($0.name)                                    }
+                                        Text($0.name.uppercased())
+                                    }
                                 }
                             } label: {
-                                Text(self.connectionStore.permissionGroup)
-                                    .font(.system(size: 20))
+                                Text(self.connectionStore.permissionGroup.uppercased())
+                                    .font(.system(size: 18))
+                                    .fontWeight(.semibold)
                                     .foregroundColor(self.connectionStore.saving ? .gray : Color(UIColor(hexString: "#49C5B6")))
                                     .frame(width: 500)
                             }
@@ -151,7 +159,7 @@ struct ConnectionDetail_Previews: PreviewProvider {
     static let connectionStore = ConnectionStore(connection: modelData.connection)
 
     static var previews: some View {
-        ConnectionDetail(accountStore: accountStore, connectionStore: connectionStore)
-            .environmentObject(modelData)
+        ConnectionDetail(connectionStore: connectionStore)
+            .environmentObject(accountStore)
     }
 }

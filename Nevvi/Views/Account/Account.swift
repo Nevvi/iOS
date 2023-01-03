@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Account: View {
-    @ObservedObject var accountStore: AccountStore
+    @EnvironmentObject var accountStore: AccountStore
     
     @State private var phoneVerificationCode: String = ""
     @State private var showPhoneVerification: Bool = false
@@ -158,7 +158,9 @@ struct Account: View {
                             .foregroundColor(self.accountStore.saving ? .gray : Color(UIColor(hexString: "#49C5B6")))
                     )
             })
-            .padding().disabled(self.accountStore.saving)
+            .padding([.top], 20)
+            .padding([.bottom], 40)
+            .disabled(self.accountStore.saving)
         }
         .padding(27.5)
         .sheet(isPresented: self.$showPicker) {
@@ -218,7 +220,9 @@ struct Account: View {
                             .background(self.phoneVerificationCode.count != 6 ? .gray : Color.green)
                             .cornerRadius(15.0)
                     }
-                }.disabled(self.phoneVerificationCode.count != 6)
+                }
+                .disabled(self.phoneVerificationCode.count != 6)
+                .padding()
             }
             .padding(40)
             .disabled(self.accountStore.saving)
@@ -236,7 +240,7 @@ struct AccountView_Previews: PreviewProvider {
     static let accountStore = AccountStore(user: modelData.user)
 
     static var previews: some View {
-        Account(accountStore: accountStore)
-           .environmentObject(modelData)
+        Account()
+           .environmentObject(AccountStore(user: modelData.user))
     }
 }

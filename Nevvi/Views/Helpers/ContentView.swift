@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
-    @ObservedObject var accountStore: AccountStore
+    @EnvironmentObject var accountStore: AccountStore
+    
     @ObservedObject var connectionStore: ConnectionStore
     @ObservedObject var connectionsStore: ConnectionsStore
     @ObservedObject var usersStore: UsersStore
@@ -19,7 +20,7 @@ struct ContentView: View {
                 TabView {
                     RefreshableView(onRefresh: {
                         self.connectionsStore.load()
-                    }, view: ConnectionList(accountStore: self.accountStore, usersStore: self.usersStore, connectionsStore: self.connectionsStore, connectionStore: self.connectionStore).tabItem() {
+                    }, view: ConnectionList(usersStore: self.usersStore, connectionsStore: self.connectionsStore, connectionStore: self.connectionStore).tabItem() {
                         Image(systemName: "person.3.fill")
                         Text("Connections")
                     }).onAppear {
@@ -28,7 +29,7 @@ struct ContentView: View {
                     
                     RefreshableView(onRefresh: {
                         self.connectionsStore.loadRequests()
-                    }, view: ConnectionRequestList(accountStore: self.accountStore, connectionsStore: self.connectionsStore).tabItem() {
+                    }, view: ConnectionRequestList(connectionsStore: self.connectionsStore).tabItem() {
                         Image(systemName: "person.fill.questionmark")
                         Text("Requests")
                     }).onAppear {
@@ -37,13 +38,13 @@ struct ContentView: View {
                     
                     RefreshableView(onRefresh: {
                         self.accountStore.load()
-                    }, view: Account(accountStore: self.accountStore).tabItem() {
+                    }, view: Account().tabItem() {
                         Image(systemName: "person.fill")
                         Text("Account")
                     })
                 }
             } else {
-                OnboardingCarousel(accountStore: self.accountStore)
+                OnboardingCarousel()
             }
         } else {
             // TODO - better loading view
@@ -57,10 +58,9 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static let modelData = ModelData()
     static var previews: some View {
-        ContentView(accountStore: AccountStore(user: modelData.user),
-                    connectionStore: ConnectionStore(connection: modelData.connection),
+        ContentView(connectionStore: ConnectionStore(connection: modelData.connection),
                     connectionsStore: ConnectionsStore(connections: modelData.connectionResponse.users, requests: modelData.requests),
                     usersStore: UsersStore(users: modelData.connectionResponse.users)
-        ).environmentObject(modelData)
+        ).environmentObject(AccountStore(user: modelData.user))
     }
 }

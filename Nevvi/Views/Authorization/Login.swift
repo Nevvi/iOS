@@ -95,11 +95,11 @@ struct Login: View {
             .alert(item: self.$error) { error in
                 if error == .credentialsNotSaved {
                     return Alert(title: Text("Credentials not saved"),
-                                 message: Text(error.localizedDescription),
-                                 primaryButton: .default(Text("OK"), action: {
-                        self.storeCredentials = true
-                    }),
-                                 secondaryButton: .cancel())
+                                 message: Text("Would you like to store credentials on next successful login?"),
+                                 primaryButton: .default(Text("Yes"), action: {
+                                    self.storeCredentials = true
+                                 }),
+                                 secondaryButton: .cancel(Text("No")))
                 } else {
                     return Alert(title: Text("Invalid login"), message: Text(error.localizedDescription))
                 }

@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct NewConnectionRequestRow: View {
-    @ObservedObject var accountStore: AccountStore
+    @EnvironmentObject var accountStore: AccountStore
+    
     var requestCallback: (String, String) -> Void
     
     @State var user: Connection
@@ -43,16 +44,27 @@ struct NewConnectionRequestRow: View {
         .sheet(isPresented: self.$showSheet) {
             ZStack {
                 VStack {
-                    Text("Which permission group should \(self.user.firstName) belong to?")
+                    AsyncImage(url: URL(string: user.profileImage), content: { image in
+                        image.resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: 70, height: 70)
+                            .clipShape(Circle())
+                    }, placeholder: {
+                        ProgressView()
+                            .padding(15)
+                    }).padding([.top], 30)
+                    
+                    Text("Which permission group should \(self.user.firstName) belong to if they accept?")
                         .font(.title2)
                         .padding([.top, .leading, .trailing])
                     
                     Picker("Which permission group should \(self.user.firstName) belong to?", selection: self.$selectedPermissionGroup) {
                         ForEach(self.accountStore.permissionGroups, id: \.name) {
-                            Text($0.name)
+                            Text($0.name.uppercased())
                         }
                     }
-                    .pickerStyle(.inline)
+                    .pickerStyle(.wheel)
+                    .padding([.top], -25)
                     
                     Button(action: {
                         self.requestCallback(self.user.id, self.selectedPermissionGroup)
@@ -68,6 +80,7 @@ struct NewConnectionRequestRow: View {
                                     .foregroundColor(Color(UIColor(hexString: "#49C5B6")))
                             )
                     })
+                    .padding([.bottom])
                 }
             }.presentationDetents([.medium])
         }
@@ -79,10 +92,9 @@ struct ConnectionRequest_Previews: PreviewProvider {
     static let accountStore = AccountStore(user: modelData.user)
     
     static var previews: some View {
-        NewConnectionRequestRow(accountStore: accountStore,
-                          requestCallback: { (id: String, group: String) in
+        NewConnectionRequestRow(requestCallback: { (id: String, group: String) in
             print(id, group)
         }, user: modelData.connectionResponse.users[0])
-            .environmentObject(modelData)
+            .environmentObject(accountStore)
     }
 }
