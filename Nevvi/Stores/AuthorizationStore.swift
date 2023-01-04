@@ -14,6 +14,7 @@ class AuthorizationStore: ObservableObject {
     @Published var authorization: Authorization? = nil
     
     @Published var loggingIn: Bool = false
+    @Published var loggingOut: Bool = false
     @Published var signingUp: Bool = false
     @Published var confirming: Bool = false
     
@@ -123,6 +124,10 @@ class AuthorizationStore: ObservableObject {
         return URL(string: "https://api.development.nevvi.net/authentication/v1/login")!
     }
     
+    private func logoutUrl() throws -> URL {
+        return URL(string: "https://api.development.nevvi.net/authentication/v1/logout")!
+    }
+    
     private func signupUrl() throws -> URL {
         return URL(string: "https://api.development.nevvi.net/authentication/v1/register")!
     }
@@ -150,6 +155,33 @@ class AuthorizationStore: ObservableObject {
         } catch(let error) {
             print(error)
             callback(.failure(AuthorizationError.unknown))
+        }
+    }
+    
+    func logout(callback: @escaping (Result<Bool, Error>) -> Void) {
+        do {
+            print("Logging out")
+            if (self.authorization == nil) {
+                return
+            }
+            
+            self.loggingOut = true
+            
+            let idToken = self.authorization!.idToken
+            let accessToken = self.authorization!.accessToken
+            
+            URLSession.shared.postData(for: try self.logoutUrl(), for: idToken, for: accessToken) { (result: Result<LogoutResponse, Error>) in
+                switch result {
+                case .success(_):
+                    self.authorization = nil
+                    callback(.success(true))
+                case .failure(let error):
+                    callback(.failure(error))
+                }
+                self.loggingOut = false
+            }
+        } catch(let error) {
+            callback(.failure(error))
         }
     }
     
@@ -212,6 +244,10 @@ class AuthorizationStore: ObservableObject {
     }
     
     struct ConfirmResponse: Decodable {
+        
+    }
+    
+    struct LogoutResponse: Decodable {
         
     }
 }

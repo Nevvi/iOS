@@ -41,7 +41,9 @@ struct ContentView: View {
                     }, view: Account().tabItem() {
                         Image(systemName: "person.fill")
                         Text("Account")
-                    })
+                    }).onAppear {
+                        self.accountStore.load()
+                    }
                 }
             } else {
                 OnboardingCarousel()
@@ -59,7 +61,7 @@ struct ContentView_Previews: PreviewProvider {
     static let modelData = ModelData()
     static var previews: some View {
         ContentView(connectionStore: ConnectionStore(connection: modelData.connection),
-                    connectionsStore: ConnectionsStore(connections: modelData.connectionResponse.users, requests: modelData.requests),
+                    connectionsStore: ConnectionsStore(connections: [], requests: modelData.requests),
                     usersStore: UsersStore(users: modelData.connectionResponse.users)
         ).environmentObject(AccountStore(user: modelData.user))
     }

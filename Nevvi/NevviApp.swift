@@ -24,6 +24,7 @@ struct NevviApp: App {
                             connectionsStore: self.connectionsStore,
                             usersStore: self.usersStore)
                     .environmentObject(accountStore)
+                    .environmentObject(authStore)
             } else {
                 Login(authStore: authStore) { (auth: Authorization) in
                     // hacky way of restoring auth on login

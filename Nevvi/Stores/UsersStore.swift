@@ -67,22 +67,22 @@ class UsersStore : ObservableObject {
         }
     }
     
-    func requestConnection(userId: String, groupName: String) {
+    func requestConnection(userId: String, groupName: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
             self.requesting = true
             let idToken: String? = self.authorization?.idToken
-            var request = NewConnectionRequest(otherUserId: userId, permissionGroupName: groupName)
+            let request = NewConnectionRequest(otherUserId: userId, permissionGroupName: groupName)
             URLSession.shared.postData(for: try self.requestUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<ConnectionRequestResponse, Error>) in
                 switch result {
                 case .success(_):
-                    print("Success!")
+                    callback(.success(true))
                 case .failure(let error):
-                    print(error)
+                    callback(.failure(error))
                 }
                 self.requesting = false
             }
         } catch(let error) {
-            print("Failed to request connection", error)
+            callback(.failure(error))
         }
     }
     

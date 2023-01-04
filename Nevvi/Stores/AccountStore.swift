@@ -53,6 +53,22 @@ class AccountStore: ObservableObject {
         self.profileImage = user.profileImage
     }
     
+    func reset() {
+        self.id = ""
+        self.firstName = ""
+        self.lastName = ""
+        self.email = ""
+        self.emailConfirmed = false
+        self.phoneNumber = ""
+        self.phoneNumberConfirmed = false
+        self.birthday = Date()
+        self.onboardingCompleted = false
+        self.blockedUsers = []
+        self.address = AddressViewModel()
+        self.permissionGroups = []
+        self.profileImage = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
+    }
+    
     private func url() throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")
@@ -113,7 +129,8 @@ class AccountStore: ObservableObject {
             let request = PatchRequest(firstName: self.firstName,
                                        lastName: self.lastName,
                                        address: self.address.toModel(),
-                                       birthday: self.birthday.yyyyMMdd())
+                                       birthday: self.birthday.yyyyMMdd(),
+                                       phoneNumber: self.phoneNumber) // TODO - format this to +1XXXXXXXXXX
             
             URLSession.shared.patchData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
                 switch result {
@@ -238,6 +255,7 @@ class AccountStore: ObservableObject {
         var lastName: String?
         var address: Address?
         var birthday: String?
+        var phoneNumber: String?
     }
     
     struct CompleteOnboardingRequest: Encodable {

@@ -14,6 +14,7 @@ class ConnectionsStore : ObservableObject {
     @Published var connections: [Connection] = []
     @Published var connectionCount: Int = 0
     
+    @Published var confirmingRequest: Bool = false
     @Published var deletingRequest: Bool = false
     @Published var loadingRequests: Bool = false
     @Published var requests: [ConnectionRequest] = []
@@ -62,6 +63,15 @@ class ConnectionsStore : ObservableObject {
         
         let userId: String? = self.authorization?.id
         return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/requests/deny")!
+    }
+    
+    private func confirmRequestUrl() throws -> URL {
+        if (self.authorization == nil) {
+            throw GenericError("Not logged in")
+        }
+        
+        let userId: String? = self.authorization?.id
+        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/requests/confirm")!
     }
     
     func load() {
@@ -124,11 +134,39 @@ class ConnectionsStore : ObservableObject {
         }
     }
     
+    func confirmRequest(otherUserId: String, permissionGroup: String, callback: @escaping (Result<Bool, Error>) -> Void) {
+        do {
+            self.confirmingRequest = true
+            let idToken: String? = self.authorization?.idToken
+            let request = ConfirmRequest(otherUserId: otherUserId, permissionGroupName: permissionGroup)
+            URLSession.shared.postData(for: try self.confirmRequestUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<ConfirmResponse, Error>) in
+                switch result {
+                case .success(_):
+                    callback(.success(true))
+                case .failure(let error):
+                    callback(.failure(error))
+                }
+                self.confirmingRequest = false
+            }
+        } catch(let error) {
+            print("Failed to confirm connection request", error)
+        }
+    }
+    
     struct DenyRequest : Encodable {
         var otherUserId: String
     }
     
+    struct ConfirmRequest : Encodable {
+        var otherUserId: String
+        var permissionGroupName: String
+    }
+    
     struct DeleteResponse : Decodable {
+        
+    }
+    
+    struct ConfirmResponse : Decodable {
         
     }
 }

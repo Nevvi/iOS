@@ -15,6 +15,9 @@ struct ConnectionDetail: View {
     @ObservedObject var connectionStore: ConnectionStore
     
     @State var showSettings = false
+    
+    @State private var showError: Bool = false
+    @State private var error: Error? = nil
 
     var body: some View {
         if self.connectionStore.loading == false && !self.connectionStore.id.isEmpty {
@@ -144,7 +147,18 @@ struct ConnectionDetail: View {
                 .disabled(self.connectionStore.saving)
                 .presentationDetents([.fraction(0.33)])
                 .onChange(of: self.connectionStore.permissionGroup) { newValue in
-                    self.connectionStore.update()
+                    self.connectionStore.update { (result: Result<Connection, Error>) in
+                        switch result {
+                        case .success(let connection):
+                            print("Updated connection with \(connection.id)")
+                        case .failure(let error):
+                            self.error = error
+                            self.showError = true
+                        }
+                    }
+                }
+                .alert(isPresented: self.$showError) {
+                    Alert(title: Text("Something went wrong"), message: Text(self.error!.localizedDescription))
                 }
             }
         } else  {

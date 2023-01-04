@@ -71,7 +71,7 @@ class ConnectionStore : ObservableObject {
         return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/\(connectionId)")!
     }
     
-    func load(connectionId: String) {
+    func load(connectionId: String, callback: @escaping (Result<Connection, Error>) -> Void) {
         do {
             self.loading = true
             self.reset()
@@ -80,13 +80,14 @@ class ConnectionStore : ObservableObject {
                 switch result {
                 case .success(let connection):
                     self.update(connection: connection)
+                    callback(.success(connection))
                 case .failure(let error):
-                    print(error)
+                    callback(.failure(error))
                 }
                 self.loading = false
             }
         } catch(let error) {
-            print("Failed to load connection", error)
+            callback(.failure(error))
         }
     }
     
@@ -108,7 +109,7 @@ class ConnectionStore : ObservableObject {
         }
     }
     
-    func update() {
+    func update(callback: @escaping (Result<Connection, Error>) -> Void) {
         do {
             self.saving = true
             let idToken: String? = self.authorization?.idToken
@@ -117,13 +118,14 @@ class ConnectionStore : ObservableObject {
                 switch result {
                 case .success(let connection):
                     self.update(connection: connection)
+                    callback(.success(connection))
                 case .failure(let error):
-                    print(error)
+                    callback(.failure(error))
                 }
                 self.saving = false
             }
         } catch(let error) {
-            print("Failed to update connection", error)
+            callback(.failure(error))
         }
     }
     
