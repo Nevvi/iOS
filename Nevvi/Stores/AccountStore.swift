@@ -12,6 +12,7 @@ import SwiftUI
 class AccountStore: ObservableObject {
     var authorization: Authorization? = nil
     
+    @Published var loading: Bool = false
     @Published var saving: Bool = false
     @Published var savingImage: Bool = false
     
@@ -29,6 +30,8 @@ class AccountStore: ObservableObject {
     @Published var permissionGroups: [PermissionGroup] = []
     @Published var profileImage: String = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
     
+    var user: User? = nil
+    
     init() {
         
     }
@@ -38,6 +41,9 @@ class AccountStore: ObservableObject {
     }
     
     func update(user: User) {
+        // keep track of the original user to monitor if anything changes
+        self.user = user
+        
         self.id = user.id
         self.firstName = user.firstName == nil ? "" : user.firstName!
         self.lastName = user.lastName == nil ? "" : user.lastName!
@@ -54,6 +60,8 @@ class AccountStore: ObservableObject {
     }
     
     func reset() {
+        self.user = nil
+        
         self.id = ""
         self.firstName = ""
         self.lastName = ""
@@ -107,6 +115,7 @@ class AccountStore: ObservableObject {
     
     func load() {
         do {
+            self.loading = true
             let idToken: String? = self.authorization?.idToken
             URLSession.shared.fetchData(for: try self.url(), for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
                 switch result {
@@ -115,9 +124,11 @@ class AccountStore: ObservableObject {
                 case .failure(let error):
                     print(error)
                 }
+                self.loading = false
             }
         } catch(let error) {
             print("Failed to load user", error)
+            self.loading = false
         }
     }
     
@@ -143,8 +154,8 @@ class AccountStore: ObservableObject {
                 self.saving = false
             }
         } catch(let error) {
-            print("Failed to save user", error)
             callback(.failure(error))
+            self.saving = false
         }
     }
     
@@ -163,8 +174,8 @@ class AccountStore: ObservableObject {
                 self.saving = false
             }
         } catch(let error) {
-            print("Failed to save user", error)
             callback(.failure(error))
+            self.saving = false
         }
     }
     
@@ -184,14 +195,13 @@ class AccountStore: ObservableObject {
                 self.saving = false
             }
         } catch(let error) {
-            print("Failed to save user", error)
             callback(.failure(error))
+            self.saving = false
         }
     }
     
     func uploadImage(image: UIImage, callback: @escaping (Result<User, Error>) -> Void) {
         do {
-            print("Saving image", image)
             self.savingImage = true
             let idToken: String? = self.authorization?.idToken
             URLSession.shared.postImage(for: try self.imageUrl(), for: image, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
@@ -205,8 +215,8 @@ class AccountStore: ObservableObject {
                 self.savingImage = false
             }
         } catch(let error) {
-            print("Failed to save user", error)
             callback(.failure(error))
+            self.savingImage = false
         }
     }
     
@@ -225,8 +235,8 @@ class AccountStore: ObservableObject {
                 self.saving = false
             }
         } catch(let error) {
-            print("Failed to send phone verification", error)
             callback(.failure(error))
+            self.saving = false
         }
     }
     
@@ -245,8 +255,8 @@ class AccountStore: ObservableObject {
                 self.saving = false
             }
         } catch(let error) {
-            print("Failed to send phone verification", error)
             callback(.failure(error))
+            self.saving = false
         }
     }
     

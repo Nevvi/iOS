@@ -15,9 +15,7 @@ struct ConnectionRequestList: View {
     
     @State private var showError: Bool = false
     @State private var error: Error? = nil
-    
-    @State private var shimmering: Bool = false
-    
+        
     var body: some View {
         NavigationView {
             List {
@@ -27,30 +25,12 @@ struct ConnectionRequestList: View {
                         VStack {
                             Image(systemName: "person.2.slash")
                                 .resizable()
-                                .frame(width: 100, height: 100)
+                                .frame(width: 120, height: 100)
                             Text("No requests found")
                         }
                         Spacer()
                     }
                     .padding([.top], 50)
-                } else if self.connectionsStore.loadingRequests {
-                    ForEach((1...5), id: \.self) { _ in
-                        HStack {
-                            Image(systemName: "person")
-                                .frame(width: 50, height: 50)
-                                .clipShape(Circle())
-                            
-                            Text("Dummy Request Text")
-                        }
-                        .padding(5)
-                    }
-                    .redacted(reason: .placeholder)
-                    .foregroundStyle(.linearGradient(colors: [.gray, .black],
-                                                     startPoint: .leading,
-                                                     endPoint: self.shimmering ? .trailing : .leading)
-                    )
-                    .animation(.easeInOut(duration: 0.5).repeatForever(autoreverses: false),
-                               value: self.shimmering)
                 } else {
                     ForEach(self.connectionsStore.requests, id: \.requestingUserId) { request in
                         ActionableConnectionRequestRow(approvalCallback: { (id: String, group: String) in
@@ -64,13 +44,12 @@ struct ConnectionRequestList: View {
                                 }
                             }
                         }, request: request)
-                    }.onDelete(perform: self.delete)
+                    }
+                    .onDelete(perform: self.delete)
+                    .redacted(when: self.connectionsStore.loadingRequests, redactionType: .customPlaceholder)
                 }
             }
             .scrollContentBackground(.hidden)
-            .onAppear {
-                self.shimmering.toggle()
-            }
             .navigationTitle("Requests")
             .navigationBarTitleDisplayMode(.inline)
             .alert(isPresented: self.$showDeleteAlert) {

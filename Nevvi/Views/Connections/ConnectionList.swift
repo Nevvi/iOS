@@ -18,9 +18,7 @@ struct ConnectionList: View {
     
     @State private var showError: Bool = false
     @State private var error: Error? = nil
-    
-    @State private var shimmering: Bool = false
-    
+        
     var body: some View {
         NavigationView {
             List {
@@ -30,36 +28,28 @@ struct ConnectionList: View {
                         VStack {
                             Image(systemName: "person.2.slash")
                                 .resizable()
-                                .frame(width: 100, height: 100)
+                                .frame(width: 120, height: 100)
                             Text("No connections found")
                         }
                         Spacer()
                     }
                     .padding([.top], 50)
                 } else {
-                    if self.connectionsStore.loading {
-                        ForEach((1...5), id: \.self) { _ in
-                            HStack {
-                                Image(systemName: "person")
-                                    .frame(width: 50, height: 50)
-                                    .clipShape(Circle())
-                                
-                                Text("Dummy Request Text")
-                            }
-                            .padding(5)
-                        }
-                        .redacted(reason: .placeholder)
-                        .foregroundStyle(.linearGradient(colors: [.gray, .black],
-                                                         startPoint: .leading,
-                                                         endPoint: self.shimmering ? .trailing : .leading)
-                        )
-                        .animation(.easeInOut(duration: 0.5).repeatForever(autoreverses: false),
-                                   value: self.shimmering)
-                    } else {
-                        ForEach(self.connectionsStore.connections) { connection in
-                            NavigationLink {
-                                NavigationLazyView(
-                                    RefreshableView(onRefresh: {
+                    ForEach(self.connectionsStore.connections) { connection in
+                        NavigationLink {
+                            NavigationLazyView(
+                                RefreshableView(onRefresh: {
+                                    self.connectionStore.load(connectionId: connection.id) { (result: Result<Connection, Error>) in
+                                        switch result {
+                                        case .success(_):
+                                            print("Got connection \(connection.id)")
+                                        case .failure(let error):
+                                            self.error = error
+                                            self.showError = true
+                                        }
+                                    }
+                                }, view: ConnectionDetail(connectionStore: self.connectionStore)
+                                    .onAppear {
                                         self.connectionStore.load(connectionId: connection.id) { (result: Result<Connection, Error>) in
                                             switch result {
                                             case .success(_):
@@ -69,32 +59,18 @@ struct ConnectionList: View {
                                                 self.showError = true
                                             }
                                         }
-                                    }, view: ConnectionDetail(connectionStore: self.connectionStore)
-                                        .onAppear {
-                                            self.connectionStore.load(connectionId: connection.id) { (result: Result<Connection, Error>) in
-                                                switch result {
-                                                case .success(_):
-                                                    print("Got connection \(connection.id)")
-                                                case .failure(let error):
-                                                    self.error = error
-                                                    self.showError = true
-                                                }
-                                            }
-                                        }
-                                                   )
-                                )
-                            } label: {
-                                ConnectionRow(connection: connection)
-                            }
+                                    }
+                                               )
+                            )
+                        } label: {
+                            ConnectionRow(connection: connection)
                         }
-                        .onDelete(perform: self.delete)
                     }
+                    .onDelete(perform: self.delete)
+                    .redacted(when: self.connectionsStore.loading, redactionType: .customPlaceholder)
                 }
             }
             .scrollContentBackground(.hidden)
-            .onAppear {
-                self.shimmering.toggle()
-            }
             .navigationTitle("Connections")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {

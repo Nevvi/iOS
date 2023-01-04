@@ -155,6 +155,7 @@ class AuthorizationStore: ObservableObject {
         } catch(let error) {
             print(error)
             callback(.failure(AuthorizationError.unknown))
+            self.loggingIn = false
         }
     }
     
@@ -182,6 +183,7 @@ class AuthorizationStore: ObservableObject {
             }
         } catch(let error) {
             callback(.failure(error))
+            self.loggingOut = false
         }
     }
     
@@ -200,8 +202,8 @@ class AuthorizationStore: ObservableObject {
                 self.signingUp = false
             }
         } catch(let error) {
-            print(error)
             callback(.failure(AuthorizationError.unknown))
+            self.signingUp = false
         }
     }
     
@@ -220,8 +222,8 @@ class AuthorizationStore: ObservableObject {
                 self.confirming = false
             }
         } catch(let error) {
-            print(error)
             callback(.failure(AuthorizationError.unknown))
+            self.confirming = false
         }
     }
     

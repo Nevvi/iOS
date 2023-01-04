@@ -85,7 +85,7 @@ struct ConnectionDetail: View {
                     .padding([.bottom], 8)
                 }
                 
-                if !(self.connectionStore.birthday == Date()) {
+                if self.connectionStore.birthday.yyyyMMdd() != Date().yyyyMMdd() {
                     VStack(alignment: .leading) {
                         Text("Birthday")
                             .foregroundColor(.secondary)

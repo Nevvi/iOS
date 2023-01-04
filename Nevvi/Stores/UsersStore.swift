@@ -64,6 +64,7 @@ class UsersStore : ObservableObject {
             }
         } catch(let error) {
             print("Failed to load connections", error)
+            self.loading = false
         }
     }
     
@@ -83,6 +84,7 @@ class UsersStore : ObservableObject {
             }
         } catch(let error) {
             callback(.failure(error))
+            self.requesting = false
         }
     }
     

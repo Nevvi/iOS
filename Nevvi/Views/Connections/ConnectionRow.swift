@@ -19,8 +19,12 @@ struct ConnectionRow: View {
                         .frame(width: 50, height: 50)
                         .clipShape(Circle())
                 }, placeholder: {
-                    ProgressView()
-                        .padding(15)
+                    Image(systemName: "photo.circle")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.gray)
+                        .clipShape(Circle())
                 }).padding([.trailing], 10)
             }
             

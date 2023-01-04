@@ -13,9 +13,7 @@ struct ConnectionSearch: View {
 
     @State private var showError: Bool = false
     @State private var error: Error? = nil
-    
-    @State private var shimmering: Bool = false
-    
+        
     var body: some View {
         NavigationView {
             List {
@@ -25,30 +23,12 @@ struct ConnectionSearch: View {
                         VStack {
                             Image(systemName: "person.2.slash")
                                 .resizable()
-                                .frame(width: 100, height: 100)
+                                .frame(width: 120, height: 100)
                             Text("No users found")
                         }
                         Spacer()
                     }
                     .padding([.top], 50)
-                } else if self.usersStore.loading {
-                    ForEach((1...5), id: \.self) { _ in
-                        HStack {
-                            Image(systemName: "person")
-                                .frame(width: 50, height: 50)
-                                .clipShape(Circle())
-                            
-                            Text("Dummy Request Text")
-                        }
-                        .padding(5)
-                    }
-                    .redacted(reason: .placeholder)
-                    .foregroundStyle(.linearGradient(colors: [.gray, .black],
-                                                     startPoint: .leading,
-                                                     endPoint: self.shimmering ? .trailing : .leading)
-                    )
-                    .animation(.easeInOut(duration: 0.5).repeatForever(autoreverses: false),
-                               value: self.shimmering)
                 } else {
                     ForEach(self.usersStore.users) { user in
                         NewConnectionRequestRow(requestCallback: { (id: String, group: String) in
@@ -64,14 +44,12 @@ struct ConnectionSearch: View {
                             }
                         }, user: user)
                     }
+                    .redacted(when: self.usersStore.loading, redactionType: .customPlaceholder)
                 }
             }
-            .navigationTitle("Users")
-            .navigationBarTitleDisplayMode(.inline)
-            .onAppear {
-                self.shimmering.toggle()
-            }
         }
+        .navigationTitle("Users")
+        .navigationBarTitleDisplayMode(.inline)
         .scrollContentBackground(.hidden)
         .searchable(text: self.$nameFilter.text)
         .disableAutocorrection(true)

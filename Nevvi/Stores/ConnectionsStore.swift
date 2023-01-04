@@ -94,6 +94,7 @@ class ConnectionsStore : ObservableObject {
             }
         } catch(let error) {
             print("Failed to load connections", error)
+            self.loading = false
         }
     }
     
@@ -112,6 +113,7 @@ class ConnectionsStore : ObservableObject {
             }
         } catch(let error) {
             print("Failed to load connections", error)
+            self.loadingRequests = false
         }
     }
     
@@ -131,6 +133,7 @@ class ConnectionsStore : ObservableObject {
             }
         } catch(let error) {
             print("Failed to delete connection request", error)
+            self.deletingRequest = false
         }
     }
     
@@ -150,6 +153,7 @@ class ConnectionsStore : ObservableObject {
             }
         } catch(let error) {
             print("Failed to confirm connection request", error)
+            self.confirmingRequest = false
         }
     }
     

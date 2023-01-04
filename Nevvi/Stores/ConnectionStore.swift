@@ -88,6 +88,7 @@ class ConnectionStore : ObservableObject {
             }
         } catch(let error) {
             callback(.failure(error))
+            self.loading = false
         }
     }
     
@@ -106,6 +107,7 @@ class ConnectionStore : ObservableObject {
             }
         } catch(let error) {
             print("Failed to delete connection", error)
+            self.deleting = false
         }
     }
     
@@ -126,6 +128,7 @@ class ConnectionStore : ObservableObject {
             }
         } catch(let error) {
             callback(.failure(error))
+            self.saving = false
         }
     }
     

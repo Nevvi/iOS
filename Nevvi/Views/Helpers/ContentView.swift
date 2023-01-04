@@ -61,8 +61,10 @@ struct ContentView_Previews: PreviewProvider {
     static let modelData = ModelData()
     static var previews: some View {
         ContentView(connectionStore: ConnectionStore(connection: modelData.connection),
-                    connectionsStore: ConnectionsStore(connections: [], requests: modelData.requests),
+                    connectionsStore: ConnectionsStore(connections: modelData.connectionResponse.users, requests: modelData.requests),
                     usersStore: UsersStore(users: modelData.connectionResponse.users)
-        ).environmentObject(AccountStore(user: modelData.user))
+        )
+        .environmentObject(AccountStore(user: modelData.user))
+        .environmentObject(AuthorizationStore())
     }
 }
