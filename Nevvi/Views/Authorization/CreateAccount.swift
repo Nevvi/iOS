@@ -49,7 +49,6 @@ struct CreateAccount: View {
                 
                 Text("Welcome to Nevvi!")
                     .font(.largeTitle).foregroundColor(Color.white)
-                    .padding([.top], 50)
                 
                 Text("Keep your contacts up to date!")
                     .font(.subheadline).foregroundColor(Color.white)
