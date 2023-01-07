@@ -74,7 +74,7 @@ struct ConnectionDetail: View {
                             .fontWeight(.light)
                             .font(.system(size: 14))
                         
-                        Text(self.connectionStore.address.street)
+                        Text(self.connectionStore.address.toString())
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))

@@ -132,7 +132,7 @@ struct PersonalInformation: View {
                             .fontWeight(.light)
                             .font(.system(size: 14))
                         
-                        TextField("111 Hollywood Ave", text: self.$accountStore.address.street)
+                        Text(self.accountStore.address.toString())
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
@@ -177,6 +177,18 @@ struct PersonalInformation: View {
                 .onChange(of: self.accountStore.address.street, perform: { newValue in
                     self.tryToggle()
                 })
+                .onChange(of: self.accountStore.address.unit, perform: { newValue in
+                    self.tryToggle()
+                })
+                .onChange(of: self.accountStore.address.city, perform: { newValue in
+                    self.tryToggle()
+                })
+                .onChange(of: self.accountStore.address.state, perform: { newValue in
+                    self.tryToggle()
+                })
+                .onChange(of: self.accountStore.address.zipCode, perform: { newValue in
+                    self.tryToggle()
+                })
                 .onChange(of: self.accountStore.birthday, perform: { newValue in
                     self.tryToggle()
                 })
@@ -189,6 +201,7 @@ struct PersonalInformation: View {
                 }
                 .sheet(isPresented: self.$showAddressSearch) {
                     AddressSearch()
+                        .presentationDetents([.large])
                 }
                 .sheet(isPresented: self.$showPicker) {
                     ImagePicker(callback: { (image: UIImage) in

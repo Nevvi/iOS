@@ -5,7 +5,8 @@
     "email": "Kathy1larrea@gmail.com",
     "phoneNumber": "+16513667495",
     "address": {
-        "street": "1835 Randolph Ave, Apt 5",
+        "street": "1835 Randolph Ave",
+        "unit": "5",
         "city": "Saint Paul",
         "state": "MN",
         "zipCode": 55105

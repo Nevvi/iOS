@@ -9,6 +9,7 @@ import Foundation
 
 class AddressViewModel : ObservableObject {
     @Published var street: String = ""
+    @Published var unit: String = ""
     @Published var city: String = ""
     @Published var state: String = ""
     @Published var zipCode: Int = -1
@@ -19,6 +20,7 @@ class AddressViewModel : ObservableObject {
     
     func update(address: Address) {
         self.street = address.street != nil ? address.street! : ""
+        self.unit = address.unit != nil ? address.unit! : ""
         self.city = address.city != nil ? address.city! : ""
         self.state = address.state != nil ? address.state! : ""
         self.zipCode = address.zipCode != nil ? address.zipCode! : -1
@@ -26,8 +28,13 @@ class AddressViewModel : ObservableObject {
     
     func toModel() -> Address {
         return Address(street: self.street,
+                       unit: self.unit,
                        city: self.city,
                        state: self.state,
                        zipCode: self.zipCode)
+    }
+    
+    func toString() -> String {
+        return "\(self.street)\(self.unit != "" ? " \(self.unit)" : "" ), \(self.city), \(self.state) \(self.zipCode)"
     }
 }

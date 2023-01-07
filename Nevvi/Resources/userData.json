@@ -9,7 +9,8 @@
     "phoneNumberConfirmed": false,
     "onboardingCompleted": true,
     "address": {
-        "street": "114 W 86th Street Apt 6C",
+        "street": "114 W 86th Street",
+        "unit": "6C",
         "city": "New York",
         "state": "NY",
         "zipCode": 10024
