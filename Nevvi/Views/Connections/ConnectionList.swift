@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct ConnectionList: View {
-    @ObservedObject var usersStore: UsersStore
-    @ObservedObject var connectionsStore: ConnectionsStore
+    @EnvironmentObject var connectionsStore: ConnectionsStore
+    @EnvironmentObject var usersStore: UsersStore
+    
     @ObservedObject var connectionStore: ConnectionStore
     
     @State private var toBeDeleted: IndexSet?
@@ -22,18 +23,22 @@ struct ConnectionList: View {
     var body: some View {
         NavigationView {
             List {
-                if self.connectionsStore.connectionCount == 0 && self.connectionsStore.loading == false {
+                if self.connectionsStore.connectionCount == 0 {
                     HStack {
                         Spacer()
-                        VStack {
-                            Image(systemName: "person.2.slash")
-                                .resizable()
-                                .frame(width: 120, height: 100)
-                            Text("No connections found")
+                        if self.connectionsStore.loading {
+                            ProgressView()
+                        } else {
+                            VStack {
+                                Image(systemName: "person.2.slash")
+                                    .resizable()
+                                    .frame(width: 120, height: 100)
+                                Text("No connections found")
+                            }
                         }
                         Spacer()
                     }
-                    .padding([.top], 50)
+                    .padding([.top], 100)
                 } else {
                     ForEach(self.connectionsStore.connections) { connection in
                         NavigationLink {
@@ -75,7 +80,7 @@ struct ConnectionList: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
                 NavigationLink {
-                    ConnectionSearch(usersStore: self.usersStore)
+                    ConnectionSearch()
                         .navigationBarTitleDisplayMode(.inline)
                         .padding([.top], -100)
                 } label: {
@@ -125,10 +130,14 @@ struct ConnectionList: View {
 struct ConnectionList_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
-    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users, requests: modelData.requests)
+    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
+                                                   requests: modelData.requests,
+                                                   blockedUsers: modelData.connectionResponse.users)
     static let connectionStore = ConnectionStore()
     
     static var previews: some View {
-        ConnectionList(usersStore: usersStore, connectionsStore: connectionsStore, connectionStore: connectionStore)
+        ConnectionList(connectionStore: connectionStore)
+            .environmentObject(connectionsStore)
+            .environmentObject(usersStore)
     }
 }

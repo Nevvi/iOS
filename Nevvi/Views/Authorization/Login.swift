@@ -16,7 +16,7 @@ struct Login: View {
     @ObservedObject var authStore: AuthorizationStore
     
     var loginDisabled: Bool {
-        self.email.isEmpty || self.password.isEmpty
+        self.email.isEmpty || self.password.isEmpty || self.authStore.loggingIn
     }
     
     private var callback: (Authorization) -> Void
@@ -31,32 +31,44 @@ struct Login: View {
             VStack() {
                 Spacer()
                 
-                Text("NEVVI")
+                Text("Welcome to Nevvi!")
                     .font(.largeTitle).foregroundColor(Color.white)
-                    .padding([.top, .bottom], 40)
+                    .padding([.top], 50)
+                
+                Text("Keep your contacts up to date!")
+                    .font(.subheadline).foregroundColor(Color.white)
+                    .padding([.top], 1)
+                    .padding([.bottom], 50)
                 
                 VStack(alignment: .leading, spacing: 15) {
                     TextField("Email", text: self.$email)
                         .padding()
                         .keyboardType(.emailAddress)
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
                         .background(.white)
-                        .cornerRadius(20.0)
+                        .cornerRadius(10.0)
                     
                     SecureField("Password", text: self.$password)
                         .padding()
+                        .disableAutocorrection(true)
+                        .autocapitalization(.none)
                         .background(.white)
-                        .cornerRadius(20.0)
+                        .cornerRadius(10.0)
+                    
+                    Button(action: self.signIn) {
+                        Text("Sign In")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                    }
+                    .disabled(self.loginDisabled)
+                    .background(Color.green)
+                    .opacity(self.loginDisabled ? 0.5 : 1.0)
+                    .frame(maxWidth: .infinity)
+                    .cornerRadius(10.0)
                 }.padding(27.5)
-                
-                Button(action: self.signIn) {
-                    Text("Sign In")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(width: 300, height: 50)
-                        .background(Color.green)
-                        .cornerRadius(15.0)
-                }.disabled(self.loginDisabled)
                 
                 if self.authStore.loggingIn {
                     ProgressView().padding(45)

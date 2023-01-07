@@ -16,20 +16,28 @@ class ConnectionsStore : ObservableObject {
     
     @Published var confirmingRequest: Bool = false
     @Published var deletingRequest: Bool = false
+    
     @Published var loadingRequests: Bool = false
     @Published var requests: [ConnectionRequest] = []
     @Published var requestCount: Int = 0
+    
+    @Published var loadingBlockerUsers: Bool = false
+    @Published var blockedUsers: [Connection] = []
+    @Published var blockedUserCount: Int = 0
     
     init() {
         
     }
     
-    init(connections: [Connection], requests: [ConnectionRequest]) {
+    init(connections: [Connection], requests: [ConnectionRequest], blockedUsers: [Connection]) {
         self.connections = connections
         self.connectionCount = connections.count
         
         self.requests = requests
         self.requestCount = requests.count
+        
+        self.blockedUsers = blockedUsers
+        self.blockedUserCount = blockedUsers.count
     }
     
     private func url(nameFilter: String?) throws -> URL {
@@ -74,6 +82,15 @@ class ConnectionsStore : ObservableObject {
         return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/requests/confirm")!
     }
     
+    private func rejectedUsersUrl() throws -> URL {
+        if (self.authorization == nil) {
+            throw GenericError("Not logged in")
+        }
+        
+        let userId: String? = self.authorization?.id
+        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/rejected")!
+    }
+    
     func load() {
         self.load(nameFilter: nil)
     }
@@ -95,6 +112,26 @@ class ConnectionsStore : ObservableObject {
         } catch(let error) {
             print("Failed to load connections", error)
             self.loading = false
+        }
+    }
+    
+    func loadRejectedUsers() {
+        do {
+            self.loadingBlockerUsers = true
+            let idToken: String? = self.authorization?.idToken
+            URLSession.shared.fetchData(for: try self.rejectedUsersUrl(), for: "Bearer \(idToken!)") { (result: Result<[Connection], Error>) in
+                switch result {
+                case .success(let users):
+                    self.blockedUsers = users
+                    self.blockedUserCount = users.count
+                case .failure(let error):
+                    print(error)
+                }
+                self.loadingBlockerUsers = false
+            }
+        } catch(let error) {
+            print("Failed to load blocked users", error)
+            self.loadingBlockerUsers = false
         }
     }
     

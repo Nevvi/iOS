@@ -44,66 +44,77 @@ struct CreateAccount: View {
     var body: some View {
         NavigationView {
             VStack() {
-            
                 
-                Text("NEVVI")
+                Spacer()
+                
+                Text("Welcome to Nevvi!")
                     .font(.largeTitle).foregroundColor(Color.white)
-                    .padding([.top, .bottom], 60)
+                    .padding([.top], 50)
+                
+                Text("Keep your contacts up to date!")
+                    .font(.subheadline).foregroundColor(Color.white)
+                    .padding([.top], 1)
+                    .padding([.bottom], 50)
                 
                 if self.showConfirmationCode {
                     VStack(alignment: .center, spacing: 15) {
-                        Text("Enter the confirmation code we sent to you")
-                            .padding()
-                            .multilineTextAlignment(.center)
-                            .keyboardType(.emailAddress)
-                            .foregroundColor(.white)
-                            .cornerRadius(20.0)
-                        
                         TextField("Email", text: self.$email)
                             .padding()
                             .keyboardType(.emailAddress)
+                            .disableAutocorrection(true)
+                            .autocapitalization(.none)
                             .background(.white)
-                            .cornerRadius(20.0)
+                            .cornerRadius(10)
                         
                         TextField("Code", text: self.$confirmationCode)
                             .padding()
                             .keyboardType(.numberPad)
                             .background(.white)
-                            .cornerRadius(20.0)
-                    }.padding(40)
-                    
-                    Button(action: self.confirmAccount) {
-                        Text("Confirm Account")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(width: 300, height: 50)
-                            .background(Color.green)
-                            .cornerRadius(15.0)
-                    }.disabled(self.confirmAccountDisabled)
+                            .cornerRadius(10)
+                        
+                        Button(action: self.confirmAccount) {
+                            Text("Confirm Account")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                        }
+                        .disabled(self.confirmAccountDisabled)
+                        .background(Color.green)
+                        .frame(maxWidth: .infinity)
+                        .cornerRadius(10.0)
+                    }
+                    .padding([.leading, .trailing], 27.5)
                 } else {
                     VStack(alignment: .leading, spacing: 15) {
                         TextField("Email", text: self.$email)
                             .padding()
                             .keyboardType(.emailAddress)
+                            .disableAutocorrection(true)
+                            .autocapitalization(.none)
                             .background(.white)
-                            .cornerRadius(20.0)
+                            .cornerRadius(10.0)
                         
                         SecureField("Password", text: self.$password)
                             .padding()
+                            .disableAutocorrection(true)
+                            .autocapitalization(.none)
                             .background(.white)
-                            .cornerRadius(20.0)
-                    }.padding(EdgeInsets(NSDirectionalEdgeInsets(top: 60, leading: 40, bottom: 40, trailing: 40)))
-                    
-                    Button(action: self.createAccount) {
-                        Text("Create Account")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(width: 300, height: 50)
-                            .background(Color.green)
-                            .cornerRadius(15.0)
-                    }.disabled(self.createAccountDisabled)
+                            .cornerRadius(10.0)
+                        
+                        Button(action: self.createAccount) {
+                            Text("Create Account")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                        }
+                        .disabled(self.createAccountDisabled)
+                        .background(Color.green)
+                        .frame(maxWidth: .infinity)
+                        .cornerRadius(10.0)
+                    }
+                    .padding([.leading, .trailing], 27.5)
                 }
                 
                 if self.authStore.signingUp || self.authStore.confirming {

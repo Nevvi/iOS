@@ -57,7 +57,7 @@ struct Account: View {
                 }.padding([.top], 50)
                 
                 NavigationLink {
-                    Text("Settings")
+                    Settings()
                 } label: {
                     HStack {
                         Image(systemName: "gearshape").padding([.trailing])
@@ -71,6 +71,15 @@ struct Account: View {
                     HStack {
                         Image(systemName: "bell").padding([.trailing])
                         Text("Notifications")
+                    }.foregroundColor(.black)
+                }.padding([.top], 30)
+                
+                NavigationLink {
+                    BlockedUserList()
+                } label: {
+                    HStack {
+                        Image(systemName: "person.2.slash").padding([.trailing])
+                        Text("Blocked Users")
                     }.foregroundColor(.black)
                 }.padding([.top], 30)
                 
@@ -110,11 +119,17 @@ struct Account: View {
 struct AccountView_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let authStore = AuthorizationStore()
+    static let usersStore = UsersStore(users: modelData.connectionResponse.users)
     static let accountStore = AccountStore(user: modelData.user)
+    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
+                                                   requests: modelData.requests,
+                                                   blockedUsers: modelData.connectionResponse.users)
 
     static var previews: some View {
         Account()
            .environmentObject(accountStore)
            .environmentObject(authStore)
+           .environmentObject(usersStore)
+           .environmentObject(connectionsStore)
     }
 }

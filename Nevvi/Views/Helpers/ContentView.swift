@@ -9,10 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var connectionsStore: ConnectionsStore
+    @EnvironmentObject var usersStore: UsersStore
     
     @ObservedObject var connectionStore: ConnectionStore
-    @ObservedObject var connectionsStore: ConnectionsStore
-    @ObservedObject var usersStore: UsersStore
     
     var body: some View {
         if (!accountStore.id.isEmpty) {
@@ -20,30 +20,32 @@ struct ContentView: View {
                 TabView {
                     RefreshableView(onRefresh: {
                         self.connectionsStore.load()
-                    }, view: ConnectionList(usersStore: self.usersStore, connectionsStore: self.connectionsStore, connectionStore: self.connectionStore).tabItem() {
-                        Image(systemName: "person.3.fill")
+                    }, view: ConnectionList(connectionStore: self.connectionStore).tabItem() {
+                        Image(systemName: "person.line.dotted.person.fill")
                         Text("Connections")
-                    }).onAppear {
-                        self.connectionsStore.load()
-                    }
+                    })
                     
                     RefreshableView(onRefresh: {
                         self.connectionsStore.loadRequests()
-                    }, view: ConnectionRequestList(connectionsStore: self.connectionsStore).tabItem() {
+                    }, view: ConnectionRequestList().tabItem() {
                         Image(systemName: "person.fill.questionmark")
                         Text("Requests")
-                    }).onAppear {
-                        self.connectionsStore.loadRequests()
-                    }
+                    })
+                    
+                    RefreshableView(onRefresh: {
+                        
+                    }, view: Text("Groups").tabItem() {
+                        Image(systemName: "person.3.fill")
+                        Text("Groups")
+                    })
                     
                     RefreshableView(onRefresh: {
                         self.accountStore.load()
+                        self.connectionsStore.loadRejectedUsers()
                     }, view: Account().tabItem() {
                         Image(systemName: "person.fill")
                         Text("Account")
-                    }).onAppear {
-                        self.accountStore.load()
-                    }
+                    })
                 }
             } else {
                 OnboardingCarousel()
@@ -52,6 +54,9 @@ struct ContentView: View {
             // TODO - better loading view
             ProgressView().onAppear {
                 self.accountStore.load()
+                self.connectionsStore.load()
+                self.connectionsStore.loadRequests()
+                self.connectionsStore.loadRejectedUsers()
             }
         }
     }
@@ -60,11 +65,12 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static let modelData = ModelData()
     static var previews: some View {
-        ContentView(connectionStore: ConnectionStore(connection: modelData.connection),
-                    connectionsStore: ConnectionsStore(connections: modelData.connectionResponse.users, requests: modelData.requests),
-                    usersStore: UsersStore(users: modelData.connectionResponse.users)
-        )
+        ContentView(connectionStore: ConnectionStore(connection: modelData.connection))
         .environmentObject(AccountStore(user: modelData.user))
+        .environmentObject(ConnectionsStore(connections: modelData.connectionResponse.users,
+                                            requests: modelData.requests,
+                                            blockedUsers: modelData.connectionResponse.users))
         .environmentObject(AuthorizationStore())
+        .environmentObject(UsersStore(users: modelData.connectionResponse.users))
     }
 }

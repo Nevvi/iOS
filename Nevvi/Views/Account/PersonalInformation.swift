@@ -15,6 +15,7 @@ struct PersonalInformation: View {
     @State private var showPhoneVerification: Bool = false
     @State private var showPicker: Bool = false
     @State private var showBirthdayPicker: Bool = false
+    @State private var showAddressSearch: Bool = false
     @State private var newProfileImage = UIImage()
     
     @State private var showSave: Bool = true
@@ -132,10 +133,13 @@ struct PersonalInformation: View {
                             .font(.system(size: 14))
                         
                         TextField("111 Hollywood Ave", text: self.$accountStore.address.street)
+                            .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
+                            )
+                            .onTapGesture {
+                                self.showAddressSearch = true
+                            }
                     }
                     .padding([.leading, .trailing])
                     .padding([.bottom], 8)
@@ -182,6 +186,9 @@ struct PersonalInformation: View {
                         .labelsHidden()
                         .padding()
                         .presentationDetents([.height(250)])
+                }
+                .sheet(isPresented: self.$showAddressSearch) {
+                    AddressSearch()
                 }
                 .sheet(isPresented: self.$showPicker) {
                     ImagePicker(callback: { (image: UIImage) in

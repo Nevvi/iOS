@@ -7,9 +7,7 @@
 
 import SwiftUI
 
-struct ConnectionDetail: View {
-    @Environment(\.presentationMode) private var presentationMode
-    
+struct ConnectionDetail: View {    
     @EnvironmentObject var accountStore: AccountStore
     
     @ObservedObject var connectionStore: ConnectionStore

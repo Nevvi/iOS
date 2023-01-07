@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ConnectionRequestList: View {
-    @ObservedObject var connectionsStore: ConnectionsStore
+    @EnvironmentObject var connectionsStore: ConnectionsStore
     
     @State private var toBeDeleted: IndexSet?
     @State private var showDeleteAlert: Bool = false
@@ -19,18 +19,22 @@ struct ConnectionRequestList: View {
     var body: some View {
         NavigationView {
             List {
-                if self.connectionsStore.requests.count == 0 && self.connectionsStore.loadingRequests == false {
+                if self.connectionsStore.requestCount == 0 {
                     HStack {
                         Spacer()
-                        VStack {
-                            Image(systemName: "person.2.slash")
-                                .resizable()
-                                .frame(width: 120, height: 100)
-                            Text("No requests found")
+                        if self.connectionsStore.loadingRequests {
+                            ProgressView()
+                        } else {
+                            VStack {
+                                Image(systemName: "person.2.slash")
+                                    .resizable()
+                                    .frame(width: 120, height: 100)
+                                Text("No requests found")
+                            }
                         }
                         Spacer()
                     }
-                    .padding([.top], 50)
+                    .padding([.top], 100)
                 } else {
                     ForEach(self.connectionsStore.requests, id: \.requestingUserId) { request in
                         ActionableConnectionRequestRow(approvalCallback: { (id: String, group: String) in
@@ -52,8 +56,11 @@ struct ConnectionRequestList: View {
             .scrollContentBackground(.hidden)
             .navigationTitle("Requests")
             .navigationBarTitleDisplayMode(.inline)
+            .alert(isPresented: self.$showError) {
+                Alert(title: Text("Something went wrong"), message: Text(self.error!.localizedDescription))
+            }
             .alert(isPresented: self.$showDeleteAlert) {
-                Alert(title: Text("Delete request?"), message: Text("Are you sure you want to delete this request? This person will no longer show up in your searches."), primaryButton: .destructive(Text("Delete")) {
+                Alert(title: Text("Delete request?"), message: Text("Are you sure you want to delete this request? This person will no longer show up in your normal searches."), primaryButton: .destructive(Text("Delete")) {
                     for index in self.toBeDeleted! {
                         let otherUserId = self.connectionsStore.requests[index].requestingUserId
                         self.connectionsStore.denyRequest(otherUserId: otherUserId) { (result: Result<Bool, Error>) in
@@ -75,23 +82,25 @@ struct ConnectionRequestList: View {
                 }
                 )
             }
-            .alert(isPresented: self.$showError) {
-                Alert(title: Text("Something went wrong"), message: Text(self.error!.localizedDescription))
-            }
         }
     }
     
     func delete(at offsets: IndexSet) {
         self.toBeDeleted = offsets
         self.showDeleteAlert = true
+        print(offsets)
     }
 }
 
 struct ConnectionRequestList_Previews: PreviewProvider {
     static let modelData = ModelData()
-    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users, requests: [])
+    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
+                                                   requests: modelData.requests,
+                                                   blockedUsers: modelData.connectionResponse.users)
     
     static var previews: some View {
-        ConnectionRequestList(connectionsStore: connectionsStore)
+        ConnectionRequestList()
+            .environmentObject(connectionsStore)
+            .environmentObject(AccountStore(user: modelData.user))
     }
 }

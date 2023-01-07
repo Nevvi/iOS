@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct ConnectionSearch: View {
-    @ObservedObject var usersStore: UsersStore
+    @EnvironmentObject var usersStore: UsersStore
+    
     @StateObject var nameFilter = DebouncedText()
 
     @State private var showError: Bool = false
@@ -17,18 +18,30 @@ struct ConnectionSearch: View {
     var body: some View {
         NavigationView {
             List {
-                if self.usersStore.userCount == 0 && self.usersStore.loading == false && self.nameFilter.text.count >= 3 {
-                    HStack {
-                        Spacer()
-                        VStack {
-                            Image(systemName: "person.2.slash")
-                                .resizable()
-                                .frame(width: 120, height: 100)
-                            Text("No users found")
+                if self.usersStore.userCount == 0 {
+                    if (self.nameFilter.text.count < 3) {
+                        Text("Enter at least 3 characters to search for other users")
+                            .foregroundColor(.secondary)
+                            .fontWeight(.light)
+                            .font(.system(size: 18))
+                            .multilineTextAlignment(.center)
+                    } else {
+                        HStack {
+                            Spacer()
+                            if self.usersStore.loading {
+                                ProgressView()
+                            } else {
+                                VStack {
+                                    Image(systemName: "person.2.slash")
+                                        .resizable()
+                                        .frame(width: 120, height: 100)
+                                    Text("No users found")
+                                }
+                            }
+                            Spacer()
                         }
-                        Spacer()
+                        .padding([.top], 100)
                     }
-                    .padding([.top], 50)
                 } else {
                     ForEach(self.usersStore.users) { user in
                         NewConnectionRequestRow(requestCallback: { (id: String, group: String) in
@@ -59,6 +72,11 @@ struct ConnectionSearch: View {
         .onChange(of: self.nameFilter.debouncedText) { text in
             self.usersStore.load(nameFilter: text)
         }
+        .onAppear {
+            self.nameFilter.text = ""
+            self.usersStore.users = []
+            self.usersStore.userCount = 0
+        }
     }
 }
 
@@ -67,6 +85,7 @@ struct ConnectionSearch_Previews: PreviewProvider {
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
     
     static var previews: some View {
-        ConnectionSearch(usersStore: usersStore)
+        ConnectionSearch()
+            .environmentObject(usersStore)
     }
 }

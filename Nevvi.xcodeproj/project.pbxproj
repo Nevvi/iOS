@@ -19,6 +19,11 @@
 		04038E2D29662FFF00D3C7AC /* ViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04038E2C29662FFF00D3C7AC /* ViewExtensions.swift */; };
 		04038E302966323600D3C7AC /* RedactionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04038E2F2966323600D3C7AC /* RedactionType.swift */; };
 		04038E322966324E00D3C7AC /* Redactable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04038E312966324E00D3C7AC /* Redactable.swift */; };
+		04038E34296667CA00D3C7AC /* BlockedUserList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04038E33296667CA00D3C7AC /* BlockedUserList.swift */; };
+		04038E3629679CCE00D3C7AC /* ContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04038E3529679CCE00D3C7AC /* ContactStore.swift */; };
+		04038E3829679FEF00D3C7AC /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04038E3729679FEF00D3C7AC /* Settings.swift */; };
+		0431437B2969B3A90094D7E0 /* AddressSearchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431437A2969B3A90094D7E0 /* AddressSearchStore.swift */; };
+		0431437D2969B3F50094D7E0 /* AddressSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431437C2969B3F50094D7E0 /* AddressSearch.swift */; };
 		04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FB295DEA5C00703523 /* NevviApp.swift */; };
 		04B948FE295DEA5C00703523 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FD295DEA5C00703523 /* ContentView.swift */; };
 		04B94900295DEA5E00703523 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B948FF295DEA5E00703523 /* Assets.xcassets */; };
@@ -79,6 +84,11 @@
 		04038E2C29662FFF00D3C7AC /* ViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewExtensions.swift; sourceTree = "<group>"; };
 		04038E2F2966323600D3C7AC /* RedactionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedactionType.swift; sourceTree = "<group>"; };
 		04038E312966324E00D3C7AC /* Redactable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Redactable.swift; sourceTree = "<group>"; };
+		04038E33296667CA00D3C7AC /* BlockedUserList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedUserList.swift; sourceTree = "<group>"; };
+		04038E3529679CCE00D3C7AC /* ContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactStore.swift; sourceTree = "<group>"; };
+		04038E3729679FEF00D3C7AC /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		0431437A2969B3A90094D7E0 /* AddressSearchStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSearchStore.swift; sourceTree = "<group>"; };
+		0431437C2969B3F50094D7E0 /* AddressSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSearch.swift; sourceTree = "<group>"; };
 		04B948F8295DEA5C00703523 /* Nevvi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nevvi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B948FB295DEA5C00703523 /* NevviApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NevviApp.swift; sourceTree = "<group>"; };
 		04B948FD295DEA5C00703523 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -290,6 +300,9 @@
 			children = (
 				04B9492A295DF0BA00703523 /* Account.swift */,
 				04038E2A29660F2300D3C7AC /* PersonalInformation.swift */,
+				04038E33296667CA00D3C7AC /* BlockedUserList.swift */,
+				04038E3729679FEF00D3C7AC /* Settings.swift */,
+				0431437C2969B3F50094D7E0 /* AddressSearch.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -321,6 +334,8 @@
 				04B949682960927F00703523 /* ConnectionStore.swift */,
 				04B9496C2960979D00703523 /* ConnectionsStore.swift */,
 				04B949752960A94A00703523 /* UsersStore.swift */,
+				04038E3529679CCE00D3C7AC /* ContactStore.swift */,
+				0431437A2969B3A90094D7E0 /* AddressSearchStore.swift */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -462,11 +477,14 @@
 				04B948FE295DEA5C00703523 /* ContentView.swift in Sources */,
 				04B94963295F814100703523 /* OperatorOverloads.swift in Sources */,
 				04B94918295DEB9900703523 /* Connection.swift in Sources */,
+				04038E3629679CCE00D3C7AC /* ContactStore.swift in Sources */,
 				04038E1B2960CE9500D3C7AC /* ConnectionRequest.swift in Sources */,
 				04B9496B2960964500703523 /* NavigationLazyView.swift in Sources */,
 				04038E1D2960D16300D3C7AC /* ActionableConnectionRequestRow.swift in Sources */,
 				04B9494E295E718A00703523 /* Credentials.swift in Sources */,
+				04038E3829679FEF00D3C7AC /* Settings.swift in Sources */,
 				04B94912295DEAFC00703523 /* CircleImage.swift in Sources */,
+				0431437D2969B3F50094D7E0 /* AddressSearch.swift in Sources */,
 				04038E2D29662FFF00D3C7AC /* ViewExtensions.swift in Sources */,
 				04B949762960A94A00703523 /* UsersStore.swift in Sources */,
 				04B94955295F2E8F00703523 /* OnboardingCarousel.swift in Sources */,
@@ -498,9 +516,11 @@
 				04B94928295DEEB500703523 /* URLSessionExtensions.swift in Sources */,
 				04B949782960AF9B00703523 /* DebouncedText.swift in Sources */,
 				04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */,
+				0431437B2969B3A90094D7E0 /* AddressSearchStore.swift in Sources */,
 				04B9495D295F3B1800703523 /* OnboardingViewTwo.swift in Sources */,
 				04B949742960A4E500703523 /* ConnectionSearch.swift in Sources */,
 				04B9491A295DEBCE00703523 /* ConnectionList.swift in Sources */,
+				04038E34296667CA00D3C7AC /* BlockedUserList.swift in Sources */,
 				04B9497A2960B3E900703523 /* NewConnectionRequestRow.swift in Sources */,
 				04B94970296098AA00703523 /* ConnectionsResponse.swift in Sources */,
 				04038E302966323600D3C7AC /* RedactionType.swift in Sources */,
@@ -639,6 +659,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nevvi/Info.plist;
+				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to keep your phone contacts up to date";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -671,6 +692,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nevvi/Info.plist;
+				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to keep your phone contacts up to date";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
