@@ -303,6 +303,10 @@ struct PersonalInformation: View {
         user.lastName != self.accountStore.lastName ||
         user.phoneNumber != self.accountStore.phoneNumber ||
         user.address.street != self.accountStore.address.street ||
+        user.address.unit != self.accountStore.address.unit ||
+        user.address.city != self.accountStore.address.city ||
+        user.address.state != self.accountStore.address.state ||
+        user.address.zipCode != self.accountStore.address.zipCode ||
         user.birthday != self.accountStore.birthday
         
         if (!self.canSave && didChange) || (self.canSave && !didChange) {

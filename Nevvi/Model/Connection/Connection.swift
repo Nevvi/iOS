@@ -19,6 +19,7 @@ struct Connection: Hashable, Codable, Identifiable {
     var address: Address?
     var profileImage: String
     var permissionGroup: String?
+    var connected: Bool?
     
     var birthdayStr: String? {
         guard let birthday = self.birthday else {

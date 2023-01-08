@@ -39,8 +39,10 @@ struct NewConnectionRequestRow: View {
             
             Spacer()
             
-            Button { self.showSheet = true } label: {
-                Text("Connect")
+            if user.connected == nil || !user.connected! {
+                Button { self.showSheet = true } label: {
+                    Text("Connect")
+                }
             }
         }
         .padding([.top, .bottom], 5)
