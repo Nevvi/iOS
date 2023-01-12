@@ -7,14 +7,11 @@
 
 import SwiftUI
 
-struct ConnectionSearch: View {
+struct UserSearch: View {
     @EnvironmentObject var usersStore: UsersStore
     
     @StateObject var nameFilter = DebouncedText()
 
-    @State private var showError: Bool = false
-    @State private var error: Error? = nil
-        
     var body: some View {
         NavigationView {
             List {
@@ -51,8 +48,7 @@ struct ConnectionSearch: View {
                                     print("Requested!")
                                     // probably want to reload here once backend filters out or modifies requested users
                                 case .failure(let error):
-                                    self.error = error
-                                    self.showError = true
+                                    print("Something bad happened", error)
                                 }
                             }
                         }, user: user)
@@ -66,9 +62,6 @@ struct ConnectionSearch: View {
         .scrollContentBackground(.hidden)
         .searchable(text: self.$nameFilter.text)
         .disableAutocorrection(true)
-        .alert(isPresented: self.$showError) {
-            Alert(title: Text("Something went wrong"), message: Text(self.error!.localizedDescription))
-        }
         .onChange(of: self.nameFilter.debouncedText) { text in
             self.usersStore.load(nameFilter: text)
         }
@@ -80,12 +73,12 @@ struct ConnectionSearch: View {
     }
 }
 
-struct ConnectionSearch_Previews: PreviewProvider {
+struct UserSearch_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
     
     static var previews: some View {
-        ConnectionSearch()
+        UserSearch()
             .environmentObject(usersStore)
     }
 }

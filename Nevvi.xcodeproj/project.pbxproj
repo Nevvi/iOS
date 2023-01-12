@@ -24,6 +24,15 @@
 		04038E3829679FEF00D3C7AC /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04038E3729679FEF00D3C7AC /* Settings.swift */; };
 		0431437B2969B3A90094D7E0 /* AddressSearchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431437A2969B3A90094D7E0 /* AddressSearchStore.swift */; };
 		0431437D2969B3F50094D7E0 /* AddressSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431437C2969B3F50094D7E0 /* AddressSearch.swift */; };
+		04314383296B46D60094D7E0 /* BuildConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314382296B46D60094D7E0 /* BuildConfiguration.swift */; };
+		04314385296B648E0094D7E0 /* connectionGroups.json in Resources */ = {isa = PBXBuildFile; fileRef = 04314384296B648E0094D7E0 /* connectionGroups.json */; };
+		04314387296B64A50094D7E0 /* ConnectionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314386296B64A50094D7E0 /* ConnectionGroup.swift */; };
+		04314389296B65220094D7E0 /* ConnectionGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314388296B65220094D7E0 /* ConnectionGroupList.swift */; };
+		0431438B296B655F0094D7E0 /* ConnectionGroupsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431438A296B655F0094D7E0 /* ConnectionGroupsStore.swift */; };
+		0431438D296B6E020094D7E0 /* ConnectionGroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431438C296B6E020094D7E0 /* ConnectionGroupRow.swift */; };
+		04314391296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314390296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift */; };
+		04314393296CCD010094D7E0 /* ConnectionGroupDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */; };
+		04314395297087210094D7E0 /* ConnectionGroupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314394297087210094D7E0 /* ConnectionGroupStore.swift */; };
 		04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FB295DEA5C00703523 /* NevviApp.swift */; };
 		04B948FE295DEA5C00703523 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FD295DEA5C00703523 /* ContentView.swift */; };
 		04B94900295DEA5E00703523 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B948FF295DEA5E00703523 /* Assets.xcassets */; };
@@ -65,7 +74,7 @@
 		04B9496D2960979E00703523 /* ConnectionsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9496C2960979D00703523 /* ConnectionsStore.swift */; };
 		04B94970296098AA00703523 /* ConnectionsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9496F296098AA00703523 /* ConnectionsResponse.swift */; };
 		04B949722960992E00703523 /* connectionResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 04B949712960992E00703523 /* connectionResponse.json */; };
-		04B949742960A4E500703523 /* ConnectionSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949732960A4E500703523 /* ConnectionSearch.swift */; };
+		04B949742960A4E500703523 /* UserSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949732960A4E500703523 /* UserSearch.swift */; };
 		04B949762960A94A00703523 /* UsersStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949752960A94A00703523 /* UsersStore.swift */; };
 		04B949782960AF9B00703523 /* DebouncedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949772960AF9B00703523 /* DebouncedText.swift */; };
 		04B9497A2960B3E900703523 /* NewConnectionRequestRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949792960B3E900703523 /* NewConnectionRequestRow.swift */; };
@@ -89,6 +98,15 @@
 		04038E3729679FEF00D3C7AC /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		0431437A2969B3A90094D7E0 /* AddressSearchStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSearchStore.swift; sourceTree = "<group>"; };
 		0431437C2969B3F50094D7E0 /* AddressSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSearch.swift; sourceTree = "<group>"; };
+		04314382296B46D60094D7E0 /* BuildConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildConfiguration.swift; sourceTree = "<group>"; };
+		04314384296B648E0094D7E0 /* connectionGroups.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = connectionGroups.json; sourceTree = "<group>"; };
+		04314386296B64A50094D7E0 /* ConnectionGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroup.swift; sourceTree = "<group>"; };
+		04314388296B65220094D7E0 /* ConnectionGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupList.swift; sourceTree = "<group>"; };
+		0431438A296B655F0094D7E0 /* ConnectionGroupsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupsStore.swift; sourceTree = "<group>"; };
+		0431438C296B6E020094D7E0 /* ConnectionGroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupRow.swift; sourceTree = "<group>"; };
+		04314390296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupMembershipRow.swift; sourceTree = "<group>"; };
+		04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupDetail.swift; sourceTree = "<group>"; };
+		04314394297087210094D7E0 /* ConnectionGroupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupStore.swift; sourceTree = "<group>"; };
 		04B948F8295DEA5C00703523 /* Nevvi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nevvi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B948FB295DEA5C00703523 /* NevviApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NevviApp.swift; sourceTree = "<group>"; };
 		04B948FD295DEA5C00703523 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -131,7 +149,7 @@
 		04B9496C2960979D00703523 /* ConnectionsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsStore.swift; sourceTree = "<group>"; };
 		04B9496F296098AA00703523 /* ConnectionsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsResponse.swift; sourceTree = "<group>"; };
 		04B949712960992E00703523 /* connectionResponse.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = connectionResponse.json; sourceTree = "<group>"; };
-		04B949732960A4E500703523 /* ConnectionSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSearch.swift; sourceTree = "<group>"; };
+		04B949732960A4E500703523 /* UserSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearch.swift; sourceTree = "<group>"; };
 		04B949752960A94A00703523 /* UsersStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersStore.swift; sourceTree = "<group>"; };
 		04B949772960AF9B00703523 /* DebouncedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebouncedText.swift; sourceTree = "<group>"; };
 		04B949792960B3E900703523 /* NewConnectionRequestRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConnectionRequestRow.swift; sourceTree = "<group>"; };
@@ -249,6 +267,7 @@
 				04B9492C295DF25200703523 /* connectionData.json */,
 				04B949712960992E00703523 /* connectionResponse.json */,
 				04038E182960CE7300D3C7AC /* requestsData.json */,
+				04314384296B648E0094D7E0 /* connectionGroups.json */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -272,10 +291,14 @@
 				04B94919295DEBCE00703523 /* ConnectionList.swift */,
 				04B9491B295DEBE600703523 /* ConnectionDetail.swift */,
 				04B9491D295DEBF700703523 /* ConnectionRow.swift */,
-				04B949732960A4E500703523 /* ConnectionSearch.swift */,
+				04B949732960A4E500703523 /* UserSearch.swift */,
 				04B949792960B3E900703523 /* NewConnectionRequestRow.swift */,
 				04038E162960CDE500D3C7AC /* ConnectionRequestList.swift */,
 				04038E1C2960D16300D3C7AC /* ActionableConnectionRequestRow.swift */,
+				04314388296B65220094D7E0 /* ConnectionGroupList.swift */,
+				0431438C296B6E020094D7E0 /* ConnectionGroupRow.swift */,
+				04314390296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift */,
+				04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */,
 			);
 			path = Connections;
 			sourceTree = "<group>";
@@ -336,6 +359,9 @@
 				04B949752960A94A00703523 /* UsersStore.swift */,
 				04038E3529679CCE00D3C7AC /* ContactStore.swift */,
 				0431437A2969B3A90094D7E0 /* AddressSearchStore.swift */,
+				04314382296B46D60094D7E0 /* BuildConfiguration.swift */,
+				0431438A296B655F0094D7E0 /* ConnectionGroupsStore.swift */,
+				04314394297087210094D7E0 /* ConnectionGroupStore.swift */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -366,6 +392,7 @@
 				04B94917295DEB9900703523 /* Connection.swift */,
 				04B9496F296098AA00703523 /* ConnectionsResponse.swift */,
 				04038E1A2960CE9500D3C7AC /* ConnectionRequest.swift */,
+				04314386296B64A50094D7E0 /* ConnectionGroup.swift */,
 			);
 			path = Connection;
 			sourceTree = "<group>";
@@ -438,6 +465,7 @@
 				04B94903295DEA5E00703523 /* Preview Assets.xcassets in Resources */,
 				04038E192960CE7300D3C7AC /* requestsData.json in Resources */,
 				04B9492D295DF25200703523 /* connectionData.json in Resources */,
+				04314385296B648E0094D7E0 /* connectionGroups.json in Resources */,
 				04B94916295DEB7E00703523 /* userData.json in Resources */,
 				04B949722960992E00703523 /* connectionResponse.json in Resources */,
 				04B94900295DEA5E00703523 /* Assets.xcassets in Resources */,
@@ -482,15 +510,19 @@
 				04B9496B2960964500703523 /* NavigationLazyView.swift in Sources */,
 				04038E1D2960D16300D3C7AC /* ActionableConnectionRequestRow.swift in Sources */,
 				04B9494E295E718A00703523 /* Credentials.swift in Sources */,
+				04314391296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift in Sources */,
 				04038E3829679FEF00D3C7AC /* Settings.swift in Sources */,
 				04B94912295DEAFC00703523 /* CircleImage.swift in Sources */,
 				0431437D2969B3F50094D7E0 /* AddressSearch.swift in Sources */,
 				04038E2D29662FFF00D3C7AC /* ViewExtensions.swift in Sources */,
 				04B949762960A94A00703523 /* UsersStore.swift in Sources */,
+				0431438D296B6E020094D7E0 /* ConnectionGroupRow.swift in Sources */,
 				04B94955295F2E8F00703523 /* OnboardingCarousel.swift in Sources */,
 				04B94914295DEB1100703523 /* ModelData.swift in Sources */,
 				04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */,
+				04314387296B64A50094D7E0 /* ConnectionGroup.swift in Sources */,
 				04B94947295E57C500703523 /* UIApplicationExtensions.swift in Sources */,
+				0431438B296B655F0094D7E0 /* ConnectionGroupsStore.swift in Sources */,
 				04B94931295DFBBA00703523 /* Authorization.swift in Sources */,
 				04038E172960CDE500D3C7AC /* ConnectionRequestList.swift in Sources */,
 				04B9496D2960979E00703523 /* ConnectionsStore.swift in Sources */,
@@ -515,14 +547,18 @@
 				04B94961295F3FD100703523 /* OnboardingViewFour.swift in Sources */,
 				04B94928295DEEB500703523 /* URLSessionExtensions.swift in Sources */,
 				04B949782960AF9B00703523 /* DebouncedText.swift in Sources */,
+				04314389296B65220094D7E0 /* ConnectionGroupList.swift in Sources */,
 				04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */,
 				0431437B2969B3A90094D7E0 /* AddressSearchStore.swift in Sources */,
+				04314395297087210094D7E0 /* ConnectionGroupStore.swift in Sources */,
 				04B9495D295F3B1800703523 /* OnboardingViewTwo.swift in Sources */,
-				04B949742960A4E500703523 /* ConnectionSearch.swift in Sources */,
+				04B949742960A4E500703523 /* UserSearch.swift in Sources */,
 				04B9491A295DEBCE00703523 /* ConnectionList.swift in Sources */,
 				04038E34296667CA00D3C7AC /* BlockedUserList.swift in Sources */,
 				04B9497A2960B3E900703523 /* NewConnectionRequestRow.swift in Sources */,
+				04314383296B46D60094D7E0 /* BuildConfiguration.swift in Sources */,
 				04B94970296098AA00703523 /* ConnectionsResponse.swift in Sources */,
+				04314393296CCD010094D7E0 /* ConnectionGroupDetail.swift in Sources */,
 				04038E302966323600D3C7AC /* RedactionType.swift in Sources */,
 				04B9492B295DF0BA00703523 /* Account.swift in Sources */,
 				04B94910295DEAD800703523 /* User.swift in Sources */,
@@ -532,7 +568,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		04B94904295DEA5E00703523 /* Debug */ = {
+		0431437E296B44810094D7E0 /* Debug Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -590,9 +626,43 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = Debug;
+			name = "Debug Development";
 		};
-		04B94905295DEA5E00703523 /* Release */ = {
+		0431437F296B44810094D7E0 /* Debug Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
+				DEVELOPMENT_TEAM = 496RH4SCJ6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Nevvi/Info.plist;
+				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to keep your phone contacts up to date";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug Development";
+		};
+		04314380296B449B0094D7E0 /* Release Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -644,9 +714,156 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
+			name = "Release Development";
 		};
-		04B94907295DEA5E00703523 /* Debug */ = {
+		04314381296B449B0094D7E0 /* Release Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
+				DEVELOPMENT_TEAM = 496RH4SCJ6;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Nevvi/Info.plist;
+				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to keep your phone contacts up to date";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Release Development";
+		};
+		04B94904295DEA5E00703523 /* Debug Production */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug Production";
+		};
+		04B94905295DEA5E00703523 /* Release Production */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release Production";
+		};
+		04B94907295DEA5E00703523 /* Debug Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -678,9 +895,9 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = "Debug Production";
 		};
-		04B94908295DEA5E00703523 /* Release */ = {
+		04B94908295DEA5E00703523 /* Release Production */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -711,7 +928,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Release;
+			name = "Release Production";
 		};
 /* End XCBuildConfiguration section */
 
@@ -719,20 +936,24 @@
 		04B948F3295DEA5C00703523 /* Build configuration list for PBXProject "Nevvi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				04B94904295DEA5E00703523 /* Debug */,
-				04B94905295DEA5E00703523 /* Release */,
+				04B94904295DEA5E00703523 /* Debug Production */,
+				0431437E296B44810094D7E0 /* Debug Development */,
+				04B94905295DEA5E00703523 /* Release Production */,
+				04314380296B449B0094D7E0 /* Release Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = "Debug Development";
 		};
 		04B94906295DEA5E00703523 /* Build configuration list for PBXNativeTarget "Nevvi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				04B94907295DEA5E00703523 /* Debug */,
-				04B94908295DEA5E00703523 /* Release */,
+				04B94907295DEA5E00703523 /* Debug Production */,
+				0431437F296B44810094D7E0 /* Debug Development */,
+				04B94908295DEA5E00703523 /* Release Production */,
+				04314381296B449B0094D7E0 /* Release Development */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = "Debug Development";
 		};
 /* End XCConfigurationList section */
 

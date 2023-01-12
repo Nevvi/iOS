@@ -24,6 +24,8 @@ class ConnectionStore : ObservableObject {
     @Published var loading: Bool = false
     @Published var deleting: Bool = false
     
+    @Published var error: Swift.Error?
+    
     init() {
         
     }
@@ -68,7 +70,7 @@ class ConnectionStore : ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/\(connectionId)")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/\(connectionId)")!
     }
     
     func load(connectionId: String, callback: @escaping (Result<Connection, Error>) -> Void) {
@@ -82,11 +84,13 @@ class ConnectionStore : ObservableObject {
                     self.update(connection: connection)
                     callback(.success(connection))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.loading = false
             }
         } catch(let error) {
+            self.error = GenericError(error.localizedDescription)
             callback(.failure(error))
             self.loading = false
         }
@@ -101,12 +105,13 @@ class ConnectionStore : ObservableObject {
                 case .success(_):
                     callback(.success(true))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.deleting = false
             }
         } catch(let error) {
-            print("Failed to delete connection", error)
+            self.error = GenericError(error.localizedDescription)
             self.deleting = false
         }
     }
@@ -122,11 +127,13 @@ class ConnectionStore : ObservableObject {
                     self.update(connection: connection)
                     callback(.success(connection))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.saving = false
             }
         } catch(let error) {
+            self.error = GenericError(error.localizedDescription)
             callback(.failure(error))
             self.saving = false
         }

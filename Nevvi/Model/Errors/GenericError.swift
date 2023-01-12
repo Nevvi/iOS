@@ -7,8 +7,7 @@
 
 import Foundation
 
-struct GenericError : LocalizedError
-{
+struct GenericError : LocalizedError {
     var errorDescription: String? { return mMsg }
     var failureReason: String? { return mMsg }
     var recoverySuggestion: String? { return "" }

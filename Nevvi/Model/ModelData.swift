@@ -13,6 +13,7 @@ final class ModelData: ObservableObject {
     @Published var connection: Connection = load("connectionData.json")
     @Published var user: User = load("userData.json")
     @Published var requests: [ConnectionRequest] = load("requestsData.json")
+    @Published var groups: [ConnectionGroup] = load("connectionGroups.json")
 }
 
 func load<T: Decodable>(_ filename: String) -> T {

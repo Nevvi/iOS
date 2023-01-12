@@ -30,6 +30,8 @@ class AccountStore: ObservableObject {
     @Published var permissionGroups: [PermissionGroup] = []
     @Published var profileImage: String = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
     
+    @Published var error: Swift.Error?
+    
     var user: User? = nil
     
     init() {
@@ -83,7 +85,7 @@ class AccountStore: ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)")!
     }
     
     private func imageUrl() throws -> URL {
@@ -92,7 +94,7 @@ class AccountStore: ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/image")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/image")!
     }
     
     private func verifyPhoneUrl() throws -> URL {
@@ -101,7 +103,7 @@ class AccountStore: ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/authentication/v1/users/\(userId!)/sendCode?attribute=phone_number")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/users/\(userId!)/sendCode?attribute=phone_number")!
     }
     
     private func confirmPhoneUrl(code: String) throws -> URL {
@@ -110,7 +112,7 @@ class AccountStore: ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/authentication/v1/users/\(userId!)/confirmCode?attribute=phone_number&code=\(code)")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/users/\(userId!)/confirmCode?attribute=phone_number&code=\(code)")!
     }
     
     func load() {
@@ -122,12 +124,12 @@ class AccountStore: ObservableObject {
                 case .success(let user):
                     self.update(user: user)
                 case .failure(let error):
-                    print(error)
+                    self.error = GenericError(error.localizedDescription)
                 }
                 self.loading = false
             }
         } catch(let error) {
-            print("Failed to load user", error)
+            self.error = GenericError(error.localizedDescription)
             self.loading = false
         }
     }
@@ -149,13 +151,15 @@ class AccountStore: ObservableObject {
                     self.update(user: user)
                     callback(.success(user))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.saving = false
             }
         } catch(let error) {
-            callback(.failure(error))
+            self.error = GenericError(error.localizedDescription)
             self.saving = false
+            callback(.failure(error))
         }
     }
     
@@ -169,13 +173,15 @@ class AccountStore: ObservableObject {
                     self.update(user: user)
                     callback(.success(user))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.saving = false
             }
         } catch(let error) {
-            callback(.failure(error))
+            self.error = GenericError(error.localizedDescription)
             self.saving = false
+            callback(.failure(error))
         }
     }
     
@@ -190,13 +196,15 @@ class AccountStore: ObservableObject {
                     self.update(user: user)
                     callback(.success(user))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.saving = false
             }
         } catch(let error) {
-            callback(.failure(error))
+            self.error = GenericError(error.localizedDescription)
             self.saving = false
+            callback(.failure(error))
         }
     }
     
@@ -208,15 +216,16 @@ class AccountStore: ObservableObject {
                 switch result {
                 case .success(let user):
                     self.update(user: user)
-                    callback(.success(user))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.savingImage = false
             }
         } catch(let error) {
-            callback(.failure(error))
+            self.error = GenericError(error.localizedDescription)
             self.savingImage = false
+            callback(.failure(error))
         }
     }
     
@@ -230,11 +239,13 @@ class AccountStore: ObservableObject {
                 case .success(let response):
                     callback(.success(response))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.saving = false
             }
         } catch(let error) {
+            self.error = GenericError(error.localizedDescription)
             callback(.failure(error))
             self.saving = false
         }
@@ -250,11 +261,13 @@ class AccountStore: ObservableObject {
                 case .success(let response):
                     callback(.success(response))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.saving = false
             }
         } catch(let error) {
+            self.error = GenericError(error.localizedDescription)
             callback(.failure(error))
             self.saving = false
         }

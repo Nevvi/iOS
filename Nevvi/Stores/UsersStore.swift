@@ -14,6 +14,8 @@ class UsersStore : ObservableObject {
     @Published var loading: Bool = false
     @Published var users: [Connection] = []
     @Published var userCount: Int = 0
+    
+    @Published var error: Swift.Error?
         
     init() {
         
@@ -28,7 +30,7 @@ class UsersStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let url = "https://api.development.nevvi.net/user/v1/users/search?name=\(nameFilter)"
+        let url = "\(BuildConfiguration.shared.baseURL)/user/v1/users/search?name=\(nameFilter)"
         let urlString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
         return URL(string: urlString)!
     }
@@ -39,7 +41,7 @@ class UsersStore : ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/requests")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/requests")!
     }
     
     func load(nameFilter: String) {
@@ -58,12 +60,12 @@ class UsersStore : ObservableObject {
                     self.users = response.users
                     self.userCount = response.count
                 case .failure(let error):
-                    print(error)
+                    self.error = GenericError(error.localizedDescription)
                 }
                 self.loading = false
             }
         } catch(let error) {
-            print("Failed to load connections", error)
+            self.error = GenericError(error.localizedDescription)
             self.loading = false
         }
     }
@@ -78,11 +80,13 @@ class UsersStore : ObservableObject {
                 case .success(_):
                     callback(.success(true))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.requesting = false
             }
         } catch(let error) {
+            self.error = GenericError(error.localizedDescription)
             callback(.failure(error))
             self.requesting = false
         }

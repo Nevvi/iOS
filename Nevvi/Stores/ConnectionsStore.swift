@@ -25,6 +25,8 @@ class ConnectionsStore : ObservableObject {
     @Published var blockedUsers: [Connection] = []
     @Published var blockedUserCount: Int = 0
     
+    @Published var error: Swift.Error?
+    
     init() {
         
     }
@@ -46,7 +48,7 @@ class ConnectionsStore : ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        var urlString = "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections"
+        var urlString = "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections"
         
         if nameFilter != nil && nameFilter!.count >= 3 {
             urlString = "\(urlString)?name=\(nameFilter!)"
@@ -61,7 +63,7 @@ class ConnectionsStore : ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/requests/pending")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/requests/pending")!
     }
     
     private func deleteRequestUrl() throws -> URL {
@@ -70,7 +72,7 @@ class ConnectionsStore : ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/requests/deny")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/requests/deny")!
     }
     
     private func confirmRequestUrl() throws -> URL {
@@ -79,7 +81,7 @@ class ConnectionsStore : ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/requests/confirm")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/requests/confirm")!
     }
     
     private func rejectedUsersUrl() throws -> URL {
@@ -88,7 +90,7 @@ class ConnectionsStore : ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/rejected")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/rejected")!
     }
     
     func load() {
@@ -105,12 +107,12 @@ class ConnectionsStore : ObservableObject {
                     self.connections = response.users
                     self.connectionCount = response.count
                 case .failure(let error):
-                    print(error)
+                    self.error = GenericError(error.localizedDescription)
                 }
                 self.loading = false
             }
         } catch(let error) {
-            print("Failed to load connections", error)
+            self.error = GenericError(error.localizedDescription)
             self.loading = false
         }
     }
@@ -125,12 +127,12 @@ class ConnectionsStore : ObservableObject {
                     self.blockedUsers = users
                     self.blockedUserCount = users.count
                 case .failure(let error):
-                    print(error)
+                    self.error = GenericError(error.localizedDescription)
                 }
                 self.loadingBlockerUsers = false
             }
         } catch(let error) {
-            print("Failed to load blocked users", error)
+            self.error = GenericError(error.localizedDescription)
             self.loadingBlockerUsers = false
         }
     }
@@ -144,12 +146,12 @@ class ConnectionsStore : ObservableObject {
                 case .success(let requests):
                     self.requests = requests
                 case .failure(let error):
-                    print(error)
+                    self.error = GenericError(error.localizedDescription)
                 }
                 self.loadingRequests = false
             }
         } catch(let error) {
-            print("Failed to load connections", error)
+            self.error = GenericError(error.localizedDescription)
             self.loadingRequests = false
         }
     }
@@ -164,12 +166,13 @@ class ConnectionsStore : ObservableObject {
                 case .success(_):
                     callback(.success(true))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.deletingRequest = false
             }
         } catch(let error) {
-            print("Failed to delete connection request", error)
+            self.error = GenericError(error.localizedDescription)
             self.deletingRequest = false
         }
     }
@@ -184,12 +187,13 @@ class ConnectionsStore : ObservableObject {
                 case .success(_):
                     callback(.success(true))
                 case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
                 self.confirmingRequest = false
             }
         } catch(let error) {
-            print("Failed to confirm connection request", error)
+            self.error = GenericError(error.localizedDescription)
             self.confirmingRequest = false
         }
     }

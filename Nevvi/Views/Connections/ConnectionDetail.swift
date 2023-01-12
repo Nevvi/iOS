@@ -9,14 +9,13 @@ import SwiftUI
 
 struct ConnectionDetail: View {    
     @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
     
     @ObservedObject var connectionStore: ConnectionStore
     
+    @State var showGroups = false
     @State var showSettings = false
     
-    @State private var showError: Bool = false
-    @State private var error: Error? = nil
-
     var body: some View {
         if self.connectionStore.loading == false && !self.connectionStore.id.isEmpty {
             ScrollView {
@@ -108,6 +107,14 @@ struct ConnectionDetail: View {
                         .foregroundColor(.black)
                 }
             )
+            .navigationBarItems(trailing: Button {
+                    self.showGroups = true
+                } label: {
+                    Image(systemName: "person.3.fill")
+                        .renderingMode(.template)
+                        .foregroundColor(.black)
+                }
+            )
             .sheet(isPresented: self.$showSettings) {
                 ZStack {
                     VStack {
@@ -115,6 +122,7 @@ struct ConnectionDetail: View {
                             .font(.title2)
                             .fontWeight(.semibold)
                             .padding([.top], 50)
+                            .padding([.bottom], 20)
                         
                         Spacer()
                         
@@ -123,7 +131,7 @@ struct ConnectionDetail: View {
                                 .foregroundColor(.secondary)
                                 .fontWeight(.light)
                                 .font(.system(size: 14))
-                                                        
+                            
                             Menu {
                                 Picker("Which permission group should \(self.connectionStore.firstName) belong to?", selection: self.$connectionStore.permissionGroup) {
                                     ForEach(self.accountStore.permissionGroups, id: \.name) {
@@ -141,22 +149,38 @@ struct ConnectionDetail: View {
                         
                         Spacer()
                     }
+                    .disabled(self.connectionStore.saving)
                 }
-                .disabled(self.connectionStore.saving)
                 .presentationDetents([.fraction(0.33)])
+            }
+            .sheet(isPresented: self.$showGroups) {
+                VStack {
+                    Text("Group Membership")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .padding([.top], 50)
+                                                
+                    List {
+                        ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
+                            ConnectionGroupMembershipRow(connectionStore: self.connectionStore,
+                                                         isMember: group.connections.contains(self.connectionStore.id),
+                                                         group: group)
+                        }
+                        .listRowSeparator(.hidden)
+                    }
+                    .scrollContentBackground(.hidden)
+                    .padding([.top], -30)
+                    .presentationDetents([.fraction(0.50)])
+                }
                 .onChange(of: self.connectionStore.permissionGroup) { newValue in
                     self.connectionStore.update { (result: Result<Connection, Error>) in
                         switch result {
                         case .success(let connection):
                             print("Updated connection with \(connection.id)")
                         case .failure(let error):
-                            self.error = error
-                            self.showError = true
+                            print("Something bad happened", error)
                         }
                     }
-                }
-                .alert(isPresented: self.$showError) {
-                    Alert(title: Text("Something went wrong"), message: Text(self.error!.localizedDescription))
                 }
             }
         } else  {
@@ -168,10 +192,12 @@ struct ConnectionDetail: View {
 struct ConnectionDetail_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let accountStore = AccountStore(user: modelData.user)
+    static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
     static let connectionStore = ConnectionStore(connection: modelData.connection)
 
     static var previews: some View {
         ConnectionDetail(connectionStore: connectionStore)
             .environmentObject(accountStore)
+            .environmentObject(connectionGroupsStore)
     }
 }

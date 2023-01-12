@@ -16,9 +16,6 @@ struct ConnectionList: View {
     @State private var toBeDeleted: IndexSet?
     @State private var showDeleteAlert: Bool = false
     @StateObject var nameFilter = DebouncedText()
-    
-    @State private var showError: Bool = false
-    @State private var error: Error? = nil
         
     var body: some View {
         NavigationView {
@@ -49,8 +46,7 @@ struct ConnectionList: View {
                                         case .success(_):
                                             print("Got connection \(connection.id)")
                                         case .failure(let error):
-                                            self.error = error
-                                            self.showError = true
+                                            print("Something bad happened", error)
                                         }
                                     }
                                 }, view: ConnectionDetail(connectionStore: self.connectionStore)
@@ -60,12 +56,11 @@ struct ConnectionList: View {
                                             case .success(_):
                                                 print("Got connection \(connection.id)")
                                             case .failure(let error):
-                                                self.error = error
-                                                self.showError = true
+                                                print("Something bad happened", error)
                                             }
                                         }
                                     }
-                                               )
+                                )
                             )
                         } label: {
                             ConnectionRow(connection: connection)
@@ -80,16 +75,13 @@ struct ConnectionList: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
                 NavigationLink {
-                    ConnectionSearch()
+                    UserSearch()
                         .navigationBarTitleDisplayMode(.inline)
                         .padding([.top], -100)
                 } label: {
                     Image(systemName: "plus").foregroundColor(.blue)
                 }
             })
-            .alert(isPresented: self.$showError) {
-                Alert(title: Text("Something went wrong"), message: Text(self.error!.localizedDescription))
-            }
             .alert(isPresented: self.$showDeleteAlert) {
                 Alert(title: Text("Delete confirmation"), message: Text("Are you sure you want to remove this connection?"), primaryButton: .destructive(Text("Delete")) {
                     for index in self.toBeDeleted! {
@@ -99,8 +91,7 @@ struct ConnectionList: View {
                             case.success(_):
                                 self.connectionsStore.load()
                             case .failure(let error):
-                                self.error = error
-                                self.showError = true
+                                print("Something bad happened", error)
                             }
                         }
                     }

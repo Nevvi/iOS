@@ -106,6 +106,19 @@ extension URLSession {
         execute(request: request, completion: completion)
     }
     
+    func deleteData<T: Decodable>(for url: URL, for body: Encodable, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
+        var request = URLRequest(url: url)
+        do {
+            request.httpMethod = "DELETE"
+            request.httpBody = try JSONEncoder().encode(body)
+            request.setValue(authToken, forHTTPHeaderField: "Authorization")
+        } catch(let error) {
+            completion(.failure(error))
+        }
+
+        execute(request: request, completion: completion)
+    }
+    
     func postImage<T: Decodable>(for url: URL, for image: UIImage, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
         let request = MultipartFormDataRequest(url: url)
         let smallerImage = resizeImage(image: image, newWidth: 200)

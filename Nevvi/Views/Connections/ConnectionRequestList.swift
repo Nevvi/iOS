@@ -12,9 +12,6 @@ struct ConnectionRequestList: View {
     
     @State private var toBeDeleted: IndexSet?
     @State private var showDeleteAlert: Bool = false
-    
-    @State private var showError: Bool = false
-    @State private var error: Error? = nil
         
     var body: some View {
         NavigationView {
@@ -43,8 +40,7 @@ struct ConnectionRequestList: View {
                                 case .success(_):
                                     self.connectionsStore.loadRequests()
                                 case .failure(let error):
-                                    self.error = error
-                                    self.showError = true
+                                    print("Something bad happened", error)
                                 }
                             }
                         }, request: request)
@@ -56,9 +52,6 @@ struct ConnectionRequestList: View {
             .scrollContentBackground(.hidden)
             .navigationTitle("Requests")
             .navigationBarTitleDisplayMode(.inline)
-            .alert(isPresented: self.$showError) {
-                Alert(title: Text("Something went wrong"), message: Text(self.error!.localizedDescription))
-            }
             .alert(isPresented: self.$showDeleteAlert) {
                 Alert(title: Text("Delete request?"), message: Text("Are you sure you want to delete this request? This person will no longer show up in your normal searches."), primaryButton: .destructive(Text("Delete")) {
                     for index in self.toBeDeleted! {
@@ -68,8 +61,7 @@ struct ConnectionRequestList: View {
                             case.success(_):
                                 self.connectionsStore.loadRequests()
                             case .failure(let error):
-                                self.error = error
-                                self.showError = true
+                                print("Something bad happened", error)
                             }
                         }
                     }

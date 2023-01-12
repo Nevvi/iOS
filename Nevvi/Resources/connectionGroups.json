@@ -1,0 +1,24 @@
+[
+    {
+        "id": "2f1b489a-de70-47db-832b-73e86e668e2d",
+        "userId": "49259105-818b-4e85-881b-e12122c4d272",
+        "name": "Family",
+        "connections": [
+            "0578c4ca-813f-4fd7-8087-cc1b200411b4"
+        ],
+        "createDate": "2023-01-08T21:48:30.924Z",
+        "createBy": "HARDCODED_FOR_NOW",
+        "updateDate": "2023-01-08T21:48:30.924Z",
+        "updateBy": "HARDCODED_FOR_NOW"
+    },
+    {
+        "id": "f424add2-47c0-4145-a016-12454a0f00e7",
+        "userId": "49259105-818b-4e85-881b-e12122c4d272",
+        "name": "Wedding",
+        "connections": [],
+        "createDate": "2023-01-08T21:50:58.911Z",
+        "createBy": "HARDCODED_FOR_NOW",
+        "updateDate": "2023-01-08T21:50:58.911Z",
+        "updateBy": "HARDCODED_FOR_NOW"
+    }
+]

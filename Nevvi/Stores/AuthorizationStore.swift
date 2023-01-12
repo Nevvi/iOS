@@ -121,19 +121,19 @@ class AuthorizationStore: ObservableObject {
     }
     
     private func loginUrl() throws -> URL {
-        return URL(string: "https://api.development.nevvi.net/authentication/v1/login")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/login")!
     }
     
     private func logoutUrl() throws -> URL {
-        return URL(string: "https://api.development.nevvi.net/authentication/v1/logout")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/logout")!
     }
     
     private func signupUrl() throws -> URL {
-        return URL(string: "https://api.development.nevvi.net/authentication/v1/register")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/register")!
     }
     
     private func confirmUrl() throws -> URL {
-        return URL(string: "https://api.development.nevvi.net/authentication/v1/confirm")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/confirm")!
     }
     
     func login(email: String, password: String, callback: @escaping (Result<Authorization, AuthorizationError>) -> Void) {
@@ -202,6 +202,7 @@ class AuthorizationStore: ObservableObject {
                 self.signingUp = false
             }
         } catch(let error) {
+            print(error)
             callback(.failure(AuthorizationError.unknown))
             self.signingUp = false
         }
@@ -222,6 +223,7 @@ class AuthorizationStore: ObservableObject {
                 self.confirming = false
             }
         } catch(let error) {
+            print(error)
             callback(.failure(AuthorizationError.unknown))
             self.confirming = false
         }

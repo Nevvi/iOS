@@ -19,9 +19,6 @@ struct PersonalInformation: View {
     @State private var newProfileImage = UIImage()
     
     @State private var showSave: Bool = true
-    @State private var showError: Bool = false
-    @State private var error: Error? = nil
-    
     @State private var canSave: Bool = false
     
     var body: some View {
@@ -105,8 +102,7 @@ struct PersonalInformation: View {
                                         case .success(_):
                                             self.showPhoneVerification = true
                                         case .failure(let error):
-                                            self.error = error
-                                            self.showError = true
+                                            print("Something bad happened", error)
                                         }
                                     }
                                 } label: {
@@ -208,8 +204,7 @@ struct PersonalInformation: View {
                         self.accountStore.uploadImage(image: image) { (result: Result<User, Error>) in
                             switch result {
                             case .failure(let error):
-                                self.error = error
-                                self.showError = true
+                                print("Something bad happened", error)
                             case .success(let user):
                                 self.accountStore.update(user: user)
                             }
@@ -240,8 +235,7 @@ struct PersonalInformation: View {
                                     self.accountStore.phoneNumberConfirmed = true
                                     self.showPhoneVerification = false
                                 case .failure(let error):
-                                    self.error = error
-                                    self.showError = true
+                                    print("Something bad happened", error)
                                 }
                             }
                         } label: {
@@ -268,9 +262,6 @@ struct PersonalInformation: View {
                     .disabled(self.accountStore.saving)
                     .presentationDetents([.medium])
                 }
-                .alert(isPresented: self.$showError) {
-                    Alert(title: Text("Something went wrong"), message: Text(self.error!.localizedDescription))
-                }
                 .navigationBarTitleDisplayMode(.inline)
             }
         }
@@ -280,8 +271,7 @@ struct PersonalInformation: View {
                     self.accountStore.save { (result: Result<User, Error>) in
                         switch result {
                         case .failure(let error):
-                            self.error = error
-                            self.showError = true
+                            print("Something bad happened", error)
                         case .success(_):
                             self.tryToggle()
                         }

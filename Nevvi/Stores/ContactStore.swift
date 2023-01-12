@@ -11,6 +11,7 @@ class ContactStore {
     var authorization: Authorization? = nil
     
     private var limit: Int = 20
+    @Published var error: Swift.Error?
     
     private func url(skip: Int, limit: Int) throws -> URL {
         if (self.authorization == nil) {

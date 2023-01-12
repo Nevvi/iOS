@@ -10,9 +10,11 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
+    @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
     @EnvironmentObject var usersStore: UsersStore
     
     @ObservedObject var connectionStore: ConnectionStore
+    @ObservedObject var connectionGroupStore: ConnectionGroupStore
     
     var body: some View {
         if (!accountStore.id.isEmpty) {
@@ -33,8 +35,8 @@ struct ContentView: View {
                     })
                     
                     RefreshableView(onRefresh: {
-                        
-                    }, view: Text("Groups").tabItem() {
+                        self.connectionGroupsStore.load()
+                    }, view: ConnectionGroupList(connectionGroupStore: self.connectionGroupStore, connectionStore: self.connectionStore).tabItem() {
                         Image(systemName: "person.3.fill")
                         Text("Groups")
                     })
@@ -47,6 +49,12 @@ struct ContentView: View {
                         Text("Account")
                     })
                 }
+                .errorAlert(error: self.$accountStore.error)
+                .errorAlert(error: self.$connectionStore.error)
+                .errorAlert(error: self.$connectionsStore.error)
+                .errorAlert(error: self.$connectionGroupStore.error)
+                .errorAlert(error: self.$connectionGroupsStore.error)
+                .errorAlert(error: self.$usersStore.error)
             } else {
                 OnboardingCarousel()
             }
@@ -57,6 +65,7 @@ struct ContentView: View {
                 self.connectionsStore.load()
                 self.connectionsStore.loadRequests()
                 self.connectionsStore.loadRejectedUsers()
+                self.connectionGroupsStore.load()
             }
         }
     }
@@ -65,12 +74,14 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static let modelData = ModelData()
     static var previews: some View {
-        ContentView(connectionStore: ConnectionStore(connection: modelData.connection))
+        ContentView(connectionStore: ConnectionStore(connection: modelData.connection),
+                    connectionGroupStore: ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users))
         .environmentObject(AccountStore(user: modelData.user))
         .environmentObject(ConnectionsStore(connections: modelData.connectionResponse.users,
                                             requests: modelData.requests,
                                             blockedUsers: modelData.connectionResponse.users))
         .environmentObject(AuthorizationStore())
         .environmentObject(UsersStore(users: modelData.connectionResponse.users))
+        .environmentObject(ConnectionGroupsStore(groups: modelData.groups))
     }
 }
