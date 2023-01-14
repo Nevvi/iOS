@@ -19,6 +19,7 @@ class AccountStore: ObservableObject {
     @Published var id: String = ""
     @Published var firstName: String = ""
     @Published var lastName: String = ""
+    @Published var deviceId: String = ""
     @Published var email: String = ""
     @Published var emailConfirmed: Bool = false
     @Published var phoneNumber: String = ""
@@ -49,6 +50,7 @@ class AccountStore: ObservableObject {
         self.id = user.id
         self.firstName = user.firstName == nil ? "" : user.firstName!
         self.lastName = user.lastName == nil ? "" : user.lastName!
+        self.deviceId = user.deviceId == nil ? "" : user.deviceId!
         self.email = user.email
         self.emailConfirmed = user.emailConfirmed
         self.phoneNumber = user.phoneNumber == nil ? "" : user.phoneNumber!
@@ -67,6 +69,7 @@ class AccountStore: ObservableObject {
         self.id = ""
         self.firstName = ""
         self.lastName = ""
+        self.deviceId = "" // TODO - do we want this?
         self.email = ""
         self.emailConfirmed = false
         self.phoneNumber = ""
@@ -127,10 +130,30 @@ class AccountStore: ObservableObject {
                     self.error = GenericError(error.localizedDescription)
                 }
                 self.loading = false
+                
+                // If the user we got with this token doesn't match the device id then do an update
+                if let uuid = UIDevice.current.identifierForVendor?.uuidString {
+                    if self.deviceId != uuid {
+                        // TODO - Future: prompt user to use this device for long term?
+                        self.deviceId = uuid
+                        self.save()
+                    }
+                }
             }
         } catch(let error) {
             self.error = GenericError(error.localizedDescription)
             self.loading = false
+        }
+    }
+    
+    func save() {
+        self.save { (result: Result<User, Error>) in
+            switch result {
+            case .success(let user):
+                self.update(user: user)
+            case .failure(let error):
+                self.error = GenericError(error.localizedDescription)
+            }
         }
     }
     
@@ -143,7 +166,8 @@ class AccountStore: ObservableObject {
                                        lastName: self.lastName,
                                        address: self.address.toModel(),
                                        birthday: self.birthday.yyyyMMdd(),
-                                       phoneNumber: self.phoneNumber) // TODO - format this to +1XXXXXXXXXX
+                                       phoneNumber: self.phoneNumber != "" ? self.phoneNumber : nil,  // TODO - format this to +1XXXXXXXXXX
+                                       deviceId: self.deviceId)
             
             URLSession.shared.patchData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
                 switch result {
@@ -279,6 +303,7 @@ class AccountStore: ObservableObject {
         var address: Address?
         var birthday: String?
         var phoneNumber: String?
+        var deviceId: String?
     }
     
     struct CompleteOnboardingRequest: Encodable {

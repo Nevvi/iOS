@@ -13,6 +13,7 @@ struct User: Hashable, Codable {
     var id: String
     var firstName: String?
     var lastName: String?
+    var deviceId: String?
     var email: String
     var emailConfirmed: Bool
     var phoneNumber: String?

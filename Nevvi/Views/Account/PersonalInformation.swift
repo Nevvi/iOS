@@ -113,7 +113,7 @@ struct PersonalInformation: View {
                             }
                         }
                         
-                        TextField("555-555-5555", text: self.$accountStore.phoneNumber)
+                        TextField("", text: self.$accountStore.phoneNumber)
                             .padding()
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                             .textInputAutocapitalization(.never)
@@ -147,7 +147,9 @@ struct PersonalInformation: View {
                                 .fontWeight(.light)
                                 .font(.system(size: 14))
                             
-                            Text(self.accountStore.birthday.yyyyMMdd())
+                            Text(self.accountStore.birthday.yyyyMMdd() != Date().yyyyMMdd() ?
+                                 self.accountStore.birthday.yyyyMMdd() :
+                                 "")
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding()
                                 .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
@@ -158,6 +160,7 @@ struct PersonalInformation: View {
                     .onTapGesture {
                         self.showBirthdayPicker.toggle()
                     }
+                        
                     
                     Spacer()
                 }
@@ -289,21 +292,34 @@ struct PersonalInformation: View {
             return
         }
         
-        let didChange = user.firstName != self.accountStore.firstName ||
-        user.lastName != self.accountStore.lastName ||
-        user.phoneNumber != self.accountStore.phoneNumber ||
-        user.address.street != self.accountStore.address.street ||
-        user.address.unit != self.accountStore.address.unit ||
-        user.address.city != self.accountStore.address.city ||
-        user.address.state != self.accountStore.address.state ||
-        user.address.zipCode != self.accountStore.address.zipCode ||
-        user.birthday != self.accountStore.birthday
+        let didChange = didPropChange(type: String.self, a: user.firstName, b: self.accountStore.firstName) ||
+        didPropChange(type: String.self, a: user.lastName, b: self.accountStore.lastName) ||
+        didPropChange(type: String.self, a: user.phoneNumber, b: self.accountStore.phoneNumber) ||
+        didPropChange(type: String.self, a: user.address.street, b: self.accountStore.address.street) ||
+        didPropChange(type: String.self, a: user.address.unit, b: self.accountStore.address.unit) ||
+        didPropChange(type: String.self, a: user.address.city, b: self.accountStore.address.city) ||
+        didPropChange(type: String.self, a: user.address.state, b: self.accountStore.address.state) ||
+        didPropChange(type: Int.self, a: user.address.zipCode, b: self.accountStore.address.zipCode) ||
+        didPropChange(type: Date.self, a: user.birthday, b: self.accountStore.birthday)
         
         if (!self.canSave && didChange) || (self.canSave && !didChange) {
             withAnimation {
                 self.canSave.toggle()
             }
         }
+    }
+    
+    func didPropChange<T: Equatable>(type: T.Type, a: Any?, b: Any?) -> Bool {
+        let a = a as? T
+        let b = b as? T
+        
+        if T.self == String.self {
+            if (a as? String == "" || a == nil) && (b as? String == "" || b == nil) {
+                return false
+            }
+        }
+
+        return a != b
     }
 
 }

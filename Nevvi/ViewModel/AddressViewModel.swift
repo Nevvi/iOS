@@ -27,14 +27,18 @@ class AddressViewModel : ObservableObject {
     }
     
     func toModel() -> Address {
-        return Address(street: self.street,
-                       unit: self.unit,
-                       city: self.city,
-                       state: self.state,
-                       zipCode: self.zipCode)
+        return Address(street: self.street != "" ? self.street : nil,
+                       unit: self.unit != "" ? self.unit : nil,
+                       city: self.city != "" ? self.city : nil,
+                       state: self.state != "" ? self.state : nil,
+                       zipCode: self.zipCode != -1 ? self.zipCode : nil)
     }
     
     func toString() -> String {
+        if self.street == "" {
+            return ""
+        }
+        
         return "\(self.street)\(self.unit != "" ? " \(self.unit)" : "" ), \(self.city), \(self.state) \(self.zipCode)"
     }
 }
