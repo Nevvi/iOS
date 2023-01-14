@@ -145,6 +145,7 @@ class ConnectionsStore : ObservableObject {
                 switch result {
                 case .success(let requests):
                     self.requests = requests
+                    self.requestCount = requests.count
                 case .failure(let error):
                     self.error = GenericError(error.localizedDescription)
                 }

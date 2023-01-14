@@ -150,6 +150,16 @@ struct ConnectionDetail: View {
                         Spacer()
                     }
                     .disabled(self.connectionStore.saving)
+                    .onChange(of: self.connectionStore.permissionGroup) { newValue in
+                        self.connectionStore.update { (result: Result<Connection, Error>) in
+                            switch result {
+                            case .success(let connection):
+                                print("Updated connection with \(connection.id)")
+                            case .failure(let error):
+                                print("Something bad happened", error)
+                            }
+                        }
+                    }
                 }
                 .presentationDetents([.fraction(0.33)])
             }
@@ -171,16 +181,6 @@ struct ConnectionDetail: View {
                     .scrollContentBackground(.hidden)
                     .padding([.top], -30)
                     .presentationDetents([.fraction(0.50)])
-                }
-                .onChange(of: self.connectionStore.permissionGroup) { newValue in
-                    self.connectionStore.update { (result: Result<Connection, Error>) in
-                        switch result {
-                        case .success(let connection):
-                            print("Updated connection with \(connection.id)")
-                        case .failure(let error):
-                            print("Something bad happened", error)
-                        }
-                    }
                 }
             }
         } else  {
