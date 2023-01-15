@@ -14,8 +14,6 @@ struct BlockedUserList: View {
     @StateObject var nameFilter = DebouncedText()
     
     @State private var showInfo: Bool = false
-    @State private var showError: Bool = false
-    @State private var error: Error? = nil
         
     var body: some View {
         NavigationView {
@@ -41,8 +39,7 @@ struct BlockedUserList: View {
                                     case .success(_):
                                         self.connectionsStore.loadRejectedUsers()
                                     case .failure(let error):
-                                        self.error = error
-                                        self.showError = true
+                                        print("Something went wrong", error)
                                     }
                                 }
                             }, user: user)
@@ -64,9 +61,6 @@ struct BlockedUserList: View {
         }
         .navigationTitle("Blocked Users")
         .navigationBarTitleDisplayMode(.inline)
-        .alert(isPresented: self.$showError) {
-            Alert(title: Text("Something went wrong"), message: Text(self.error!.localizedDescription))
-        }
         .toolbar(content: {
             Image(systemName: "info.circle")
                 .padding([.trailing])

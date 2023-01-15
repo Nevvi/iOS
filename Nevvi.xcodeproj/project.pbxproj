@@ -33,6 +33,8 @@
 		04314391296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314390296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift */; };
 		04314393296CCD010094D7E0 /* ConnectionGroupDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */; };
 		04314395297087210094D7E0 /* ConnectionGroupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314394297087210094D7E0 /* ConnectionGroupStore.swift */; };
+		04314397297438D70094D7E0 /* PermissionGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314396297438D70094D7E0 /* PermissionGroupList.swift */; };
+		0431439929743F8F0094D7E0 /* PermissionGroupDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431439829743F8F0094D7E0 /* PermissionGroupDetail.swift */; };
 		04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FB295DEA5C00703523 /* NevviApp.swift */; };
 		04B948FE295DEA5C00703523 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FD295DEA5C00703523 /* ContentView.swift */; };
 		04B94900295DEA5E00703523 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B948FF295DEA5E00703523 /* Assets.xcassets */; };
@@ -107,6 +109,8 @@
 		04314390296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupMembershipRow.swift; sourceTree = "<group>"; };
 		04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupDetail.swift; sourceTree = "<group>"; };
 		04314394297087210094D7E0 /* ConnectionGroupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupStore.swift; sourceTree = "<group>"; };
+		04314396297438D70094D7E0 /* PermissionGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGroupList.swift; sourceTree = "<group>"; };
+		0431439829743F8F0094D7E0 /* PermissionGroupDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGroupDetail.swift; sourceTree = "<group>"; };
 		04B948F8295DEA5C00703523 /* Nevvi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nevvi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B948FB295DEA5C00703523 /* NevviApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NevviApp.swift; sourceTree = "<group>"; };
 		04B948FD295DEA5C00703523 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -326,6 +330,8 @@
 				04038E33296667CA00D3C7AC /* BlockedUserList.swift */,
 				04038E3729679FEF00D3C7AC /* Settings.swift */,
 				0431437C2969B3F50094D7E0 /* AddressSearch.swift */,
+				04314396297438D70094D7E0 /* PermissionGroupList.swift */,
+				0431439829743F8F0094D7E0 /* PermissionGroupDetail.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -505,6 +511,8 @@
 				04B948FE295DEA5C00703523 /* ContentView.swift in Sources */,
 				04B94963295F814100703523 /* OperatorOverloads.swift in Sources */,
 				04B94918295DEB9900703523 /* Connection.swift in Sources */,
+				04314397297438D70094D7E0 /* PermissionGroupList.swift in Sources */,
+				0431439929743F8F0094D7E0 /* PermissionGroupDetail.swift in Sources */,
 				04038E3629679CCE00D3C7AC /* ContactStore.swift in Sources */,
 				04038E1B2960CE9500D3C7AC /* ConnectionRequest.swift in Sources */,
 				04B9496B2960964500703523 /* NavigationLazyView.swift in Sources */,

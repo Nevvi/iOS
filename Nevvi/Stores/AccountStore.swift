@@ -167,7 +167,8 @@ class AccountStore: ObservableObject {
                                        address: self.address.toModel(),
                                        birthday: self.birthday.yyyyMMdd(),
                                        phoneNumber: self.phoneNumber != "" ? self.phoneNumber : nil,  // TODO - format this to +1XXXXXXXXXX
-                                       deviceId: self.deviceId)
+                                       deviceId: self.deviceId,
+                                       permissionGroups: self.permissionGroups)
             
             URLSession.shared.patchData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
                 switch result {
@@ -304,6 +305,7 @@ class AccountStore: ObservableObject {
         var birthday: String?
         var phoneNumber: String?
         var deviceId: String?
+        var permissionGroups: [PermissionGroup]?
     }
     
     struct CompleteOnboardingRequest: Encodable {

@@ -10,9 +10,6 @@ import SwiftUI
 struct Account: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var authStore: AuthorizationStore
-    
-    @State private var showError: Bool = false
-    @State private var error: Error? = nil
 
     var body: some View {
         NavigationView {
@@ -56,21 +53,21 @@ struct Account: View {
                     }.foregroundColor(.black)
                 }.padding([.top], 50)
                 
-                NavigationLink {
-                    Settings()
-                } label: {
-                    HStack {
-                        Image(systemName: "gearshape").padding([.trailing])
-                        Text("Settings")
-                    }.foregroundColor(.black)
-                }.padding([.top], 30)
+//                NavigationLink {
+//                    Text("Notifications")
+//                } label: {
+//                    HStack {
+//                        Image(systemName: "bell").padding([.trailing])
+//                        Text("Notifications")
+//                    }.foregroundColor(.black)
+//                }.padding([.top], 30)
                 
                 NavigationLink {
-                    Text("Notifications")
+                    PermissionGroupList()
                 } label: {
                     HStack {
-                        Image(systemName: "bell").padding([.trailing])
-                        Text("Notifications")
+                        Image(systemName: "lock").padding([.trailing])
+                        Text("Permission Groups")
                     }.foregroundColor(.black)
                 }.padding([.top], 30)
                 
@@ -83,14 +80,22 @@ struct Account: View {
                     }.foregroundColor(.black)
                 }.padding([.top], 30)
                 
+                NavigationLink {
+                    Settings()
+                } label: {
+                    HStack {
+                        Image(systemName: "gearshape").padding([.trailing])
+                        Text("Settings")
+                    }.foregroundColor(.black)
+                }.padding([.top], 30)
+                
                 Spacer()
                 
                 Button(action: {
                     self.authStore.logout { (result: Result<Bool, Error>) in
                         switch result {
                         case .failure(let error):
-                            self.error = error
-                            self.showError = true
+                            print("Something went wrong", error)
                         case .success(_):
                             self.accountStore.reset()
                         }
@@ -106,9 +111,6 @@ struct Account: View {
                 .padding([.bottom], 30)
             }
             .padding(30)
-            .alert(isPresented: self.$showError) {
-                Alert(title: Text("Something went wrong"), message: Text(self.error!.localizedDescription))
-            }
             .navigationTitle("My Account")
             .navigationBarTitleDisplayMode(.inline)
         }
