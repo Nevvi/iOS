@@ -162,8 +162,8 @@ class AccountStore: ObservableObject {
             self.saving = true
             let idToken: String? = self.authorization?.idToken
             
-            let request = PatchRequest(firstName: self.firstName,
-                                       lastName: self.lastName,
+            let request = PatchRequest(firstName: self.firstName != "" ? self.firstName : nil,
+                                       lastName: self.lastName != "" ? self.lastName : nil,
                                        address: self.address.toModel(),
                                        birthday: self.birthday.yyyyMMdd(),
                                        phoneNumber: self.phoneNumber != "" ? self.phoneNumber : nil,  // TODO - format this to +1XXXXXXXXXX

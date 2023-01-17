@@ -37,38 +37,10 @@ struct PermissionGroupList: View {
             }
             .scrollContentBackground(.hidden)
             .sheet(isPresented: self.$showGroupEdit) {
-                PermissionGroupDetail(group: self.selectedGroup!, callback: { (group: PermissionGroup) in
-                    print(self.accountStore.permissionGroups)
-                    self.accountStore.permissionGroups = self.accountStore.permissionGroups.map { existingGroup in
-                        return existingGroup.name == group.name ? group : existingGroup
-                    }
-                    print(self.accountStore.permissionGroups)
-                    self.accountStore.save { (result: Result<User, Error>) in
-                        switch result {
-                        case .success(_):
-                            self.showGroupEdit = false
-                        case .failure(let error):
-                            print("Something went wrong", error)
-                        }
-                    }
-                })
-                    .padding()
-                    .presentationDetents([.medium])
+                editPermissionGroupSheet
             }
             .sheet(isPresented: self.$showNewGroup) {
-                PermissionGroupDetail(callback: { (group: PermissionGroup) in
-                    self.accountStore.permissionGroups.append(group)
-                    self.accountStore.save { (result: Result<User, Error>) in
-                        switch result {
-                        case .success(_):
-                            self.showNewGroup = false
-                        case .failure(let error):
-                            print("Something went wrong", error)
-                        }
-                    }
-                })
-                    .padding()
-                    .presentationDetents([.medium])
+                newPermissionGroupSheet
             }
             
             Text("\(self.selectedGroup?.name ?? "")")
@@ -82,6 +54,40 @@ struct PermissionGroupList: View {
         })
         .navigationTitle("Permission Groups")
         .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    var editPermissionGroupSheet: some View {
+        PermissionGroupDetail(group: self.selectedGroup!, callback: { (group: PermissionGroup) in
+            self.accountStore.permissionGroups = self.accountStore.permissionGroups.map { existingGroup in
+                return existingGroup.name == group.name ? group : existingGroup
+            }
+            self.accountStore.save { (result: Result<User, Error>) in
+                switch result {
+                case .success(_):
+                    self.showGroupEdit = false
+                case .failure(let error):
+                    print("Something went wrong", error)
+                }
+            }
+        })
+        .padding()
+        .presentationDetents([.medium])
+    }
+    
+    var newPermissionGroupSheet: some View {
+        PermissionGroupDetail(callback: { (group: PermissionGroup) in
+            self.accountStore.permissionGroups.append(group)
+            self.accountStore.save { (result: Result<User, Error>) in
+                switch result {
+                case .success(_):
+                    self.showNewGroup = false
+                case .failure(let error):
+                    print("Something went wrong", error)
+                }
+            }
+        })
+        .padding()
+        .presentationDetents([.medium])
     }
 }
 

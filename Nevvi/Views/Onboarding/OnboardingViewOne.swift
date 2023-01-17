@@ -7,59 +7,50 @@
 
 import SwiftUI
 
-struct OnboardingViewOne: View {
-    @State private var isAnimating: Bool = false
-    
+struct OnboardingViewOne: View {    
     var primaryClick: () -> Void
 
     var body: some View {
-        VStack(spacing: 20.0) {
+        VStack() {
             Spacer()
 
             Text("Welcome to Nevvi!")
                 .font(.title)
                 .bold()
                 .foregroundColor(.white)
+                .padding(20)
             
-            Spacer()
+            Image("ConnectionGrid")
+                .resizable()
+                .scaledToFit()
+                .padding()
+                        
+            Text("We keep all your connections up to date, so you don't have to.")
+                .onboardingStyle()
+                .padding(20)
 
-            Text("Our goal is to keep those in your life updated when those inevitable life changes happen.")
-                .font(.headline)
-                .multilineTextAlignment(.center)
-                .foregroundColor(.white)
-                .shadow(color: Color.black.opacity(0.1), radius: 1, x: 2, y: 2)
-
             Spacer()
-            Spacer()
+            
+            HStack {
+                Spacer()
+                primaryButton
+            }
+            .padding()
 
-            Button(action: self.primaryClick, label: {
+        }
+        .padding([.leading, .trailing])
+        .background(BackgroundGradient())
+    }
+    
+    var primaryButton: some View {
+        Button(action: self.primaryClick, label: {
+            HStack {
                 Text("Get Started")
                     .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 50)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .foregroundColor(Color(UIColor(hexString: "#49C5B6")))
-                    )
-            })
-            .shadow(radius: 10)
-        }
-        .padding()
-        .background(
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    Color(UIColor(hexString: "#33897F")),
-                    Color(UIColor(hexString: "#5293B8"))
-                ]),
-                startPoint: .top,
-                endPoint: .bottom)
-            .edgesIgnoringSafeArea(.all))
-        .onAppear(perform: {
-            isAnimating = false
-            withAnimation(.easeOut(duration: 0.5)) {
-                self.isAnimating = true
+                
+                Image(systemName: "chevron.right")
             }
+            .foregroundColor(.white)
         })
     }
 }

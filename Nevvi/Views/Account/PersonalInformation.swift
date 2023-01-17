@@ -7,13 +7,20 @@
 
 import SwiftUI
 
+extension VStack {
+    func personalInfoStyle() -> some View {
+        return self
+            .padding([.leading, .trailing])
+            .padding([.bottom], 8)
+    }
+}
+
 struct PersonalInformation: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var authStore: AuthorizationStore
     
     @State private var phoneVerificationCode: String = ""
     @State private var showPhoneVerification: Bool = false
-    @State private var showPicker: Bool = false
     @State private var showBirthdayPicker: Bool = false
     @State private var showAddressSearch: Bool = false
     @State private var newProfileImage = UIImage()
@@ -26,30 +33,7 @@ struct PersonalInformation: View {
             ScrollView {
                 VStack {
                     VStack {
-                        ZStack(alignment: .bottomTrailing) {
-                            AsyncImage(url: URL(string: self.accountStore.profileImage), content: { image in
-                                image.resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 80, height: 80)
-                                    .clipShape(Circle())
-                            }, placeholder: {
-                                Image(systemName: "photo.circle")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 80, height: 80)
-                                    .foregroundColor(.gray)
-                                    .clipShape(Circle())
-                            })
-                            
-                            Image(systemName: "plus")
-                                .foregroundColor(.white)
-                                .frame(width: 25, height: 25)
-                                .background(Color.blue)
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                        }.onTapGesture {
-                            self.showPicker = true
-                        }
+                        ProfileImageSelector(height: 80, width: 80)
                         
                         Text(self.accountStore.email)
                             .foregroundColor(.secondary)
@@ -58,110 +42,59 @@ struct PersonalInformation: View {
                     
                     VStack(alignment: .leading) {
                         Text("First Name")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
+                            .personalInfoLabel()
                         
                         TextField("Jane", text: self.$accountStore.firstName)
-                            .padding()
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
-                    }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
+                            .personalInfoStyle()
+                    }.personalInfoStyle()
                     
                     VStack(alignment: .leading) {
                         Text("Last Name")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
+                            .personalInfoLabel()
                         
                         TextField("Doe", text: self.$accountStore.lastName)
-                            .padding()
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
-                    }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
+                            .personalInfoStyle()
+                    }.personalInfoStyle()
                     
                     VStack(alignment: .leading) {
-                        HStack {
-                            Text("Phone Number")
-                                .foregroundColor(.secondary)
-                                .fontWeight(.light)
-                                .font(.system(size: 14))
-                            
-                            Spacer()
-                            
-                            if !self.accountStore.phoneNumber.isEmpty && !self.accountStore.phoneNumberConfirmed {
-                                Button {
-                                    self.accountStore.verifyPhone { (result: Result<AccountStore.VerifyPhoneResponse, Error>) in
-                                        switch result {
-                                        case .success(_):
-                                            self.showPhoneVerification = true
-                                        case .failure(let error):
-                                            print("Something bad happened", error)
-                                        }
-                                    }
-                                } label: {
-                                    Text("Verify")
-                                }
-                                .fontWeight(.light)
-                                .font(.system(size: 14))
-                            }
-                        }
+                        phoneVerificationLabel
                         
                         TextField("", text: self.$accountStore.phoneNumber)
-                            .padding()
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
-                    }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
+                            .personalInfoStyle()
+                    }.personalInfoStyle()
                     
                     VStack(alignment: .leading) {
                         Text("Street Address")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
+                            .personalInfoLabel()
                         
-                        Text(self.accountStore.address.toString())
+                        Text(self.accountStore.address.street != "" ? self.accountStore.address.toString() : "")
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
+                            .padding(16)
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
                             )
                             .onTapGesture {
                                 self.showAddressSearch = true
                             }
-                    }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
+                    }.personalInfoStyle()
                     
                     HStack {
                         VStack(alignment: .leading) {
                             Text("Birthday")
-                                .foregroundColor(.secondary)
-                                .fontWeight(.light)
-                                .font(.system(size: 14))
+                                .personalInfoLabel()
                             
                             Text(self.accountStore.birthday.yyyyMMdd() != Date().yyyyMMdd() ?
                                  self.accountStore.birthday.yyyyMMdd() :
                                  "")
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding()
+                                .padding(14)
                                 .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                         }
+                        .personalInfoStyle()
                     }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
                     .onTapGesture {
                         self.showBirthdayPicker.toggle()
                     }
                         
-                    
                     Spacer()
                 }
                 .onChange(of: self.accountStore.firstName, perform: { newValue in
@@ -192,99 +125,154 @@ struct PersonalInformation: View {
                     self.tryToggle()
                 })
                 .sheet(isPresented: self.$showBirthdayPicker) {
-                    DatePicker("", selection: self.$accountStore.birthday, in: ...Date(), displayedComponents: [.date])
-                        .datePickerStyle(.wheel)
-                        .labelsHidden()
-                        .padding()
-                        .presentationDetents([.height(250)])
+                    datePickerSheet
                 }
                 .sheet(isPresented: self.$showAddressSearch) {
-                    AddressSearch()
-                        .presentationDetents([.large])
-                }
-                .sheet(isPresented: self.$showPicker) {
-                    ImagePicker(callback: { (image: UIImage) in
-                        self.accountStore.uploadImage(image: image) { (result: Result<User, Error>) in
-                            switch result {
-                            case .failure(let error):
-                                print("Something bad happened", error)
-                            case .success(let user):
-                                self.accountStore.update(user: user)
-                            }
-                        }
-                    }, sourceType: .photoLibrary)
+                    AddressSearch().presentationDetents([.large])
                 }
                 .sheet(isPresented: self.$showPhoneVerification) {
-                    VStack(alignment: .center) {
-                        Text("Please enter the confirmation code we texted to you")
-                            .multilineTextAlignment(.center)
-                            .padding([.top], 50)
-                        
-                        Spacer()
-                        
-                        TextField("Code", text: self.$phoneVerificationCode)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .keyboardType(.numberPad)
-                            .padding()
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                        
-                        Spacer()
-                        
-                        Button {
-                            self.accountStore.confirmPhone(code: self.phoneVerificationCode) { (result: Result<AccountStore.ConfirmPhoneResponse, Error>) in
-                                switch result {
-                                case .success(_):
-                                    // TODO - load this new value more dynamically instead of hard code?
-                                    self.accountStore.phoneNumberConfirmed = true
-                                    self.showPhoneVerification = false
-                                case .failure(let error):
-                                    print("Something bad happened", error)
-                                }
-                            }
-                        } label: {
-                            if self.accountStore.saving {
-                                ProgressView()
-                                    .padding()
-                                    .frame(width: 300, height: 50)
-                                    .background(Color.green)
-                                    .cornerRadius(15.0)
-                            } else {
-                                Text("Confirm Phone")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .frame(width: 300, height: 50)
-                                    .background(self.phoneVerificationCode.count != 6 ? .gray : Color.green)
-                                    .cornerRadius(15.0)
-                            }
-                        }
-                        .disabled(self.phoneVerificationCode.count != 6)
-                        .padding()
-                    }
-                    .padding(40)
-                    .disabled(self.accountStore.saving)
-                    .presentationDetents([.medium])
+                    phoneVerificationSheet
                 }
-                .navigationBarTitleDisplayMode(.inline)
             }
         }
         .toolbar(content: {
             if self.canSave {
-                Button(action: {
-                    self.accountStore.save { (result: Result<User, Error>) in
-                        switch result {
-                        case .failure(let error):
-                            print("Something bad happened", error)
-                        case .success(_):
-                            self.tryToggle()
-                        }
-                    }
-                }, label: {
-                    Text("Update")
-                })
-                .disabled(self.accountStore.saving)
+                updateAccountButton
             }
         })
+    }
+    
+    var phoneVerificationLabel: some View {
+        HStack {
+            Text("Phone Number")
+                .personalInfoLabel()
+            
+            Spacer()
+            
+            if !self.accountStore.phoneNumber.isEmpty && !self.accountStore.phoneNumberConfirmed && self.accountStore.phoneNumber == self.accountStore.user?.phoneNumber {
+                Button {
+                    self.accountStore.verifyPhone { (result: Result<AccountStore.VerifyPhoneResponse, Error>) in
+                        switch result {
+                        case .success(_):
+                            self.showPhoneVerification = true
+                        case .failure(let error):
+                            print("Something bad happened", error)
+                        }
+                    }
+                } label: {
+                    Text("Verify")
+                }
+                .fontWeight(.light)
+                .font(.system(size: 14))
+            }
+        }
+    }
+    
+    var phoneVerificationSheet: some View {
+        VStack(alignment: .center) {
+            Text("Please enter the confirmation code we texted to you")
+                .multilineTextAlignment(.center)
+                .padding([.top], 50)
+            
+            Spacer()
+            
+            TextField("Code", text: self.$phoneVerificationCode)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .keyboardType(.numberPad)
+                .padding()
+                .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+            
+            Spacer()
+            
+            Button {
+                self.accountStore.confirmPhone(code: self.phoneVerificationCode) { (result: Result<AccountStore.ConfirmPhoneResponse, Error>) in
+                    switch result {
+                    case .success(_):
+                        // TODO - load this new value more dynamically instead of hard code?
+                        self.accountStore.phoneNumberConfirmed = true
+                        self.showPhoneVerification = false
+                    case .failure(let error):
+                        print("Something bad happened", error)
+                    }
+                }
+            } label: {
+                if self.accountStore.saving {
+                    ProgressView()
+                        .padding()
+                        .frame(width: 300, height: 50)
+                        .background(Color.green)
+                        .cornerRadius(15.0)
+                } else {
+                    Text("Confirm Phone")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(width: 300, height: 50)
+                        .background(self.phoneVerificationCode.count != 6 ? .gray : Color.green)
+                        .cornerRadius(15.0)
+                }
+            }
+            .disabled(self.phoneVerificationCode.count != 6)
+            .padding()
+        }
+        .padding(40)
+        .disabled(self.accountStore.saving)
+        .presentationDetents([.medium])
+    }
+    
+    var datePickerSheet: some View {
+        DatePicker("", selection: self.$accountStore.birthday, in: ...Date(), displayedComponents: [.date])
+            .datePickerStyle(.wheel)
+            .labelsHidden()
+            .padding()
+            .presentationDetents([.height(250)])
+    }
+    
+    var updateAccountButton: some View {
+        Button(action: {
+            self.accountStore.save { (result: Result<User, Error>) in
+                switch result {
+                case .failure(let error):
+                    print("Something bad happened", error)
+                case .success(_):
+                    self.tryToggle()
+                }
+            }
+        }, label: {
+            Text("Update")
+        })
+        .disabled(self.accountStore.saving)
+    }
+    
+    func withChangeEvents() -> some View {
+        return self
+            .onChange(of: self.accountStore.firstName, perform: { newValue in
+                self.tryToggle()
+            })
+            .onChange(of: self.accountStore.lastName, perform: { newValue in
+                self.tryToggle()
+            })
+            .onChange(of: self.accountStore.phoneNumber, perform: { newValue in
+                self.tryToggle()
+            })
+            .onChange(of: self.accountStore.address.street, perform: { newValue in
+                self.tryToggle()
+            })
+            .onChange(of: self.accountStore.address.unit, perform: { newValue in
+                self.tryToggle()
+            })
+            .onChange(of: self.accountStore.address.city, perform: { newValue in
+                self.tryToggle()
+            })
+            .onChange(of: self.accountStore.address.state, perform: { newValue in
+                self.tryToggle()
+            })
+            .onChange(of: self.accountStore.address.zipCode, perform: { newValue in
+                self.tryToggle()
+            })
+            .onChange(of: self.accountStore.birthday, perform: { newValue in
+                self.tryToggle()
+            })
     }
     
     func tryToggle() {

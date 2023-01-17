@@ -31,106 +31,13 @@ struct ConnectionGroupDetail: View {
             
             List {
                 if self.connectionGroupStore.loading || self.connectionGroupStore.connectionCount == 0 {
-                    HStack {
-                        Spacer()
-                        if self.connectionGroupStore.loadingConnections {
-                            ProgressView()
-                        } else {
-                            VStack {
-                                Image(systemName: "person.2.slash")
-                                    .resizable()
-                                    .frame(width: 120, height: 100)
-                                Text("No connections found")
-                            }
-                        }
-                        Spacer()
-                    }
-                    .padding([.top], 100)
+                    noConnectionsView
                 } else {
-                    ForEach(self.connectionGroupStore.connections) { connection in
-                        NavigationLink {
-                            NavigationLazyView(
-                                ConnectionDetail(connectionStore: self.connectionStore)
-                                    .onAppear {
-                                        self.connectionStore.load(connectionId: connection.id) { (result: Result<Connection, Error>) in
-                                            switch result {
-                                            case .success(_):
-                                                print("Got connection \(connection.id)")
-                                            case .failure(let error):
-                                                print("Something bad happened", error)
-                                            }
-                                        }
-                                    }
-                            )
-                        } label: {
-                            ConnectionRow(connection: connection)
-                        }
-                        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-                    }
-                    .onDelete(perform: self.delete)
-                    .redacted(when: self.connectionGroupStore.loadingConnections || self.connectionGroupStore.deleting, redactionType: .customPlaceholder)
+                    connectionsView
                 }
             }
             .padding([.top], -20)
             .scrollContentBackground(.hidden)
-            .sheet(isPresented: self.$showExportOptions) {
-                VStack {
-                    Text("We will collect all the latest information available to you for the connections in this group and export it to the email we have for you")
-                        .foregroundColor(.secondary)
-                        .fontWeight(.regular)
-                        .font(.system(size: 16))
-                        .padding()
-                        .presentationDetents([.fraction(0.33)])
-                    
-                    Spacer()
-                    
-                    Button {
-                        self.connectionGroupStore.exportGroupData { (result: Result<Bool, Error>) in
-                            self.showExportOptions = false
-                            switch result {
-                            case .success(_):
-                                print("Success")
-                            case .failure(let error):
-                                print("Failed to export", error)
-                            }
-                        }
-                    } label: {
-                        Text("Confirm")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 50)
-                            .padding(.vertical, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .foregroundColor(self.connectionGroupStore.loading ? .gray : Color(UIColor(hexString: "#49C5B6")))
-                            )
-                    }
-                    .disabled(self.connectionGroupStore.loading)
-                }
-                .padding()
-            }
-            .alert(isPresented: self.$showDeleteAlert) {
-                Alert(title: Text("Delete confirmation"), message: Text("Are you sure you want to remove this connection from the group?"), primaryButton: .destructive(Text("Delete")) {
-                    for index in self.toBeDeleted! {
-                        let connectionid = self.connectionGroupStore.connections[index].id
-                        self.connectionGroupStore.removeFromGroup(userId: connectionid) { (result: Result<Bool, Error>) in
-                            switch result {
-                            case.success(_):
-                                self.connectionGroupStore.loadConnections(groupId: self.connectionGroupStore.id, name: self.nameFilter.text)
-                            case .failure(let error):
-                                print("Something bad happened", error)
-                            }
-                        }
-                    }
-                    
-                    self.toBeDeleted = nil
-                    self.showDeleteAlert = false
-                }, secondaryButton: .cancel() {
-                    self.toBeDeleted = nil
-                    self.showDeleteAlert = false
-                }
-                )
-            }
         }
         .navigationTitle(self.connectionGroupStore.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -141,6 +48,110 @@ struct ConnectionGroupDetail: View {
                     self.showExportOptions.toggle()
                 }
         })
+        .sheet(isPresented: self.$showExportOptions) {
+            exportSheet
+        }
+        .alert(isPresented: self.$showDeleteAlert) {
+            deleteAlert
+        }
+    }
+    
+    var noConnectionsView: some View {
+        HStack {
+            Spacer()
+            if self.connectionGroupStore.loadingConnections {
+                ProgressView()
+            } else {
+                NoDataFound(imageName: "person.2.slash", height: 100, width: 120)
+            }
+            Spacer()
+        }
+        .padding([.top], 100)
+    }
+    
+    var connectionsView: some View {
+        ForEach(self.connectionGroupStore.connections) { connection in
+            NavigationLink {
+                NavigationLazyView(
+                    ConnectionDetail(connectionStore: self.connectionStore)
+                        .onAppear {
+                            self.connectionStore.load(connectionId: connection.id) { (result: Result<Connection, Error>) in
+                                switch result {
+                                case .success(_):
+                                    print("Got connection \(connection.id)")
+                                case .failure(let error):
+                                    print("Something bad happened", error)
+                                }
+                            }
+                        }
+                )
+            } label: {
+                ConnectionRow(connection: connection)
+            }
+            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+        }
+        .onDelete(perform: self.delete)
+        .redacted(when: self.connectionGroupStore.loadingConnections || self.connectionGroupStore.deleting, redactionType: .customPlaceholder)
+    }
+    
+    var exportSheet: some View {
+        VStack {
+            Text("We will collect all the latest information available to you for the connections in this group and export it to the email we have for you")
+                .foregroundColor(.secondary)
+                .fontWeight(.regular)
+                .font(.system(size: 16))
+                .padding()
+                .presentationDetents([.fraction(0.33)])
+            
+            Spacer()
+            
+            Button {
+                self.connectionGroupStore.exportGroupData { (result: Result<Bool, Error>) in
+                    self.showExportOptions = false
+                    switch result {
+                    case .success(_):
+                        print("Success")
+                    case .failure(let error):
+                        print("Failed to export", error)
+                    }
+                }
+            } label: {
+                Text("Confirm")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 50)
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .foregroundColor(self.connectionGroupStore.loading ? .gray : Color(UIColor(hexString: "#49C5B6")))
+                    )
+            }
+            .disabled(self.connectionGroupStore.loading)
+        }
+        .padding()
+    }
+    
+    var deleteAlert: Alert {
+        Alert(title: Text("Delete confirmation"), message: Text("Are you sure you want to remove this connection from the group?"), primaryButton: .destructive(Text("Delete")) {
+            for index in self.toBeDeleted! {
+                let connectionid = self.connectionGroupStore.connections[index].id
+                self.connectionGroupStore.removeFromGroup(userId: connectionid) { (result: Result<Bool, Error>) in
+                    switch result {
+                    case.success(_):
+                        self.connectionGroupStore.loadConnections(groupId: self.connectionGroupStore.id, name: self.nameFilter.text)
+                    case .failure(let error):
+                        print("Something bad happened", error)
+                    }
+                }
+            }
+            
+            self.toBeDeleted = nil
+            self.showDeleteAlert = false
+        }, secondaryButton: .cancel() {
+            self.toBeDeleted = nil
+            self.showDeleteAlert = false
+        }
+        )
     }
     
     func delete(at offsets: IndexSet) {

@@ -23,43 +23,14 @@ struct UserSearch: View {
                             .font(.system(size: 18))
                             .multilineTextAlignment(.center)
                     } else {
-                        HStack {
-                            Spacer()
-                            if self.usersStore.loading {
-                                ProgressView()
-                            } else {
-                                VStack {
-                                    Image(systemName: "person.2.slash")
-                                        .resizable()
-                                        .frame(width: 120, height: 100)
-                                    Text("No users found")
-                                }
-                            }
-                            Spacer()
-                        }
-                        .padding([.top], 100)
+                        noUsersView
                     }
                 } else {
-                    ForEach(self.usersStore.users) { user in
-                        NewConnectionRequestRow(requestCallback: { (id: String, group: String) in
-                            self.usersStore.requestConnection(userId: id, groupName: group) { (result: Result<Bool, Error>) in
-                                switch result {
-                                case .success(_):
-                                    print("Requested!")
-                                    // probably want to reload here once backend filters out or modifies requested users
-                                case .failure(let error):
-                                    print("Something bad happened", error)
-                                }
-                            }
-                        }, user: user)
-                    }
-                    .redacted(when: self.usersStore.loading, redactionType: .customPlaceholder)
+                   usersView
                 }
             }
+            .scrollContentBackground(.hidden)
         }
-        .navigationTitle("Users")
-        .navigationBarTitleDisplayMode(.inline)
-        .scrollContentBackground(.hidden)
         .searchable(text: self.$nameFilter.text)
         .disableAutocorrection(true)
         .onChange(of: self.nameFilter.debouncedText) { text in
@@ -69,6 +40,45 @@ struct UserSearch: View {
             self.nameFilter.text = ""
             self.usersStore.users = []
             self.usersStore.userCount = 0
+        }
+    }
+    
+    var noUsersView: some View {
+        HStack {
+            Spacer()
+            if self.usersStore.loading {
+                ProgressView()
+            } else {
+                VStack {
+                    Image(systemName: "person.2.slash")
+                        .resizable()
+                        .frame(width: 120, height: 100)
+                    Text("No users found")
+                }
+            }
+            Spacer()
+        }
+        .padding([.top], 100)
+    }
+    
+    var usersView: some View {
+        ForEach(self.usersStore.users) { user in
+            NewConnectionRequestRow(requestCallback: { (id: String, group: String) in
+                requestConnection(userId: id, groupName: group)
+            }, user: user)
+        }
+        .redacted(when: self.usersStore.loading, redactionType: .customPlaceholder)
+    }
+    
+    func requestConnection(userId: String, groupName: String) {
+        self.usersStore.requestConnection(userId: userId, groupName: groupName) { (result: Result<Bool, Error>) in
+            switch result {
+            case .success(_):
+                print("Requested!")
+                // probably want to reload here once backend filters out or modifies requested users
+            case .failure(let error):
+                print("Something bad happened", error)
+            }
         }
     }
 }

@@ -20,172 +20,133 @@ struct ConnectionDetail: View {
         if self.connectionStore.loading == false && !self.connectionStore.id.isEmpty {
             ScrollView {
                 VStack {
-                    AsyncImage(url: URL(string: self.connectionStore.profileImage), content: { image in
-                        image.resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(maxWidth: 100, maxHeight: 100)
-                            .clipShape(Circle())
-                    }, placeholder: {
-                        ProgressView()
-                            .padding(35)
-                    })
-                    
+                    ProfileImage(imageUrl: self.connectionStore.profileImage, height: 100, width: 100)
                     Text("\(self.connectionStore.firstName) \(self.connectionStore.lastName)")
                 }.padding()
                 
-                if !self.connectionStore.email.isEmpty {
-                    VStack(alignment: .leading) {
-                        Text("Email")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
-                        
-                        
-                        Text(self.connectionStore.email)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                    }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
+                if !self.connectionStore.phoneNumber.isEmpty {
+                    connectionData(label: "Email", value: self.connectionStore.email)
                 }
                 
                 if !self.connectionStore.phoneNumber.isEmpty {
-                    VStack(alignment: .leading) {
-                        Text("Phone Number")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
-                        
-                        Text(self.connectionStore.phoneNumber)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                    }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
+                    connectionData(label: "Phone Number", value: self.connectionStore.phoneNumber)
                 }
                 
                 if !self.connectionStore.address.isEmpty {
-                    VStack(alignment: .leading) {
-                        Text("Street Address")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
-                        
-                        Text(self.connectionStore.address.toString())
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                    }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
+                    connectionData(label: "Address", value: self.connectionStore.address.toString())
                 }
                 
                 if self.connectionStore.birthday.yyyyMMdd() != Date().yyyyMMdd() {
-                    VStack(alignment: .leading) {
-                        Text("Birthday")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
-                        
-                        Text(self.connectionStore.birthday.yyyyMMdd())
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding()
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                    }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
+                    connectionData(label: "Birthday", value: self.connectionStore.birthday.yyyyMMdd())
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: Button {
-                    self.showSettings = true
-                } label: {
-                    Image(systemName: "gearshape.fill")
-                        .renderingMode(.template)
-                        .foregroundColor(.black)
-                }
-            )
-            .navigationBarItems(trailing: Button {
-                    self.showGroups = true
-                } label: {
-                    Image(systemName: "person.3.fill")
-                        .renderingMode(.template)
-                        .foregroundColor(.black)
-                }
-            )
+            .navigationBarItems(trailing: settingsButton)
+            .navigationBarItems(trailing: groupsButton)
             .sheet(isPresented: self.$showSettings) {
-                ZStack {
-                    VStack {
-                        Text("Your settings with \(self.connectionStore.firstName)")
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .padding([.top], 50)
-                            .padding([.bottom], 20)
-                        
-                        Spacer()
-                        
-                        VStack {
-                            Text("Permission Group")
-                                .foregroundColor(.secondary)
-                                .fontWeight(.light)
-                                .font(.system(size: 14))
-                            
-                            Menu {
-                                Picker("Which permission group should \(self.connectionStore.firstName) belong to?", selection: self.$connectionStore.permissionGroup) {
-                                    ForEach(self.accountStore.permissionGroups, id: \.name) {
-                                        Text($0.name.uppercased())
-                                    }
-                                }
-                            } label: {
-                                Text(self.connectionStore.permissionGroup.uppercased())
-                                    .font(.system(size: 18))
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(self.connectionStore.saving ? .gray : Color(UIColor(hexString: "#49C5B6")))
-                                    .frame(width: 500)
-                            }
-                        }
-                        
-                        Spacer()
-                    }
-                    .disabled(self.connectionStore.saving)
-                    .onChange(of: self.connectionStore.permissionGroup) { newValue in
-                        self.connectionStore.update { (result: Result<Connection, Error>) in
-                            switch result {
-                            case .success(let connection):
-                                print("Updated connection with \(connection.id)")
-                            case .failure(let error):
-                                print("Something bad happened", error)
-                            }
-                        }
-                    }
-                }
-                .presentationDetents([.fraction(0.33)])
+                settingsSheet
             }
             .sheet(isPresented: self.$showGroups) {
-                VStack {
-                    Text("Group Membership")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .padding([.top], 50)
-                                                
-                    List {
-                        ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
-                            ConnectionGroupMembershipRow(connectionStore: self.connectionStore,
-                                                         isMember: group.connections.contains(self.connectionStore.id),
-                                                         group: group)
-                        }
-                        .listRowSeparator(.hidden)
-                    }
-                    .scrollContentBackground(.hidden)
-                    .padding([.top], -30)
-                    .presentationDetents([.fraction(0.50)])
-                }
+                groupsSheet
             }
         } else  {
             ProgressView()
         }
+    }
+    
+    var settingsButton: some View {
+        Button {
+            self.showSettings = true
+        } label: {
+            Image(systemName: "gearshape.fill")
+                .renderingMode(.template)
+                .foregroundColor(.black)
+        }
+    }
+    
+    var groupsButton: some View {
+        Button {
+            self.showGroups = true
+        } label: {
+            Image(systemName: "person.3.fill")
+                .renderingMode(.template)
+                .foregroundColor(.black)
+        }
+    }
+    
+    var groupsSheet: some View {
+        VStack {
+            Text("Group Membership")
+                .font(.title3)
+                .fontWeight(.semibold)
+                .padding([.top], 50)
+                                        
+            List {
+                ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
+                    ConnectionGroupMembershipRow(connectionStore: self.connectionStore,
+                                                 isMember: group.connections.contains(self.connectionStore.id),
+                                                 group: group)
+                }
+                .listRowSeparator(.hidden)
+            }
+            .scrollContentBackground(.hidden)
+            .padding([.top], -30)
+            .presentationDetents([.fraction(0.50)])
+        }
+    }
+    
+    var settingsSheet: some View {
+        ZStack {
+            VStack {
+                Text("Your settings with \(self.connectionStore.firstName)")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .padding([.top], 50)
+                    .padding([.bottom], 20)
+                
+                Spacer()
+                
+                VStack {
+                    Text("Permission Group")
+                        .personalInfoLabel()
+                    
+                    Menu {
+                        Picker("Which permission group should \(self.connectionStore.firstName) belong to?", selection: self.$connectionStore.permissionGroup) {
+                            ForEach(self.accountStore.permissionGroups, id: \.name) {
+                                Text($0.name.uppercased())
+                            }
+                        }
+                    } label: {
+                        Text(self.connectionStore.permissionGroup.uppercased())
+                            .font(.system(size: 18))
+                            .fontWeight(.semibold)
+                            .foregroundColor(self.connectionStore.saving ? .gray : Color(UIColor(hexString: "#49C5B6")))
+                            .frame(width: 500)
+                    }
+                }
+                
+                Spacer()
+            }
+            .disabled(self.connectionStore.saving)
+            .onChange(of: self.connectionStore.permissionGroup) { newValue in
+                self.connectionStore.update { (result: Result<Connection, Error>) in
+                    switch result {
+                    case .success(let connection):
+                        print("Updated connection with \(connection.id)")
+                    case .failure(let error):
+                        print("Something bad happened", error)
+                    }
+                }
+            }
+        }
+        .presentationDetents([.fraction(0.33)])
+    }
+    
+    func connectionData(label: String, value: String) -> some View {
+        VStack(alignment: .leading) {
+            Text(label).personalInfoLabel()
+            Text(value).asTextField()
+        }.personalInfoStyle()
     }
 }
 

@@ -64,22 +64,7 @@ struct PermissionGroupDetail: View {
             
             Spacer()
             
-            Button(action: {
-                group.name = self.groupName
-                callback(group)
-            }, label: {
-                Text("Save")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 50)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .foregroundColor(self.groupName == "" ? .gray : Color(UIColor(hexString: "#49C5B6")))
-                    )
-            })
-            .shadow(radius: 10)
-            .disabled(self.groupName == "")
+            saveButton
         }
         .onAppear {
             self.groupName = self.group.name
@@ -89,6 +74,25 @@ struct PermissionGroupDetail: View {
             self.enableBirthday = self.group.fields.contains("birthday")
         }
         .padding()
+    }
+    
+    var saveButton: some View {
+        Button(action: {
+            group.name = self.groupName
+            callback(group)
+        }, label: {
+            Text("Save")
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.horizontal, 50)
+                .padding(.vertical, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 20)
+                        .foregroundColor(self.groupName == "" ? .gray : Color(UIColor(hexString: "#49C5B6")))
+                )
+        })
+        .shadow(radius: 10)
+        .disabled(self.groupName == "")
     }
     
     func handleToggle(newValue: Bool, field: String) {

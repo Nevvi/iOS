@@ -15,19 +15,7 @@ struct Account: View {
         NavigationView {
             VStack(alignment: .leading) {
                 HStack {
-                    AsyncImage(url: URL(string: self.accountStore.profileImage), content: { image in
-                        image.resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(maxWidth: 70, maxHeight: 70)
-                            .clipShape(Circle())
-                    }, placeholder: {
-                        Image(systemName: "photo.circle")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 70, height: 70)
-                            .foregroundColor(.gray)
-                            .clipShape(Circle())
-                    })
+                    ProfileImage(imageUrl: self.accountStore.profileImage, height: 70, width: 70)
                     
                     VStack(alignment: .leading) {
                         Text("\(self.accountStore.firstName) \(self.accountStore.lastName)")
@@ -44,75 +32,52 @@ struct Account: View {
                 
                 Divider()
                 
-                NavigationLink {
-                    PersonalInformation()
-                } label: {
-                    HStack {
-                        Image(systemName: "person").padding([.trailing])
-                        Text("Personal Information")
-                    }.foregroundColor(.black)
-                }.padding([.top], 50)
-                
-//                NavigationLink {
-//                    Text("Notifications")
-//                } label: {
-//                    HStack {
-//                        Image(systemName: "bell").padding([.trailing])
-//                        Text("Notifications")
-//                    }.foregroundColor(.black)
-//                }.padding([.top], 30)
-                
-                NavigationLink {
-                    PermissionGroupList()
-                } label: {
-                    HStack {
-                        Image(systemName: "lock").padding([.trailing])
-                        Text("Permission Groups")
-                    }.foregroundColor(.black)
-                }.padding([.top], 30)
-                
-                NavigationLink {
-                    BlockedUserList()
-                } label: {
-                    HStack {
-                        Image(systemName: "person.2.slash").padding([.trailing])
-                        Text("Blocked Users")
-                    }.foregroundColor(.black)
-                }.padding([.top], 30)
-                
-                NavigationLink {
-                    Settings()
-                } label: {
-                    HStack {
-                        Image(systemName: "gearshape").padding([.trailing])
-                        Text("Settings")
-                    }.foregroundColor(.black)
-                }.padding([.top], 30)
+                accountOption(content: PersonalInformation(), iconName: "person", label: "Personal Information")
+                accountOption(content: PermissionGroupList(), iconName: "lock", label: "Permission Groups")
+                accountOption(content: BlockedUserList(), iconName: "person.2.slash", label: "Blocked Users")
+                accountOption(content: Settings(), iconName: "gearshape", label: "Settings")
                 
                 Spacer()
                 
-                Button(action: {
-                    self.authStore.logout { (result: Result<Bool, Error>) in
-                        switch result {
-                        case .failure(let error):
-                            print("Something went wrong", error)
-                        case .success(_):
-                            self.accountStore.reset()
-                        }
-                    }
-                }, label: {
-                    HStack {
-                        Image(systemName: "rectangle.portrait.and.arrow.forward").padding([.trailing])
-                        Text("Logout")
-                    }
-                    .foregroundColor(self.authStore.loggingOut ? .gray : .black)
-                })
-                .disabled(self.authStore.loggingOut)
-                .padding([.bottom], 30)
+                logoutButton
             }
             .padding(30)
             .navigationTitle("My Account")
             .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+    
+    func accountOption(content: some View, iconName: String, label: String) -> some View {
+        NavigationLink {
+            content
+        } label: {
+            HStack {
+                Image(systemName: iconName).padding([.trailing])
+                Text(label)
+            }.foregroundColor(.black)
+        }.padding([.top], 30)
+    }
+    
+    var logoutButton: some View {
+        Button(action: self.logout, label: {
+            HStack {
+                Image(systemName: "rectangle.portrait.and.arrow.forward").padding([.trailing])
+                Text("Logout")
+            }
+            .foregroundColor(self.authStore.loggingOut ? .gray : .black)
+        })
+        .disabled(self.authStore.loggingOut)
+        .padding([.bottom], 30)
+    }
+    
+    func logout() {
+        self.authStore.logout { (result: Result<Bool, Error>) in
+            switch result {
+            case .failure(let error):
+                print("Something went wrong", error)
+            case .success(_):
+                self.accountStore.reset()
+            }
         }
     }
 

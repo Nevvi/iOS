@@ -7,6 +7,16 @@
 
 import SwiftUI
 
+extension Text {
+    func settingsStyle() -> some View {
+        return self
+            .multilineTextAlignment(.leading)
+            .foregroundColor(.secondary)
+            .fontWeight(.light)
+            .font(.system(size: 16))
+    }
+}
+
 struct Settings: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var authStore: AuthorizationStore
@@ -23,36 +33,25 @@ struct Settings: View {
                     Toggle("Auto-sync Contacts", isOn: self.$syncContacts)
                 }
                 Text("Automatically sync all Nevvi connections with your device contacts when you log in")
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(.secondary)
-                    .fontWeight(.light)
-                    .font(.system(size: 16))
+                    .settingsStyle()
                 
-                Divider()
-                    .padding()
+                Divider().padding()
                 
                 HStack {
                     Image(systemName: "rectangle.portrait.and.arrow.forward").padding([.trailing], 5)
                     Toggle("Update all information", isOn: self.$syncContacts)
                 }
                 Text("Update all contact information including name and birthday when a connection changes instead of just email, phone, and address")
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(.secondary)
-                    .fontWeight(.light)
-                    .font(.system(size: 16))
+                    .settingsStyle()
                 
-                Divider()
-                    .padding()
+                Divider().padding()
                 
                 HStack {
                     Image(systemName: self.authStore.biometricType() == .face ? "faceid" : "touchid").padding([.trailing], 5)
                     Toggle("Enabled \(self.authStore.biometricType() == .face ? "Face" : "Touch") ID", isOn: self.$syncContacts)
                 }
                 Text("Have option to use biometric login instead of inputting your username and password every time")
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(.secondary)
-                    .fontWeight(.light)
-                    .font(.system(size: 16))
+                    .settingsStyle()
                 
                 Spacer()
             }

@@ -20,11 +20,11 @@ struct CreateAccount: View {
     @ObservedObject var authStore: AuthorizationStore
     
     var createAccountDisabled: Bool {
-        self.email.isEmpty || self.password.isEmpty
+        self.email.isEmpty || self.password.isEmpty || self.authStore.signingUp
     }
     
     var confirmAccountDisabled: Bool {
-        self.email.isEmpty || self.confirmationCode.isEmpty
+        self.email.isEmpty || self.confirmationCode.isEmpty || self.authStore.confirming || self.authStore.loggingIn
     }
     
     private var callback: (Authorization) -> Void
@@ -44,7 +44,6 @@ struct CreateAccount: View {
     var body: some View {
         NavigationView {
             VStack() {
-                
                 Spacer()
                 
                 Text("Welcome to Nevvi!")
@@ -56,68 +55,9 @@ struct CreateAccount: View {
                     .padding([.bottom], 50)
                 
                 if self.showConfirmationCode {
-                    VStack(alignment: .center, spacing: 15) {
-                        TextField("Email", text: self.$email)
-                            .padding()
-                            .keyboardType(.emailAddress)
-                            .disableAutocorrection(true)
-                            .autocapitalization(.none)
-                            .background(.white)
-                            .cornerRadius(10)
-                        
-                        TextField("Code", text: self.$confirmationCode)
-                            .padding()
-                            .keyboardType(.numberPad)
-                            .background(.white)
-                            .cornerRadius(10)
-                        
-                        Button(action: self.confirmAccount) {
-                            Text("Confirm Account")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                        }
-                        .disabled(self.confirmAccountDisabled)
-                        .background(Color.green)
-                        .frame(maxWidth: .infinity)
-                        .cornerRadius(10.0)
-                    }
-                    .padding([.leading, .trailing], 27.5)
+                    confirmationCodeView
                 } else {
-                    VStack(alignment: .leading, spacing: 15) {
-                        TextField("Email", text: self.$email)
-                            .padding()
-                            .keyboardType(.emailAddress)
-                            .disableAutocorrection(true)
-                            .autocapitalization(.none)
-                            .background(.white)
-                            .cornerRadius(10.0)
-                        
-                        SecureField("Password", text: self.$password)
-                            .padding()
-                            .disableAutocorrection(true)
-                            .autocapitalization(.none)
-                            .background(.white)
-                            .cornerRadius(10.0)
-                        
-                        Button(action: self.createAccount) {
-                            Text("Create Account")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                        }
-                        .disabled(self.createAccountDisabled)
-                        .background(Color.green)
-                        .frame(maxWidth: .infinity)
-                        .cornerRadius(10.0)
-                    }
-                    .padding([.leading, .trailing], 27.5)
-                }
-                
-                if self.authStore.signingUp || self.authStore.confirming {
-                    ProgressView().padding(20)
+                    createAccountView
                 }
                 
                 Spacer()
@@ -130,22 +70,63 @@ struct CreateAccount: View {
             }
             .autocapitalization(.none)
             .disabled(self.authStore.signingUp)
-            .alert(item: self.$error) { error in
-                if self.showConfirmationCode {
-                    return Alert(title: Text("Failed to confirm account"), message: Text(error.localizedDescription))
-                } else {
-                    return Alert(title: Text("Failed to create account"), message: Text(error.localizedDescription))
-                }
-            }
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color(UIColor(hexString: "#33897F")),
-                        Color(UIColor(hexString: "#5293B8"))
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom).edgesIgnoringSafeArea(.all))
+            .background(BackgroundGradient())
         }
+        .alert(item: self.$error) { error in
+            if self.showConfirmationCode {
+                return Alert(title: Text("Failed to confirm account"), message: Text(error.localizedDescription))
+            } else {
+                return Alert(title: Text("Failed to create account"), message: Text(error.localizedDescription))
+            }
+        }
+    }
+    
+    var createAccountView: some View {
+        VStack(alignment: .leading, spacing: 15) {
+            TextField("Email", text: self.$email)
+                .authStyle()
+                .keyboardType(.emailAddress)
+            
+            SecureField("Password", text: self.$password)
+                .authStyle()
+            
+            Button(action: self.createAccount) {
+                Text("Create Account")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+            }
+            .disabled(self.createAccountDisabled)
+            .background(self.createAccountDisabled ? .gray : Color.green)
+            .frame(maxWidth: .infinity)
+            .cornerRadius(10.0)
+        }
+        .padding([.leading, .trailing], 27.5)
+    }
+    
+    var confirmationCodeView: some View {
+        VStack(alignment: .center, spacing: 15) {
+            TextField("Email", text: self.$email)
+                .authStyle()
+                .keyboardType(.emailAddress)
+            
+            TextField("Code", text: self.$confirmationCode)
+                .authStyle()
+            
+            Button(action: self.confirmAccount) {
+                Text("Confirm Account")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+            }
+            .disabled(self.confirmAccountDisabled)
+            .background(self.confirmAccountDisabled ? .gray : Color.green)
+            .frame(maxWidth: .infinity)
+            .cornerRadius(10.0)
+        }
+        .padding([.leading, .trailing], 27.5)
     }
     
     func createAccount() {

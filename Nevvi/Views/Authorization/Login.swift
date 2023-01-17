@@ -42,19 +42,11 @@ struct Login: View {
                 
                 VStack(alignment: .leading, spacing: 15) {
                     TextField("Email", text: self.$email)
-                        .padding()
+                        .authStyle()
                         .keyboardType(.emailAddress)
-                        .disableAutocorrection(true)
-                        .autocapitalization(.none)
-                        .background(.white)
-                        .cornerRadius(10.0)
                     
                     SecureField("Password", text: self.$password)
-                        .padding()
-                        .disableAutocorrection(true)
-                        .autocapitalization(.none)
-                        .background(.white)
-                        .cornerRadius(10.0)
+                        .authStyle()
                     
                     Button(action: self.signIn) {
                         Text("Sign In")
@@ -73,23 +65,7 @@ struct Login: View {
                 if self.authStore.loggingIn {
                     ProgressView().padding(45)
                 } else if self.authStore.biometricType() != .none {
-                    Button {
-                        self.authStore.requestBiometricUnlock {(result: Result<Credentials, AuthorizationStore.AuthorizationError>) in
-                            switch result {
-                            case .success(let credentials):
-                                self.email = credentials.username
-                                self.password = credentials.password
-                                self.signIn()
-                            case .failure(let error):
-                                self.error = error
-                            }
-                        }
-                    } label: {
-                        Image(systemName: self.authStore.biometricType() == .face ? "faceid" : "touchid")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .foregroundColor(.white)
-                    }.padding(30)
+                    biometricLoginButton
                 }
                 
                 Spacer()
@@ -97,7 +73,8 @@ struct Login: View {
                 HStack {
                     NavigationLink("Create account") {
                         CreateAccount(authStore: self.authStore, callback: self.callback)
-                    }.padding()
+                    }
+                    .padding()
                 }
                 .foregroundColor(.white)
                 
@@ -116,14 +93,30 @@ struct Login: View {
                     return Alert(title: Text("Invalid login"), message: Text(error.localizedDescription))
                 }
             }
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color(UIColor(hexString: "#33897F")),
-                        Color(UIColor(hexString: "#5293B8"))
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom).edgesIgnoringSafeArea(.all))
+            .background(BackgroundGradient())
+        }
+        .accentColor(.white)
+    }
+    
+    var biometricLoginButton: some View {
+        Button(action: requestBiometricUnlock) {
+            Image(systemName: self.authStore.biometricType() == .face ? "faceid" : "touchid")
+                .resizable()
+                .frame(width: 50, height: 50)
+                .foregroundColor(.white)
+        }.padding(30)
+    }
+    
+    func requestBiometricUnlock() {
+        self.authStore.requestBiometricUnlock {(result: Result<Credentials, AuthorizationStore.AuthorizationError>) in
+            switch result {
+            case .success(let credentials):
+                self.email = credentials.username
+                self.password = credentials.password
+                self.signIn()
+            case .failure(let error):
+                self.error = error
+            }
         }
     }
     

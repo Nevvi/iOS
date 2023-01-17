@@ -12,21 +12,8 @@ struct ConnectionRow: View {
     
     var body: some View {
         HStack {
-            ZStack {
-                AsyncImage(url: URL(string: connection.profileImage), content: { image in
-                    image.resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 50, height: 50)
-                        .clipShape(Circle())
-                }, placeholder: {
-                    Image(systemName: "photo.circle")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(.gray)
-                        .clipShape(Circle())
-                }).padding([.trailing], 10)
-            }
+            ProfileImage(imageUrl: connection.profileImage, height: 50, width: 50)
+                .padding([.trailing], 10)
             
             Text("\(connection.firstName) \(connection.lastName)")
         }

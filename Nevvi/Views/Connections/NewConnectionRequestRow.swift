@@ -19,77 +19,74 @@ struct NewConnectionRequestRow: View {
     
     var body: some View {
         HStack {
-            ZStack {
-                AsyncImage(url: URL(string: user.profileImage), content: { image in
-                    image.resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 50, height: 50)
-                        .clipShape(Circle())
-                }, placeholder: {
-                    Image(systemName: "photo.circle")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(.gray)
-                        .clipShape(Circle())
-                }).padding([.trailing], 10)
-            }
+            ProfileImage(imageUrl: user.profileImage, height: 50, width: 50)
+                .padding([.trailing], 10)
             
             Text("\(user.firstName) \(user.lastName)")
             
             Spacer()
             
             if user.connected == nil || !user.connected! {
-                Button { self.showSheet = true } label: {
-                    Text("Connect")
-                }
+                connectButton
             }
         }
         .padding([.top, .bottom], 5)
         .padding([.leading, .trailing], 5)
         .sheet(isPresented: self.$showSheet) {
-            ZStack {
-                VStack {
-                    AsyncImage(url: URL(string: user.profileImage), content: { image in
-                        image.resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 70, height: 70)
-                            .clipShape(Circle())
-                    }, placeholder: {
-                        ProgressView()
-                            .padding(15)
-                    }).padding([.top], 30)
-                    
-                    Text("Which permission group should \(self.user.firstName) belong to if they accept?")
-                        .font(.title2)
-                        .padding([.top, .leading, .trailing])
-                    
-                    Picker("Which permission group should \(self.user.firstName) belong to?", selection: self.$selectedPermissionGroup) {
-                        ForEach(self.accountStore.permissionGroups, id: \.name) {
-                            Text($0.name.uppercased())
-                        }
-                    }
-                    .pickerStyle(.wheel)
-                    .padding([.top], -25)
-                    
-                    Button(action: {
-                        self.requestCallback(self.user.id, self.selectedPermissionGroup)
-                        self.showSheet = false
-                    }, label: {
-                        Text("Request")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 50)
-                            .padding(.vertical, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 20)
-                                    .foregroundColor(Color(UIColor(hexString: "#49C5B6")))
-                            )
-                    })
-                    .padding([.bottom])
-                }
-            }.presentationDetents([.medium])
+            requestConnectionSheet
         }
+    }
+    
+    var connectButton: some View {
+        Button {
+            self.showSheet = true
+        } label: {
+            Text("Connect")
+        }
+    }
+    
+    var requestConnectionSheet: some View {
+        ZStack {
+            VStack {
+                AsyncImage(url: URL(string: user.profileImage), content: { image in
+                    image.resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 70, height: 70)
+                        .clipShape(Circle())
+                }, placeholder: {
+                    ProgressView()
+                        .padding(15)
+                }).padding([.top], 30)
+                
+                Text("Which permission group should \(self.user.firstName) belong to if they accept?")
+                    .font(.title2)
+                    .padding([.top, .leading, .trailing])
+                
+                Picker("Which permission group should \(self.user.firstName) belong to?", selection: self.$selectedPermissionGroup) {
+                    ForEach(self.accountStore.permissionGroups, id: \.name) {
+                        Text($0.name.uppercased())
+                    }
+                }
+                .pickerStyle(.wheel)
+                .padding([.top], -25)
+                
+                Button(action: {
+                    self.requestCallback(self.user.id, self.selectedPermissionGroup)
+                    self.showSheet = false
+                }, label: {
+                    Text("Request")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 50)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .foregroundColor(Color(UIColor(hexString: "#49C5B6")))
+                        )
+                })
+                .padding([.bottom])
+            }
+        }.presentationDetents([.medium])
     }
 }
 

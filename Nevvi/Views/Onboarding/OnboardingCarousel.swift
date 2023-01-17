@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+extension View {
+    func tabStyle(page: Int) -> some View {
+        return self.tag(page).gesture(DragGesture())
+    }
+}
+
 struct OnboardingCarousel: View {
     @State var index = 0
     @EnvironmentObject var accountStore: AccountStore
@@ -16,18 +22,27 @@ struct OnboardingCarousel: View {
             TabView(selection: $index) {
                 OnboardingViewOne(primaryClick: {
                     self.index = 1
-                }).tag(0)
+                }).tabStyle(page: 0)
                 OnboardingViewTwo(primaryClick: {
                     self.index = 2
-                }).tag(1)
-                OnboardingViewThree(accountStore: self.accountStore, primaryClick: {
+                }, secondaryClick: {
+                    self.index = 0
+                }).tabStyle(page: 1)
+                OnboardingViewThree(primaryClick: {
                     self.index = 3
-                }).tag(2)
-                OnboardingViewFour(accountStore: self.accountStore, primaryClick: {
-                    
-                }).tag(3)
+                }, secondaryClick: {
+                    self.index = 1
+                }).tabStyle(page: 2)
+                OnboardingViewFour(primaryClick: {
+                    print("Done onboarding!")
+                }, secondaryClick: {
+                    self.index = 2
+                }).tabStyle(page: 3)
             }
-        }.ignoresSafeArea()
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            .edgesIgnoringSafeArea([.all])
+            .animation(.easeOut(duration: 0.2), value: index)
+        }
     }
 }
 

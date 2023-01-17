@@ -21,32 +21,35 @@ struct ConnectionGroupMembershipRow: View {
             Toggle(group.name, isOn: self.$isMember)
                 .onChange(of: self.isMember) { newValue in
                     self.loading = true
-                    
-                    if newValue {
-                        self.connectionGroupsStore.addToGroup(groupId: group.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
-                                self.loading = false
-                                switch result {
-                                    case .success(_):
-                                    self.connectionGroupsStore.load()
-                                    case .failure(let error):
-                                    print("Failed to add to group", error)
-                                }
-                            }
-                    } else {
-                        self.connectionGroupsStore.removeFromGroup(groupId: group.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
-                                self.loading = false
-                                switch result {
-                                    case .success(_):
-                                    self.connectionGroupsStore.load()
-                                    case .failure(let error):
-                                    print("Failed to remove from group", error)
-                                }
-                            }
-                    }
+                    self.handleChange(toggled: newValue)
                 }
                 .disabled(self.loading)
         }
         .padding([.leading, .trailing], 30)
+    }
+    
+    func handleChange(toggled: Bool) {
+        if toggled {
+            self.connectionGroupsStore.addToGroup(groupId: group.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
+                    self.loading = false
+                    switch result {
+                        case .success(_):
+                        self.connectionGroupsStore.load()
+                        case .failure(let error):
+                        print("Failed to add to group", error)
+                    }
+                }
+        } else {
+            self.connectionGroupsStore.removeFromGroup(groupId: group.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
+                    self.loading = false
+                    switch result {
+                        case .success(_):
+                        self.connectionGroupsStore.load()
+                        case .failure(let error):
+                        print("Failed to remove from group", error)
+                    }
+                }
+        }
     }
 }
 
