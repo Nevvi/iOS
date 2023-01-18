@@ -41,9 +41,7 @@ struct Account: View {
                 
                 logoutButton
             }
-            .padding(30)
-            .navigationTitle("My Account")
-            .navigationBarTitleDisplayMode(.inline)
+            .padding([.leading, .trailing, .top], 30)
         }
     }
     

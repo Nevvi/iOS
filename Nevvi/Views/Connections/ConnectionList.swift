@@ -10,11 +10,15 @@ import SwiftUI
 struct ConnectionList: View {
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var usersStore: UsersStore
+    @EnvironmentObject var contactStore: ContactStore
     
     @ObservedObject var connectionStore: ConnectionStore
     
+    @State private var syncing: Bool = false
+    @State private var showSyncConfirmation: Bool = false
     @State private var toBeDeleted: IndexSet?
     @State private var showDeleteAlert: Bool = false
+    
     @StateObject var nameFilter = DebouncedText()
         
     var body: some View {
@@ -28,23 +32,32 @@ struct ConnectionList: View {
             }
             .scrollContentBackground(.hidden)
             .navigationTitle("Connections")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .toolbar(content: {
-                NavigationLink {
-                    UserSearch()
-                } label: {
-                    Image(systemName: "plus").foregroundColor(.blue)
+                if self.connectionsStore.outOfSyncCount > 0 {
+                    if syncing {
+                        ProgressView().padding([.trailing], 5)
+                    } else {
+                        Button {
+                            self.showSyncConfirmation = true
+                        } label: {
+                            Text("Sync (\(self.connectionsStore.outOfSyncCount))")
+                        }
+                        .padding([.trailing], 5)
+                    }
                 }
             })
+            .searchable(text: self.$nameFilter.text)
+            .disableAutocorrection(true)
+            .onChange(of: self.nameFilter.debouncedText) { text in
+                self.connectionsStore.load(nameFilter: text)
+            }
         }
-        
         .alert(isPresented: self.$showDeleteAlert) {
             deleteAlert
         }
-        .searchable(text: self.$nameFilter.text)
-        .disableAutocorrection(true)
-        .onChange(of: self.nameFilter.debouncedText) { text in
-            self.connectionsStore.load(nameFilter: text)
+        .alert(isPresented: self.$showSyncConfirmation) {
+            syncConfirmation
         }
     }
     
@@ -103,6 +116,18 @@ struct ConnectionList: View {
         })
     }
     
+    var syncConfirmation: Alert {
+        Alert(title: Text("Sync Confirmation"),
+              // TODO include some more info about who and what is being synced here
+              message: Text("Would you like to sync \(self.connectionsStore.outOfSyncCount) updated contact(s) to you device?"),
+              primaryButton: .default(Text("Yes"), action: {
+                  self.sync()
+                  self.showSyncConfirmation = false
+              }),
+              secondaryButton: .cancel(Text("No"))
+        )
+    }
+    
     func loadConnection(connectionId: String) {
         self.connectionStore.load(connectionId: connectionId) { (result: Result<Connection, Error>) in
             switch result {
@@ -118,6 +143,28 @@ struct ConnectionList: View {
         self.toBeDeleted = offsets
         self.showDeleteAlert = true
     }
+    
+    func sync() {
+        self.syncing = true
+        self.connectionsStore.loadOutOfSync { (result: Result<ConnectionResponse, Error>) in
+            switch result {
+            case .success(let response):
+                // Stop the recursion once we get to 0
+                if response.count != 0 {
+                    self.contactStore.syncContacts(connections: response.users) {
+                        // Either grab the next batch of connections to sync or reset the count to 0
+                        self.sync()
+                    }
+                } else {
+                    self.syncing = true
+                    UIApplication.shared.applicationIconBadgeNumber = 0
+                }
+            case .failure(let error):
+                print("Something bad happened", error.localizedDescription)
+                self.syncing = true
+            }
+        }
+    }
 }
 
 struct ConnectionList_Previews: PreviewProvider {
@@ -127,10 +174,12 @@ struct ConnectionList_Previews: PreviewProvider {
                                                    requests: modelData.requests,
                                                    blockedUsers: modelData.connectionResponse.users)
     static let connectionStore = ConnectionStore()
+    static let contactStore = ContactStore()
     
     static var previews: some View {
         ConnectionList(connectionStore: connectionStore)
             .environmentObject(connectionsStore)
             .environmentObject(usersStore)
+            .environmentObject(contactStore)
     }
 }

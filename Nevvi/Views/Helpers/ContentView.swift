@@ -12,6 +12,7 @@ struct ContentView: View {
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
     @EnvironmentObject var usersStore: UsersStore
+    @EnvironmentObject var contactStore: ContactStore
     
     @ObservedObject var connectionStore: ConnectionStore
     @ObservedObject var connectionGroupStore: ConnectionGroupStore
@@ -22,32 +23,38 @@ struct ContentView: View {
                 TabView {
                     RefreshableView(onRefresh: {
                         self.connectionsStore.load()
-                    }, view: ConnectionList(connectionStore: self.connectionStore).tabItem() {
-                        Image(systemName: "person.line.dotted.person.fill")
-                        Text("Connections")
-                    })
+                        self.connectionsStore.loadOutOfSync { _ in }
+                    }, view: ConnectionList(connectionStore: self.connectionStore))
+                        .tabItem() {
+                            Label("Connections", systemImage: "person.line.dotted.person.fill")
+                        }
+                    
+                    UserSearch()
+                        .tabItem() {
+                            Label("Search", systemImage: "plus.magnifyingglass")
+                        }
                     
                     RefreshableView(onRefresh: {
                         self.connectionsStore.loadRequests()
-                    }, view: ConnectionRequestList().tabItem() {
-                        Image(systemName: "person.fill.questionmark")
-                        Text("Requests")
-                    })
+                    }, view: ConnectionRequestList())
+                        .tabItem() {
+                            Label("Requests", systemImage: "person.fill.questionmark")
+                        }
                     
                     RefreshableView(onRefresh: {
                         self.connectionGroupsStore.load()
-                    }, view: ConnectionGroupList(connectionGroupStore: self.connectionGroupStore, connectionStore: self.connectionStore).tabItem() {
-                        Image(systemName: "person.3.fill")
-                        Text("Groups")
-                    })
+                    }, view: ConnectionGroupList(connectionGroupStore: self.connectionGroupStore, connectionStore: self.connectionStore))
+                        .tabItem() {
+                            Label("Groups", systemImage: "person.3.fill")
+                        }
                     
                     RefreshableView(onRefresh: {
                         self.accountStore.load()
                         self.connectionsStore.loadRejectedUsers()
-                    }, view: Account().tabItem() {
-                        Image(systemName: "person.fill")
-                        Text("Account")
-                    })
+                    }, view: Account())
+                        .tabItem() {
+                            Label("Account", systemImage: "person.fill")
+                        }
                 }
                 .errorAlert(error: self.$accountStore.error)
                 .errorAlert(error: self.$connectionStore.error)
@@ -83,5 +90,6 @@ struct ContentView_Previews: PreviewProvider {
         .environmentObject(AuthorizationStore())
         .environmentObject(UsersStore(users: modelData.connectionResponse.users))
         .environmentObject(ConnectionGroupsStore(groups: modelData.groups))
+        .environmentObject(ContactStore())
     }
 }

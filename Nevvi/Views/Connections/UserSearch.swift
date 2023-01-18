@@ -30,6 +30,8 @@ struct UserSearch: View {
                 }
             }
             .scrollContentBackground(.hidden)
+            .navigationTitle("Search")
+            .navigationBarTitleDisplayMode(.large)
         }
         .searchable(text: self.$nameFilter.text)
         .disableAutocorrection(true)

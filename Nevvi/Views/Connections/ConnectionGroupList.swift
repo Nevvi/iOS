@@ -29,13 +29,14 @@ struct ConnectionGroupList: View {
             }
             .scrollContentBackground(.hidden)
             .navigationTitle("Groups")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .toolbar(content: {
                 Image(systemName: "plus")
-                    .foregroundColor(.blue)
+                    .foregroundColor(.black)
                     .onTapGesture {
                         self.showGroupForm = true
                     }
+                    .padding([.trailing])
             })
         }
         

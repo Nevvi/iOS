@@ -24,7 +24,7 @@ struct ConnectionRequestList: View {
             }
             .scrollContentBackground(.hidden)
             .navigationTitle("Requests")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
         }
         .alert(isPresented: self.$showDeleteAlert) {
             deleteAlert
