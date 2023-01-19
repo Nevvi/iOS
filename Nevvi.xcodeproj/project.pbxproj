@@ -25,6 +25,10 @@
 		041412F72976009F008A35DA /* ProfileImageSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041412F62976009F008A35DA /* ProfileImageSelector.swift */; };
 		041412F9297604BC008A35DA /* NoDataFound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041412F8297604BC008A35DA /* NoDataFound.swift */; };
 		041412FB2976182D008A35DA /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041412FA2976182D008A35DA /* ProfileImage.swift */; };
+		041412FE2978C82B008A35DA /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 041412FD2978C82B008A35DA /* FirebaseAnalytics */; };
+		041413002978C82B008A35DA /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 041412FF2978C82B008A35DA /* FirebaseAuth */; };
+		041413022978C82B008A35DA /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 041413012978C82B008A35DA /* FirebaseFirestore */; };
+		041413042978C82B008A35DA /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 041413032978C82B008A35DA /* FirebaseMessaging */; };
 		0431437B2969B3A90094D7E0 /* AddressSearchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431437A2969B3A90094D7E0 /* AddressSearchStore.swift */; };
 		0431437D2969B3F50094D7E0 /* AddressSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431437C2969B3F50094D7E0 /* AddressSearch.swift */; };
 		04314383296B46D60094D7E0 /* BuildConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314382296B46D60094D7E0 /* BuildConfiguration.swift */; };
@@ -174,6 +178,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				041412FE2978C82B008A35DA /* FirebaseAnalytics in Frameworks */,
+				041413022978C82B008A35DA /* FirebaseFirestore in Frameworks */,
+				041413042978C82B008A35DA /* FirebaseMessaging in Frameworks */,
+				041413002978C82B008A35DA /* FirebaseAuth in Frameworks */,
 				04B9494C295E712200703523 /* SwiftKeychainWrapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,6 +445,10 @@
 			name = Nevvi;
 			packageProductDependencies = (
 				04B9494B295E712200703523 /* SwiftKeychainWrapper */,
+				041412FD2978C82B008A35DA /* FirebaseAnalytics */,
+				041412FF2978C82B008A35DA /* FirebaseAuth */,
+				041413012978C82B008A35DA /* FirebaseFirestore */,
+				041413032978C82B008A35DA /* FirebaseMessaging */,
 			);
 			productName = Nevvi;
 			productReference = 04B948F8295DEA5C00703523 /* Nevvi.app */;
@@ -468,6 +480,7 @@
 			mainGroup = 04B948EF295DEA5C00703523;
 			packageReferences = (
 				04B9494A295E712200703523 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
+				041412FC2978C82B008A35DA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 04B948F9295DEA5C00703523 /* Products */;
 			projectDirPath = "";
@@ -663,6 +676,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
@@ -685,6 +699,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -751,6 +766,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
@@ -773,6 +789,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -900,6 +917,7 @@
 				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
@@ -922,6 +940,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -934,6 +953,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
@@ -956,6 +976,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -990,6 +1011,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		041412FC2978C82B008A35DA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		04B9494A295E712200703523 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
@@ -1001,6 +1030,26 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		041412FD2978C82B008A35DA /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 041412FC2978C82B008A35DA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		041412FF2978C82B008A35DA /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 041412FC2978C82B008A35DA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		041413012978C82B008A35DA /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 041412FC2978C82B008A35DA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		041413032978C82B008A35DA /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 041412FC2978C82B008A35DA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		04B9494B295E712200703523 /* SwiftKeychainWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 04B9494A295E712200703523 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;

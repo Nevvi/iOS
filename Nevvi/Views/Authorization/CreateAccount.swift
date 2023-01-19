@@ -162,6 +162,7 @@ struct CreateAccount: View {
         self.authStore.login(email: email, password: password) { (result: Result<Authorization, AuthorizationStore.AuthorizationError>) in
             switch result {
             case .success(let authorization):
+                KeychainStore.saveCredentials(Credentials(username: email, password: password))
                 self.callback(authorization)
             case .failure(let error):
                 self.email = ""

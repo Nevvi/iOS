@@ -10,9 +10,7 @@ import SwiftUI
 struct Login: View {
     @State private var email = ""
     @State private var password = ""
-    @State private var error: AuthorizationStore.AuthorizationError?
-    @State private var storeCredentials: Bool = false
-    
+    @State private var error: AuthorizationStore.AuthorizationError?    
     @ObservedObject var authStore: AuthorizationStore
     
     var loginDisabled: Bool {
@@ -82,16 +80,7 @@ struct Login: View {
             .autocapitalization(.none)
             .disabled(self.authStore.loggingIn)
             .alert(item: self.$error) { error in
-                if error == .credentialsNotSaved {
-                    return Alert(title: Text("Credentials not saved"),
-                                 message: Text("Would you like to store credentials on next successful login?"),
-                                 primaryButton: .default(Text("Yes"), action: {
-                                    self.storeCredentials = true
-                                 }),
-                                 secondaryButton: .cancel(Text("No")))
-                } else {
-                    return Alert(title: Text("Invalid login"), message: Text(error.localizedDescription))
-                }
+                return Alert(title: Text("Invalid login"), message: Text(error.localizedDescription))
             }
             .background(BackgroundGradient())
         }
@@ -104,7 +93,8 @@ struct Login: View {
                 .resizable()
                 .frame(width: 50, height: 50)
                 .foregroundColor(.white)
-        }.padding(30)
+        }
+        .padding(30)
     }
     
     func requestBiometricUnlock() {
@@ -124,10 +114,7 @@ struct Login: View {
         self.authStore.login(email: email, password: password) { (result: Result<Authorization, AuthorizationStore.AuthorizationError>) in
             switch result {
             case .success(let authorization):
-                // TODO - if login doesn't match existing creds in keychain overwrite?
-                if self.storeCredentials && KeychainStore.saveCredentials(Credentials(username: email, password: password)) {
-                    self.storeCredentials = false
-                }
+                KeychainStore.saveCredentials(Credentials(username: email, password: password))
                 self.callback(authorization)
             case .failure(let error):
                 self.email = ""

@@ -145,6 +145,7 @@ struct ConnectionList: View {
     }
     
     func sync() {
+        // TODO - bail out after X attempts
         self.syncing = true
         self.connectionsStore.loadOutOfSync { (result: Result<ConnectionResponse, Error>) in
             switch result {
@@ -156,12 +157,12 @@ struct ConnectionList: View {
                         self.sync()
                     }
                 } else {
-                    self.syncing = true
+                    self.syncing = false
                     UIApplication.shared.applicationIconBadgeNumber = 0
                 }
             case .failure(let error):
                 print("Something bad happened", error.localizedDescription)
-                self.syncing = true
+                self.syncing = false
             }
         }
     }

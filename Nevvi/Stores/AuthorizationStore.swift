@@ -56,7 +56,7 @@ class AuthorizationStore: ObservableObject {
             case .biometricError:
                 return NSLocalizedString("Biometric access not recognized", comment: "")
             case .credentialsNotSaved:
-                return NSLocalizedString("No biometric credentials saved. Would you like to saved them?", comment: "")
+                return NSLocalizedString("No login credentials have been saved. Face ID will be enabled after the first successful login.", comment: "")
             case .unknown:
                 return NSLocalizedString("Unknown error occurred", comment: "")
             }
@@ -80,12 +80,6 @@ class AuthorizationStore: ObservableObject {
     
     func requestBiometricUnlock(completion: @escaping (Result<Credentials, AuthorizationError>) -> Void) {
         let authContext = LAContext()
-        
-        let credentials = KeychainStore.getCredentials()
-        guard let credentials = credentials else {
-            completion(.failure(.credentialsNotSaved))
-            return
-        }
         
         var error: NSError?
         let canEvaluate = authContext.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
@@ -112,6 +106,11 @@ class AuthorizationStore: ObservableObject {
                         if error != nil {
                             completion(.failure(.biometricError))
                         } else {
+                            let credentials = KeychainStore.getCredentials()
+                            guard let credentials = credentials else {
+                                completion(.failure(.credentialsNotSaved))
+                                return
+                            }
                             completion(.success(credentials))
                         }
                     }

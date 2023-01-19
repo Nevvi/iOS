@@ -14,8 +14,8 @@
             filePath = "Nevvi/Stores/AuthorizationStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
+            startingLineNumber = "149"
+            endingLineNumber = "149"
             landmarkName = "login(email:password:callback:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -622,8 +622,8 @@
             filePath = "Nevvi/Stores/AuthorizationStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "94"
-            endingLineNumber = "94"
+            startingLineNumber = "88"
+            endingLineNumber = "88"
             landmarkName = "requestBiometricUnlock(completion:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1325,8 +1325,8 @@
             filePath = "Nevvi/Views/Connections/ConnectionList.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "149"
-            endingLineNumber = "149"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
             landmarkName = "sync()"
             landmarkType = "7">
             <Locations>
@@ -1373,8 +1373,8 @@
             filePath = "Nevvi/Views/Connections/ConnectionList.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "154"
-            endingLineNumber = "154"
+            startingLineNumber = "155"
+            endingLineNumber = "155"
             landmarkName = "sync()"
             landmarkType = "7">
             <Locations>
@@ -1421,8 +1421,8 @@
             filePath = "Nevvi/Views/Connections/ConnectionList.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "156"
-            endingLineNumber = "156"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
             landmarkName = "sync()"
             landmarkType = "7">
          </BreakpointContent>
