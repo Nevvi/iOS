@@ -24,4 +24,5 @@ struct User: Hashable, Codable {
     var address: Address
     var permissionGroups: [PermissionGroup]
     var profileImage: String
+    var deviceSettings: DeviceSettings
 }

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ConnectionList: View {
     @EnvironmentObject var connectionsStore: ConnectionsStore
+    @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var usersStore: UsersStore
     @EnvironmentObject var contactStore: ContactStore
     
@@ -37,7 +38,7 @@ struct ConnectionList: View {
                 if self.connectionsStore.outOfSyncCount > 0 {
                     if syncing {
                         ProgressView().padding([.trailing], 5)
-                    } else {
+                    } else if (!self.accountStore.deviceSettings.autoSync) {
                         Button {
                             self.showSyncConfirmation = true
                         } label: {
@@ -58,6 +59,11 @@ struct ConnectionList: View {
         }
         .alert(isPresented: self.$showSyncConfirmation) {
             syncConfirmation
+        }
+        .onAppear {
+            if self.accountStore.deviceSettings.autoSync {
+                self.sync()
+            }
         }
     }
     
@@ -176,11 +182,13 @@ struct ConnectionList_Previews: PreviewProvider {
                                                    blockedUsers: modelData.connectionResponse.users)
     static let connectionStore = ConnectionStore()
     static let contactStore = ContactStore()
+    static let accountStore = AccountStore(user: modelData.user)
     
     static var previews: some View {
         ConnectionList(connectionStore: connectionStore)
             .environmentObject(connectionsStore)
             .environmentObject(usersStore)
             .environmentObject(contactStore)
+            .environmentObject(accountStore)
     }
 }

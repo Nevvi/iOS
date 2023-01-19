@@ -30,6 +30,7 @@ class AccountStore: ObservableObject {
     @Published var address: AddressViewModel = AddressViewModel()
     @Published var permissionGroups: [PermissionGroup] = []
     @Published var profileImage: String = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
+    @Published var deviceSettings: DeviceSettingsViewModel = DeviceSettingsViewModel()
     
     @Published var error: Swift.Error?
     
@@ -59,6 +60,7 @@ class AccountStore: ObservableObject {
         self.onboardingCompleted = user.onboardingCompleted
         self.blockedUsers = user.blockedUsers
         self.address.update(address: user.address)
+        self.deviceSettings.update(settings: user.deviceSettings)
         self.permissionGroups = user.permissionGroups
         self.profileImage = user.profileImage
     }
@@ -78,6 +80,7 @@ class AccountStore: ObservableObject {
         self.onboardingCompleted = false
         self.blockedUsers = []
         self.address = AddressViewModel()
+        self.deviceSettings = DeviceSettingsViewModel()
         self.permissionGroups = []
         self.profileImage = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
     }
@@ -168,7 +171,8 @@ class AccountStore: ObservableObject {
                                        birthday: self.birthday.yyyyMMdd(),
                                        phoneNumber: self.phoneNumber != "" ? self.phoneNumber : nil,  // TODO - format this to +1XXXXXXXXXX
                                        deviceId: self.deviceId,
-                                       permissionGroups: self.permissionGroups)
+                                       permissionGroups: self.permissionGroups,
+                                       deviceSettings: self.deviceSettings.toModel())
             
             URLSession.shared.patchData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
                 switch result {
@@ -306,6 +310,7 @@ class AccountStore: ObservableObject {
         var phoneNumber: String?
         var deviceId: String?
         var permissionGroups: [PermissionGroup]?
+        var deviceSettings: DeviceSettings?
     }
     
     struct CompleteOnboardingRequest: Encodable {

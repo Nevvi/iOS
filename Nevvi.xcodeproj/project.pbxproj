@@ -29,6 +29,8 @@
 		041413002978C82B008A35DA /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 041412FF2978C82B008A35DA /* FirebaseAuth */; };
 		041413022978C82B008A35DA /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 041413012978C82B008A35DA /* FirebaseFirestore */; };
 		041413042978C82B008A35DA /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 041413032978C82B008A35DA /* FirebaseMessaging */; };
+		041413062978D7C1008A35DA /* DeviceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041413052978D7C1008A35DA /* DeviceSettings.swift */; };
+		041413082978D853008A35DA /* DeviceSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041413072978D853008A35DA /* DeviceSettingsViewModel.swift */; };
 		0431437B2969B3A90094D7E0 /* AddressSearchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431437A2969B3A90094D7E0 /* AddressSearchStore.swift */; };
 		0431437D2969B3F50094D7E0 /* AddressSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431437C2969B3F50094D7E0 /* AddressSearch.swift */; };
 		04314383296B46D60094D7E0 /* BuildConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314382296B46D60094D7E0 /* BuildConfiguration.swift */; };
@@ -110,6 +112,8 @@
 		041412F62976009F008A35DA /* ProfileImageSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageSelector.swift; sourceTree = "<group>"; };
 		041412F8297604BC008A35DA /* NoDataFound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoDataFound.swift; sourceTree = "<group>"; };
 		041412FA2976182D008A35DA /* ProfileImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImage.swift; sourceTree = "<group>"; };
+		041413052978D7C1008A35DA /* DeviceSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettings.swift; sourceTree = "<group>"; };
+		041413072978D853008A35DA /* DeviceSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingsViewModel.swift; sourceTree = "<group>"; };
 		0431437A2969B3A90094D7E0 /* AddressSearchStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSearchStore.swift; sourceTree = "<group>"; };
 		0431437C2969B3F50094D7E0 /* AddressSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSearch.swift; sourceTree = "<group>"; };
 		04314382296B46D60094D7E0 /* BuildConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildConfiguration.swift; sourceTree = "<group>"; };
@@ -193,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				04038E212961E91900D3C7AC /* AddressViewModel.swift */,
+				041413072978D853008A35DA /* DeviceSettingsViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -203,6 +208,7 @@
 				04B9490F295DEAD800703523 /* User.swift */,
 				04B9491F295DEDA000703523 /* Address.swift */,
 				04B94921295DEDAF00703523 /* PermissionGroup.swift */,
+				041413052978D7C1008A35DA /* DeviceSettings.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -582,6 +588,7 @@
 				04038E152960C43300D3C7AC /* CheckboxGroup.swift in Sources */,
 				04B9491E295DEBF700703523 /* ConnectionRow.swift in Sources */,
 				04B94967295F972500703523 /* ImagePicker.swift in Sources */,
+				041413062978D7C1008A35DA /* DeviceSettings.swift in Sources */,
 				04038E252961EF3900D3C7AC /* RefreshableView.swift in Sources */,
 				04B94961295F3FD100703523 /* OnboardingViewFour.swift in Sources */,
 				0431439D2975AC830094D7E0 /* TextExtensions.swift in Sources */,
@@ -601,6 +608,7 @@
 				04314393296CCD010094D7E0 /* ConnectionGroupDetail.swift in Sources */,
 				04038E302966323600D3C7AC /* RedactionType.swift in Sources */,
 				04B9492B295DF0BA00703523 /* Account.swift in Sources */,
+				041413082978D853008A35DA /* DeviceSettingsViewModel.swift in Sources */,
 				04B94910295DEAD800703523 /* User.swift in Sources */,
 				0431439B2975A77E0094D7E0 /* BackgroundGradient.swift in Sources */,
 			);

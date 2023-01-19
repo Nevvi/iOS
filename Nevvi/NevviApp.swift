@@ -52,21 +52,23 @@ struct NevviApp: App {
                     self.usersStore.authorization = auth
                     self.contactStore.authorization = auth
                     
-                    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-                        if success {
-                            self.connectionsStore.loadOutOfSync { (result: Result<ConnectionResponse, Error>) in
-                                switch result {
-                                case .success(let response):
-                                    print("Got \(response.count) out of sync connection(s)")
-                                    UIApplication.shared.applicationIconBadgeNumber = response.count
-                                case .failure(let error):
-                                    print("Failed to load out of sync connections", error.localizedDescription)
-                                }
-                            }
-                        } else if let error = error {
-                            print(error.localizedDescription)
-                        }
-                    }
+                    
+                    // TODO - find more seamless way to ask for notification access right when they get in the app
+//                    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+//                        if success {
+//                            self.connectionsStore.loadOutOfSync { (result: Result<ConnectionResponse, Error>) in
+//                                switch result {
+//                                case .success(let response):
+//                                    print("Got \(response.count) out of sync connection(s)")
+//                                    UIApplication.shared.applicationIconBadgeNumber = response.count
+//                                case .failure(let error):
+//                                    print("Failed to load out of sync connections", error.localizedDescription)
+//                                }
+//                            }
+//                        } else if let error = error {
+//                            print(error.localizedDescription)
+//                        }
+//                    }
                 }
             }
         }
