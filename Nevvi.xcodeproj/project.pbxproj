@@ -31,6 +31,9 @@
 		041413042978C82B008A35DA /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 041413032978C82B008A35DA /* FirebaseMessaging */; };
 		041413062978D7C1008A35DA /* DeviceSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041413052978D7C1008A35DA /* DeviceSettings.swift */; };
 		041413082978D853008A35DA /* DeviceSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 041413072978D853008A35DA /* DeviceSettingsViewModel.swift */; };
+		0414130F297C5CFC008A35DA /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 0414130E297C5CFC008A35DA /* Nuke */; };
+		04141311297C5CFC008A35DA /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 04141310297C5CFC008A35DA /* NukeExtensions */; };
+		04141313297C5CFC008A35DA /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = 04141312297C5CFC008A35DA /* NukeUI */; };
 		0431437B2969B3A90094D7E0 /* AddressSearchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431437A2969B3A90094D7E0 /* AddressSearchStore.swift */; };
 		0431437D2969B3F50094D7E0 /* AddressSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431437C2969B3F50094D7E0 /* AddressSearch.swift */; };
 		04314383296B46D60094D7E0 /* BuildConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314382296B46D60094D7E0 /* BuildConfiguration.swift */; };
@@ -184,9 +187,12 @@
 			files = (
 				041412FE2978C82B008A35DA /* FirebaseAnalytics in Frameworks */,
 				041413022978C82B008A35DA /* FirebaseFirestore in Frameworks */,
+				04141311297C5CFC008A35DA /* NukeExtensions in Frameworks */,
 				041413042978C82B008A35DA /* FirebaseMessaging in Frameworks */,
+				0414130F297C5CFC008A35DA /* Nuke in Frameworks */,
 				041413002978C82B008A35DA /* FirebaseAuth in Frameworks */,
 				04B9494C295E712200703523 /* SwiftKeychainWrapper in Frameworks */,
+				04141313297C5CFC008A35DA /* NukeUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,11 +228,19 @@
 			path = Redaction;
 			sourceTree = "<group>";
 		};
+		0414130C297C5C46008A35DA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		04B948EF295DEA5C00703523 = {
 			isa = PBXGroup;
 			children = (
 				04B948FA295DEA5C00703523 /* Nevvi */,
 				04B948F9295DEA5C00703523 /* Products */,
+				0414130C297C5C46008A35DA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -455,6 +469,9 @@
 				041412FF2978C82B008A35DA /* FirebaseAuth */,
 				041413012978C82B008A35DA /* FirebaseFirestore */,
 				041413032978C82B008A35DA /* FirebaseMessaging */,
+				0414130E297C5CFC008A35DA /* Nuke */,
+				04141310297C5CFC008A35DA /* NukeExtensions */,
+				04141312297C5CFC008A35DA /* NukeUI */,
 			);
 			productName = Nevvi;
 			productReference = 04B948F8295DEA5C00703523 /* Nevvi.app */;
@@ -487,6 +504,7 @@
 			packageReferences = (
 				04B9494A295E712200703523 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
 				041412FC2978C82B008A35DA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				0414130D297C5CFC008A35DA /* XCRemoteSwiftPackageReference "Nuke" */,
 			);
 			productRefGroup = 04B948F9295DEA5C00703523 /* Products */;
 			projectDirPath = "";
@@ -1027,6 +1045,14 @@
 				minimumVersion = 9.0.0;
 			};
 		};
+		0414130D297C5CFC008A35DA /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
 		04B9494A295E712200703523 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
@@ -1057,6 +1083,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 041412FC2978C82B008A35DA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		0414130E297C5CFC008A35DA /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0414130D297C5CFC008A35DA /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
+		04141310297C5CFC008A35DA /* NukeExtensions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0414130D297C5CFC008A35DA /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeExtensions;
+		};
+		04141312297C5CFC008A35DA /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0414130D297C5CFC008A35DA /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeUI;
 		};
 		04B9494B295E712200703523 /* SwiftKeychainWrapper */ = {
 			isa = XCSwiftPackageProductDependency;

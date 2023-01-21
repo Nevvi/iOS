@@ -766,8 +766,8 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "122"
-            endingLineNumber = "122"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
             landmarkName = "syncContacts(connections:callback:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1328,7 +1328,7 @@
             startingLineNumber = "156"
             endingLineNumber = "156"
             landmarkName = "sync()"
-            landmarkType = "9">
+            landmarkType = "7">
             <Locations>
                <Location
                   uuid = "75DEFC46-658C-4FE3-A7E1-35D2ABA97A55 - a61b3ae40b8c9bf3"
@@ -1376,7 +1376,7 @@
             startingLineNumber = "161"
             endingLineNumber = "161"
             landmarkName = "sync()"
-            landmarkType = "9">
+            landmarkType = "7">
             <Locations>
                <Location
                   uuid = "D954BB47-3603-4861-AE56-FBB5FEC9F11F - 1ec7fe0e77be0b0a"
@@ -1424,7 +1424,7 @@
             startingLineNumber = "163"
             endingLineNumber = "163"
             landmarkName = "sync()"
-            landmarkType = "9">
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1485,8 +1485,8 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
             landmarkName = "syncContacts(connections:callback:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1645,8 +1645,8 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "163"
-            endingLineNumber = "163"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
             landmarkName = "syncContacts(connections:callback:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -1677,8 +1677,8 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
             landmarkName = "syncContacts(connections:callback:)"
             landmarkType = "7">
             <Locations>
@@ -1760,6 +1760,38 @@
             startingLineNumber = "97"
             endingLineNumber = "97"
             landmarkName = "patchData(for:for:for:completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7DED2A32-9DE0-433A-BA97-418B9D6FC854"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Views/Helpers/ProfileImageSelector.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D5DF4C4D-BE28-42A0-8222-6D22D98031EA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Views/Helpers/ProfileImageSelector.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
+            landmarkName = "resizeImage(image:targetSize:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

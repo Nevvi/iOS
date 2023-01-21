@@ -105,10 +105,6 @@ class ContactStore: ObservableObject {
                         
                         let contact = contactOpt == nil ? CNMutableContact() : contactOpt!
                         
-                        // TODO - check if they want this setting
-                        contact.givenName = detail.firstName
-                        contact.familyName = detail.lastName
-                        
                         if detail.birthday != nil {
                             contact.birthday = Calendar.current.dateComponents([.year, .month, .day], from: detail.birthday!)
                         }
@@ -127,12 +123,12 @@ class ContactStore: ObservableObject {
                             contact.postalAddresses.append(CNLabeledValue(label: CNLabelHome, value: address))
                         }
                                                       
-                        // We own the iPhone number :)
+                        // We own the mobile number :)
                         contact.phoneNumbers.removeAll(where: { (phoneNumber: CNLabeledValue<CNPhoneNumber>) in
-                            phoneNumber.label == CNLabelPhoneNumberiPhone
+                            phoneNumber.label == CNLabelPhoneNumberMobile
                         })
                         if detail.phoneNumber != nil {
-                            contact.phoneNumbers.append(CNLabeledValue(label: CNLabelPhoneNumberiPhone, value: CNPhoneNumber(stringValue: detail.phoneNumber!)))
+                            contact.phoneNumbers.append(CNLabeledValue(label: CNLabelPhoneNumberMobile, value: CNPhoneNumber(stringValue: detail.phoneNumber!)))
                         }
                         
                         // We own the home email :)
@@ -145,6 +141,9 @@ class ContactStore: ObservableObject {
                         
                         let saveRequest = CNSaveRequest()
                         if contactOpt == nil {
+                            // Only update name if creating this contact for the first time
+                            contact.givenName = detail.firstName
+                            contact.familyName = detail.lastName
                             saveRequest.add(contact, toContainerWithIdentifier: nil)
                         } else {
                             saveRequest.update(contact)

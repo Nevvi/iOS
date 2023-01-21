@@ -24,7 +24,7 @@ struct ConnectionDetail: View {
                     Text("\(self.connectionStore.firstName) \(self.connectionStore.lastName)")
                 }.padding()
                 
-                if !self.connectionStore.phoneNumber.isEmpty {
+                if !self.connectionStore.email.isEmpty {
                     connectionData(label: "Email", value: self.connectionStore.email)
                 }
                 

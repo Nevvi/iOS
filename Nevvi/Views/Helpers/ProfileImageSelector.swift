@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import NukeUI
+
 
 struct ProfileImageSelector: View {
     @EnvironmentObject var accountStore: AccountStore
@@ -17,19 +19,24 @@ struct ProfileImageSelector: View {
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            AsyncImage(url: URL(string: self.accountStore.profileImage), content: { image in
-                image.resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: width, height: height)
-                    .clipShape(Circle())
-            }, placeholder: {
-                Image(systemName: "photo.circle")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: width, height: height)
-                    .foregroundColor(.gray)
-                    .clipShape(Circle())
-            })
+            
+            LazyImage(url: URL(string: self.accountStore.profileImage), resizingMode: .aspectFill)
+                .frame(width: width, height: height)
+                .clipShape(Circle())
+                
+//            AsyncImage(url: URL(string: self.accountStore.profileImage), content: { image in
+//                image.resizable()
+//                    .aspectRatio(contentMode: .fill)
+//                    .frame(width: width, height: height)
+//                    .clipShape(Circle())
+//            }, placeholder: {
+//                Image(systemName: "photo.circle")
+//                    .resizable()
+//                    .scaledToFit()
+//                    .frame(width: width, height: height)
+//                    .foregroundColor(.gray)
+//                    .clipShape(Circle())
+//            })
             
             Image(systemName: "plus")
                 .foregroundColor(.white)
@@ -43,7 +50,8 @@ struct ProfileImageSelector: View {
         }
         .sheet(isPresented: self.$showPicker) {
             ImagePicker(callback: { (image: UIImage) in
-                self.accountStore.uploadImage(image: image) { (result: Result<User, Error>) in
+                let resizedImage = resizeImage(image: image, targetSize: CGSize(width: 1024, height: 1024))!
+                self.accountStore.uploadImage(image: resizedImage) { (result: Result<User, Error>) in
                     switch result {
                     case .failure(let error):
                         print("Something bad happened", error)
@@ -53,6 +61,29 @@ struct ProfileImageSelector: View {
                 }
             }, sourceType: .photoLibrary)
         }
+    }
+    
+    func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage? {
+        let size = image.size
+        
+        let widthRatio  = targetSize.width  / size.width
+        let heightRatio = targetSize.height / size.height
+        
+        var newSize: CGSize
+        if(widthRatio > heightRatio) {
+            newSize = CGSize(width: size.width * heightRatio, height: size.height * heightRatio)
+        } else {
+            newSize = CGSize(width: size.width * widthRatio, height: size.height * widthRatio)
+        }
+        
+        let rect = CGRect(origin: .zero, size: newSize)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        image.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage
     }
 }
 
