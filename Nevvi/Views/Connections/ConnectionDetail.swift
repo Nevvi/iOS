@@ -13,8 +13,7 @@ struct ConnectionDetail: View {
     
     @ObservedObject var connectionStore: ConnectionStore
     
-    @State var showGroups = false
-    @State var showSettings = false
+    @State var showEditSheet = false
     
     var body: some View {
         if self.connectionStore.loading == false && !self.connectionStore.id.isEmpty {
@@ -41,91 +40,52 @@ struct ConnectionDetail: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(trailing: settingsButton)
-            .navigationBarItems(trailing: groupsButton)
-            .sheet(isPresented: self.$showSettings) {
-                settingsSheet
-            }
-            .sheet(isPresented: self.$showGroups) {
-                groupsSheet
+            .toolbar(content: {
+                editButton
+            })
+            .sheet(isPresented: self.$showEditSheet) {
+                editSheet
             }
         } else  {
             ProgressView()
         }
     }
     
-    var settingsButton: some View {
+    var editButton: some View {
         Button {
-            self.showSettings = true
+            self.showEditSheet = true
         } label: {
-            Image(systemName: "gearshape.fill")
-                .renderingMode(.template)
-                .foregroundColor(.black)
+            Text("Edit")
         }
     }
     
-    var groupsButton: some View {
-        Button {
-            self.showGroups = true
-        } label: {
-            Image(systemName: "person.3.fill")
-                .renderingMode(.template)
-                .foregroundColor(.black)
-        }
-    }
-    
-    var groupsSheet: some View {
+    var editSheet: some View {
         VStack {
-            Text("Group Membership")
-                .font(.title3)
+            ProfileImage(imageUrl: self.connectionStore.profileImage, height: 80, width: 80)
+            
+            Text("\(self.connectionStore.firstName) \(self.connectionStore.lastName)")
+                .font(.title2)
                 .fontWeight(.semibold)
-                .padding([.top], 50)
-                                        
-            List {
-                ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
-                    ConnectionGroupMembershipRow(connectionStore: self.connectionStore,
-                                                 isMember: group.connections.contains(self.connectionStore.id),
-                                                 group: group)
-                }
-                .listRowSeparator(.hidden)
-            }
-            .scrollContentBackground(.hidden)
-            .padding([.top], -30)
-            .presentationDetents([.fraction(0.50)])
-        }
-    }
-    
-    var settingsSheet: some View {
-        ZStack {
+            
+            Divider().padding([.top, .bottom], 20)
+            
             VStack {
-                Text("Your settings with \(self.connectionStore.firstName)")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .padding([.top], 50)
-                    .padding([.bottom], 20)
+                Text("Permission Group")
+                    .personalInfoLabel()
                 
-                Spacer()
-                
-                VStack {
-                    Text("Permission Group")
-                        .personalInfoLabel()
-                    
-                    Menu {
-                        Picker("Which permission group should \(self.connectionStore.firstName) belong to?", selection: self.$connectionStore.permissionGroup) {
-                            ForEach(self.accountStore.permissionGroups, id: \.name) {
-                                Text($0.name.uppercased())
-                            }
+                Menu {
+                    Picker("Which permission group should \(self.connectionStore.firstName) belong to?", selection: self.$connectionStore.permissionGroup) {
+                        ForEach(self.accountStore.permissionGroups, id: \.name) {
+                            Text($0.name.uppercased())
                         }
-                    } label: {
-                        Text(self.connectionStore.permissionGroup.uppercased())
-                            .font(.system(size: 18))
-                            .fontWeight(.semibold)
-                            .foregroundColor(self.connectionStore.saving ? .gray : Color(UIColor(hexString: "#49C5B6")))
-                            .frame(width: 500)
                     }
+                } label: {
+                    Text(self.connectionStore.permissionGroup.uppercased())
+                        .font(.system(size: 18))
+                        .fontWeight(.semibold)
+                        .foregroundColor(self.connectionStore.saving ? .gray : Color(UIColor(hexString: "#49C5B6")))
+                        .frame(width: 500)
                 }
-                
-                Spacer()
             }
             .disabled(self.connectionStore.saving)
             .onChange(of: self.connectionStore.permissionGroup) { newValue in
@@ -138,8 +98,28 @@ struct ConnectionDetail: View {
                     }
                 }
             }
+            
+            Divider().padding([.top, .bottom], 20)
+            
+            VStack {
+                Text("Group Membership")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                                            
+                List {
+                    ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
+                        ConnectionGroupMembershipRow(connectionStore: self.connectionStore,
+                                                     isMember: group.connections.contains(self.connectionStore.id),
+                                                     group: group)
+                    }
+                    .listRowSeparator(.hidden)
+                }
+                .scrollContentBackground(.hidden)
+                .padding([.top], -30)
+            }
         }
-        .presentationDetents([.fraction(0.33)])
+        .padding([.top], 40)
+        .padding([.leading, .trailing], 20)
     }
     
     func connectionData(label: String, value: String) -> some View {

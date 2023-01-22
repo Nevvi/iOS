@@ -35,6 +35,7 @@ struct PermissionGroupList: View {
                 }
                 .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
             }
+            .padding([.top], -20)
             .scrollContentBackground(.hidden)
             .sheet(isPresented: self.$showGroupEdit) {
                 editPermissionGroupSheet
@@ -71,7 +72,7 @@ struct PermissionGroupList: View {
             }
         })
         .padding()
-        .presentationDetents([.medium])
+        .presentationDetents([.fraction(0.66)])
     }
     
     var newPermissionGroupSheet: some View {
@@ -87,7 +88,7 @@ struct PermissionGroupList: View {
             }
         })
         .padding()
-        .presentationDetents([.medium])
+        .presentationDetents([.fraction(0.66)])
     }
 }
 

@@ -31,17 +31,30 @@ struct ConnectionGroupList: View {
             .navigationTitle("Groups")
             .navigationBarTitleDisplayMode(.large)
             .toolbar(content: {
-                Image(systemName: "plus")
-                    .foregroundColor(.black)
-                    .onTapGesture {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
                         self.showGroupForm = true
-                    }
-                    .padding([.trailing])
+                    } label: {
+                        Image(systemName: "plus")
+                    }.padding([.trailing], 5)
+                }
             })
         }
-        
-        .sheet(isPresented: self.$showGroupForm, content: {
-            createGroupSheet
+        .alert("Create Group", isPresented: $showGroupForm, actions: {
+            TextField("Group Name", text: self.$newGroupName)
+            Button("Cancel", role: .cancel, action: {})
+            Button("Create") {
+                self.connectionGroupsStore.create(name: self.newGroupName) { (result: Result<ConnectionGroup, Error>) in
+                    switch result {
+                    case .success(_):
+                        self.showGroupForm = false
+                        self.connectionGroupsStore.load()
+                    case .failure(let error):
+                        print("Something bad happened", error)
+                    }
+                    self.newGroupName = ""
+                }
+            }
         })
         .alert(isPresented: self.$showDeleteAlert) {
             deleteAlert
@@ -73,6 +86,7 @@ struct ConnectionGroupList: View {
             } label: {
                 ConnectionGroupRow(connectionGroup: group)
             }
+            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
             .foregroundColor(.white)
@@ -82,50 +96,6 @@ struct ConnectionGroupList: View {
         .onDelete(perform: self.delete)
         .redacted(when: self.connectionGroupsStore.loading, redactionType: .customPlaceholder)
         .listRowSeparator(.hidden)
-    }
-    
-    var createGroupSheet: some View {
-        VStack {
-            Text("Create Group")
-                .font(.title3)
-                .padding([.top])
-            
-            Spacer()
-            
-            TextField("New Group Name", text: self.$newGroupName)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
-                .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-            
-            Spacer()
-            
-            Button {
-                self.connectionGroupsStore.create(name: self.newGroupName) { (result: Result<ConnectionGroup, Error>) in
-                    switch result {
-                    case .success(_):
-                        self.showGroupForm = false
-                        self.connectionGroupsStore.load()
-                    case .failure(let error):
-                        print("Something bad happened", error)
-                    }
-                    self.newGroupName = ""
-                }
-            } label: {
-                Text("Create")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 50)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .foregroundColor(self.newGroupName.isEmpty ? .gray : Color(UIColor(hexString: "#49C5B6")))
-                    )
-            }
-            .disabled(self.newGroupName.isEmpty)
-
-        }
-        .padding()
-        .presentationDetents([.height(300)])
     }
     
     var deleteAlert: Alert {

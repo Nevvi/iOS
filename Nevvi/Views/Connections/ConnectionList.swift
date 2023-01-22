@@ -36,16 +36,24 @@ struct ConnectionList: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar(content: {
                 if self.connectionsStore.outOfSyncCount > 0 {
-                    if syncing {
-                        ProgressView().padding([.trailing], 5)
-                    } else if (!self.accountStore.deviceSettings.autoSync) {
-                        Button {
-                            self.showSyncConfirmation = true
-                        } label: {
-                            Text("Sync (\(self.connectionsStore.outOfSyncCount))")
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        if syncing {
+                            ProgressView()
+                        } else if (!self.accountStore.deviceSettings.autoSync) {
+                            Button {
+                                self.showSyncConfirmation = true
+                            } label: {
+                                Text("Sync (\(self.connectionsStore.outOfSyncCount))")
+                            }
                         }
-                        .padding([.trailing], 5)
                     }
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: UserSearch()) {
+                        Image(systemName: "plus")
+                    }
+                    .padding([.trailing], 5)
                 }
             })
             .searchable(text: self.$nameFilter.text)
@@ -95,6 +103,7 @@ struct ConnectionList: View {
             } label: {
                 ConnectionRow(connection: connection)
             }
+            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
         }
         .onDelete(perform: self.delete)
         .redacted(when: self.connectionsStore.loading, redactionType: .customPlaceholder)

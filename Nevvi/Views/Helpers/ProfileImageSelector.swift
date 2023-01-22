@@ -19,24 +19,9 @@ struct ProfileImageSelector: View {
     
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            
             LazyImage(url: URL(string: self.accountStore.profileImage), resizingMode: .aspectFill)
                 .frame(width: width, height: height)
                 .clipShape(Circle())
-                
-//            AsyncImage(url: URL(string: self.accountStore.profileImage), content: { image in
-//                image.resizable()
-//                    .aspectRatio(contentMode: .fill)
-//                    .frame(width: width, height: height)
-//                    .clipShape(Circle())
-//            }, placeholder: {
-//                Image(systemName: "photo.circle")
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(width: width, height: height)
-//                    .foregroundColor(.gray)
-//                    .clipShape(Circle())
-//            })
             
             Image(systemName: "plus")
                 .foregroundColor(.white)

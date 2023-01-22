@@ -25,7 +25,6 @@ struct ConnectionGroupMembershipRow: View {
                 }
                 .disabled(self.loading)
         }
-        .padding([.leading, .trailing], 30)
     }
     
     func handleChange(toggled: Bool) {

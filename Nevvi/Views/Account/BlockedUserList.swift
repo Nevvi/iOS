@@ -19,7 +19,7 @@ struct BlockedUserList: View {
         NavigationView {
             List {
                 if self.connectionsStore.blockedUserCount == 0 && self.connectionsStore.loadingBlockerUsers == false {
-                    NoDataFound(imageName: "person.2.slash", height: 120, width: 120)
+                    NoDataFound(imageName: "person.2.slash", height: 100, width: 120)
                 } else {
                     ForEach(self.connectionsStore.blockedUsers) { user in
                         NewConnectionRequestRow(requestCallback: { (id: String, group: String) in

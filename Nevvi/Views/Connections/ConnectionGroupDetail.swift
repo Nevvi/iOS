@@ -42,11 +42,13 @@ struct ConnectionGroupDetail: View {
         .navigationTitle(self.connectionGroupStore.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(content: {
-            Text("Export")
-                .padding([.trailing])
-                .onTapGesture {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
                     self.showExportOptions.toggle()
+                } label: {
+                    Text("Export").padding([.trailing], 5)
                 }
+            }
         })
         .sheet(isPresented: self.$showExportOptions) {
             exportSheet
@@ -123,10 +125,10 @@ struct ConnectionGroupDetail: View {
                     .padding(.vertical, 16)
                     .background(
                         RoundedRectangle(cornerRadius: 20)
-                            .foregroundColor(self.connectionGroupStore.loading ? .gray : Color(UIColor(hexString: "#49C5B6")))
+                            .foregroundColor(self.connectionGroupStore.exporting ? .gray : Color(UIColor(hexString: "#49C5B6")))
                     )
             }
-            .disabled(self.connectionGroupStore.loading)
+            .disabled(self.connectionGroupStore.exporting)
         }
         .padding()
     }

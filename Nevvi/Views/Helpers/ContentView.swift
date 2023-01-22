@@ -29,11 +29,6 @@ struct ContentView: View {
                             Label("Connections", systemImage: "person.line.dotted.person.fill")
                         }
                     
-                    UserSearch()
-                        .tabItem() {
-                            Label("Search", systemImage: "plus.magnifyingglass")
-                        }
-                    
                     RefreshableView(onRefresh: {
                         self.connectionsStore.loadRequests()
                     }, view: ConnectionRequestList())
