@@ -15,7 +15,7 @@
         "state": "NY",
         "zipCode": 10024
     },
-    "profileImage": "https://nevvi-user-images-dev.s3.amazonaws.com/users/49259105-818b-4e85-881b-e12122c4d272/images/ty_and_lo_wedding_1.jpeg",
+    "profileImage": "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png",
     "permissionGroups": [
         {
             "name": "ALL",

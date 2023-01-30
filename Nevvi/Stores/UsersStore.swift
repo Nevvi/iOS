@@ -23,6 +23,7 @@ class UsersStore : ObservableObject {
     
     init(users: [Connection]) {
         self.users = users
+        self.userCount = users.count
     }
     
     private func url(nameFilter: String) throws -> URL {

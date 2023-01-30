@@ -29,8 +29,8 @@ struct UserSearch: View {
                    usersView
                 }
             }
-            .scrollContentBackground(.hidden)
         }
+        .scrollContentBackground(self.usersStore.userCount == 0 ? .hidden : .visible)
         .searchable(text: self.$nameFilter.text)
         .navigationBarTitleDisplayMode(.inline)
         .disableAutocorrection(true)
@@ -67,7 +67,6 @@ struct UserSearch: View {
             NewConnectionRequestRow(requestCallback: { (id: String, group: String) in
                 requestConnection(userId: id, groupName: group)
             }, user: user)
-            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
         }
         .redacted(when: self.usersStore.loading, redactionType: .customPlaceholder)
     }

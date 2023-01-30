@@ -54,7 +54,7 @@ struct Login: View {
                             .frame(maxWidth: .infinity)
                     }
                     .disabled(self.loginDisabled)
-                    .background(Color.green)
+                    .background(ColorConstants.tertiary)
                     .opacity(self.loginDisabled ? 0.5 : 1.0)
                     .frame(maxWidth: .infinity)
                     .cornerRadius(10.0)

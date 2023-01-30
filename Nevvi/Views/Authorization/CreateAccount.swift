@@ -42,36 +42,35 @@ struct CreateAccount: View {
     }
       
     var body: some View {
-        NavigationView {
-            VStack() {
-                Spacer()
-                
-                Text("Welcome to Nevvi!")
-                    .font(.largeTitle).foregroundColor(Color.white)
-                
-                Text("Keep your contacts up to date!")
-                    .font(.subheadline).foregroundColor(Color.white)
-                    .padding([.top], 1)
-                    .padding([.bottom], 50)
-                
-                if self.showConfirmationCode {
-                    confirmationCodeView
-                } else {
-                    createAccountView
-                }
-                
-                Spacer()
-
-                Button(self.showConfirmationCode ? "Create account" : "Need to confirm an account?") {
-                    self.showConfirmationCode = !self.showConfirmationCode
-                }
-                .padding()
-                .foregroundColor(.white)
+        VStack() {
+            Spacer()
+            
+            Text("Welcome to Nevvi!")
+                .font(.largeTitle).foregroundColor(Color.white)
+            
+            Text("Keep your contacts up to date!")
+                .font(.subheadline).foregroundColor(Color.white)
+                .padding([.top], 1)
+                .padding([.bottom], 50)
+            
+            if self.showConfirmationCode {
+                confirmationCodeView
+            } else {
+                createAccountView
             }
-            .autocapitalization(.none)
-            .disabled(self.authStore.signingUp)
-            .background(BackgroundGradient())
+            
+            Spacer()
+            Spacer()
+
+            Button(self.showConfirmationCode ? "Create account" : "Need to confirm an account?") {
+                self.showConfirmationCode = !self.showConfirmationCode
+            }
+            .padding()
+            .foregroundColor(.white)
         }
+        .autocapitalization(.none)
+        .disabled(self.authStore.signingUp)
+        .background(BackgroundGradient())
         .alert(item: self.$error) { error in
             if self.showConfirmationCode {
                 return Alert(title: Text("Failed to confirm account"), message: Text(error.localizedDescription))
@@ -98,7 +97,8 @@ struct CreateAccount: View {
                     .frame(maxWidth: .infinity)
             }
             .disabled(self.createAccountDisabled)
-            .background(self.createAccountDisabled ? .gray : Color.green)
+            .background(ColorConstants.tertiary)
+            .opacity(self.createAccountDisabled ? 0.5 : 1.0)
             .frame(maxWidth: .infinity)
             .cornerRadius(10.0)
         }
@@ -122,7 +122,8 @@ struct CreateAccount: View {
                     .frame(maxWidth: .infinity)
             }
             .disabled(self.confirmAccountDisabled)
-            .background(self.confirmAccountDisabled ? .gray : Color.green)
+            .background(ColorConstants.tertiary)
+            .opacity(self.confirmAccountDisabled ? 0.5 : 1.0)
             .frame(maxWidth: .infinity)
             .cornerRadius(10.0)
         }

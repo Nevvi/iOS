@@ -12,9 +12,15 @@ struct ConnectionGroupRow: View {
     
     var body: some View {
         HStack {
-            Text("\(connectionGroup.name) (\(connectionGroup.connections.count))")
+            Text(connectionGroup.name)
+                .foregroundColor(ColorConstants.text)
+            
+            Spacer()
+            
+            Text("\(connectionGroup.connections.count)")
+                .foregroundColor(.gray)
         }
-        .padding(10)
+        .padding(5)
     }
 }
 

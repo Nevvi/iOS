@@ -16,6 +16,7 @@ struct ProfileImage: View {
     var body: some View {
         LazyImage(url: URL(string: imageUrl), resizingMode: .aspectFill)
             .frame(width: width, height: height)
+            .background(.white)
             .clipShape(Circle())
     }
 }

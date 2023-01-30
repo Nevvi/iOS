@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct OnboardingViewFour: View {
+struct OnboardingDescription: View {
     @State private var firstName = ""
     @State private var lastName = ""
     
@@ -23,19 +23,19 @@ struct OnboardingViewFour: View {
     var body: some View {
         VStack(spacing: 20.0) {
             Text("Nevvi")
-                .font(.title)
-                .bold()
-                .foregroundColor(.white)
-                .padding()
+                .onboardingTitle()
             
+            Spacer()
+            Image("OnboardingThree")
+            Spacer()
             
             Text("The heart and soul of Nevvi is the connections you make with others.")
                 .onboardingStyle()
-                .padding(20)
+                .padding(10)
             
             Text("Think of a connection like an entry in your contacts, but instead of you managing someone else's information they manage it themselves.")
                 .onboardingStyle()
-                .padding(20)
+                .padding(10)
             
             Spacer()
             
@@ -62,8 +62,11 @@ struct OnboardingViewFour: View {
                 
                 Image(systemName: "chevron.right")
             }
-            .foregroundColor(self.accountStore.saving ? .accentColor : .white)
+            .foregroundColor(ColorConstants.accent)
+            .opacity(self.accountStore.saving ? 0.5 : 1.0)
         })
+        .disabled(self.accountStore.saving)
+        .foregroundColor(ColorConstants.accent)
     }
     
     var secondaryButton: some View {
@@ -73,8 +76,10 @@ struct OnboardingViewFour: View {
                 
                 Text("Back")
                     .font(.headline)
+                    .foregroundColor(ColorConstants.accent)
             }
-            .foregroundColor(.white)
+            .foregroundColor(ColorConstants.accent)
+            .opacity(self.accountStore.saving ? 0.5 : 1.0)
         })
     }
     
@@ -85,12 +90,12 @@ struct OnboardingViewFour: View {
     }
 }
 
-struct OnboardingViewFour_Previews: PreviewProvider {
+struct OnboardingDescription_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let accountStore = AccountStore(user: modelData.user)
     
     static var previews: some View {
-        OnboardingViewFour(primaryClick: {}, secondaryClick: {})
+        OnboardingDescription(primaryClick: {}, secondaryClick: {})
             .environmentObject(accountStore)
     }
 }

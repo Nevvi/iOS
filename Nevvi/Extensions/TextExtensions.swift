@@ -9,11 +9,20 @@ import Foundation
 import SwiftUI
 
 extension Text {
+    func onboardingTitle() -> some View {
+        return self
+            .font(.system(size: 32))
+            .font(.title)
+            .bold()
+            .foregroundColor(.white)
+            .padding([.top], 30)
+    }
+    
     func onboardingStyle() -> some View {
         return self
-            .font(.headline)
+            .font(.system(size: 18))
             .multilineTextAlignment(.center)
-            .foregroundColor(.white)
+            .foregroundColor(ColorConstants.accent)
             .shadow(color: Color.black.opacity(0.1), radius: 1, x: 2, y: 2)
     }
     
@@ -22,6 +31,18 @@ extension Text {
             .foregroundColor(.secondary)
             .fontWeight(.light)
             .font(.system(size: 14))
+    }
+    
+    func personalInfo() -> some View {
+        return self
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(10)
+            .foregroundColor(ColorConstants.text)
+            .fontWeight(.light)
+            .font(.system(size: 20))
+            .background(ColorConstants.primary)
+            .cornerRadius(10)
+            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
     }
     
     func asTextField() -> some View {
@@ -40,6 +61,7 @@ extension TextField {
             .autocapitalization(.none)
             .background(.white)
             .cornerRadius(10.0)
+            .tint(ColorConstants.text)
     }
     
     func personalInfoStyle() -> some View {
@@ -48,6 +70,7 @@ extension TextField {
             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
             .textInputAutocapitalization(.never)
             .disableAutocorrection(true)
+            .tint(ColorConstants.text)
     }
 }
 
@@ -59,5 +82,6 @@ extension SecureField {
             .autocapitalization(.none)
             .background(.white)
             .cornerRadius(10.0)
+            .tint(ColorConstants.text)
     }
 }

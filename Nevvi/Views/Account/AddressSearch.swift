@@ -40,140 +40,138 @@ struct AddressSearch: View {
                     self.accountStore.address.state = "\(reversedGeoLocation.state)"
                     self.accountStore.address.zipCode = Int(reversedGeoLocation.zipCode)!
                     addressSearchStore.searchTerm = self.accountStore.address.street
-                    isFocused = false
                 }
             }
         }
     }
-
-
-    @FocusState private var isFocused: Bool
 
     @State private var btnHover = false
     @State private var isBtnActive = false
 
     var body: some View {
         VStack(spacing: 0) {
-            Text("Start typing your street address and you will see a list of possible matches.")
-            
-            TextField("Address", text: $addressSearchStore.searchTerm)
-                .padding([.leading], 10)
-                .padding([.top], 20)
-            
-            List {
-                if self.accountStore.address.street != addressSearchStore.searchTerm && isFocused == false {
-                    ForEach(addressSearchStore.locationResults, id: \.self) { location in
-                        Button {
-                            reverseGeo(location: location)
-                        } label: {
-                            VStack(alignment: .leading) {
-                                Text(location.title)
-                                Text(location.subtitle)
-                                    .font(.system(.caption))
-                            }
-                        }
-                    }
-                }
-            }.listRowSeparator(.visible)
-            
             VStack(alignment: .leading) {
-                Text("Address One")
+                Text("Address")
                     .foregroundColor(.secondary)
                     .fontWeight(.light)
                     .font(.system(size: 14))
                 
-                TextField("111 Hollywood Ave", text: self.$accountStore.address.street)
-                    .padding()
+                TextField("111 Hollywood Ave", text: self.$addressSearchStore.searchTerm)
+                    .padding(10)
                     .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
             }
             .padding()
             
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("Address Two")
-                        .foregroundColor(.secondary)
-                        .fontWeight(.light)
-                        .font(.system(size: 14))
-                    
-                    TextField("Apt 1A", text: self.$accountStore.address.unit)
-                        .padding()
-                        .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                        .textInputAutocapitalization(.never)
-                        .disableAutocorrection(true)
+            if self.accountStore.address.street != addressSearchStore.searchTerm {
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        ForEach(addressSearchStore.locationResults, id: \.self) { location in
+                            Button {
+                                reverseGeo(location: location)
+                            } label: {
+                                VStack(alignment: .leading) {
+                                    Text(location.title)
+                                    Text(location.subtitle)
+                                        .font(.system(.caption))
+                                }
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding([.leading])
+                            .padding([.bottom], 5)
+                        }
+                    }
                 }
-                .padding([.leading, .trailing])
-                .padding([.bottom], 8)
+            } else {
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("Address Two")
+                            .foregroundColor(.secondary)
+                            .fontWeight(.light)
+                            .font(.system(size: 14))
+    
+                        TextField("Apt 1A", text: self.$accountStore.address.unit)
+                            .padding(10)
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                            .textInputAutocapitalization(.never)
+                            .disableAutocorrection(true)
+                    }
+                    .padding([.leading, .trailing])
+                    .padding([.bottom], 8)
+    
+                    VStack(alignment: .leading) {
+                        Text("City")
+                            .foregroundColor(.secondary)
+                            .fontWeight(.light)
+                            .font(.system(size: 14))
+    
+                        TextField("Hollywood", text: self.$accountStore.address.city)
+                            .padding(10)
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                            .textInputAutocapitalization(.never)
+                            .disableAutocorrection(true)
+                    }
+                    .padding([.leading, .trailing])
+                    .padding([.bottom], 8)
+                }
+    
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text("State")
+                            .foregroundColor(.secondary)
+                            .fontWeight(.light)
+                            .font(.system(size: 14))
+    
+                        TextField("CA", text: self.$accountStore.address.state)
+                            .padding(10)
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                            .textInputAutocapitalization(.never)
+                            .disableAutocorrection(true)
+                    }
+                    .padding([.leading, .trailing])
+                    .padding([.bottom], 8)
+    
+                    VStack(alignment: .leading) {
+                        Text("Zip Code")
+                            .foregroundColor(.secondary)
+                            .fontWeight(.light)
+                            .font(.system(size: 14))
+    
+                        TextField("Zip Code", value: self.$accountStore.address.zipCode, formatter: NumberFormatter())
+                            .padding(10)
+                            .keyboardType(.numberPad)
+                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                            .textInputAutocapitalization(.never)
+                            .disableAutocorrection(true)
+                    }
+                    .padding([.leading, .trailing])
+                    .padding([.bottom], 8)
+                }
                 
-                VStack(alignment: .leading) {
-                    Text("City")
-                        .foregroundColor(.secondary)
-                        .fontWeight(.light)
-                        .font(.system(size: 14))
-                    
-                    TextField("Hollywood", text: self.$accountStore.address.city)
-                        .padding()
-                        .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                        .textInputAutocapitalization(.never)
-                        .disableAutocorrection(true)
-                }
-                .padding([.leading, .trailing])
-                .padding([.bottom], 8)
-            }
-            
-            HStack {
-                VStack(alignment: .leading) {
-                    Text("State")
-                        .foregroundColor(.secondary)
-                        .fontWeight(.light)
-                        .font(.system(size: 14))
-                    
-                    TextField("CA", text: self.$accountStore.address.state)
-                        .padding()
-                        .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                        .textInputAutocapitalization(.never)
-                        .disableAutocorrection(true)
-                }
-                .padding([.leading, .trailing])
-                .padding([.bottom], 8)
+                Spacer()
                 
-                VStack(alignment: .leading) {
-                    Text("Zip Code")
-                        .foregroundColor(.secondary)
-                        .fontWeight(.light)
-                        .font(.system(size: 14))
-                    
-                    TextField("Zip Code", value: self.$accountStore.address.zipCode, formatter: NumberFormatter())
-                        .padding()
-                        .keyboardType(.numberPad)
-                        .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                        .textInputAutocapitalization(.never)
-                        .disableAutocorrection(true)
-                }
-                .padding([.leading, .trailing])
-                .padding([.bottom], 8)
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }, label: {
+                    Text("Done")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 50)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .foregroundColor(ColorConstants.secondary)
+                        )
+                })
+                .shadow(radius: 10)
+                .padding([.top], 20)
             }
-            
-            Spacer()
-            
-            Button(action: {
-                presentationMode.wrappedValue.dismiss()
-            }, label: {
-                Text("Done")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 50)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20)
-                            .foregroundColor(Color(UIColor(hexString: "#49C5B6")))
-                    )
-            })
-            .shadow(radius: 10)
-            .padding([.top], 20)
-
-        }.padding()
+        }
+        .padding()
+        .onAppear {
+            self.addressSearchStore.searchTerm = self.accountStore.address.street
+        }
     }
 }
 

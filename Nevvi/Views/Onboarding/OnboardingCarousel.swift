@@ -20,20 +20,20 @@ struct OnboardingCarousel: View {
     var body: some View {
         VStack{
             TabView(selection: $index) {
-                OnboardingViewOne(primaryClick: {
+                OnboardingIntro(primaryClick: {
                     self.index = 1
                 }).tabStyle(page: 0)
-                OnboardingViewTwo(primaryClick: {
+                OnboardingInformation(primaryClick: {
                     self.index = 2
                 }, secondaryClick: {
                     self.index = 0
                 }).tabStyle(page: 1)
-                OnboardingViewThree(primaryClick: {
+                OnboardingSync(primaryClick: {
                     self.index = 3
                 }, secondaryClick: {
                     self.index = 1
                 }).tabStyle(page: 2)
-                OnboardingViewFour(primaryClick: {
+                OnboardingDescription(primaryClick: {
                     print("Done onboarding!")
                 }, secondaryClick: {
                     self.index = 2

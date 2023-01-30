@@ -28,6 +28,23 @@
          contextName = "closure #1 in ConnectionList.sync():ConnectionList.swift">
       </ContextState>
       <ContextState
+         contextName = "PersonalInformation.tryToggle():PersonalInformation.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "user.birthday">
+            </PersistentString>
+            <PersistentString
+               value = "self.accountStore.birthday">
+            </PersistentString>
+            <PersistentString
+               value = "self.accountStore.address.street">
+            </PersistentString>
+            <PersistentString
+               value = "user.address.street">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "NSURLSession.execute&lt;&#x3c4;_0_0&gt;(request:completion:):URLSessionExtensions.swift">
       </ContextState>
       <ContextState

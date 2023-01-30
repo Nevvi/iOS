@@ -18,26 +18,17 @@ struct BlockedUserList: View {
     var body: some View {
         NavigationView {
             List {
-                if self.connectionsStore.blockedUserCount == 0 && self.connectionsStore.loadingBlockerUsers == false {
-                    NoDataFound(imageName: "person.2.slash", height: 100, width: 120)
+                if self.connectionsStore.blockedUserCount == 0 {
+                    noDataView
                 } else {
-                    ForEach(self.connectionsStore.blockedUsers) { user in
-                        NewConnectionRequestRow(requestCallback: { (id: String, group: String) in
-                            self.usersStore.requestConnection(userId: id, groupName: group) { (result: Result<Bool, Error>) in
-                                switch result {
-                                case .success(_):
-                                    self.connectionsStore.loadRejectedUsers()
-                                case .failure(let error):
-                                    print("Something went wrong", error)
-                                }
-                            }
-                        }, user: user)
-                    }
-                    .redacted(when: self.connectionsStore.loadingBlockerUsers, redactionType: .customPlaceholder)
+                    blockedUsersView
                 }
             }
-            .scrollContentBackground(.hidden)
+            .scrollContentBackground(self.connectionsStore.blockedUserCount == 0 ? .hidden : .visible)
             .padding([.top], -20)
+            .refreshable {
+                self.connectionsStore.loadRejectedUsers()
+            }
             .sheet(isPresented: self.$showInfo) {
                 Text("Blocked users do not show up in your normal search results and you do not show up in theirs. The only way to unblock a user is to re-connect with them.")
                     .foregroundColor(.secondary)
@@ -56,6 +47,35 @@ struct BlockedUserList: View {
         })
         .navigationTitle("Blocked Users")
         .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    var noDataView: some View {
+        HStack {
+            Spacer()
+            if self.connectionsStore.loadingBlockerUsers == true {
+                ProgressView()
+            } else {
+                NoDataFound(imageName: "person.2.slash", height: 100, width: 120)
+            }
+            Spacer()
+        }
+        .padding([.top], 100)
+    }
+    
+    var blockedUsersView: some View {
+        ForEach(self.connectionsStore.blockedUsers) { user in
+            NewConnectionRequestRow(requestCallback: { (id: String, group: String) in
+                self.usersStore.requestConnection(userId: id, groupName: group) { (result: Result<Bool, Error>) in
+                    switch result {
+                    case .success(_):
+                        self.connectionsStore.loadRejectedUsers()
+                    case .failure(let error):
+                        print("Something went wrong", error)
+                    }
+                }
+            }, user: user)
+        }
+        .redacted(when: self.connectionsStore.loadingBlockerUsers, redactionType: .customPlaceholder)
     }
 }
 

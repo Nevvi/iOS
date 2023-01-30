@@ -24,6 +24,7 @@ struct ConnectionGroupMembershipRow: View {
                     self.handleChange(toggled: newValue)
                 }
                 .disabled(self.loading)
+                .tint(ColorConstants.secondary)
         }
     }
     

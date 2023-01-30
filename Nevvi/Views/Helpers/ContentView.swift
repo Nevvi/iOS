@@ -21,32 +21,22 @@ struct ContentView: View {
         if (!accountStore.id.isEmpty) {
             if (accountStore.onboardingCompleted) {
                 TabView {
-                    RefreshableView(onRefresh: {
-                        self.connectionsStore.load()
-                        self.connectionsStore.loadOutOfSync { _ in }
-                    }, view: ConnectionList(connectionStore: self.connectionStore))
+                    ConnectionList(connectionStore: self.connectionStore)
                         .tabItem() {
                             Label("Connections", systemImage: "person.line.dotted.person.fill")
                         }
                     
-                    RefreshableView(onRefresh: {
-                        self.connectionsStore.loadRequests()
-                    }, view: ConnectionRequestList())
+                    ConnectionRequestList()
                         .tabItem() {
                             Label("Requests", systemImage: "person.fill.questionmark")
                         }
                     
-                    RefreshableView(onRefresh: {
-                        self.connectionGroupsStore.load()
-                    }, view: ConnectionGroupList(connectionGroupStore: self.connectionGroupStore, connectionStore: self.connectionStore))
+                    ConnectionGroupList(connectionGroupStore: self.connectionGroupStore, connectionStore: self.connectionStore)
                         .tabItem() {
                             Label("Groups", systemImage: "person.3.fill")
                         }
                     
-                    RefreshableView(onRefresh: {
-                        self.accountStore.load()
-                        self.connectionsStore.loadRejectedUsers()
-                    }, view: Account())
+                    Account()
                         .tabItem() {
                             Label("Account", systemImage: "person.fill")
                         }
@@ -67,6 +57,7 @@ struct ContentView: View {
                 self.connectionsStore.load()
                 self.connectionsStore.loadRequests()
                 self.connectionsStore.loadRejectedUsers()
+                self.connectionsStore.loadOutOfSync { _ in }
                 self.connectionGroupsStore.load()
             }
         }

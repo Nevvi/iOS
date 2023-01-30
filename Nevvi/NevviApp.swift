@@ -8,9 +8,37 @@
 import SwiftUI
 import BackgroundTasks
 
+import Firebase
+import FirebaseMessaging
+import UserNotifications
+
+class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        FirebaseApp.configure()
+        Messaging.messaging().delegate = self
+        UNUserNotificationCenter.current().delegate = self
+        application.registerForRemoteNotifications()
+        return true
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
+    }
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        messaging.token { token, error in
+            if let error = error {
+                print("Error fetching FCM registration token: \(error)")
+            } else if let token = token {
+                print("FCM registration token: \(token)")
+            }
+        }
+    }
+}
+
 @main
 struct NevviApp: App {
-//    @Environment(\.scenePhase) private var phase
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     @StateObject private var modelData = ModelData()
     
@@ -22,14 +50,7 @@ struct NevviApp: App {
     @StateObject private var connectionGroupsStore = ConnectionGroupsStore()
     @StateObject private var usersStore = UsersStore()
     @StateObject private var contactStore = ContactStore()
-    
-//    func scheduleLoadOutOfSync() {
-//        print("Scheduling background sync task")
-//        let request = BGAppRefreshTaskRequest(identifier: "loadoutofsync")
-//        request.earliestBeginDate = Calendar.current.date(byAdding: .second, value: 30, to: Date()) // Mark 2
-//        try? BGTaskScheduler.shared.submit(request)
-//        print("Submitted request")
-//    }
+    @StateObject private var notificationStore = NotificationStore()
     
     var body: some Scene {
         WindowGroup {
@@ -41,6 +62,25 @@ struct NevviApp: App {
                     .environmentObject(connectionGroupsStore)
                     .environmentObject(usersStore)
                     .environmentObject(contactStore)
+                    .environmentObject(notificationStore)
+                    .onAppear {
+                        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, _ in
+                            guard success else {
+                                print("Notifications are disabled, not updating token")
+                                return
+                            }
+                            
+                            Messaging.messaging().token { token, error in
+                                if let error = error {
+                                    print("Error fetching FCM registration token: \(error)")
+                                } else if let token = token {
+                                    // TODO - only update on change?
+                                    self.notificationStore.updateToken(token: token)
+                                    print("FCM registration token: \(token)")
+                                }
+                            }
+                        }
+                    }
             } else {
                 Login(authStore: authStore) { (auth: Authorization) in
                     // hacky way of restoring auth on login
@@ -51,59 +91,9 @@ struct NevviApp: App {
                     self.connectionGroupsStore.authorization = auth
                     self.usersStore.authorization = auth
                     self.contactStore.authorization = auth
-                    
-                    
-                    // TODO - find more seamless way to ask for notification access right when they get in the app
-//                    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
-//                        if success {
-//                            self.connectionsStore.loadOutOfSync { (result: Result<ConnectionResponse, Error>) in
-//                                switch result {
-//                                case .success(let response):
-//                                    print("Got \(response.count) out of sync connection(s)")
-//                                    UIApplication.shared.applicationIconBadgeNumber = response.count
-//                                case .failure(let error):
-//                                    print("Failed to load out of sync connections", error.localizedDescription)
-//                                }
-//                            }
-//                        } else if let error = error {
-//                            print(error.localizedDescription)
-//                        }
-//                    }
+                    self.notificationStore.authorization = auth
                 }
             }
         }
-//        .onChange(of: phase) { newPhase in
-//            switch newPhase {
-//            case .background: scheduleLoadOutOfSync()
-//            default: break
-//            }
-//        }
-//        .backgroundTask(.appRefresh("loadoutofsync")) {
-//            print("Loading out of sync connections")
-//            let auth = await self.authStore.authorization
-//            if (auth == nil) {
-//                return
-//            }
-//
-//            let userId: String? = auth?.id
-//            var urlString = "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections?inSync=false"
-//            var request = URLRequest(url: URL(string: urlString)!)
-//            request.httpMethod = "GET"
-//            request.setValue(auth?.idToken, forHTTPHeaderField: "Authorization")
-//
-//            guard let data = try? await URLSession.shared.data(for: request).0 else {
-//                return
-//            }
-//
-//            let decoder = JSONDecoder()
-//            guard let response = try? decoder.decode(ConnectionResponse.self, from: data) else {
-//                return
-//            }
-//
-//            print("Got \(response.count) out of sync connection(s)")
-//            await MainActor.run(body: {
-//                UIApplication.shared.applicationIconBadgeNumber = response.count
-//            })
-//        }
     }
 }

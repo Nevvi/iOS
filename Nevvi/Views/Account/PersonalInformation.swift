@@ -11,7 +11,7 @@ extension VStack {
     func personalInfoStyle() -> some View {
         return self
             .padding([.leading, .trailing])
-            .padding([.bottom], 8)
+            .padding([.bottom], 12)
     }
 }
 
@@ -83,7 +83,7 @@ struct PersonalInformation: View {
                                 .personalInfoLabel()
                             
                             Text(self.accountStore.birthday.yyyyMMdd() != Date().yyyyMMdd() ?
-                                 self.accountStore.birthday.yyyyMMdd() :
+                                 self.accountStore.birthday.toString() :
                                  "")
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(14)
@@ -280,14 +280,15 @@ struct PersonalInformation: View {
             return
         }
         
+        let addressModel = self.accountStore.address.toModel()
         let didChange = didPropChange(type: String.self, a: user.firstName, b: self.accountStore.firstName) ||
         didPropChange(type: String.self, a: user.lastName, b: self.accountStore.lastName) ||
         didPropChange(type: String.self, a: user.phoneNumber, b: self.accountStore.phoneNumber) ||
-        didPropChange(type: String.self, a: user.address.street, b: self.accountStore.address.street) ||
-        didPropChange(type: String.self, a: user.address.unit, b: self.accountStore.address.unit) ||
-        didPropChange(type: String.self, a: user.address.city, b: self.accountStore.address.city) ||
-        didPropChange(type: String.self, a: user.address.state, b: self.accountStore.address.state) ||
-        didPropChange(type: Int.self, a: user.address.zipCode, b: self.accountStore.address.zipCode) ||
+        didPropChange(type: String.self, a: user.address.street, b: addressModel.street) ||
+        didPropChange(type: String.self, a: user.address.unit, b: addressModel.unit) ||
+        didPropChange(type: String.self, a: user.address.city, b: addressModel.city) ||
+        didPropChange(type: String.self, a: user.address.state, b: addressModel.state) ||
+        didPropChange(type: Int.self, a: user.address.zipCode, b: addressModel.zipCode) ||
         didPropChange(type: Date.self, a: user.birthday, b: self.accountStore.birthday)
         
         if (!self.canSave && didChange) || (self.canSave && !didChange) {

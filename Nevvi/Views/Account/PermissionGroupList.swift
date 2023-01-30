@@ -21,6 +21,7 @@ struct PermissionGroupList: View {
                     HStack {
                         Text(group.name.uppercased())
                         if group.name.uppercased() != "ALL" {
+                            Spacer()
                             Text("(\(group.fields.count) fields)")
                         }
                     }
@@ -36,7 +37,6 @@ struct PermissionGroupList: View {
                 .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
             }
             .padding([.top], -20)
-            .scrollContentBackground(.hidden)
             .sheet(isPresented: self.$showGroupEdit) {
                 editPermissionGroupSheet
             }

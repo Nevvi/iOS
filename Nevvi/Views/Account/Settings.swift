@@ -39,6 +39,7 @@ struct Settings: View {
                             self.accountStore.save { _ in self.autoSyncSaving = false }
                         }
                         .disabled(self.autoSyncSaving)
+                        .tint(ColorConstants.secondary)
                 }
                 Text("Automatically sync all updated Nevvi connections with your device contacts when you log in. Otherwise you will have the option to sync manually.")
                     .settingsStyle()
@@ -54,6 +55,7 @@ struct Settings: View {
                             self.accountStore.save { _ in self.syncAllInformationSaving = false }
                         }
                         .disabled(self.syncAllInformationSaving)
+                        .tint(ColorConstants.secondary)
                 }
                 Text("Update all contact information available including name and birthday when a connection changes instead of just email, phone, and address")
                     .settingsStyle()

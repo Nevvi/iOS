@@ -22,9 +22,12 @@ struct ConnectionRequestList: View {
                     requestsView
                 }
             }
-            .scrollContentBackground(.hidden)
+            .scrollContentBackground(self.connectionsStore.requestCount == 0 ? .hidden : .visible)
             .navigationTitle("Requests")
             .navigationBarTitleDisplayMode(.large)
+            .refreshable {
+                self.connectionsStore.loadRequests()
+            }
         }
         .alert(isPresented: self.$showDeleteAlert) {
             deleteAlert

@@ -7,27 +7,21 @@
 
 import SwiftUI
 
-struct OnboardingViewOne: View {    
+struct OnboardingIntro: View {    
     var primaryClick: () -> Void
 
     var body: some View {
-        VStack() {
-            Spacer()
-
+        VStack(spacing: 20.0) {
             Text("Welcome to Nevvi!")
-                .font(.title)
-                .bold()
-                .foregroundColor(.white)
-                .padding(20)
+                .onboardingTitle()
             
-            Image("ConnectionGrid")
-                .resizable()
-                .scaledToFit()
-                .padding()
+            Spacer()
+            Image("OnboardingOne")
+            Spacer()
                         
             Text("We keep all your connections up to date, so you don't have to.")
                 .onboardingStyle()
-                .padding(20)
+                .padding()
 
             Spacer()
             
@@ -50,14 +44,14 @@ struct OnboardingViewOne: View {
                 
                 Image(systemName: "chevron.right")
             }
-            .foregroundColor(.white)
+            .foregroundColor(ColorConstants.accent)
         })
     }
 }
 
-struct OnboardingViewOne_Previews: PreviewProvider {
+struct OnboardingIntro_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingViewOne(primaryClick: {
+        OnboardingIntro(primaryClick: {
             
         })
     }

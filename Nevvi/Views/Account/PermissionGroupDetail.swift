@@ -38,29 +38,35 @@ struct PermissionGroupDetail: View {
                         
             Toggle("First Name", isOn: self.$enableFirstName)
                 .disabled(true)
+                .tint(ColorConstants.secondary)
             
             Toggle("Last Name", isOn: self.$enableLastName)
                 .disabled(true)
+                .tint(ColorConstants.secondary)
             
             Toggle("Email", isOn: self.$enableEmail)
                 .onChange(of: self.enableEmail) { newValue in
                     handleToggle(newValue: newValue, field: "email")
                 }
+                .tint(ColorConstants.secondary)
             
             Toggle("Phone Number", isOn: self.$enablePhone)
                 .onChange(of: self.enablePhone) { newValue in
                     handleToggle(newValue: newValue, field: "phoneNumber")
                 }
+                .tint(ColorConstants.secondary)
             
             Toggle("Address", isOn: self.$enableAddress)
                 .onChange(of: self.enableAddress) { newValue in
                     handleToggle(newValue: newValue, field: "address")
                 }
+                .tint(ColorConstants.secondary)
             
             Toggle("Birthday", isOn: self.$enableBirthday)
                 .onChange(of: self.enableBirthday) { newValue in
                     handleToggle(newValue: newValue, field: "birthday")
                 }
+                .tint(ColorConstants.secondary)
             
             Spacer()
             
@@ -88,8 +94,9 @@ struct PermissionGroupDetail: View {
                 .padding(.vertical, 16)
                 .background(
                     RoundedRectangle(cornerRadius: 20)
-                        .foregroundColor(self.groupName == "" ? .gray : Color(UIColor(hexString: "#49C5B6")))
+                        .foregroundColor(ColorConstants.secondary)
                 )
+                .opacity(self.groupName == "" ? 0.5 : 1.0)
         })
         .shadow(radius: 10)
         .disabled(self.groupName == "")

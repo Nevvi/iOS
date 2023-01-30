@@ -27,7 +27,7 @@ struct ConnectionGroupList: View {
                     groupsView
                 }
             }
-            .scrollContentBackground(.hidden)
+            .scrollContentBackground(self.connectionGroupsStore.groupsCount == 0 ? .hidden : .visible)
             .navigationTitle("Groups")
             .navigationBarTitleDisplayMode(.large)
             .toolbar(content: {
@@ -39,6 +39,9 @@ struct ConnectionGroupList: View {
                     }.padding([.trailing], 5)
                 }
             })
+            .refreshable {
+                self.connectionGroupsStore.load()
+            }
         }
         .alert("Create Group", isPresented: $showGroupForm, actions: {
             TextField("Group Name", text: self.$newGroupName)
@@ -86,16 +89,10 @@ struct ConnectionGroupList: View {
             } label: {
                 ConnectionGroupRow(connectionGroup: group)
             }
-            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
-            .foregroundColor(.white)
-            .fontWeight(.semibold)
-            .background(BackgroundGradient())
+            .padding(5)
         }
         .onDelete(perform: self.delete)
         .redacted(when: self.connectionGroupsStore.loading, redactionType: .customPlaceholder)
-        .listRowSeparator(.hidden)
     }
     
     var deleteAlert: Alert {

@@ -17,27 +17,31 @@ struct ConnectionDetail: View {
     
     var body: some View {
         if self.connectionStore.loading == false && !self.connectionStore.id.isEmpty {
-            ScrollView {
+            VStack {
                 VStack {
                     ProfileImage(imageUrl: self.connectionStore.profileImage, height: 100, width: 100)
                     Text("\(self.connectionStore.firstName) \(self.connectionStore.lastName)")
                 }.padding()
                 
-                if !self.connectionStore.email.isEmpty {
-                    connectionData(label: "Email", value: self.connectionStore.email)
-                }
+                VStack {
+                    if !self.connectionStore.email.isEmpty {
+                        connectionData(label: "Email", value: self.connectionStore.email)
+                    }
+                    
+                    if !self.connectionStore.phoneNumber.isEmpty {
+                        connectionData(label: "Phone Number", value: self.connectionStore.phoneNumber)
+                    }
+                    
+                    if !self.connectionStore.address.isEmpty {
+                        connectionData(label: "Address", value: self.connectionStore.address.toString())
+                    }
+                    
+                    if self.connectionStore.birthday.toString() != Date().toString() {
+                        connectionData(label: "Birthday", value: self.connectionStore.birthday.toString())
+                    }
+                }.padding()
                 
-                if !self.connectionStore.phoneNumber.isEmpty {
-                    connectionData(label: "Phone Number", value: self.connectionStore.phoneNumber)
-                }
-                
-                if !self.connectionStore.address.isEmpty {
-                    connectionData(label: "Address", value: self.connectionStore.address.toString())
-                }
-                
-                if self.connectionStore.birthday.yyyyMMdd() != Date().yyyyMMdd() {
-                    connectionData(label: "Birthday", value: self.connectionStore.birthday.yyyyMMdd())
-                }
+                Spacer()
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
@@ -83,7 +87,8 @@ struct ConnectionDetail: View {
                     Text(self.connectionStore.permissionGroup.uppercased())
                         .font(.system(size: 18))
                         .fontWeight(.semibold)
-                        .foregroundColor(self.connectionStore.saving ? .gray : Color(UIColor(hexString: "#49C5B6")))
+                        .foregroundColor(ColorConstants.secondary)
+                        .opacity(self.connectionStore.saving ? 0.5 : 1.0)
                         .frame(width: 500)
                 }
             }
@@ -105,18 +110,19 @@ struct ConnectionDetail: View {
                 Text("Group Membership")
                     .font(.title3)
                     .fontWeight(.semibold)
+                    .padding([.bottom], 5)
+                    
                                             
-                List {
-                    ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
-                        ConnectionGroupMembershipRow(connectionStore: self.connectionStore,
-                                                     isMember: group.connections.contains(self.connectionStore.id),
-                                                     group: group)
-                    }
-                    .listRowSeparator(.hidden)
+                ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
+                    ConnectionGroupMembershipRow(connectionStore: self.connectionStore,
+                                                 isMember: group.connections.contains(self.connectionStore.id),
+                                                 group: group)
                 }
-                .scrollContentBackground(.hidden)
-                .padding([.top], -30)
+                .padding([.leading, .trailing])
+                .padding([.bottom], 5)
             }
+            
+            Spacer()
         }
         .padding([.top], 40)
         .padding([.leading, .trailing], 20)
@@ -125,8 +131,10 @@ struct ConnectionDetail: View {
     func connectionData(label: String, value: String) -> some View {
         VStack(alignment: .leading) {
             Text(label).personalInfoLabel()
-            Text(value).asTextField()
-        }.personalInfoStyle()
+            Text(value).personalInfo()
+        }
+        .padding([.leading, .trailing])
+        .padding([.bottom], 10)
     }
 }
 

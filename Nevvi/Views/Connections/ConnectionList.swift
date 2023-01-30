@@ -31,7 +31,7 @@ struct ConnectionList: View {
                     connectionsView
                 }
             }
-            .scrollContentBackground(.hidden)
+            .scrollContentBackground(self.connectionsStore.connectionCount == 0 ? .hidden : .visible)
             .navigationTitle("Connections")
             .navigationBarTitleDisplayMode(.large)
             .toolbar(content: {
@@ -60,6 +60,10 @@ struct ConnectionList: View {
             .disableAutocorrection(true)
             .onChange(of: self.nameFilter.debouncedText) { text in
                 self.connectionsStore.load(nameFilter: text)
+            }
+            .refreshable {
+                self.connectionsStore.load(nameFilter: self.nameFilter.debouncedText)
+                self.connectionsStore.loadOutOfSync { _ in }
             }
         }
         .alert(isPresented: self.$showDeleteAlert) {
@@ -92,18 +96,14 @@ struct ConnectionList: View {
         ForEach(self.connectionsStore.connections) { connection in
             NavigationLink {
                 NavigationLazyView(
-                    RefreshableView(onRefresh: {
-                        loadConnection(connectionId: connection.id)
-                    }, view: ConnectionDetail(connectionStore: self.connectionStore)
+                    ConnectionDetail(connectionStore: self.connectionStore)
                         .onAppear {
                             loadConnection(connectionId: connection.id)
                         }
-                    )
                 )
             } label: {
                 ConnectionRow(connection: connection)
             }
-            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
         }
         .onDelete(perform: self.delete)
         .redacted(when: self.connectionsStore.loading, redactionType: .customPlaceholder)

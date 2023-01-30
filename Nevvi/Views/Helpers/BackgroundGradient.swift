@@ -11,8 +11,8 @@ struct BackgroundGradient: View {
     var body: some View {
         LinearGradient(
             gradient: Gradient(colors: [
-                Color(UIColor(hexString: "#33897F")),
-                Color(UIColor(hexString: "#5293B8"))
+                ColorConstants.primary,
+                ColorConstants.secondary
             ]),
             startPoint: .top,
             endPoint: .bottom)

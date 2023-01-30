@@ -18,18 +18,15 @@ struct ConnectionGroupDetail: View {
     
     var body: some View {
         VStack {
-            TextField("Name search", text: self.$nameFilter.debouncedText)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(10)
-                .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                .disableAutocorrection(true)
-                .onChange(of: self.nameFilter.debouncedText) { text in
-                    self.connectionGroupStore.loadConnections(groupId: self.connectionGroupStore.id, name: text)
-                }
-                .padding([.leading, .trailing], 30)
-                .padding([.top], 15)
-            
             List {
+                TextField("Search by name", text: self.$nameFilter.debouncedText)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .disableAutocorrection(true)
+                    .onChange(of: self.nameFilter.debouncedText) { text in
+                        self.connectionGroupStore.loadConnections(groupId: self.connectionGroupStore.id, name: text)
+                    }
+                    .padding(10)
+                
                 if self.connectionGroupStore.loading || self.connectionGroupStore.connectionCount == 0 {
                     noConnectionsView
                 } else {
@@ -37,7 +34,7 @@ struct ConnectionGroupDetail: View {
                 }
             }
             .padding([.top], -20)
-            .scrollContentBackground(.hidden)
+            .scrollContentBackground(self.connectionGroupStore.connectionCount == 0 ? .hidden : .visible)
         }
         .navigationTitle(self.connectionGroupStore.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -90,7 +87,6 @@ struct ConnectionGroupDetail: View {
             } label: {
                 ConnectionRow(connection: connection)
             }
-            .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
         }
         .onDelete(perform: self.delete)
         .redacted(when: self.connectionGroupStore.loadingConnections || self.connectionGroupStore.deleting, redactionType: .customPlaceholder)
@@ -125,8 +121,9 @@ struct ConnectionGroupDetail: View {
                     .padding(.vertical, 16)
                     .background(
                         RoundedRectangle(cornerRadius: 20)
-                            .foregroundColor(self.connectionGroupStore.exporting ? .gray : Color(UIColor(hexString: "#49C5B6")))
+                            .foregroundColor(ColorConstants.secondary)
                     )
+                    .opacity(self.connectionGroupStore.exporting ? 0.5 : 1.0)
             }
             .disabled(self.connectionGroupStore.exporting)
         }

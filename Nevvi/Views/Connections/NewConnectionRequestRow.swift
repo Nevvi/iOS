@@ -14,6 +14,7 @@ struct NewConnectionRequestRow: View {
     
     @State var user: Connection
     
+    @State var loading: Bool = false
     @State var showSheet: Bool = false
     @State var selectedPermissionGroup: String = "ALL"
     
@@ -71,7 +72,9 @@ struct NewConnectionRequestRow: View {
                 .padding([.top], -25)
                 
                 Button(action: {
+                    self.loading = true
                     self.requestCallback(self.user.id, self.selectedPermissionGroup)
+                    self.loading = false
                     self.showSheet = false
                 }, label: {
                     Text("Request")
@@ -81,9 +84,11 @@ struct NewConnectionRequestRow: View {
                         .padding(.vertical, 16)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .foregroundColor(Color(UIColor(hexString: "#49C5B6")))
+                                .foregroundColor(ColorConstants.secondary)
                         )
+                        .opacity(self.loading ? 0.5 : 1.0)
                 })
+                .disabled(self.loading)
                 .padding([.bottom])
             }
         }.presentationDetents([.medium])

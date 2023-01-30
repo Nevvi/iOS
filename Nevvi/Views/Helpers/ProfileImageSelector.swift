@@ -21,8 +21,9 @@ struct ProfileImageSelector: View {
         ZStack(alignment: .bottomTrailing) {
             LazyImage(url: URL(string: self.accountStore.profileImage), resizingMode: .aspectFill)
                 .frame(width: width, height: height)
+                .background(.white)
                 .clipShape(Circle())
-            
+                
             Image(systemName: "plus")
                 .foregroundColor(.white)
                 .frame(width: 25, height: 25)
