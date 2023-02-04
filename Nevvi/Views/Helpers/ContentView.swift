@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.scenePhase) var scenePhase
+    
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
@@ -47,20 +49,29 @@ struct ContentView: View {
                 .errorAlert(error: self.$connectionGroupStore.error)
                 .errorAlert(error: self.$connectionGroupsStore.error)
                 .errorAlert(error: self.$usersStore.error)
+                .onChange(of: scenePhase) { newPhase in
+                    if newPhase == .active {
+                        self.reload()
+                    } 
+                }
             } else {
                 OnboardingCarousel()
             }
         } else {
             // TODO - better loading view
             ProgressView().onAppear {
-                self.accountStore.load()
-                self.connectionsStore.load()
-                self.connectionsStore.loadRequests()
-                self.connectionsStore.loadRejectedUsers()
-                self.connectionsStore.loadOutOfSync { _ in }
-                self.connectionGroupsStore.load()
+                self.reload()
             }
         }
+    }
+    
+    func reload() {
+        self.accountStore.load()
+        self.connectionsStore.load()
+        self.connectionsStore.loadRequests()
+        self.connectionsStore.loadRejectedUsers()
+        self.connectionsStore.loadOutOfSync { _ in }
+        self.connectionGroupsStore.load()
     }
 }
 

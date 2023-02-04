@@ -39,6 +39,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
 @main
 struct NevviApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @Environment(\.scenePhase) var scenePhase
     
     @StateObject private var modelData = ModelData()
     
@@ -79,6 +80,13 @@ struct NevviApp: App {
                                     print("FCM registration token: \(token)")
                                 }
                             }
+                            
+                            UNUserNotificationCenter.current().setBadgeCount(0)
+                        }
+                    }
+                    .onChange(of: scenePhase) { newPhase in
+                        if newPhase == .active {
+                            UNUserNotificationCenter.current().setBadgeCount(0)
                         }
                     }
             } else {
