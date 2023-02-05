@@ -6,10 +6,6 @@
 	<array>
 		<string>loadoutofsync</string>
 	</array>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict/>
-	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict/>

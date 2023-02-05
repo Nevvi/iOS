@@ -23,21 +23,30 @@ struct OnboardingCarousel: View {
                 OnboardingIntro(primaryClick: {
                     self.index = 1
                 }).tabStyle(page: 0)
-                OnboardingInformation(primaryClick: {
+                
+                OnboardingDescription(primaryClick: {
                     self.index = 2
                 }, secondaryClick: {
                     self.index = 0
                 }).tabStyle(page: 1)
-                OnboardingSync(primaryClick: {
+                
+                OnboardingDescriptionCont(primaryClick: {
                     self.index = 3
                 }, secondaryClick: {
                     self.index = 1
                 }).tabStyle(page: 2)
-                OnboardingDescription(primaryClick: {
-                    print("Done onboarding!")
+                
+                OnboardingInformation(primaryClick: {
+                    self.index = 4
                 }, secondaryClick: {
                     self.index = 2
                 }).tabStyle(page: 3)
+                
+                OnboardingSync(primaryClick: {
+                    print("Done onboarding!")
+                }, secondaryClick: {
+                    self.index = 3
+                }).tabStyle(page: 4)
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .edgesIgnoringSafeArea([.all])

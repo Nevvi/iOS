@@ -1,13 +1,13 @@
 //
-//  OnboardingViewFour.swift
+//  OnboardingDescriptionCont.swift
 //  Nevvi
 //
-//  Created by Tyler Cobb on 12/30/22.
+//  Created by Tyler Cobb on 2/4/23.
 //
 
 import SwiftUI
 
-struct OnboardingDescription: View {
+struct OnboardingDescriptionCont: View {    
     var primaryClick: () -> Void
     var secondaryClick: () -> Void
 
@@ -17,14 +17,14 @@ struct OnboardingDescription: View {
                 .onboardingTitle()
             
             Spacer()
-            Image("OnboardingThree")
+            Image("OnboardingFour")
             Spacer()
             
-            Text("The heart and soul of Nevvi is the connections you make with others.")
+            Text("In other words...")
                 .onboardingStyle()
                 .padding(10)
             
-            Text("Think of a connection like an entry in your contacts, but instead of you managing someone else's information they manage it themselves.")
+            Text("Anytime you update your data it will automatically be sent to your connections if they are allowed to see it.")
                 .onboardingStyle()
                 .padding(10)
             
@@ -71,8 +71,8 @@ struct OnboardingDescription: View {
     }
 }
 
-struct OnboardingDescription_Previews: PreviewProvider {    
+struct OnboardingDescriptionCont_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingDescription(primaryClick: {}, secondaryClick: {})
+        OnboardingDescriptionCont(primaryClick: {}, secondaryClick: {})
     }
 }

@@ -24,7 +24,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "59A2DD10-B78B-4965-BBCE-A4E2FD49FBF0"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Nevvi/Extensions/URLSessionExtensions.swift"
@@ -1793,6 +1793,22 @@
             startingLineNumber = "294"
             endingLineNumber = "294"
             landmarkName = "tryToggle()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "46D222E3-3117-4010-B58D-C19EDB43F2D9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/UsersStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "84"
+            endingLineNumber = "84"
+            landmarkName = "requestConnection(userId:groupName:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

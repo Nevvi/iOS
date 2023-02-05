@@ -9,11 +9,11 @@ import SwiftUI
 
 struct NewConnectionRequestRow: View {
     @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var usersStore: UsersStore
     
-    var requestCallback: (String, String) -> Void
-    
+    var requestCallback: () -> Void
+        
     @State var user: Connection
-    
     @State var loading: Bool = false
     @State var showSheet: Bool = false
     @State var selectedPermissionGroup: String = "ALL"
@@ -69,14 +69,10 @@ struct NewConnectionRequestRow: View {
                     }
                 }
                 .pickerStyle(.wheel)
-                .padding([.top], -25)
+                .padding([.top], -30)
+                .padding([.bottom], 10)
                 
-                Button(action: {
-                    self.loading = true
-                    self.requestCallback(self.user.id, self.selectedPermissionGroup)
-                    self.loading = false
-                    self.showSheet = false
-                }, label: {
+                Button(action: self.requestConnection, label: {
                     Text("Request")
                         .font(.headline)
                         .foregroundColor(.white)
@@ -93,16 +89,30 @@ struct NewConnectionRequestRow: View {
             }
         }.presentationDetents([.medium])
     }
+    
+    func requestConnection() {
+        self.loading = true
+        self.usersStore.requestConnection(userId: self.user.id, groupName: self.selectedPermissionGroup) { (result: Result<Bool, Error>) in
+            switch result {
+            case .success(_):
+                self.requestCallback()
+            case .failure(let error):
+                print("Something bad happened", error)
+            }
+            self.loading = false
+            self.showSheet = false
+        }
+    }
 }
 
 struct ConnectionRequest_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let accountStore = AccountStore(user: modelData.user)
+    static let usersStore = UsersStore(users: modelData.connectionResponse.users)
     
     static var previews: some View {
-        NewConnectionRequestRow(requestCallback: { (id: String, group: String) in
-            print(id, group)
-        }, user: modelData.connectionResponse.users[0])
+        NewConnectionRequestRow(requestCallback: {},user: modelData.connectionResponse.users[0])
             .environmentObject(accountStore)
+            .environmentObject(usersStore)
     }
 }

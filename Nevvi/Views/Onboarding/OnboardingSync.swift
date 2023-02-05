@@ -28,7 +28,7 @@ struct OnboardingSync: View {
                 .onboardingTitle()
                 .padding([.bottom], 20)
             
-            Text("With Nevvi, as long as you are connected with a person we can keep your device synced when their data, such as address, changes.")
+            Text("With Nevvi, as long as you stay connected with a person we can keep your device in sync when their data, such as address, changes.")
                 .onboardingStyle()
                 .padding([.leading, .trailing, .bottom], 20)
             
@@ -54,7 +54,7 @@ struct OnboardingSync: View {
     var primaryButton: some View {
         Button(action: self.primaryAction, label: {
             HStack {
-                Text("Next")
+                Text("Finish")
                     .font(.headline)
                 
                 Image(systemName: "chevron.right")
@@ -78,7 +78,7 @@ struct OnboardingSync: View {
     }
     
     func primaryAction() {
-        let request = AccountStore.PatchRequest(deviceSettings: DeviceSettings(autoSync: self.enabledSync, syncAllInformation: false))
+        let request = AccountStore.PatchRequest(deviceSettings: DeviceSettings(autoSync: self.enabledSync, syncAllInformation: false), onboardingCompleted: true)
         self.accountStore.update(request: request) { _ in
             self.primaryClick()
         }

@@ -52,6 +52,8 @@
 		04B158542987F49600846FDB /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 04B158532987F49600846FDB /* FirebaseFirestore */; };
 		04B158562987F49600846FDB /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 04B158552987F49600846FDB /* FirebaseMessaging */; };
 		04B158582987FA2300846FDB /* NotificationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B158572987FA2300846FDB /* NotificationStore.swift */; };
+		04B1585A298EFAF100846FDB /* OnboardingDescriptionCont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B15859298EFAF000846FDB /* OnboardingDescriptionCont.swift */; };
+		04B1585D29903AFA00846FDB /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 04B1585C29903AFA00846FDB /* AlertToast */; };
 		04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FB295DEA5C00703523 /* NevviApp.swift */; };
 		04B948FE295DEA5C00703523 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FD295DEA5C00703523 /* ContentView.swift */; };
 		04B94900295DEA5E00703523 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B948FF295DEA5E00703523 /* Assets.xcassets */; };
@@ -137,6 +139,7 @@
 		0431439A2975A77E0094D7E0 /* BackgroundGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundGradient.swift; sourceTree = "<group>"; };
 		0431439C2975AC830094D7E0 /* TextExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextExtensions.swift; sourceTree = "<group>"; };
 		04B158572987FA2300846FDB /* NotificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationStore.swift; sourceTree = "<group>"; };
+		04B15859298EFAF000846FDB /* OnboardingDescriptionCont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDescriptionCont.swift; sourceTree = "<group>"; };
 		04B948F8295DEA5C00703523 /* Nevvi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nevvi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B948FB295DEA5C00703523 /* NevviApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NevviApp.swift; sourceTree = "<group>"; };
 		04B948FD295DEA5C00703523 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -193,6 +196,7 @@
 				04B158562987F49600846FDB /* FirebaseMessaging in Frameworks */,
 				04B1584C2987F47B00846FDB /* NukeUI in Frameworks */,
 				04B158522987F49600846FDB /* FirebaseAuth in Frameworks */,
+				04B1585D29903AFA00846FDB /* AlertToast in Frameworks */,
 				04B158482987F47B00846FDB /* Nuke in Frameworks */,
 				04B1584E2987F47F00846FDB /* SwiftKeychainWrapper in Frameworks */,
 				04B158502987F49600846FDB /* FirebaseAnalytics in Frameworks */,
@@ -447,6 +451,7 @@
 				04B9495C295F3B1800703523 /* OnboardingInformation.swift */,
 				04B9495E295F3BE000703523 /* OnboardingSync.swift */,
 				04B94960295F3FD100703523 /* OnboardingDescription.swift */,
+				04B15859298EFAF000846FDB /* OnboardingDescriptionCont.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -488,6 +493,7 @@
 				04B158512987F49600846FDB /* FirebaseAuth */,
 				04B158532987F49600846FDB /* FirebaseFirestore */,
 				04B158552987F49600846FDB /* FirebaseMessaging */,
+				04B1585C29903AFA00846FDB /* AlertToast */,
 			);
 			productName = Nevvi;
 			productReference = 04B948F8295DEA5C00703523 /* Nevvi.app */;
@@ -521,6 +527,7 @@
 				04B9494A295E712200703523 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
 				041412FC2978C82B008A35DA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				0414130D297C5CFC008A35DA /* XCRemoteSwiftPackageReference "Nuke" */,
+				04B1585B29903AF900846FDB /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			productRefGroup = 04B948F9295DEA5C00703523 /* Products */;
 			projectDirPath = "";
@@ -627,6 +634,7 @@
 				04038E252961EF3900D3C7AC /* RefreshableView.swift in Sources */,
 				04B158582987FA2300846FDB /* NotificationStore.swift in Sources */,
 				04B94961295F3FD100703523 /* OnboardingDescription.swift in Sources */,
+				04B1585A298EFAF100846FDB /* OnboardingDescriptionCont.swift in Sources */,
 				0431439D2975AC830094D7E0 /* TextExtensions.swift in Sources */,
 				04B94928295DEEB500703523 /* URLSessionExtensions.swift in Sources */,
 				04B949782960AF9B00703523 /* DebouncedText.swift in Sources */,
@@ -1075,6 +1083,14 @@
 				minimumVersion = 11.0.0;
 			};
 		};
+		04B1585B29903AF900846FDB /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		04B9494A295E712200703523 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
@@ -1125,6 +1141,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 041412FC2978C82B008A35DA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		04B1585C29903AFA00846FDB /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04B1585B29903AF900846FDB /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

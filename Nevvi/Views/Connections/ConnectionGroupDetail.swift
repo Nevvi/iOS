@@ -5,16 +5,21 @@
 //  Created by Tyler Cobb on 1/9/23.
 //
 
+import AlertToast
 import SwiftUI
 
 struct ConnectionGroupDetail: View {
+    @EnvironmentObject var accountStore: AccountStore
+    
     @ObservedObject var connectionGroupStore: ConnectionGroupStore
     @ObservedObject var connectionStore: ConnectionStore
     
     @State private var toBeDeleted: IndexSet?
     @State private var showDeleteAlert: Bool = false
     @StateObject var nameFilter = DebouncedText()
+    
     @State var showExportOptions: Bool = false
+    @State var showToast: Bool = false
     
     var body: some View {
         VStack {
@@ -52,6 +57,9 @@ struct ConnectionGroupDetail: View {
         }
         .alert(isPresented: self.$showDeleteAlert) {
             deleteAlert
+        }
+        .toast(isPresenting: $showToast){
+            AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Export sent to \(self.accountStore.email)")
         }
     }
     
@@ -108,7 +116,7 @@ struct ConnectionGroupDetail: View {
                     self.showExportOptions = false
                     switch result {
                     case .success(_):
-                        print("Success")
+                        self.showToast = true
                     case .failure(let error):
                         print("Failed to export", error)
                     }
@@ -161,11 +169,12 @@ struct ConnectionGroupDetail: View {
 
 struct ConnectionGroupDetail_Previews: PreviewProvider {
     static let modelData = ModelData()
-    
+    static let accountStore = AccountStore(user: modelData.user)
     static let connectionStore = ConnectionStore(connection: modelData.connection)
     static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users)
     
     static var previews: some View {
         ConnectionGroupDetail(connectionGroupStore: connectionGroupStore, connectionStore: connectionStore)
+            .environmentObject(accountStore)
     }
 }

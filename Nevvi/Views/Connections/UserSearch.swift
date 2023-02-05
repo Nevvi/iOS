@@ -5,11 +5,13 @@
 //  Created by Tyler Cobb on 12/31/22.
 //
 
+import AlertToast
 import SwiftUI
 
 struct UserSearch: View {
     @EnvironmentObject var usersStore: UsersStore
     
+    @State private var showToast: Bool = false
     @StateObject var nameFilter = DebouncedText()
 
     var body: some View {
@@ -42,6 +44,9 @@ struct UserSearch: View {
             self.usersStore.users = []
             self.usersStore.userCount = 0
         }
+        .toast(isPresenting: $showToast){
+            AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Request sent!")
+        }
     }
     
     var noUsersView: some View {
@@ -64,23 +69,11 @@ struct UserSearch: View {
     
     var usersView: some View {
         ForEach(self.usersStore.users) { user in
-            NewConnectionRequestRow(requestCallback: { (id: String, group: String) in
-                requestConnection(userId: id, groupName: group)
+            NewConnectionRequestRow(requestCallback: {
+                self.showToast = true
             }, user: user)
         }
         .redacted(when: self.usersStore.loading, redactionType: .customPlaceholder)
-    }
-    
-    func requestConnection(userId: String, groupName: String) {
-        self.usersStore.requestConnection(userId: userId, groupName: groupName) { (result: Result<Bool, Error>) in
-            switch result {
-            case .success(_):
-                print("Requested!")
-                // probably want to reload here once backend filters out or modifies requested users
-            case .failure(let error):
-                print("Something bad happened", error)
-            }
-        }
     }
 }
 

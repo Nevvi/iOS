@@ -5,6 +5,7 @@
 //  Created by Tyler Cobb on 1/4/23.
 //
 
+import AlertToast
 import SwiftUI
 
 struct BlockedUserList: View {
@@ -13,6 +14,7 @@ struct BlockedUserList: View {
     
     @StateObject var nameFilter = DebouncedText()
     
+    @State private var showToast: Bool = false
     @State private var showInfo: Bool = false
         
     var body: some View {
@@ -36,6 +38,9 @@ struct BlockedUserList: View {
                     .font(.system(size: 16))
                     .padding()
                     .presentationDetents([.height(150)])
+            }
+            .toast(isPresenting: $showToast){
+                AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Request sent!")
             }
         }
         .toolbar(content: {
@@ -64,15 +69,9 @@ struct BlockedUserList: View {
     
     var blockedUsersView: some View {
         ForEach(self.connectionsStore.blockedUsers) { user in
-            NewConnectionRequestRow(requestCallback: { (id: String, group: String) in
-                self.usersStore.requestConnection(userId: id, groupName: group) { (result: Result<Bool, Error>) in
-                    switch result {
-                    case .success(_):
-                        self.connectionsStore.loadRejectedUsers()
-                    case .failure(let error):
-                        print("Something went wrong", error)
-                    }
-                }
+            NewConnectionRequestRow(requestCallback: {
+                self.showToast = true
+                self.connectionsStore.loadRejectedUsers()
             }, user: user)
         }
         .redacted(when: self.connectionsStore.loadingBlockerUsers, redactionType: .customPlaceholder)

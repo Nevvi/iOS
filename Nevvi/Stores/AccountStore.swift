@@ -311,6 +311,7 @@ class AccountStore: ObservableObject {
         var deviceId: String?
         var permissionGroups: [PermissionGroup]?
         var deviceSettings: DeviceSettings?
+        var onboardingCompleted: Bool?
     }
     
     struct CompleteOnboardingRequest: Encodable {

@@ -127,6 +127,7 @@ struct ConnectionGroupList: View {
 
 struct ConnectionGroupList_Previews: PreviewProvider {
     static let modelData = ModelData()
+    static let accountStore = AccountStore(user: modelData.user)
     static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
     static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users)
     static let connectionStore = ConnectionStore()
@@ -134,5 +135,6 @@ struct ConnectionGroupList_Previews: PreviewProvider {
     static var previews: some View {
         ConnectionGroupList(connectionGroupStore: connectionGroupStore, connectionStore: connectionStore)
             .environmentObject(connectionGroupsStore)
+            .environmentObject(accountStore)
     }
 }
