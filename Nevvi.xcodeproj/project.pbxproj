@@ -54,6 +54,10 @@
 		04B158582987FA2300846FDB /* NotificationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B158572987FA2300846FDB /* NotificationStore.swift */; };
 		04B1585A298EFAF100846FDB /* OnboardingDescriptionCont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B15859298EFAF000846FDB /* OnboardingDescriptionCont.swift */; };
 		04B1585D29903AFA00846FDB /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 04B1585C29903AFA00846FDB /* AlertToast */; };
+		04B1585F29906B9700846FDB /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B1585E29906B9700846FDB /* KeyboardResponder.swift */; };
+		04B158632990773A00846FDB /* PublisherExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B158622990773A00846FDB /* PublisherExtensions.swift */; };
+		04B158652990777A00846FDB /* NotificationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B158642990777A00846FDB /* NotificationExtensions.swift */; };
+		04B15867299078ED00846FDB /* UIResponderExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B15866299078ED00846FDB /* UIResponderExtensions.swift */; };
 		04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FB295DEA5C00703523 /* NevviApp.swift */; };
 		04B948FE295DEA5C00703523 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FD295DEA5C00703523 /* ContentView.swift */; };
 		04B94900295DEA5E00703523 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B948FF295DEA5E00703523 /* Assets.xcassets */; };
@@ -140,6 +144,10 @@
 		0431439C2975AC830094D7E0 /* TextExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextExtensions.swift; sourceTree = "<group>"; };
 		04B158572987FA2300846FDB /* NotificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationStore.swift; sourceTree = "<group>"; };
 		04B15859298EFAF000846FDB /* OnboardingDescriptionCont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDescriptionCont.swift; sourceTree = "<group>"; };
+		04B1585E29906B9700846FDB /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
+		04B158622990773A00846FDB /* PublisherExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublisherExtensions.swift; sourceTree = "<group>"; };
+		04B158642990777A00846FDB /* NotificationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationExtensions.swift; sourceTree = "<group>"; };
+		04B15866299078ED00846FDB /* UIResponderExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIResponderExtensions.swift; sourceTree = "<group>"; };
 		04B948F8295DEA5C00703523 /* Nevvi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nevvi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B948FB295DEA5C00703523 /* NevviApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NevviApp.swift; sourceTree = "<group>"; };
 		04B948FD295DEA5C00703523 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -346,6 +354,7 @@
 				041412F62976009F008A35DA /* ProfileImageSelector.swift */,
 				041412F8297604BC008A35DA /* NoDataFound.swift */,
 				041412FA2976182D008A35DA /* ProfileImage.swift */,
+				04B1585E29906B9700846FDB /* KeyboardResponder.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -380,6 +389,9 @@
 				04038E262961F25000D3C7AC /* DateExtensions.swift */,
 				04038E2C29662FFF00D3C7AC /* ViewExtensions.swift */,
 				0431439C2975AC830094D7E0 /* TextExtensions.swift */,
+				04B158622990773A00846FDB /* PublisherExtensions.swift */,
+				04B158642990777A00846FDB /* NotificationExtensions.swift */,
+				04B15866299078ED00846FDB /* UIResponderExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -591,6 +603,7 @@
 				04314397297438D70094D7E0 /* PermissionGroupList.swift in Sources */,
 				0431439929743F8F0094D7E0 /* PermissionGroupDetail.swift in Sources */,
 				04038E3629679CCE00D3C7AC /* ContactStore.swift in Sources */,
+				04B158652990777A00846FDB /* NotificationExtensions.swift in Sources */,
 				04038E1B2960CE9500D3C7AC /* ConnectionRequest.swift in Sources */,
 				041412F72976009F008A35DA /* ProfileImageSelector.swift in Sources */,
 				04B9496B2960964500703523 /* NavigationLazyView.swift in Sources */,
@@ -605,6 +618,7 @@
 				0431438D296B6E020094D7E0 /* ConnectionGroupRow.swift in Sources */,
 				04B94955295F2E8F00703523 /* OnboardingCarousel.swift in Sources */,
 				041412FB2976182D008A35DA /* ProfileImage.swift in Sources */,
+				04B158632990773A00846FDB /* PublisherExtensions.swift in Sources */,
 				041413182983571D008A35DA /* ColorConstants.swift in Sources */,
 				04B94914295DEB1100703523 /* ModelData.swift in Sources */,
 				04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */,
@@ -649,9 +663,11 @@
 				04B9497A2960B3E900703523 /* NewConnectionRequestRow.swift in Sources */,
 				04314383296B46D60094D7E0 /* BuildConfiguration.swift in Sources */,
 				04B94970296098AA00703523 /* ConnectionsResponse.swift in Sources */,
+				04B1585F29906B9700846FDB /* KeyboardResponder.swift in Sources */,
 				04314393296CCD010094D7E0 /* ConnectionGroupDetail.swift in Sources */,
 				04038E302966323600D3C7AC /* RedactionType.swift in Sources */,
 				04B9492B295DF0BA00703523 /* Account.swift in Sources */,
+				04B15867299078ED00846FDB /* UIResponderExtensions.swift in Sources */,
 				041413082978D853008A35DA /* DeviceSettingsViewModel.swift in Sources */,
 				04B94910295DEAD800703523 /* User.swift in Sources */,
 				0431439B2975A77E0094D7E0 /* BackgroundGradient.swift in Sources */,

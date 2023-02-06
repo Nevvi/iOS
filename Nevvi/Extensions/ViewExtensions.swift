@@ -32,6 +32,10 @@ extension View {
             Text(error.recoverySuggestion ?? "")
         }
     }
+    
+    func keyboardAdaptive() -> some View {
+        ModifiedContent(content: self, modifier: KeyboardResponder())
+    }
 }
 
 struct LocalizedAlertError: LocalizedError {

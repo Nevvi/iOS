@@ -21,28 +21,33 @@ struct OnboardingInformation: View {
     var secondaryClick: () -> Void
 
     var body: some View {
-        VStack(spacing: 20.0) {
+        VStack {
             Text("Nevvi").onboardingTitle()
             
             Text("Let's get some more information so that others can find you.")
                 .onboardingStyle()
-                .padding(30)
+                .padding(20)
             
             ProfileImageSelector(height: 120, width: 120)
             
             VStack(alignment: .leading, spacing: 15) {
-                TextField("First Name", text: self.$firstName)
-                    .padding()
-                    .background(ColorConstants.accent)
-                    .foregroundColor(ColorConstants.text)
-                    .cornerRadius(20.0)
+            TextField("First Name", text: self.$firstName)
+                .padding()
+                .background(ColorConstants.accent)
+                .foregroundColor(ColorConstants.text)
+                .cornerRadius(20.0)
+                .submitLabel(.done)
+                .disableAutocorrection(true)
                 
-                TextField("Last Name", text: self.$lastName)
-                    .padding()
-                    .background(ColorConstants.accent)
-                    .foregroundColor(ColorConstants.text)
-                    .cornerRadius(20.0)
-            }.padding(27.5)
+            TextField("Last Name", text: self.$lastName)
+                .padding()
+                .background(ColorConstants.accent)
+                .foregroundColor(ColorConstants.text)
+                .cornerRadius(20.0)
+                .submitLabel(.done)
+                .disableAutocorrection(true)
+                
+            }.padding([.leading, .trailing, .top])
             
             Spacer()
             
@@ -53,7 +58,7 @@ struct OnboardingInformation: View {
                 
                 primaryButton
             }
-            .padding([.leading, .trailing])
+            .padding()
         }
         .disabled(self.accountStore.saving)
         .padding()

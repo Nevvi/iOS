@@ -3,31 +3,6 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "closure #1 in closure #1 in ContactStore.syncContacts(connections:callback:):ContactStore.swift">
-      </ContextState>
-      <ContextState
-         contextName = "closure #1 in closure #3 in ProfileImageSelector.body.getter:ProfileImageSelector.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "resizedImage.size">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "NSURLSession.postData&lt;&#x3c4;_0_0&gt;(for:for:for:completion:):URLSessionExtensions.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "accessToken">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "closure #1 in NSURLSession.fetchData&lt;&#x3c4;_0_0&gt;(for:completion:):URLSessionExtensions.swift">
-      </ContextState>
-      <ContextState
-         contextName = "closure #1 in ConnectionList.sync():ConnectionList.swift">
-      </ContextState>
-      <ContextState
          contextName = "PersonalInformation.tryToggle():PersonalInformation.swift">
          <PersistentStrings>
             <PersistentString
@@ -45,10 +20,32 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "NSURLSession.execute&lt;&#x3c4;_0_0&gt;(request:completion:):URLSessionExtensions.swift">
+         contextName = "closure #1 in closure #3 in ProfileImageSelector.body.getter:ProfileImageSelector.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "resizedImage.size">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in NSURLSession.fetchData&lt;&#x3c4;_0_0&gt;(for:completion:):URLSessionExtensions.swift">
       </ContextState>
       <ContextState
          contextName = "resizeImage(image:newWidth:):URLSessionExtensions.swift">
+      </ContextState>
+      <ContextState
+         contextName = "NSURLSession.execute&lt;&#x3c4;_0_0&gt;(request:completion:):URLSessionExtensions.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in ConnectionList.sync():ConnectionList.swift">
+      </ContextState>
+      <ContextState
+         contextName = "NSURLSession.postData&lt;&#x3c4;_0_0&gt;(for:for:for:completion:):URLSessionExtensions.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "accessToken">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "NSURLSession.postImage&lt;&#x3c4;_0_0&gt;(for:for:for:completion:):URLSessionExtensions.swift">
@@ -62,9 +59,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in NSURLSession.postData&lt;&#x3c4;_0_0&gt;(for:for:completion:):URLSessionExtensions.swift">
-      </ContextState>
-      <ContextState
          contextName = "closure #1 in closure #1 in NSURLSession.execute&lt;&#x3c4;_0_0&gt;(request:completion:):URLSessionExtensions.swift">
          <PersistentStrings>
             <PersistentString
@@ -72,6 +66,20 @@
             </PersistentString>
             <PersistentString
                value = "String(decoding: data!, as: UTF8.self)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in ContactStore.syncContacts(connections:callback:):ContactStore.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in NSURLSession.postData&lt;&#x3c4;_0_0&gt;(for:for:completion:):URLSessionExtensions.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in KeyboardResponder.body(content:):KeyboardResponder.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "max(0, focusedTextInputBottom - keyboardTop - geometry.safeAreaInsets.bottom)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
