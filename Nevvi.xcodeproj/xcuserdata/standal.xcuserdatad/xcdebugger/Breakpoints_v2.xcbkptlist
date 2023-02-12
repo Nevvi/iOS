@@ -750,9 +750,9 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "64"
-            endingLineNumber = "64"
-            landmarkName = "syncContacts(connections:callback:)"
+            startingLineNumber = "67"
+            endingLineNumber = "67"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -766,9 +766,9 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "118"
-            endingLineNumber = "118"
-            landmarkName = "syncContacts(connections:callback:)"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1262,9 +1262,9 @@
             filePath = "Nevvi/Views/Connections/ConnectionList.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
-            landmarkName = "sync()"
+            startingLineNumber = "239"
+            endingLineNumber = "239"
+            landmarkName = "sync(dryRun:)"
             landmarkType = "7">
             <Locations>
                <Location
@@ -1303,70 +1303,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "D954BB47-3603-4861-AE56-FBB5FEC9F11F"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nevvi/Views/Connections/ConnectionList.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "170"
-            endingLineNumber = "170"
-            landmarkName = "sync()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "D954BB47-3603-4861-AE56-FBB5FEC9F11F - 1ec7fe0e77be0b0a"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Result&lt;Nevvi.ConnectionResponse, Swift.Error&gt;) -&gt; () in Nevvi.ConnectionList.sync() -&gt; ()"
-                  moduleName = "Nevvi"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/standal/Desktop/CodeProjects/nevvi/iOS/Nevvi/Nevvi/Views/Connections/ConnectionList.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "148"
-                  endingLineNumber = "148"
-                  offsetFromSymbolStart = "268">
-               </Location>
-               <Location
-                  uuid = "D954BB47-3603-4861-AE56-FBB5FEC9F11F - faed49233b10c995"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; () in closure #1 (Swift.Result&lt;Nevvi.ConnectionResponse, Swift.Error&gt;) -&gt; () in Nevvi.ConnectionList.sync() -&gt; ()"
-                  moduleName = "Nevvi"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/standal/Desktop/CodeProjects/nevvi/iOS/Nevvi/Nevvi/Views/Connections/ConnectionList.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "150"
-                  endingLineNumber = "150"
-                  offsetFromSymbolStart = "32">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "9FE1D44E-54E4-4E8C-B470-B3EAE061B006"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Nevvi/Views/Connections/ConnectionList.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "172"
-            endingLineNumber = "172"
-            landmarkName = "sync()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "263AECF3-83C5-45D4-9653-D0308CCE6D0D"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -1374,9 +1310,9 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
-            landmarkName = "syncContacts(connections:callback:)"
+            startingLineNumber = "66"
+            endingLineNumber = "66"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
             landmarkType = "7">
             <Locations>
                <Location
@@ -1422,9 +1358,9 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
-            landmarkName = "syncContacts(connections:callback:)"
+            startingLineNumber = "210"
+            endingLineNumber = "210"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1566,9 +1502,9 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
-            landmarkName = "syncContacts(connections:callback:)"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1582,9 +1518,9 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "162"
-            endingLineNumber = "162"
-            landmarkName = "syncContacts(connections:callback:)"
+            startingLineNumber = "205"
+            endingLineNumber = "205"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1614,9 +1550,9 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
-            landmarkName = "syncContacts(connections:callback:)"
+            startingLineNumber = "209"
+            endingLineNumber = "209"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
             landmarkType = "7">
             <Locations>
                <Location
@@ -1662,9 +1598,9 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
-            landmarkName = "syncContacts(connections:callback:)"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1678,9 +1614,9 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
-            landmarkName = "syncContacts(connections:callback:)"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1810,6 +1746,182 @@
             endingLineNumber = "84"
             landmarkName = "requestConnection(userId:groupName:callback:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1AE96E9A-CF9F-443A-8FBC-CCD398265FDC"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/ContactStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "141"
+            endingLineNumber = "141"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "1AE96E9A-CF9F-443A-8FBC-CCD398265FDC - da181101de558cbb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Nevvi.Connection, Swift.Error&gt;) -&gt; () in closure #1 (Nevvi.Connection) -&gt; () in Nevvi.ContactStore.syncContacts(connections: Swift.Array&lt;Nevvi.Connection&gt;, dryRun: Swift.Bool, callback: (Nevvi.ContactStore.SyncInfo) -&gt; ()) -&gt; ()"
+                  moduleName = "Nevvi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/standal/Desktop/CodeProjects/nevvi/iOS/Nevvi/Nevvi/Stores/ContactStore.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "134"
+                  endingLineNumber = "134"
+                  offsetFromSymbolStart = "10480">
+               </Location>
+               <Location
+                  uuid = "1AE96E9A-CF9F-443A-8FBC-CCD398265FDC - da181101de558cbb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Nevvi.Connection, Swift.Error&gt;) -&gt; () in closure #1 (Nevvi.Connection) -&gt; () in Nevvi.ContactStore.syncContacts(connections: Swift.Array&lt;Nevvi.Connection&gt;, dryRun: Swift.Bool, callback: (Nevvi.ContactStore.SyncInfo) -&gt; ()) -&gt; ()"
+                  moduleName = "Nevvi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/standal/Desktop/CodeProjects/nevvi/iOS/Nevvi/Nevvi/Stores/ContactStore.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "134"
+                  endingLineNumber = "134"
+                  offsetFromSymbolStart = "10508">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D16D0D81-DF6F-4178-AEAB-ABBC5BC91143"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/ContactStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1C741C75-8E98-4EEF-9118-39C5860F2BC1"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/ContactStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "145"
+            endingLineNumber = "145"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "36DC2FC6-03BA-4DE9-9CFA-599ACDE98D12"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/ContactStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "220"
+            endingLineNumber = "220"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "DFB6F6D7-5FCA-4759-AE61-0C385C175BF2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/ContactStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "FE961CF6-ED6C-4DB1-A68C-73F1656070FC"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Extensions/StringExtensions.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "24"
+            endingLineNumber = "24"
+            landmarkName = "stripLineBreaks()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "B0C5989A-8435-4663-BFDC-1182A022AF09"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/ContactStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "116"
+            endingLineNumber = "116"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5294A21A-1389-4A63-A16B-6385C09BC8CB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/ContactStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "120"
+            endingLineNumber = "120"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "59060A44-A613-48F7-A008-6810701132C4"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Views/Connections/ConnectionList.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "175"
+            endingLineNumber = "175"
+            landmarkName = "contactUpdatesSheet"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -34,10 +34,32 @@
          contextName = "resizeImage(image:newWidth:):URLSessionExtensions.swift">
       </ContextState>
       <ContextState
+         contextName = "closure #1 in closure #1 in ConnectionList.sync():ConnectionList.swift">
+      </ContextState>
+      <ContextState
+         contextName = "String.stripLineBreaks():StringExtensions.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in KeyboardResponder.body(content:):KeyboardResponder.swift">
+      </ContextState>
+      <ContextState
          contextName = "NSURLSession.execute&lt;&#x3c4;_0_0&gt;(request:completion:):URLSessionExtensions.swift">
       </ContextState>
       <ContextState
          contextName = "closure #1 in ConnectionList.sync():ConnectionList.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in ContactStore.syncContacts(connections:dryRun:callback:):ContactStore.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "contact.birthday?.date?">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "NSURLSession.postData&lt;&#x3c4;_0_0&gt;(for:for:for:completion:):URLSessionExtensions.swift">
@@ -55,6 +77,14 @@
             </PersistentString>
             <PersistentString
                value = "image.pngData()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "ContactStore.ContactSyncInfo.changesExist():ContactStore.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "updated != nil">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -82,6 +112,9 @@
                value = "max(0, focusedTextInputBottom - keyboardTop - geometry.safeAreaInsets.bottom)">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in ContactStore.syncContacts(connections:dryRun:callback:):ContactStore.swift">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

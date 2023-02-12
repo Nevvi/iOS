@@ -54,9 +54,12 @@ class ContactStore: ObservableObject {
         }
     }
     
-    func syncContacts(connections: [Connection], callback: @escaping () -> Void) {
+    func syncContacts(connections: [Connection], dryRun: Bool, callback: @escaping (SyncInfo) -> Void) {
         let store = CNContactStore()
         let dispatchGroup = DispatchGroup()
+        
+        var contactSyncInfos: [ContactSyncInfo] = []
+        let addressFormatter = CNPostalAddressFormatter()
         
         connections.forEach { connection in
             dispatchGroup.enter()
@@ -72,6 +75,7 @@ class ContactStore: ObservableObject {
                                            CNContactBirthdayKey] as [CNKeyDescriptor]
                         
                         var contactOpt: CNMutableContact? = nil
+                        var contactFieldChanges: [ContactSyncFieldInfo] = []
                         
                         if detail.phoneNumber != nil {
                             print("Searching for contact with phone", detail.phoneNumber!)
@@ -104,12 +108,22 @@ class ContactStore: ObservableObject {
                         }
                         
                         let contact = contactOpt == nil ? CNMutableContact() : contactOpt!
+
+                        // This is out of date on simulator even though contact has right data?? Need to check on real device
+                        let existingBirthday = contact.birthday?.date?.formatted(date: .abbreviated, time: .omitted)
+                        let newBirthday = detail.birthday?.formatted(date: .abbreviated, time: .omitted)
                         
                         if detail.birthday != nil {
                             contact.birthday = Calendar.current.dateComponents([.year, .month, .day], from: detail.birthday!)
+                            
+                            let birthdayChange = ContactSyncFieldInfo(field: "Birthday", oldValue: existingBirthday, newValue: newBirthday)
+                            contactFieldChanges.append(birthdayChange)
                         }
                         
                         // We own the home address :)
+                        let existingHomeAddress = contact.postalAddresses.first { (address: CNLabeledValue<CNPostalAddress>) in
+                            address.label == CNLabelHome
+                        }
                         contact.postalAddresses.removeAll { (address: CNLabeledValue<CNPostalAddress>) in
                             address.label == CNLabelHome
                         }
@@ -121,38 +135,67 @@ class ContactStore: ObservableObject {
                             address.postalCode = String(detail.address!.zipCode!)
                             address.country = "US"
                             contact.postalAddresses.append(CNLabeledValue(label: CNLabelHome, value: address))
+                            
+                            var oldAddress: String? = nil
+                            let newAddress: String? = addressFormatter.string(from: address).stripLineBreaks()
+                            if let existingHomeAddress = existingHomeAddress {
+                                oldAddress = addressFormatter.string(from: existingHomeAddress.value).stripLineBreaks()
+                            }
+                            
+                            let addressChange = ContactSyncFieldInfo(field: "Address", oldValue: oldAddress, newValue: newAddress)
+                            contactFieldChanges.append(addressChange)
                         }
                                                       
                         // We own the mobile number :)
+                        let existingPhoneNumber = contact.phoneNumbers.first { (phoneNumber: CNLabeledValue<CNPhoneNumber>) in
+                            phoneNumber.label == CNLabelPhoneNumberMobile
+                        }
                         contact.phoneNumbers.removeAll(where: { (phoneNumber: CNLabeledValue<CNPhoneNumber>) in
                             phoneNumber.label == CNLabelPhoneNumberMobile
                         })
                         if detail.phoneNumber != nil {
-                            contact.phoneNumbers.append(CNLabeledValue(label: CNLabelPhoneNumberMobile, value: CNPhoneNumber(stringValue: detail.phoneNumber!)))
+                            let phoneNumber = CNPhoneNumber(stringValue: detail.phoneNumber!)
+                            contact.phoneNumbers.append(CNLabeledValue(label: CNLabelPhoneNumberMobile, value: phoneNumber))
+                        
+                            let phoneChange = ContactSyncFieldInfo(field: "Phone Number", oldValue: existingPhoneNumber?.value.stringValue, newValue: phoneNumber.stringValue)
+                            contactFieldChanges.append(phoneChange)
                         }
                         
                         // We own the home email :)
+                        let existingEmail = contact.emailAddresses.first { (email: CNLabeledValue<NSString>) in
+                            email.label == CNLabelHome
+                        }
                         contact.emailAddresses.removeAll(where: { (email: CNLabeledValue<NSString>) in
                             email.label == CNLabelHome
                         })
                         if detail.email != nil {
-                            contact.emailAddresses.append(CNLabeledValue(label: CNLabelHome, value: NSString(string: detail.email!)))
+                            let email = NSString(string: detail.email!)
+                            contact.emailAddresses.append(CNLabeledValue(label: CNLabelHome, value: email))
+                            
+                            let emailChange = ContactSyncFieldInfo(field: "Email", oldValue: existingEmail?.value.description, newValue: detail.email)
+                            contactFieldChanges.append(emailChange)
                         }
                         
+
                         let saveRequest = CNSaveRequest()
                         if contactOpt == nil {
                             // Only update name if creating this contact for the first time
                             contact.givenName = detail.firstName
                             contact.familyName = detail.lastName
                             saveRequest.add(contact, toContainerWithIdentifier: nil)
+                            contactSyncInfos.append(ContactSyncInfo(connection: detail, updatedFields: contactFieldChanges, isUpdate: false))
                         } else {
                             saveRequest.update(contact)
+                            // We don't actually modify the name right now... keep that the same
+                            contactSyncInfos.append(ContactSyncInfo(connection: detail, updatedFields: contactFieldChanges, isUpdate: true))
                         }
-                        
-                        do {
-                            try store.execute(saveRequest)
-                        } catch {
-                            print("Error occur: \(error)")
+                            
+                        if (!dryRun) {
+                            do {
+                                try store.execute(saveRequest)
+                            } catch {
+                                print("Error occur: \(error)")
+                            }
                         }
                         
                     } catch (let error) {
@@ -162,7 +205,11 @@ class ContactStore: ObservableObject {
                     print(failure)
                 }
                 
-                self.updateConnection(connectionId: connection.id) {_ in
+                if (!dryRun) {
+                    self.updateConnection(connectionId: connection.id) {_ in
+                        dispatchGroup.leave()
+                    }
+                } else {
                     dispatchGroup.leave()
                 }
             }
@@ -170,11 +217,33 @@ class ContactStore: ObservableObject {
         
         dispatchGroup.notify(queue: .main) {
             print("Done syncing \(connections.count) contacts")
-            callback()
+            callback(SyncInfo(updatedContacts: contactSyncInfos))
         }
     }
     
     struct UpdateRequest: Encodable {
         var inSync: Bool
+    }
+    
+    struct ContactSyncFieldInfo {
+        var field: String
+        var oldValue: String?
+        var newValue: String?
+    }
+    
+    struct ContactSyncInfo {
+        var connection: Connection
+        var updatedFields: [ContactSyncFieldInfo]
+        var isUpdate: Bool // true if updating contact, false if creating contact
+        
+        func changedFields() -> [ContactSyncFieldInfo] {
+            return self.updatedFields.filter { fieldUpdate in
+                fieldUpdate.oldValue != fieldUpdate.newValue
+            }
+        }
+    }
+    
+    struct SyncInfo {
+        var updatedContacts: [ContactSyncInfo]
     }
 }

@@ -19,4 +19,8 @@ extension String {
         }
         return pureNumber
     }
+    
+    func stripLineBreaks() -> String {
+        return self.replacingOccurrences(of: "\n", with: " ")
+    }
 }

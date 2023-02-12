@@ -20,6 +20,10 @@ struct ConnectionList: View {
     @State private var toBeDeleted: IndexSet?
     @State private var showDeleteAlert: Bool = false
     
+    @State private var contactsToSyncCount: Int = 0
+    @State private var contactUpdates: [ContactStore.ContactSyncInfo] = []
+    @State private var showContactUpdates: Bool = false
+    
     @StateObject var nameFilter = DebouncedText()
         
     var body: some View {
@@ -41,7 +45,7 @@ struct ConnectionList: View {
                             ProgressView()
                         } else if (!self.accountStore.deviceSettings.autoSync) {
                             Button {
-                                self.showSyncConfirmation = true
+                                self.sync(dryRun: true)
                             } label: {
                                 Text("Sync (\(self.connectionsStore.outOfSyncCount))")
                             }
@@ -63,18 +67,22 @@ struct ConnectionList: View {
             }
             .refreshable {
                 self.connectionsStore.load(nameFilter: self.nameFilter.debouncedText)
-                self.connectionsStore.loadOutOfSync { _ in }
+                self.connectionsStore.loadOutOfSync { _ in
+                    if self.accountStore.deviceSettings.autoSync {
+                        self.sync(dryRun: false)
+                    }
+                }
             }
         }
         .alert(isPresented: self.$showDeleteAlert) {
             deleteAlert
         }
-        .alert(isPresented: self.$showSyncConfirmation) {
-            syncConfirmation
+        .sheet(isPresented: self.$showContactUpdates) {
+            contactUpdatesSheet
         }
         .onAppear {
             if self.accountStore.deviceSettings.autoSync {
-                self.sync()
+                self.sync(dryRun: false)
             }
         }
     }
@@ -131,16 +139,80 @@ struct ConnectionList: View {
         })
     }
     
-    var syncConfirmation: Alert {
-        Alert(title: Text("Sync Confirmation"),
-              // TODO include some more info about who and what is being synced here
-              message: Text("Would you like to sync \(self.connectionsStore.outOfSyncCount) updated contact(s) to you device?"),
-              primaryButton: .default(Text("Yes"), action: {
-                  self.sync()
-                  self.showSyncConfirmation = false
-              }),
-              secondaryButton: .cancel(Text("No"))
-        )
+    var contactUpdatesSheet: some View {
+        ScrollView {
+            VStack {
+                if (self.contactsToSyncCount > 0 && !self.accountStore.deviceSettings.autoSync) {
+                    Text("\(self.contactUpdates.count) contact(s) to sync")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding([.top], 10)
+                } else {
+                    Text("\(self.contactUpdates.count) contact(s) synced!")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding([.top], 10)
+                }
+                
+                Divider().padding([.top, .bottom], 10)
+                
+                ForEach(self.contactUpdates, id: \.self.connection.id) { (update: ContactStore.ContactSyncInfo) in
+                    if (update.changedFields().count > 0) {
+                        VStack(alignment: .leading) {
+                            HStack {
+                                ProfileImage(imageUrl: update.connection.profileImage, height: 50, width: 50)
+                                Text("\(update.connection.firstName) \(update.connection.lastName)")
+                                Spacer()
+                                if (!update.isUpdate) {
+                                    Text("New!")
+                                        .italic()
+                                        .fontWeight(.semibold)
+                                }
+                            }
+                            .padding([.bottom], 10)
+                            
+                            ForEach(update.changedFields(), id: \.self.field) { (fieldUpdate: ContactStore.ContactSyncFieldInfo) in
+                                if fieldUpdate.oldValue != fieldUpdate.newValue {
+                                    VStack(alignment: .leading) {
+                                        Text(fieldUpdate.field).personalInfoLabel()
+                                        Text(fieldUpdate.newValue!).personalInfo()
+                                    }
+                                }
+                            }
+                        }
+                        .frame(
+                            minWidth: 0,
+                            maxWidth: .infinity,
+                            minHeight: 0,
+                            maxHeight: .infinity,
+                            alignment: .topLeading
+                        )
+                        .padding([.leading, .trailing], 10)
+                        
+                        Divider().padding([.top, .bottom], 10)
+                    }
+                }
+            }
+            .padding()
+            
+            Spacer()
+            
+            if (self.contactsToSyncCount > 0 && !self.accountStore.deviceSettings.autoSync) {
+                Button(action: {
+                    self.sync(dryRun: false)
+                }, label: {
+                    Text("Sync")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 50)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .foregroundColor(ColorConstants.secondary)
+                        )
+                })
+            }
+        }
     }
     
     func loadConnection(connectionId: String) {
@@ -159,24 +231,33 @@ struct ConnectionList: View {
         self.showDeleteAlert = true
     }
     
-    func sync() {
-        // TODO - bail out after X attempts
+    func sync(dryRun: Bool) {
         self.syncing = true
+        self.showContactUpdates = false
+        self.contactUpdates = []
+        
         self.connectionsStore.loadOutOfSync { (result: Result<ConnectionResponse, Error>) in
             switch result {
             case .success(let response):
-                // Stop the recursion once we get to 0
-                if response.count != 0 {
-                    self.contactStore.syncContacts(connections: response.users) {
-                        // Either grab the next batch of connections to sync or reset the count to 0
-                        self.sync()
+                if response.count > 0 {
+                    self.contactStore.syncContacts(connections: response.users, dryRun: dryRun) { syncInfo in
+                        self.contactUpdates.append(contentsOf: syncInfo.updatedContacts)
+                        
+                        if (!dryRun) {
+                            UIApplication.shared.applicationIconBadgeNumber = 0
+                            self.contactsToSyncCount = 0
+                            self.connectionsStore.loadOutOfSync { _ in }
+                        } else {
+                            self.contactsToSyncCount = self.contactUpdates.count
+                        }
+                        
+                        self.showContactUpdates = true
+                        self.syncing = false
                     }
-                } else {
-                    self.syncing = false
-                    UIApplication.shared.applicationIconBadgeNumber = 0
                 }
             case .failure(let error):
                 print("Something bad happened", error.localizedDescription)
+                self.contactUpdates = []
                 self.syncing = false
             }
         }
