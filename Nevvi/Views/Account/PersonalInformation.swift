@@ -25,7 +25,6 @@ struct PersonalInformation: View {
     @State private var showAddressSearch: Bool = false
     @State private var newProfileImage = UIImage()
     
-    @State private var showSave: Bool = true
     @State private var canSave: Bool = false
     
     var body: some View {
@@ -106,21 +105,6 @@ struct PersonalInformation: View {
                 .onChange(of: self.accountStore.phoneNumber, perform: { newValue in
                     self.tryToggle()
                 })
-                .onChange(of: self.accountStore.address.street, perform: { newValue in
-                    self.tryToggle()
-                })
-                .onChange(of: self.accountStore.address.unit, perform: { newValue in
-                    self.tryToggle()
-                })
-                .onChange(of: self.accountStore.address.city, perform: { newValue in
-                    self.tryToggle()
-                })
-                .onChange(of: self.accountStore.address.state, perform: { newValue in
-                    self.tryToggle()
-                })
-                .onChange(of: self.accountStore.address.zipCode, perform: { newValue in
-                    self.tryToggle()
-                })
                 .onChange(of: self.accountStore.birthday, perform: { newValue in
                     self.tryToggle()
                 })
@@ -128,7 +112,10 @@ struct PersonalInformation: View {
                     datePickerSheet
                 }
                 .sheet(isPresented: self.$showAddressSearch) {
-                    AddressSearch().presentationDetents([.large])
+                    AddressSearch(address: self.accountStore.address, callback: { address in
+                        self.updateAddress(address: address)
+                        self.showAddressSearch = false
+                    }).presentationDetents([.large])
                 }
                 .sheet(isPresented: self.$showPhoneVerification) {
                     phoneVerificationSheet
@@ -244,35 +231,9 @@ struct PersonalInformation: View {
         .disabled(self.accountStore.saving)
     }
     
-    func withChangeEvents() -> some View {
-        return self
-            .onChange(of: self.accountStore.firstName, perform: { newValue in
-                self.tryToggle()
-            })
-            .onChange(of: self.accountStore.lastName, perform: { newValue in
-                self.tryToggle()
-            })
-            .onChange(of: self.accountStore.phoneNumber, perform: { newValue in
-                self.tryToggle()
-            })
-            .onChange(of: self.accountStore.address.street, perform: { newValue in
-                self.tryToggle()
-            })
-            .onChange(of: self.accountStore.address.unit, perform: { newValue in
-                self.tryToggle()
-            })
-            .onChange(of: self.accountStore.address.city, perform: { newValue in
-                self.tryToggle()
-            })
-            .onChange(of: self.accountStore.address.state, perform: { newValue in
-                self.tryToggle()
-            })
-            .onChange(of: self.accountStore.address.zipCode, perform: { newValue in
-                self.tryToggle()
-            })
-            .onChange(of: self.accountStore.birthday, perform: { newValue in
-                self.tryToggle()
-            })
+    func updateAddress(address: AddressViewModel) {
+        self.accountStore.address = address
+        self.tryToggle()
     }
     
     func tryToggle() {

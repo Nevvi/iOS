@@ -151,7 +151,6 @@ struct CreateAccount: View {
                 if self.email.isEmpty == false && self.password.isEmpty == false {
                     self.signIn()
                 }
-                self.showConfirmationCode = false
             case .failure(let error):
                 self.confirmationCode = ""
                 self.error = error
@@ -165,6 +164,9 @@ struct CreateAccount: View {
             case .success(let authorization):
                 KeychainStore.saveCredentials(Credentials(username: email, password: password))
                 self.callback(authorization)
+                
+                // set this to false after successful signin so that we don't go back to create account page
+                self.showConfirmationCode = false
             case .failure(let error):
                 self.email = ""
                 self.password = ""

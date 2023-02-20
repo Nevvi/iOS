@@ -11,9 +11,15 @@ import CoreLocation
 import MapKit
 
 struct AddressSearch: View {
-    @Environment(\.presentationMode) private var presentationMode
-    @EnvironmentObject var accountStore: AccountStore
+    @State private var address = AddressViewModel()
+    private var callback: (AddressViewModel) -> Void
+    
     @StateObject private var addressSearchStore = AddressSearchStore()
+    
+    init(address: AddressViewModel, callback: @escaping (AddressViewModel) -> Void) {
+        self.address = address
+        self.callback = callback
+    }
 
     func reverseGeo(location: MKLocalSearchCompletion) {
         let searchRequest = MKLocalSearch.Request(completion: location)
@@ -35,11 +41,11 @@ struct AddressSearch: View {
 
                     let reversedGeoLocation = ReversedGeoLocation(with: placemark)
 
-                    self.accountStore.address.street = "\(reversedGeoLocation.streetNumber) \(reversedGeoLocation.streetName)"
-                    self.accountStore.address.city = "\(reversedGeoLocation.city)"
-                    self.accountStore.address.state = "\(reversedGeoLocation.state)"
-                    self.accountStore.address.zipCode = Int(reversedGeoLocation.zipCode)!
-                    addressSearchStore.searchTerm = self.accountStore.address.street
+                    self.address.street = "\(reversedGeoLocation.streetNumber) \(reversedGeoLocation.streetName)"
+                    self.address.city = "\(reversedGeoLocation.city)"
+                    self.address.state = "\(reversedGeoLocation.state)"
+                    self.address.zipCode = Int(reversedGeoLocation.zipCode)!
+                    addressSearchStore.searchTerm = self.address.street
                 }
             }
         }
@@ -64,7 +70,7 @@ struct AddressSearch: View {
             }
             .padding()
             
-            if self.accountStore.address.street != addressSearchStore.searchTerm {
+            if self.address.street != addressSearchStore.searchTerm {
                 ScrollView {
                     VStack(alignment: .leading) {
                         ForEach(addressSearchStore.locationResults, id: \.self) { location in
@@ -91,7 +97,7 @@ struct AddressSearch: View {
                             .fontWeight(.light)
                             .font(.system(size: 14))
     
-                        TextField("Apt 1A", text: self.$accountStore.address.unit)
+                        TextField("Apt 1A", text: self.$address.unit)
                             .padding(10)
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                             .textInputAutocapitalization(.never)
@@ -106,7 +112,7 @@ struct AddressSearch: View {
                             .fontWeight(.light)
                             .font(.system(size: 14))
     
-                        TextField("Hollywood", text: self.$accountStore.address.city)
+                        TextField("Hollywood", text: self.$address.city)
                             .padding(10)
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                             .textInputAutocapitalization(.never)
@@ -123,7 +129,7 @@ struct AddressSearch: View {
                             .fontWeight(.light)
                             .font(.system(size: 14))
     
-                        TextField("CA", text: self.$accountStore.address.state)
+                        TextField("CA", text: self.$address.state)
                             .padding(10)
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                             .textInputAutocapitalization(.never)
@@ -138,7 +144,7 @@ struct AddressSearch: View {
                             .fontWeight(.light)
                             .font(.system(size: 14))
     
-                        TextField("Zip Code", value: self.$accountStore.address.zipCode, formatter: NumberFormatter())
+                        TextField("Zip Code", value: self.$address.zipCode, formatter: NumberFormatter())
                             .padding(10)
                             .keyboardType(.numberPad)
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
@@ -152,7 +158,7 @@ struct AddressSearch: View {
                 Spacer()
                 
                 Button(action: {
-                    presentationMode.wrappedValue.dismiss()
+                    self.callback(self.address)
                 }, label: {
                     Text("Done")
                         .font(.headline)
@@ -170,17 +176,15 @@ struct AddressSearch: View {
         }
         .padding()
         .onAppear {
-            self.addressSearchStore.searchTerm = self.accountStore.address.street
+            self.addressSearchStore.searchTerm = self.address.street
         }
     }
 }
 
 struct AddressSearch_Previews: PreviewProvider {
     static let modelData = ModelData()
-    static let accountStore = AccountStore(user: modelData.user)
     
     static var previews: some View {
-        AddressSearch()
-            .environmentObject(accountStore)
+        AddressSearch(address: AddressViewModel().update(address: modelData.user.address)) { _ in }
     }
 }

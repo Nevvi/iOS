@@ -18,12 +18,13 @@ class AddressViewModel : ObservableObject {
         return self.street.isEmpty && self.city.isEmpty && self.state.isEmpty
     }
     
-    func update(address: Address) {
+    func update(address: Address) -> AddressViewModel {
         self.street = address.street != nil ? address.street! : ""
         self.unit = address.unit != nil ? address.unit! : ""
         self.city = address.city != nil ? address.city! : ""
         self.state = address.state != nil ? address.state! : ""
         self.zipCode = address.zipCode != nil ? address.zipCode! : -1
+        return self
     }
     
     func toModel() -> Address {
