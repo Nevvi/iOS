@@ -54,6 +54,7 @@
 		04B158582987FA2300846FDB /* NotificationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B158572987FA2300846FDB /* NotificationStore.swift */; };
 		04B1585A298EFAF100846FDB /* OnboardingDescriptionCont.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B15859298EFAF000846FDB /* OnboardingDescriptionCont.swift */; };
 		04B1585D29903AFA00846FDB /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 04B1585C29903AFA00846FDB /* AlertToast */; };
+		04B1586929AC301600846FDB /* ForgotPassword.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B1586829AC301600846FDB /* ForgotPassword.swift */; };
 		04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FB295DEA5C00703523 /* NevviApp.swift */; };
 		04B948FE295DEA5C00703523 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B948FD295DEA5C00703523 /* ContentView.swift */; };
 		04B94900295DEA5E00703523 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 04B948FF295DEA5E00703523 /* Assets.xcassets */; };
@@ -140,6 +141,7 @@
 		0431439C2975AC830094D7E0 /* TextExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextExtensions.swift; sourceTree = "<group>"; };
 		04B158572987FA2300846FDB /* NotificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationStore.swift; sourceTree = "<group>"; };
 		04B15859298EFAF000846FDB /* OnboardingDescriptionCont.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDescriptionCont.swift; sourceTree = "<group>"; };
+		04B1586829AC301600846FDB /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
 		04B948F8295DEA5C00703523 /* Nevvi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nevvi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		04B948FB295DEA5C00703523 /* NevviApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NevviApp.swift; sourceTree = "<group>"; };
 		04B948FD295DEA5C00703523 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 			children = (
 				04B94933295E01F500703523 /* Login.swift */,
 				04B94952295F21D200703523 /* CreateAccount.swift */,
+				04B1586829AC301600846FDB /* ForgotPassword.swift */,
 			);
 			path = Authorization;
 			sourceTree = "<group>";
@@ -655,6 +658,7 @@
 				041413082978D853008A35DA /* DeviceSettingsViewModel.swift in Sources */,
 				04B94910295DEAD800703523 /* User.swift in Sources */,
 				0431439B2975A77E0094D7E0 /* BackgroundGradient.swift in Sources */,
+				04B1586929AC301600846FDB /* ForgotPassword.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -749,7 +753,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -840,7 +844,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -992,7 +996,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1029,7 +1033,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

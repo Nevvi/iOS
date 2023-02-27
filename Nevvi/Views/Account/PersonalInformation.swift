@@ -66,33 +66,39 @@ struct PersonalInformation: View {
                         Text("Street Address")
                             .personalInfoLabel()
                         
-                        Text(self.accountStore.address.street != "" ? self.accountStore.address.toString() : "")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(16)
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
-                            )
-                            .onTapGesture {
-                                self.showAddressSearch = true
-                            }
-                    }.personalInfoStyle()
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
+                            
+                            Text(self.accountStore.address.street != "" ? self.accountStore.address.toString() : "")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(16)
+                        }
+                        .contentShape(RoundedRectangle(cornerRadius: 10.0))
+                        .onTapGesture {
+                            self.showAddressSearch = true
+                        }
+                    }
+                    .personalInfoStyle()
                     
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text("Birthday")
-                                .personalInfoLabel()
+                    VStack(alignment: .leading) {
+                        Text("Birthday")
+                            .personalInfoLabel()
+                        
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
                             
                             Text(self.accountStore.birthday.yyyyMMdd() != Date().yyyyMMdd() ?
                                  self.accountStore.birthday.toString() :
                                  "")
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(14)
-                                .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                         }
-                        .personalInfoStyle()
+                        .contentShape(RoundedRectangle(cornerRadius: 10.0))
+                        .onTapGesture {
+                            self.showBirthdayPicker.toggle()
+                        }
                     }
-                    .onTapGesture {
-                        self.showBirthdayPicker.toggle()
-                    }
+                    .personalInfoStyle()
                         
                     Spacer()
                 }

@@ -5,12 +5,17 @@
 //  Created by Tyler Cobb on 12/29/22.
 //
 
+import AlertToast
 import SwiftUI
 
 struct Login: View {
     @State private var email = ""
     @State private var password = ""
-    @State private var error: AuthorizationStore.AuthorizationError?    
+    @State private var error: AuthorizationStore.AuthorizationError?
+    
+    @State private var toastText: String = ""
+    @State private var showToast: Bool = false
+    
     @ObservedObject var authStore: AuthorizationStore
     
     var loginDisabled: Bool {
@@ -45,7 +50,7 @@ struct Login: View {
                     
                     SecureField("Password", text: self.$password)
                         .authStyle()
-                    
+
                     Button(action: self.signIn) {
                         Text("Sign In")
                             .font(.headline)
@@ -69,10 +74,24 @@ struct Login: View {
                 Spacer()
                 
                 HStack {
+                    NavigationLink("Forgot Password?") {
+                        ForgotPassword(authStore: self.authStore, callback: { email, password in
+                            self.email = email
+                            self.password = password
+                            self.toastText = "Password reset!"
+                            self.showToast = true
+                        })
+                    }
+                    .padding([.leading], 25)
+                    .padding([.bottom])
+                    
+                    Spacer()
+                    
                     NavigationLink("Create account") {
                         CreateAccount(authStore: self.authStore, callback: self.callback)
                     }
-                    .padding()
+                    .padding([.trailing], 25)
+                    .padding([.bottom])
                 }
                 .foregroundColor(.white)
                 
@@ -83,6 +102,9 @@ struct Login: View {
                 return Alert(title: Text("Invalid login"), message: Text(error.localizedDescription))
             }
             .background(BackgroundGradient())
+            .toast(isPresenting: $showToast){
+                AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: self.toastText)
+            }
         }
         .accentColor(.white)
     }

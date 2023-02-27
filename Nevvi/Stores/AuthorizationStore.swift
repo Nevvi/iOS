@@ -17,6 +17,8 @@ class AuthorizationStore: ObservableObject {
     @Published var loggingOut: Bool = false
     @Published var signingUp: Bool = false
     @Published var confirming: Bool = false
+    @Published var sendingResetCode: Bool = false
+    @Published var resettingPassword: Bool = false
     
     enum BiometricType {
         case none
@@ -135,6 +137,14 @@ class AuthorizationStore: ObservableObject {
         return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/confirm")!
     }
     
+    private func forgotPasswordUrl() throws -> URL {
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/forgotPassword")!
+    }
+    
+    private func confirmForgotPasswordUrl() throws -> URL {
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/confirmForgotPassword")!
+    }
+    
     func login(email: String, password: String, callback: @escaping (Result<Authorization, AuthorizationError>) -> Void) {
         do {
             print("Logging in")
@@ -228,6 +238,48 @@ class AuthorizationStore: ObservableObject {
         }
     }
     
+    func forgotPassword(email: String, callback: @escaping (Result<ConfirmResponse, AuthorizationError>) -> Void) {
+        do {
+            self.sendingResetCode = true
+            let request = ForgotPasswordRequest(email: email.lowercased())
+            URLSession.shared.postData(for: try self.forgotPasswordUrl(), for: request) { (result: Result<ConfirmResponse, Error>) in
+                switch result {
+                case .success(let response):
+                    callback(.success(response))
+                case .failure(let error):
+                    print(error)
+                    callback(.failure(AuthorizationError.unknown))
+                }
+                self.sendingResetCode = false
+            }
+        } catch(let error) {
+            print(error)
+            callback(.failure(AuthorizationError.unknown))
+            self.sendingResetCode = false
+        }
+    }
+    
+    func confirmForgotPassword(email: String, code: String, password: String, callback: @escaping (Result<ConfirmResponse, AuthorizationError>) -> Void) {
+        do {
+            self.resettingPassword = true
+            let request = ConfirmForgotPasswordRequest(email: email.lowercased(), code: code, password: password)
+            URLSession.shared.postData(for: try self.confirmForgotPasswordUrl(), for: request) { (result: Result<ConfirmResponse, Error>) in
+                switch result {
+                case .success(let response):
+                    callback(.success(response))
+                case .failure(let error):
+                    print(error)
+                    callback(.failure(AuthorizationError.invalidConfirmation))
+                }
+                self.resettingPassword = false
+            }
+        } catch(let error) {
+            print(error)
+            callback(.failure(AuthorizationError.unknown))
+            self.resettingPassword = false
+        }
+    }
+    
     struct SignupRequest: Encodable {
         var email: String
         var password: String
@@ -244,6 +296,16 @@ class AuthorizationStore: ObservableObject {
     struct ConfirmRequest: Encodable {
         var username: String
         var confirmationCode: String
+    }
+    
+    struct ForgotPasswordRequest: Encodable {
+        var email: String
+    }
+    
+    struct ConfirmForgotPasswordRequest: Encodable {
+        var email: String
+        var code: String
+        var password: String
     }
     
     struct ConfirmResponse: Decodable {
