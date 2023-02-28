@@ -53,6 +53,9 @@ struct NevviApp: App {
     @StateObject private var contactStore = ContactStore()
     @StateObject private var notificationStore = NotificationStore()
     
+    @State private var forceUpdate = false
+    
+
     var body: some Scene {
         WindowGroup {
             if (self.authStore.authorization != nil) {
@@ -64,6 +67,7 @@ struct NevviApp: App {
                     .environmentObject(usersStore)
                     .environmentObject(contactStore)
                     .environmentObject(notificationStore)
+                    .onAppear(perform: self.checkVersion)
                     .onAppear {
                         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, _ in
                             guard success else {
@@ -89,6 +93,9 @@ struct NevviApp: App {
                             UNUserNotificationCenter.current().setBadgeCount(0)
                         }
                     }
+                    .sheet(isPresented: self.$forceUpdate) {
+                        self.forceUpdateView
+                    }
             } else {
                 Login(authStore: authStore) { (auth: Authorization) in
                     // hacky way of restoring auth on login
@@ -101,7 +108,41 @@ struct NevviApp: App {
                     self.contactStore.authorization = auth
                     self.notificationStore.authorization = auth
                 }
+                .onAppear(perform: self.checkVersion)
+                .sheet(isPresented: self.$forceUpdate) {
+                    self.forceUpdateView
+                }
             }
+        }
+    }
+    
+    var forceUpdateView: some View {
+        VStack(spacing: 20.0) {
+            Text("Oh no!...")
+                .onboardingTitle()
+            
+            Spacer()
+                        
+            Text("This version of Nevvi is not supported anymore. Please update to the latest version.")
+                .onboardingStyle()
+                .padding()
+
+            Spacer()
+            Spacer()
+        }
+        .padding([.leading, .trailing])
+        .background(BackgroundGradient())
+        .interactiveDismissDisabled()
+    }
+    
+    func checkVersion() {
+        self.authStore.getMinAppVersion { version in
+            if Bundle.main.releaseVersionNumber! < version {
+                self.forceUpdate = true
+            }
+            print(version)
+            print(Bundle.main.releaseVersionNumber!)
+            print(Bundle.main.buildVersionNumber!)
         }
     }
 }

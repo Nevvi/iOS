@@ -61,6 +61,13 @@ struct Settings: View {
                     .settingsStyle()
                 
                 Spacer()
+                
+                HStack(alignment: .center) {
+                    Spacer()
+                    Text("Version \(Bundle.main.releaseVersionNumber!)")
+                        .settingsStyle()
+                    Spacer()
+                }
             }
             .padding(30)
         }

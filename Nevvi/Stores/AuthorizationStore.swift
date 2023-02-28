@@ -121,6 +121,10 @@ class AuthorizationStore: ObservableObject {
         }
     }
     
+    private func minVersionsUrl() throws -> URL {
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/versions")!
+    }
+    
     private func loginUrl() throws -> URL {
         return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/login")!
     }
@@ -143,6 +147,22 @@ class AuthorizationStore: ObservableObject {
     
     private func confirmForgotPasswordUrl() throws -> URL {
         return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/confirmForgotPassword")!
+    }
+    
+    func getMinAppVersion(callback: @escaping (String) -> Void) {
+        do {
+            URLSession.shared.fetchData(for: try self.minVersionsUrl()) { (result: Result<MinVersionResponse, Error>) in
+                switch result {
+                case .success(let response):
+                    callback(response.ios)
+                case .failure(let error):
+                    // Do something catastrophic here?
+                    print(error)
+                }
+            }
+        } catch(let error) {
+            print(error)
+        }
     }
     
     func login(email: String, password: String, callback: @escaping (Result<Authorization, AuthorizationError>) -> Void) {
@@ -314,5 +334,9 @@ class AuthorizationStore: ObservableObject {
     
     struct LogoutResponse: Decodable {
         
+    }
+    
+    struct MinVersionResponse: Decodable {
+        var ios: String
     }
 }

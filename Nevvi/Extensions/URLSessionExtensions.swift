@@ -36,6 +36,12 @@ extension URLSession {
 
     }
     
+    func fetchData<T: Decodable>(for url: URL, completion: @escaping (Result<T, Error>) -> Void) {
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        execute(request: request, completion: completion)
+    }
+    
     func fetchData<T: Decodable>(for url: URL, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
