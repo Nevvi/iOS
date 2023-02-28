@@ -132,6 +132,14 @@ struct ConnectionDetail: View {
         VStack(alignment: .leading) {
             Text(label).personalInfoLabel()
             Text(value).personalInfo()
+                .contextMenu {
+                    Button(action: {
+                        UIPasteboard.general.string = value
+                    }) {
+                        Text("Copy")
+                        Image(systemName: "doc.on.doc")
+                    }
+                 }
         }
         .padding([.leading, .trailing])
         .padding([.bottom], 10)

@@ -39,7 +39,6 @@ extension Text {
             .padding(10)
             .foregroundColor(ColorConstants.text)
             .fontWeight(.light)
-            .font(.system(size: 20))
             .background(ColorConstants.primary)
             .cornerRadius(10)
             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
