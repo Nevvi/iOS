@@ -45,10 +45,10 @@ struct CreateAccount: View {
         VStack() {
             Spacer()
             
-            Text("Welcome to Nevvi!")
+            Text(self.showConfirmationCode ? "Confirm your account" : "Welcome to Nevvi!")
                 .font(.largeTitle).foregroundColor(Color.white)
             
-            Text("Keep your contacts up to date!")
+            Text(self.showConfirmationCode ? "Enter the code sent to your email" : "Keep your contacts up to date!")
                 .font(.subheadline).foregroundColor(Color.white)
                 .padding([.top], 1)
                 .padding([.bottom], 50)
@@ -88,13 +88,21 @@ struct CreateAccount: View {
             
             SecureField("Password", text: self.$password)
                 .authStyle()
+                .padding([.bottom])
             
             Button(action: self.createAccount) {
-                Text("Create Account")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
+                if self.authStore.signingUp {
+                    ProgressView()
+                        .tint(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                } else {
+                    Text("Create Account")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                }
             }
             .disabled(self.createAccountDisabled)
             .background(ColorConstants.tertiary)
@@ -113,13 +121,21 @@ struct CreateAccount: View {
             
             TextField("Code", text: self.$confirmationCode)
                 .authStyle()
+                .padding([.bottom])
             
             Button(action: self.confirmAccount) {
-                Text("Confirm Account")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
+                if self.authStore.loggingIn || self.authStore.confirming {
+                    ProgressView()
+                        .tint(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                } else {
+                    Text("Confirm Account")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                }
             }
             .disabled(self.confirmAccountDisabled)
             .background(ColorConstants.tertiary)

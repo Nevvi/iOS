@@ -114,7 +114,7 @@ struct ConnectionList: View {
             }
         }
         .onDelete(perform: self.delete)
-        .redacted(when: self.connectionsStore.loading, redactionType: .customPlaceholder)
+        .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
     }
     
     var deleteAlert: Alert {
@@ -125,6 +125,8 @@ struct ConnectionList: View {
                     switch result {
                     case.success(_):
                         self.connectionsStore.load()
+                        self.connectionsStore.loadOutOfSync(callback: { _ in })
+                        self.connectionsStore.loadRejectedUsers()
                     case .failure(let error):
                         print("Something bad happened", error)
                     }

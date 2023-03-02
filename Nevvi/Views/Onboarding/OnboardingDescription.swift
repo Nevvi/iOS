@@ -24,7 +24,7 @@ struct OnboardingDescription: View {
                 .onboardingStyle()
                 .padding(10)
             
-            Text("Think of a connection like an entry in your contacts, but instead of you managing someone else's information they manage it themselves.")
+            Text("Think of a connection like an entry in your contacts, but instead of you managing someone else's information, they manage it themselves.")
                 .onboardingStyle()
                 .padding(10)
             

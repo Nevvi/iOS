@@ -19,7 +19,7 @@ struct OnboardingIntro: View {
             Image("OnboardingOne")
             Spacer()
                         
-            Text("We keep all your connections up to date, so you don't have to.")
+            Text("We keep the personal information of all your connections up to date, so you don't have to.")
                 .onboardingStyle()
                 .padding()
 

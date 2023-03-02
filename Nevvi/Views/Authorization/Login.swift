@@ -36,7 +36,6 @@ struct Login: View {
                 
                 Text("Welcome to Nevvi!")
                     .font(.largeTitle).foregroundColor(Color.white)
-                    .padding([.top], 50)
                 
                 Text("Keep your contacts up to date!")
                     .font(.subheadline).foregroundColor(Color.white)
@@ -50,13 +49,21 @@ struct Login: View {
                     
                     SecureField("Password", text: self.$password)
                         .authStyle()
+                        .padding([.bottom])
 
                     Button(action: self.signIn) {
-                        Text("Sign In")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(maxWidth: .infinity)
+                        if self.authStore.loggingIn {
+                            ProgressView()
+                                .tint(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                        } else {
+                            Text("Sign In")
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                        }
                     }
                     .disabled(self.loginDisabled)
                     .background(ColorConstants.tertiary)
@@ -65,9 +72,7 @@ struct Login: View {
                     .cornerRadius(10.0)
                 }.padding(27.5)
                 
-                if self.authStore.loggingIn {
-                    ProgressView().padding(45)
-                } else if self.authStore.biometricType() != .none {
+                if self.authStore.biometricType() != .none {
                     biometricLoginButton
                 }
                 
@@ -117,6 +122,7 @@ struct Login: View {
                 .foregroundColor(.white)
         }
         .padding(30)
+        .disabled(self.authStore.loggingIn)
     }
     
     func requestBiometricUnlock() {

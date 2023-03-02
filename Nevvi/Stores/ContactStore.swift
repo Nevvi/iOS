@@ -109,9 +109,17 @@ class ContactStore: ObservableObject {
                         
                         let contact = contactOpt == nil ? CNMutableContact() : contactOpt!
 
-                        // This is out of date on simulator even though contact has right data?? Need to check on real device
-                        let existingBirthday = contact.birthday?.date?.formatted(date: .abbreviated, time: .omitted)
-                        let newBirthday = detail.birthday?.formatted(date: .abbreviated, time: .omitted)
+                        let utcDateFormatter = DateFormatter()
+                        utcDateFormatter.dateStyle = .medium
+                        utcDateFormatter.timeStyle = .none
+                        utcDateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+                        
+                        var existingBirthday: String? = nil
+                        if let birthday = contact.birthday {
+                            existingBirthday = utcDateFormatter.string(from: birthday.date!)
+                        }
+
+                        let newBirthday = utcDateFormatter.string(from: detail.birthday!)
                         
                         if detail.birthday != nil {
                             contact.birthday = Calendar.current.dateComponents([.year, .month, .day], from: detail.birthday!)
@@ -130,6 +138,10 @@ class ContactStore: ObservableObject {
                         if detail.address != nil &&  detail.address!.street != nil {
                             let address = CNMutablePostalAddress()
                             address.street = detail.address!.street!
+                            if let unit = detail.address?.unit {
+                                address.street = "\(address.street) \(unit)"
+                            }
+                            
                             address.city = detail.address!.city!
                             address.state = detail.address!.state!
                             address.postalCode = String(detail.address!.zipCode!)

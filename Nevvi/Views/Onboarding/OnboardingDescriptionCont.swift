@@ -24,7 +24,7 @@ struct OnboardingDescriptionCont: View {
                 .onboardingStyle()
                 .padding(10)
             
-            Text("Anytime you update your data it will automatically be sent to your connections if they are allowed to see it.")
+            Text("Anytime you update your data it will automatically be sent to the connections that are allowed to see it.")
                 .onboardingStyle()
                 .padding(10)
             
