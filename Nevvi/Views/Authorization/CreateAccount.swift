@@ -19,8 +19,41 @@ struct CreateAccount: View {
     
     @ObservedObject var authStore: AuthorizationStore
     
+    var passwordContainsUppercase: Bool {
+        !self.password.isEmpty && self.password.contains(where: { char in
+            char.isUppercase
+        })
+    }
+    
+    var passwordContainsLowercase: Bool {
+        !self.password.isEmpty && self.password.contains(where: { char in
+            char.isLowercase
+        })
+    }
+    
+    var passwordContainsNumber: Bool {
+        !self.password.isEmpty && self.password.contains(where: { char in
+            char.isNumber
+        })
+    }
+    
+    var passwordContainsSpecialChar: Bool {
+        !self.password.isEmpty && self.password.range(of: ".*[^A-Za-z0-9].*", options: .regularExpression) != nil
+    }
+    
+    var passwordMinimumLength: Bool {
+        !self.password.isEmpty && self.password.count >= 8
+    }
+    
     var createAccountDisabled: Bool {
-        self.email.isEmpty || self.password.isEmpty || self.authStore.signingUp
+        self.email.isEmpty ||
+        self.password.isEmpty ||
+        self.authStore.signingUp ||
+        !self.passwordContainsUppercase ||
+        !self.passwordContainsLowercase ||
+        !self.passwordContainsSpecialChar ||
+        !self.passwordContainsNumber ||
+        !self.passwordMinimumLength
     }
     
     var confirmAccountDisabled: Bool {
@@ -88,7 +121,41 @@ struct CreateAccount: View {
             
             SecureField("Password", text: self.$password)
                 .authStyle()
-                .padding([.bottom])
+            
+            VStack(alignment: .leading, spacing: 15) {
+                HStack {
+                    Image(systemName: "checkmark.seal.fill")
+                    Text("Contains uppercase letter")
+                }
+                .foregroundColor(self.passwordContainsUppercase ? .white : ColorConstants.secondary)
+                
+                HStack {
+                    Image(systemName: "checkmark.seal.fill")
+                    Text("Contains lowercase letter")
+                }
+                .foregroundColor(self.passwordContainsLowercase ? .white : ColorConstants.secondary)
+                
+                HStack {
+                    Image(systemName: "checkmark.seal.fill")
+                    Text("Contains special character")
+                }
+                .foregroundColor(self.passwordContainsSpecialChar ? .white : ColorConstants.secondary)
+                
+                HStack {
+                    Image(systemName: "checkmark.seal.fill")
+                    Text("Contains number")
+                }
+                .foregroundColor(self.passwordContainsNumber ? .white : ColorConstants.secondary)
+                
+                HStack {
+                    Image(systemName: "checkmark.seal.fill")
+                    Text("Contains at least 8 characters")
+                }
+                .foregroundColor(self.passwordMinimumLength ? .white : ColorConstants.secondary)
+            }
+            .padding([.leading, .bottom])
+            .fontWeight(.regular)
+            .font(.system(size: 14))
             
             Button(action: self.createAccount) {
                 if self.authStore.signingUp {

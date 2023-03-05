@@ -17,12 +17,47 @@ struct ForgotPassword: View {
     
     @ObservedObject var authStore: AuthorizationStore
     
+    var passwordContainsUppercase: Bool {
+        !self.password.isEmpty && self.password.contains(where: { char in
+            char.isUppercase
+        })
+    }
+    
+    var passwordContainsLowercase: Bool {
+        !self.password.isEmpty && self.password.contains(where: { char in
+            char.isLowercase
+        })
+    }
+    
+    var passwordContainsNumber: Bool {
+        !self.password.isEmpty && self.password.contains(where: { char in
+            char.isNumber
+        })
+    }
+    
+    var passwordContainsSpecialChar: Bool {
+        !self.password.isEmpty && self.password.range(of: ".*[^A-Za-z0-9].*", options: .regularExpression) != nil
+    }
+    
+    var passwordMinimumLength: Bool {
+        !self.password.isEmpty && self.password.count >= 8
+    }
+    
     var sendResetCodeDisabled: Bool {
         self.email.isEmpty || self.authStore.sendingResetCode
     }
     
     var resetPasswordDisabled: Bool {
-        self.email.isEmpty || self.confirmationCode.isEmpty || self.password.isEmpty || self.authStore.resettingPassword || self.authStore.loggingIn
+        self.email.isEmpty ||
+        self.confirmationCode.isEmpty ||
+        self.password.isEmpty ||
+        self.authStore.resettingPassword ||
+        self.authStore.loggingIn ||
+        !self.passwordContainsUppercase ||
+        !self.passwordContainsLowercase ||
+        !self.passwordContainsSpecialChar ||
+        !self.passwordContainsNumber ||
+        !self.passwordMinimumLength
     }
     
     private var callback: (String, String) -> Void
@@ -55,7 +90,7 @@ struct ForgotPassword: View {
                 .multilineTextAlignment(.center)
                 .padding([.top], 1)
                 .padding([.leading, .trailing], 30)
-                .padding([.bottom], 70)
+                .padding([.bottom], 50)
             
             if self.showConfirmationCode {
                 resetPasswordView
@@ -84,6 +119,8 @@ struct ForgotPassword: View {
                 .authStyle()
                 .keyboardType(.emailAddress)
             
+            Spacer()
+            
             Button(action: self.sendResetCode) {
                 Text("Send Code")
                     .font(.headline)
@@ -101,7 +138,7 @@ struct ForgotPassword: View {
     }
     
     var resetPasswordView: some View {
-        VStack(alignment: .center, spacing: 15) {
+        VStack(alignment: .leading, spacing: 15) {
             TextField("Email", text: self.$email)
                 .authStyle()
                 .disabled(true)
@@ -112,6 +149,43 @@ struct ForgotPassword: View {
             
             SecureField("New Password", text: self.$password)
                 .authStyle()
+            
+            VStack(alignment: .leading, spacing: 15) {
+                HStack {
+                    Image(systemName: "checkmark.seal.fill")
+                    Text("Contains uppercase letter")
+                }
+                .foregroundColor(self.passwordContainsUppercase ? .white : ColorConstants.secondary)
+                
+                HStack {
+                    Image(systemName: "checkmark.seal.fill")
+                    Text("Contains lowercase letter")
+                }
+                .foregroundColor(self.passwordContainsLowercase ? .white : ColorConstants.secondary)
+                
+                HStack {
+                    Image(systemName: "checkmark.seal.fill")
+                    Text("Contains special character")
+                }
+                .foregroundColor(self.passwordContainsSpecialChar ? .white : ColorConstants.secondary)
+                
+                HStack {
+                    Image(systemName: "checkmark.seal.fill")
+                    Text("Contains number")
+                }
+                .foregroundColor(self.passwordContainsNumber ? .white : ColorConstants.secondary)
+                
+                HStack {
+                    Image(systemName: "checkmark.seal.fill")
+                    Text("Contains at least 8 characters")
+                }
+                .foregroundColor(self.passwordMinimumLength ? .white : ColorConstants.secondary)
+            }
+            .padding([.leading, .bottom])
+            .fontWeight(.regular)
+            .font(.system(size: 14))
+            
+            Spacer()
             
             Button(action: self.resetPassword) {
                 Text("Reset Password")
