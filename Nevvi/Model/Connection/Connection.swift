@@ -17,6 +17,7 @@ struct Connection: Hashable, Codable, Identifiable {
     var phoneNumber: String?
     var birthday: Date?
     var address: Address?
+    var mailingAddress: Address?
     var profileImage: String
     var permissionGroup: String?
     var connected: Bool?

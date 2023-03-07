@@ -28,6 +28,7 @@ class AccountStore: ObservableObject {
     @Published var onboardingCompleted: Bool = false
     @Published var blockedUsers: [String] = []
     @Published var address: AddressViewModel = AddressViewModel()
+    @Published var mailingAddress: AddressViewModel = AddressViewModel()
     @Published var permissionGroups: [PermissionGroup] = []
     @Published var profileImage: String = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
     @Published var deviceSettings: DeviceSettingsViewModel = DeviceSettingsViewModel()
@@ -60,6 +61,7 @@ class AccountStore: ObservableObject {
         self.onboardingCompleted = user.onboardingCompleted
         self.blockedUsers = user.blockedUsers
         self.address.update(address: user.address)
+        self.mailingAddress.update(address: user.mailingAddress)
         self.deviceSettings.update(settings: user.deviceSettings)
         self.permissionGroups = user.permissionGroups
         self.profileImage = user.profileImage
@@ -80,6 +82,7 @@ class AccountStore: ObservableObject {
         self.onboardingCompleted = false
         self.blockedUsers = []
         self.address = AddressViewModel()
+        self.mailingAddress = AddressViewModel()
         self.deviceSettings = DeviceSettingsViewModel()
         self.permissionGroups = []
         self.profileImage = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
@@ -168,6 +171,7 @@ class AccountStore: ObservableObject {
             let request = PatchRequest(firstName: self.firstName != "" ? self.firstName : nil,
                                        lastName: self.lastName != "" ? self.lastName : nil,
                                        address: self.address.toModel(),
+                                       mailingAddress: self.mailingAddress.toModel(),
                                        birthday: self.birthday.yyyyMMdd(),
                                        phoneNumber: self.phoneNumber != "" ? self.phoneNumber : nil,  // TODO - format this to +1XXXXXXXXXX
                                        deviceId: self.deviceId,
@@ -306,6 +310,7 @@ class AccountStore: ObservableObject {
         var firstName: String?
         var lastName: String?
         var address: Address?
+        var mailingAddress: Address?
         var birthday: String?
         var phoneNumber: String?
         var deviceId: String?

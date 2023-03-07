@@ -12,7 +12,7 @@ class AddressViewModel : ObservableObject {
     @Published var unit: String = ""
     @Published var city: String = ""
     @Published var state: String = ""
-    @Published var zipCode: Int = -1
+    @Published var zipCode: String = ""
     
     var isEmpty: Bool {
         return self.street.isEmpty && self.city.isEmpty && self.state.isEmpty
@@ -23,7 +23,7 @@ class AddressViewModel : ObservableObject {
         self.unit = address.unit != nil ? address.unit! : ""
         self.city = address.city != nil ? address.city! : ""
         self.state = address.state != nil ? address.state! : ""
-        self.zipCode = address.zipCode != nil ? address.zipCode! : -1
+        self.zipCode = address.zipCode != nil ? address.zipCode! : ""
         return self
     }
     
@@ -32,7 +32,7 @@ class AddressViewModel : ObservableObject {
                        unit: self.unit != "" ? self.unit : nil,
                        city: self.city != "" ? self.city : nil,
                        state: self.state != "" ? self.state : nil,
-                       zipCode: self.zipCode != -1 ? self.zipCode : nil)
+                       zipCode: self.zipCode != "" ? self.zipCode : nil)
     }
     
     func toString() -> String {

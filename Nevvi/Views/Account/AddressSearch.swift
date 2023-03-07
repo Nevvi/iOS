@@ -12,6 +12,8 @@ import MapKit
 
 struct AddressSearch: View {
     @State private var address = AddressViewModel()
+    @State private var enterManually: Bool = false
+    
     private var callback: (AddressViewModel) -> Void
     
     @StateObject private var addressSearchStore = AddressSearchStore()
@@ -44,7 +46,9 @@ struct AddressSearch: View {
                     self.address.street = "\(reversedGeoLocation.streetNumber) \(reversedGeoLocation.streetName)"
                     self.address.city = "\(reversedGeoLocation.city)"
                     self.address.state = "\(reversedGeoLocation.state)"
-                    self.address.zipCode = Int(reversedGeoLocation.zipCode)!
+                    self.address.zipCode = "\(reversedGeoLocation.zipCode)"
+                    self.address.unit = "" // make the user enter the unit manually
+                    
                     addressSearchStore.searchTerm = self.address.street
                 }
             }
@@ -57,12 +61,23 @@ struct AddressSearch: View {
     var body: some View {
         VStack(spacing: 0) {
             VStack(alignment: .leading) {
-                Text("Address")
-                    .foregroundColor(.secondary)
-                    .fontWeight(.light)
-                    .font(.system(size: 14))
+                HStack {
+                    Text("Address")
+                        .foregroundColor(.secondary)
+                        .fontWeight(.light)
+                        .font(.system(size: 14))
+                    
+                    Toggle(isOn: self.$enterManually) {
+                        Text("Manual Entry")
+                            .foregroundColor(.secondary)
+                            .fontWeight(.light)
+                            .font(.system(size: 14))
+                            .frame(maxWidth: .infinity, alignment: .trailing)
+                              
+                    }
+                }
                 
-                TextField("111 Hollywood Ave", text: self.$addressSearchStore.searchTerm)
+                TextField("111 Hollywood Ave", text: self.enterManually ? self.$address.street : self.$addressSearchStore.searchTerm)
                     .padding(10)
                     .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                     .textInputAutocapitalization(.never)
@@ -70,7 +85,7 @@ struct AddressSearch: View {
             }
             .padding()
             
-            if self.address.street != addressSearchStore.searchTerm {
+            if self.address.street != addressSearchStore.searchTerm && !self.enterManually {
                 ScrollView {
                     VStack(alignment: .leading) {
                         ForEach(addressSearchStore.locationResults, id: \.self) { location in
@@ -144,9 +159,8 @@ struct AddressSearch: View {
                             .fontWeight(.light)
                             .font(.system(size: 14))
     
-                        TextField("Zip Code", value: self.$address.zipCode, formatter: NumberFormatter())
+                        TextField("Zip Code", text: self.$address.zipCode)
                             .padding(10)
-                            .keyboardType(.numberPad)
                             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                             .textInputAutocapitalization(.never)
                             .disableAutocorrection(true)

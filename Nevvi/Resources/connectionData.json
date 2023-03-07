@@ -9,8 +9,9 @@
         "unit": "5",
         "city": "Saint Paul",
         "state": "MN",
-        "zipCode": 55105
+        "zipCode": "55105"
     },
+    "mailingAddress": {},
     "profileImage": "https://nevvi-user-images-dev.s3.amazonaws.com/users/759a30e6-23f6-4898-b23a-8c8fb0095279/images/2B39DEBB-72FF-47B1-97AB-1CD53D7FFFC3.jpeg",
     "birthday": "1992-08-04",
     "permissionGroup": "Contact Info"

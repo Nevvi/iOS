@@ -12,5 +12,5 @@ struct Address: Hashable, Codable {
     var unit: String?
     var city: String?
     var state: String?
-    var zipCode: Int?
+    var zipCode: String?
 }

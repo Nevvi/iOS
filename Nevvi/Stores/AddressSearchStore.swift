@@ -33,7 +33,7 @@ class AddressSearchStore : NSObject, ObservableObject {
             .sink(receiveCompletion: { (completion) in
                 //handle error
             }, receiveValue: { (results) in
-                self.locationResults = results.filter { $0.subtitle.contains("United States") } // This parses the subtitle to show only results that have United States as the country. You could change this text to be Germany or Brazil and only show results from those countries.
+                self.locationResults = results
             })
             .store(in: &cancellables)
     }

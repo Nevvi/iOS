@@ -22,6 +22,7 @@ struct User: Hashable, Codable {
     var onboardingCompleted: Bool
     var blockedUsers: [String]
     var address: Address
+    var mailingAddress: Address
     var permissionGroups: [PermissionGroup]
     var profileImage: String
     var deviceSettings: DeviceSettings

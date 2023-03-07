@@ -3,26 +3,6 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "PersonalInformation.tryToggle():PersonalInformation.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "user.birthday">
-            </PersistentString>
-            <PersistentString
-               value = "self.accountStore.birthday">
-            </PersistentString>
-            <PersistentString
-               value = "self.accountStore.address.street">
-            </PersistentString>
-            <PersistentString
-               value = "user.address.street">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "closure #1 in closure #1 in ConnectionList.sync():ConnectionList.swift">
-      </ContextState>
-      <ContextState
          contextName = "closure #1 in closure #3 in ProfileImageSelector.body.getter:ProfileImageSelector.swift">
          <PersistentStrings>
             <PersistentString
@@ -31,27 +11,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in NSURLSession.fetchData&lt;&#x3c4;_0_0&gt;(for:completion:):URLSessionExtensions.swift">
-      </ContextState>
-      <ContextState
-         contextName = "String.stripLineBreaks():StringExtensions.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "resizeImage(image:newWidth:):URLSessionExtensions.swift">
-      </ContextState>
-      <ContextState
-         contextName = "closure #1 in KeyboardResponder.body(content:):KeyboardResponder.swift">
-      </ContextState>
-      <ContextState
-         contextName = "NSURLSession.execute&lt;&#x3c4;_0_0&gt;(request:completion:):URLSessionExtensions.swift">
-      </ContextState>
-      <ContextState
          contextName = "closure #1 in ConnectionList.sync():ConnectionList.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in ContactStore.syncContacts(connections:dryRun:callback:):ContactStore.swift">
       </ContextState>
       <ContextState
          contextName = "closure #1 in closure #1 in ContactStore.syncContacts(connections:dryRun:callback:):ContactStore.swift">
@@ -71,29 +34,53 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "NSURLSession.postImage&lt;&#x3c4;_0_0&gt;(for:for:for:completion:):URLSessionExtensions.swift">
+         contextName = "String.stripLineBreaks():StringExtensions.swift">
          <PersistentStrings>
             <PersistentString
-               value = "smallerImage.pngData()!">
-            </PersistentString>
-            <PersistentString
-               value = "image.pngData()">
+               value = "self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in KeyboardResponder.body(content:):KeyboardResponder.swift">
+      </ContextState>
+      <ContextState
+         contextName = "NSURLSession.execute&lt;&#x3c4;_0_0&gt;(request:completion:):URLSessionExtensions.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in ConnectionList.sync():ConnectionList.swift">
+      </ContextState>
+      <ContextState
+         contextName = "PersonalInformation.tryToggle():PersonalInformation.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "user.birthday">
+            </PersistentString>
+            <PersistentString
+               value = "self.accountStore.birthday">
+            </PersistentString>
+            <PersistentString
+               value = "self.accountStore.address.street">
+            </PersistentString>
+            <PersistentString
+               value = "user.address.street">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "resizeImage(image:newWidth:):URLSessionExtensions.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in NSURLSession.fetchData&lt;&#x3c4;_0_0&gt;(for:completion:):URLSessionExtensions.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in ContactStore.syncContacts(connections:callback:):ContactStore.swift">
       </ContextState>
       <ContextState
          contextName = "NSURLSession.postData&lt;&#x3c4;_0_0&gt;(for:for:for:completion:):URLSessionExtensions.swift">
          <PersistentStrings>
             <PersistentString
                value = "accessToken">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "ContactStore.ContactSyncInfo.changesExist():ContactStore.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "updated != nil">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -109,9 +96,6 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in closure #1 in ContactStore.syncContacts(connections:callback:):ContactStore.swift">
-      </ContextState>
-      <ContextState
          contextName = "closure #1 in NSURLSession.postData&lt;&#x3c4;_0_0&gt;(for:for:completion:):URLSessionExtensions.swift">
       </ContextState>
       <ContextState
@@ -123,7 +107,55 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #2 in ContactStore.syncContacts(connections:dryRun:callback:):ContactStore.swift">
+         contextName = "closure #1 in closure #1 in AddressSearch.reverseGeo(location:):AddressSearch.swift">
+      </ContextState>
+      <ContextState
+         contextName = "ReversedGeoLocation.init(with:):AddressSearchStore.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "placemark.subThoroughfare">
+            </PersistentString>
+            <PersistentString
+               value = "placemark.postalCode">
+            </PersistentString>
+            <PersistentString
+               value = "placemark.administrativeArea">
+            </PersistentString>
+            <PersistentString
+               value = "placemark.thoroughfare">
+            </PersistentString>
+            <PersistentString
+               value = "placemark.locality">
+            </PersistentString>
+            <PersistentString
+               value = "placemark.country">
+            </PersistentString>
+            <PersistentString
+               value = "placemark.isoCountryCode">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "AddressSearch.reverseGeo(location:):AddressSearch.swift">
+      </ContextState>
+      <ContextState
+         contextName = "ContactStore.ContactSyncInfo.changesExist():ContactStore.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "updated != nil">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "NSURLSession.postImage&lt;&#x3c4;_0_0&gt;(for:for:for:completion:):URLSessionExtensions.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "smallerImage.pngData()!">
+            </PersistentString>
+            <PersistentString
+               value = "image.pngData()">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
    </ContextStates>
 </VariablesViewState>

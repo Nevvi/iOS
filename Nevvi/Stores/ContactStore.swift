@@ -12,6 +12,8 @@ class ContactStore: ObservableObject {
     
     @Published var error: Swift.Error?
     
+    private var CNLabelMail = "mail"
+    
     private func connectionUrl(connectionId: String) throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")
@@ -128,7 +130,7 @@ class ContactStore: ObservableObject {
                             contactFieldChanges.append(birthdayChange)
                         }
                         
-                        // We own the home address :)
+                        // We own the home address and mailing address :)
                         let existingHomeAddress = contact.postalAddresses.first { (address: CNLabeledValue<CNPostalAddress>) in
                             address.label == CNLabelHome
                         }
@@ -139,13 +141,13 @@ class ContactStore: ObservableObject {
                             let address = CNMutablePostalAddress()
                             address.street = detail.address!.street!
                             if let unit = detail.address?.unit {
+                                address.subLocality = unit
                                 address.street = "\(address.street) \(unit)"
                             }
                             
                             address.city = detail.address!.city!
                             address.state = detail.address!.state!
                             address.postalCode = String(detail.address!.zipCode!)
-                            address.country = "US"
                             contact.postalAddresses.append(CNLabeledValue(label: CNLabelHome, value: address))
                             
                             var oldAddress: String? = nil
@@ -155,6 +157,35 @@ class ContactStore: ObservableObject {
                             }
                             
                             let addressChange = ContactSyncFieldInfo(field: "Address", oldValue: oldAddress, newValue: newAddress)
+                            contactFieldChanges.append(addressChange)
+                        }
+                        
+                        let existingMailingAddress = contact.postalAddresses.first { (address: CNLabeledValue<CNPostalAddress>) in
+                            address.label == self.CNLabelMail
+                        }
+                        contact.postalAddresses.removeAll { (address: CNLabeledValue<CNPostalAddress>) in
+                            address.label == self.CNLabelMail
+                        }
+                        if detail.mailingAddress != nil &&  detail.mailingAddress!.street != nil {
+                            let address = CNMutablePostalAddress()
+                            address.street = detail.mailingAddress!.street!
+                            if let unit = detail.mailingAddress?.unit {
+                                address.subLocality = unit
+                                address.street = "\(address.street) \(unit)"
+                            }
+                            
+                            address.city = detail.mailingAddress!.city!
+                            address.state = detail.mailingAddress!.state!
+                            address.postalCode = String(detail.mailingAddress!.zipCode!)
+                            contact.postalAddresses.append(CNLabeledValue(label: self.CNLabelMail, value: address))
+                            
+                            var oldAddress: String? = nil
+                            let newAddress: String? = addressFormatter.string(from: address).stripLineBreaks()
+                            if let existingMailingAddress = existingMailingAddress {
+                                oldAddress = addressFormatter.string(from: existingMailingAddress.value).stripLineBreaks()
+                            }
+                            
+                            let addressChange = ContactSyncFieldInfo(field: "Mailing Address", oldValue: oldAddress, newValue: newAddress)
                             contactFieldChanges.append(addressChange)
                         }
                                                       

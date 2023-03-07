@@ -23,9 +23,22 @@ struct PersonalInformation: View {
     @State private var showPhoneVerification: Bool = false
     @State private var showBirthdayPicker: Bool = false
     @State private var showAddressSearch: Bool = false
+    @State private var showMailingAddressSearch: Bool = false
     @State private var newProfileImage = UIImage()
     
     @State private var canSave: Bool = false
+    
+    private var sameMailingAddress: Binding<Bool> { Binding (
+        get: { self.accountStore.mailingAddress.toString() == self.accountStore.address.toString() },
+        set: {
+            if !$0 {
+                self.accountStore.mailingAddress = AddressViewModel()
+            } else {
+                self.accountStore.mailingAddress = self.accountStore.mailingAddress.update(address: self.accountStore.address.toModel())
+            }
+            self.tryToggle()
+        }
+    )}
     
     var body: some View {
         NavigationView {
@@ -63,6 +76,26 @@ struct PersonalInformation: View {
                     }.personalInfoStyle()
                     
                     VStack(alignment: .leading) {
+                        Text("Birthday")
+                            .personalInfoLabel()
+                        
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
+                            
+                            Text(self.accountStore.birthday.yyyyMMdd() != Date().yyyyMMdd() ?
+                                 self.accountStore.birthday.toString() :
+                                 "")
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(14)
+                        }
+                        .contentShape(RoundedRectangle(cornerRadius: 10.0))
+                        .onTapGesture {
+                            self.showBirthdayPicker.toggle()
+                        }
+                    }
+                    .personalInfoStyle()
+                    
+                    VStack(alignment: .leading) {
                         Text("Street Address")
                             .personalInfoLabel()
                         
@@ -81,21 +114,31 @@ struct PersonalInformation: View {
                     .personalInfoStyle()
                     
                     VStack(alignment: .leading) {
-                        Text("Birthday")
-                            .personalInfoLabel()
-                        
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
+                        HStack {
+                            Text("Mailing Address")
+                                .personalInfoLabel()
                             
-                            Text(self.accountStore.birthday.yyyyMMdd() != Date().yyyyMMdd() ?
-                                 self.accountStore.birthday.toString() :
-                                 "")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(14)
+                            Toggle(isOn: self.sameMailingAddress) {
+                                Text("Same as address")
+                                    .personalInfoLabel()
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                      
+                            }
                         }
-                        .contentShape(RoundedRectangle(cornerRadius: 10.0))
-                        .onTapGesture {
-                            self.showBirthdayPicker.toggle()
+                        
+                        if !self.sameMailingAddress.wrappedValue {
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 10.0)
+                                    .strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
+                                
+                                Text(self.accountStore.mailingAddress.street != "" ? self.accountStore.mailingAddress.toString() : "")
+                                    .frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
+                                    .padding(16)
+                            }
+                            .contentShape(RoundedRectangle(cornerRadius: 10.0))
+                            .onTapGesture {
+                                self.showMailingAddressSearch = true
+                            }
                         }
                     }
                     .personalInfoStyle()
@@ -119,8 +162,14 @@ struct PersonalInformation: View {
                 }
                 .sheet(isPresented: self.$showAddressSearch) {
                     AddressSearch(address: self.accountStore.address, callback: { address in
-                        self.updateAddress(address: address)
+                        self.updateAddress(address: address, isMailing: false)
                         self.showAddressSearch = false
+                    }).presentationDetents([.large])
+                }
+                .sheet(isPresented: self.$showMailingAddressSearch) {
+                    AddressSearch(address: self.accountStore.mailingAddress, callback: { address in
+                        self.updateAddress(address: address, isMailing: true)
+                        self.showMailingAddressSearch = false
                     }).presentationDetents([.large])
                 }
                 .sheet(isPresented: self.$showPhoneVerification) {
@@ -237,8 +286,12 @@ struct PersonalInformation: View {
         .disabled(self.accountStore.saving)
     }
     
-    func updateAddress(address: AddressViewModel) {
-        self.accountStore.address = address
+    func updateAddress(address: AddressViewModel, isMailing: Bool) {
+        if isMailing {
+            self.accountStore.mailingAddress = address
+        } else {
+            self.accountStore.address = address
+        }
         self.tryToggle()
     }
     
@@ -248,6 +301,8 @@ struct PersonalInformation: View {
         }
         
         let addressModel = self.accountStore.address.toModel()
+        let mailingAddressModel = self.accountStore.mailingAddress.toModel()
+        
         let didChange = didPropChange(type: String.self, a: user.firstName, b: self.accountStore.firstName) ||
         didPropChange(type: String.self, a: user.lastName, b: self.accountStore.lastName) ||
         didPropChange(type: String.self, a: user.phoneNumber, b: self.accountStore.phoneNumber) ||
@@ -255,7 +310,12 @@ struct PersonalInformation: View {
         didPropChange(type: String.self, a: user.address.unit, b: addressModel.unit) ||
         didPropChange(type: String.self, a: user.address.city, b: addressModel.city) ||
         didPropChange(type: String.self, a: user.address.state, b: addressModel.state) ||
-        didPropChange(type: Int.self, a: user.address.zipCode, b: addressModel.zipCode) ||
+        didPropChange(type: String.self, a: user.address.zipCode, b: addressModel.zipCode) ||
+        didPropChange(type: String.self, a: user.mailingAddress.street, b: mailingAddressModel.street) ||
+        didPropChange(type: String.self, a: user.mailingAddress.unit, b: mailingAddressModel.unit) ||
+        didPropChange(type: String.self, a: user.mailingAddress.city, b: mailingAddressModel.city) ||
+        didPropChange(type: String.self, a: user.mailingAddress.state, b: mailingAddressModel.state) ||
+        didPropChange(type: String.self, a: user.mailingAddress.zipCode, b: mailingAddressModel.zipCode) ||
         didPropChange(type: Date.self, a: user.birthday, b: self.accountStore.birthday)
         
         if (!self.canSave && didChange) || (self.canSave && !didChange) {

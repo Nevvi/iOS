@@ -6,15 +6,16 @@
     "emailConfirmed": true,
     "birthday": "1994-04-08",
     "phoneNumber": "+16129631237",
-    "phoneNumberConfirmed": false,
+    "phoneNumberConfirmed": true,
     "onboardingCompleted": true,
     "address": {
         "street": "114 W 86th Street",
         "unit": "6C",
         "city": "New York",
         "state": "NY",
-        "zipCode": 10024
+        "zipCode": "10024"
     },
+    "mailingAddress": {},
     "profileImage": "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png",
     "permissionGroups": [
         {

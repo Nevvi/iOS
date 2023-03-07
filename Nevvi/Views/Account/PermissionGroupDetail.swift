@@ -17,6 +17,7 @@ struct PermissionGroupDetail: View {
     @State var enableEmail: Bool = false
     @State var enablePhone: Bool = false
     @State var enableAddress: Bool = false
+    @State var enableMailingAddress: Bool = false
     @State var enableBirthday: Bool = false
     
     var callback: (PermissionGroup) -> Void
@@ -29,13 +30,13 @@ struct PermissionGroupDetail: View {
                     .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
+                    .padding([.bottom], 30)
             } else {
                 Text(self.group.name)
                     .font(.title2)
+                    .padding([.bottom], 30)
             }
             
-            Spacer()
-                        
             Toggle("First Name", isOn: self.$enableFirstName)
                 .disabled(true)
                 .tint(ColorConstants.secondary)
@@ -62,6 +63,12 @@ struct PermissionGroupDetail: View {
                 }
                 .tint(ColorConstants.secondary)
             
+            Toggle("Mailing Address", isOn: self.$enableMailingAddress)
+                .onChange(of: self.enableMailingAddress) { newValue in
+                    handleToggle(newValue: newValue, field: "mailingAddress")
+                }
+                .tint(ColorConstants.secondary)
+            
             Toggle("Birthday", isOn: self.$enableBirthday)
                 .onChange(of: self.enableBirthday) { newValue in
                     handleToggle(newValue: newValue, field: "birthday")
@@ -77,6 +84,7 @@ struct PermissionGroupDetail: View {
             self.enableEmail = self.group.fields.contains("email")
             self.enablePhone = self.group.fields.contains("phoneNumber")
             self.enableAddress = self.group.fields.contains("address")
+            self.enableMailingAddress = self.group.fields.contains("mailingAddress")
             self.enableBirthday = self.group.fields.contains("birthday")
         }
         .padding()
