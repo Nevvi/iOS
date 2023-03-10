@@ -32,6 +32,23 @@ extension View {
             Text(error.recoverySuggestion ?? "")
         }
     }
+    
+//    func placeholder<Content: View>(
+//        when shouldShow: Bool,
+//        alignment: Alignment = .leading,
+//        @ViewBuilder placeholder: () -> Content) -> some View {
+//
+//        ZStack(alignment: alignment) {
+//            placeholder().opacity(shouldShow ? 1 : 0)
+//            self
+//        }
+//    }
+    
+    #if canImport(UIKit)
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    #endif
 }
 
 struct LocalizedAlertError: LocalizedError {

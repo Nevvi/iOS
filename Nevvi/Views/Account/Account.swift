@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct Account: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var authStore: AuthorizationStore
 
@@ -52,7 +54,8 @@ struct Account: View {
             HStack {
                 Image(systemName: iconName).padding([.trailing])
                 Text(label)
-            }.foregroundColor(.black)
+            }
+            .foregroundColor(self.colorScheme == .dark ? .white : .black)
         }.padding([.top], 30)
     }
     
@@ -62,7 +65,8 @@ struct Account: View {
                 Image(systemName: "rectangle.portrait.and.arrow.forward").padding([.trailing])
                 Text("Logout")
             }
-            .foregroundColor(self.authStore.loggingOut ? .gray : .black)
+            .foregroundColor(self.colorScheme == .dark ? .white : .black)
+            .opacity(self.authStore.loggingOut ? 0.5 : 1.0)
         })
         .disabled(self.authStore.loggingOut)
         .padding([.bottom], 30)
@@ -96,5 +100,6 @@ struct AccountView_Previews: PreviewProvider {
            .environmentObject(authStore)
            .environmentObject(usersStore)
            .environmentObject(connectionsStore)
+           .environment(\.colorScheme, .dark)
     }
 }

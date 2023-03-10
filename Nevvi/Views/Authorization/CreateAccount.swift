@@ -91,14 +91,11 @@ struct CreateAccount: View {
             } else {
                 createAccountView
             }
-            
-            Spacer()
-            Spacer()
 
             Button(self.showConfirmationCode ? "Create account" : "Need to confirm an account?") {
                 self.showConfirmationCode = !self.showConfirmationCode
             }
-            .padding()
+            .padding([.top, .bottom], 30)
             .foregroundColor(.white)
         }
         .autocapitalization(.none)
@@ -111,6 +108,10 @@ struct CreateAccount: View {
                 return Alert(title: Text("Failed to create account"), message: Text(error.localizedDescription))
             }
         }
+        .onTapGesture {
+            self.hideKeyboard()
+        }
+        .preferredColorScheme(.light)
     }
     
     var createAccountView: some View {
@@ -122,40 +123,47 @@ struct CreateAccount: View {
             SecureField("Password", text: self.$password)
                 .authStyle()
             
-            VStack(alignment: .leading, spacing: 15) {
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains uppercase letter")
+            HStack(alignment: .center) {
+                Spacer()
+                VStack(alignment: .leading, spacing: 15) {
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains uppercase letter")
+                    }
+                    .foregroundColor(self.passwordContainsUppercase ? .white : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains lowercase letter")
+                    }
+                    .foregroundColor(self.passwordContainsLowercase ? .white : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains special character")
+                    }
+                    .foregroundColor(self.passwordContainsSpecialChar ? .white : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains number")
+                    }
+                    .foregroundColor(self.passwordContainsNumber ? .white : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains at least 8 characters")
+                    }
+                    .foregroundColor(self.passwordMinimumLength ? .white : ColorConstants.secondary)
                 }
-                .foregroundColor(self.passwordContainsUppercase ? .white : ColorConstants.secondary)
+                .padding()
+                .fontWeight(.regular)
+                .font(.system(size: 14))
                 
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains lowercase letter")
-                }
-                .foregroundColor(self.passwordContainsLowercase ? .white : ColorConstants.secondary)
-                
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains special character")
-                }
-                .foregroundColor(self.passwordContainsSpecialChar ? .white : ColorConstants.secondary)
-                
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains number")
-                }
-                .foregroundColor(self.passwordContainsNumber ? .white : ColorConstants.secondary)
-                
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains at least 8 characters")
-                }
-                .foregroundColor(self.passwordMinimumLength ? .white : ColorConstants.secondary)
+                Spacer()
             }
-            .padding([.leading, .bottom])
-            .fontWeight(.regular)
-            .font(.system(size: 14))
+            
+            Spacer()
             
             Button(action: self.createAccount) {
                 if self.authStore.signingUp {
@@ -177,7 +185,7 @@ struct CreateAccount: View {
             .frame(maxWidth: .infinity)
             .cornerRadius(10.0)
         }
-        .padding([.leading, .trailing], 27.5)
+        .padding(27.5)
     }
     
     var confirmationCodeView: some View {
@@ -189,6 +197,8 @@ struct CreateAccount: View {
             TextField("Code", text: self.$confirmationCode)
                 .authStyle()
                 .padding([.bottom])
+            
+            Spacer()
             
             Button(action: self.confirmAccount) {
                 if self.authStore.loggingIn || self.authStore.confirming {
@@ -210,7 +220,7 @@ struct CreateAccount: View {
             .frame(maxWidth: .infinity)
             .cornerRadius(10.0)
         }
-        .padding([.leading, .trailing], 27.5)
+        .padding(27.5)
     }
     
     func createAccount() {

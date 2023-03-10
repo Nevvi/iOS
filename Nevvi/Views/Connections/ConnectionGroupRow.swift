@@ -13,7 +13,6 @@ struct ConnectionGroupRow: View {
     var body: some View {
         HStack {
             Text(connectionGroup.name)
-                .foregroundColor(ColorConstants.text)
             
             Spacer()
             

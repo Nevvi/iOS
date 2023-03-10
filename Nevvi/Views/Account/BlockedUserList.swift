@@ -26,8 +26,8 @@ struct BlockedUserList: View {
                     blockedUsersView
                 }
             }
+            .listStyle(.plain)
             .scrollContentBackground(self.connectionsStore.blockedUserCount == 0 ? .hidden : .visible)
-            .padding([.top], -20)
             .refreshable {
                 self.connectionsStore.loadRejectedUsers()
             }
@@ -60,11 +60,12 @@ struct BlockedUserList: View {
             if self.connectionsStore.loadingBlockerUsers == true {
                 ProgressView()
             } else {
-                NoDataFound(imageName: "person.2.slash", height: 100, width: 120)
+                NoDataFound(imageName: "person.2.slash", height: 100, width: 120, text: "No blocked users")
             }
             Spacer()
         }
         .padding([.top], 100)
+        .listRowSeparator(.hidden)
     }
     
     var blockedUsersView: some View {
@@ -84,7 +85,7 @@ struct BlockedUserList_Previews: PreviewProvider {
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
     static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
                                                    requests: modelData.requests,
-                                                   blockedUsers: modelData.connectionResponse.users)
+                                                   blockedUsers: [])
     
     static var previews: some View {
         BlockedUserList()

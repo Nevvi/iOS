@@ -22,6 +22,7 @@ struct ConnectionRequestList: View {
                     requestsView
                 }
             }
+            .listStyle(.plain)
             .scrollContentBackground(self.connectionsStore.requestCount == 0 ? .hidden : .visible)
             .navigationTitle("Requests")
             .navigationBarTitleDisplayMode(.large)
@@ -40,11 +41,12 @@ struct ConnectionRequestList: View {
             if self.connectionsStore.loadingRequests {
                 ProgressView()
             } else {
-                NoDataFound(imageName: "person.2.slash", height: 100, width: 120)
+                NoDataFound(imageName: "person.2.slash", height: 100, width: 120, text: "No requests found")
             }
             Spacer()
         }
         .padding([.top], 100)
+        .listRowSeparator(.hidden)
     }
     
     var requestsView: some View {
@@ -96,7 +98,7 @@ struct ConnectionRequestList: View {
 struct ConnectionRequestList_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
-                                                   requests: modelData.requests,
+                                                   requests: [],
                                                    blockedUsers: modelData.connectionResponse.users)
     
     static var previews: some View {

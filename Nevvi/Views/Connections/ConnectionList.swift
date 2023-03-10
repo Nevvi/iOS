@@ -35,6 +35,8 @@ struct ConnectionList: View {
                     connectionsView
                 }
             }
+            .listStyle(.plain)
+            .background(Color.black.ignoresSafeArea())
             .scrollContentBackground(self.connectionsStore.connectionCount == 0 ? .hidden : .visible)
             .navigationTitle("Connections")
             .navigationBarTitleDisplayMode(.large)
@@ -93,11 +95,12 @@ struct ConnectionList: View {
             if self.connectionsStore.loading {
                 ProgressView()
             } else {
-                NoDataFound(imageName: "person.2.slash", height: 100, width: 120)
+                NoDataFound(imageName: "person.2.slash", height: 100, width: 120, text: "No connections")
             }
             Spacer()
         }
         .padding([.top], 100)
+        .listRowSeparator(.hidden)
     }
     
     var connectionsView: some View {
@@ -269,7 +272,7 @@ struct ConnectionList: View {
 struct ConnectionList_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
-    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
+    static let connectionsStore = ConnectionsStore(connections: [],
                                                    requests: modelData.requests,
                                                    blockedUsers: modelData.connectionResponse.users)
     static let connectionStore = ConnectionStore()

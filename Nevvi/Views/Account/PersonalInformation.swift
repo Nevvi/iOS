@@ -122,8 +122,8 @@ struct PersonalInformation: View {
                                 Text("Same as address")
                                     .personalInfoLabel()
                                     .frame(maxWidth: .infinity, alignment: .trailing)
-                                      
                             }
+                            .tint(ColorConstants.secondary)
                         }
                         
                         if !self.sameMailingAddress.wrappedValue {
@@ -346,10 +346,8 @@ struct PersonalInformation_Previews: PreviewProvider {
     static let accountStore = AccountStore(user: modelData.user)
 
     static var previews: some View {
-        VStack {
-            PersonalInformation()
-                .environmentObject(accountStore)
-                .environmentObject(authStore)
-        }
+        PersonalInformation()
+            .environmentObject(accountStore)
+            .environmentObject(authStore)
     }
 }

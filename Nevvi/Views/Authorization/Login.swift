@@ -110,8 +110,13 @@ struct Login: View {
             .toast(isPresenting: $showToast){
                 AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: self.toastText)
             }
+            .onTapGesture {
+                self.hideKeyboard()
+            }
         }
         .accentColor(.white)
+        .preferredColorScheme(.light)
+        
     }
     
     var biometricLoginButton: some View {

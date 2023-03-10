@@ -111,6 +111,7 @@ struct ForgotPassword: View {
                 return Alert(title: Text("Failed to send code"), message: Text(error.localizedDescription))
             }
         }
+        .preferredColorScheme(.light)
     }
     
     var sendResetCodeView: some View {

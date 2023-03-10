@@ -63,6 +63,7 @@ struct OnboardingInformation: View {
         .disabled(self.accountStore.saving)
         .padding()
         .background(BackgroundGradient())
+        .preferredColorScheme(.light)
     }
     
     var primaryButton: some View {

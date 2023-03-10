@@ -57,5 +57,6 @@ struct Onboarding_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingCarousel()
             .environmentObject(AccountStore(user: ModelData().user))
+            .environment(\.colorScheme, .dark)
     }
 }

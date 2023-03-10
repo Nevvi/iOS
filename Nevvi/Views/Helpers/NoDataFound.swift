@@ -11,6 +11,7 @@ struct NoDataFound: View {
     var imageName: String
     var height: CGFloat
     var width: CGFloat
+    var text: String = "No data found"
     
     var body: some View {
         HStack {
@@ -19,7 +20,7 @@ struct NoDataFound: View {
                 Image(systemName: "person.2.slash")
                     .resizable()
                     .frame(width: width, height: height)
-                Text("No data found")
+                Text(self.text)
             }
             Spacer()
         }

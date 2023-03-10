@@ -24,6 +24,7 @@ struct UserSearch: View {
                             .fontWeight(.light)
                             .font(.system(size: 18))
                             .multilineTextAlignment(.center)
+                            .listRowSeparator(.hidden)
                     } else {
                         noUsersView
                     }
@@ -32,6 +33,7 @@ struct UserSearch: View {
                 }
             }
         }
+        .listStyle(.plain)
         .scrollContentBackground(self.usersStore.userCount == 0 ? .hidden : .visible)
         .searchable(text: self.$nameFilter.text)
         .navigationBarTitleDisplayMode(.inline)
@@ -55,16 +57,12 @@ struct UserSearch: View {
             if self.usersStore.loading {
                 ProgressView()
             } else {
-                VStack {
-                    Image(systemName: "person.2.slash")
-                        .resizable()
-                        .frame(width: 120, height: 100)
-                    Text("No users found")
-                }
+                NoDataFound(imageName: "person.2.slash", height: 100, width: 120, text: "No users found")
             }
             Spacer()
         }
         .padding([.top], 100)
+        .listRowSeparator(.hidden)
     }
     
     var usersView: some View {
