@@ -62,6 +62,7 @@ struct NewConnectionRequestRow: View {
                 Text("Which permission group should \(self.user.firstName) belong to if they accept?")
                     .font(.title2)
                     .padding([.top, .leading, .trailing])
+                    .foregroundColor(.black)
                 
                 Picker("Which permission group should \(self.user.firstName) belong to?", selection: self.$selectedPermissionGroup) {
                     ForEach(self.accountStore.permissionGroups, id: \.name) {
@@ -71,6 +72,7 @@ struct NewConnectionRequestRow: View {
                 .pickerStyle(.wheel)
                 .padding([.top], -30)
                 .padding([.bottom], 10)
+                .foregroundColor(.black)
                 
                 Button(action: self.requestConnection, label: {
                     Text("Request")
@@ -87,7 +89,7 @@ struct NewConnectionRequestRow: View {
                 .disabled(self.loading)
                 .padding([.bottom])
             }
-        }.presentationDetents([.medium])
+        }.presentationDetents([.height(400)])
     }
     
     func requestConnection() {

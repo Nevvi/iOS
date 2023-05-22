@@ -22,20 +22,18 @@ struct OnboardingSync: View {
             
             Spacer()
             Image("OnboardingTwo")
-            Spacer()
             
             Text("\"Do you still live at ...?\"")
                 .onboardingTitle()
                 .padding([.bottom], 20)
             
-            Text("With Nevvi, as long as you stay connected with a person we can keep your device in sync when their data, such as address, changes.")
+            Text("With Nevvi, as long as you stay connected with a person we can keep the contact in your phone in sync when their data, such as address, changes.")
                 .onboardingStyle()
                 .padding([.leading, .trailing, .bottom], 20)
             
-            Toggle("Keep my device synced", isOn: self.$enabledSync)
-                .foregroundColor(ColorConstants.accent)
-                .toggleStyle(.switch)
-                .padding([.leading, .trailing], 30)
+            Text("Let's find some people you may know to connect with...")
+                .onboardingStyle()
+                .padding([.leading, .trailing, .bottom], 20)
             
             Spacer()
             Spacer()
@@ -52,9 +50,9 @@ struct OnboardingSync: View {
     }
     
     var primaryButton: some View {
-        Button(action: self.primaryAction, label: {
+        Button(action: self.primaryClick, label: {
             HStack {
-                Text("Finish")
+                Text("Next")
                     .font(.headline)
                 
                 Image(systemName: "chevron.right")
@@ -75,13 +73,6 @@ struct OnboardingSync: View {
             }
             .foregroundColor(ColorConstants.accent)
         })
-    }
-    
-    func primaryAction() {
-        let request = AccountStore.PatchRequest(deviceSettings: DeviceSettings(autoSync: self.enabledSync, syncAllInformation: false), onboardingCompleted: true)
-        self.accountStore.update(request: request) { _ in
-            self.primaryClick()
-        }
     }
 }
 

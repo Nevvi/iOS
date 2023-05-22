@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "9BA7DE99-6DA8-4A27-BB26-28CAE3E25A0F"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "7976F38D-B95E-4706-A74B-130457F319B8"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/ContactStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "7976F38D-B95E-4706-A74B-130457F319B8 - 97d317582e07b5fd"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Nevvi.Connection, Swift.Error&gt;) -&gt; () in closure #1 (Nevvi.Connection) -&gt; () in Nevvi.ContactStore.syncContacts(connections: Swift.Array&lt;Nevvi.Connection&gt;, dryRun: Swift.Bool, callback: (Nevvi.ContactStore.SyncInfo) -&gt; ()) -&gt; ()"
+                  moduleName = "Nevvi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tylerstandal/Desktop/Git/iOS/Nevvi/Stores/ContactStore.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "115"
+                  endingLineNumber = "115"
+                  offsetFromSymbolStart = "6524">
+               </Location>
+               <Location
+                  uuid = "7976F38D-B95E-4706-A74B-130457F319B8 - 97d317582e07b5fd"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Nevvi.Connection, Swift.Error&gt;) -&gt; () in closure #1 (Nevvi.Connection) -&gt; () in Nevvi.ContactStore.syncContacts(connections: Swift.Array&lt;Nevvi.Connection&gt;, dryRun: Swift.Bool, callback: (Nevvi.ContactStore.SyncInfo) -&gt; ()) -&gt; ()"
+                  moduleName = "Nevvi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tylerstandal/Desktop/Git/iOS/Nevvi/Stores/ContactStore.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "115"
+                  endingLineNumber = "115"
+                  offsetFromSymbolStart = "6496">
+               </Location>
+               <Location
+                  uuid = "7976F38D-B95E-4706-A74B-130457F319B8 - 97d317582e07b5fd"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Nevvi.Connection, Swift.Error&gt;) -&gt; () in closure #1 (Nevvi.Connection) -&gt; () in Nevvi.ContactStore.syncContacts(connections: Swift.Array&lt;Nevvi.Connection&gt;, dryRun: Swift.Bool, callback: (Nevvi.ContactStore.SyncInfo) -&gt; ()) -&gt; ()"
+                  moduleName = "Nevvi"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tylerstandal/Desktop/Git/iOS/Nevvi/Stores/ContactStore.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "115"
+                  endingLineNumber = "115"
+                  offsetFromSymbolStart = "6592">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0D908E09-D36E-4A41-A80D-D4ECB6CC3023"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/ContactStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "39BEED3D-15CF-442A-A168-9E9C693BAFB2"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/ContactStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "241"
+            endingLineNumber = "241"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8804CA7A-CDE6-43C6-BA71-F6AC9766A036"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nevvi/Stores/ContactStore.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
+            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

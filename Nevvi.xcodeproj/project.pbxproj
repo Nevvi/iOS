@@ -100,6 +100,7 @@
 		04B949762960A94A00703523 /* UsersStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949752960A94A00703523 /* UsersStore.swift */; };
 		04B949782960AF9B00703523 /* DebouncedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949772960AF9B00703523 /* DebouncedText.swift */; };
 		04B9497A2960B3E900703523 /* NewConnectionRequestRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949792960B3E900703523 /* NewConnectionRequestRow.swift */; };
+		272DB10C2A1AE1EF00C82C8D /* OnboardingBulkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272DB10B2A1AE1EF00C82C8D /* OnboardingBulkRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -190,6 +191,7 @@
 		04B949752960A94A00703523 /* UsersStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersStore.swift; sourceTree = "<group>"; };
 		04B949772960AF9B00703523 /* DebouncedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebouncedText.swift; sourceTree = "<group>"; };
 		04B949792960B3E900703523 /* NewConnectionRequestRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConnectionRequestRow.swift; sourceTree = "<group>"; };
+		272DB10B2A1AE1EF00C82C8D /* OnboardingBulkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingBulkRequest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -458,6 +460,7 @@
 				04B9495E295F3BE000703523 /* OnboardingSync.swift */,
 				04B94960295F3FD100703523 /* OnboardingDescription.swift */,
 				04B15859298EFAF000846FDB /* OnboardingDescriptionCont.swift */,
+				272DB10B2A1AE1EF00C82C8D /* OnboardingBulkRequest.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -644,6 +647,7 @@
 				04B1585A298EFAF100846FDB /* OnboardingDescriptionCont.swift in Sources */,
 				0431439D2975AC830094D7E0 /* TextExtensions.swift in Sources */,
 				04B94928295DEEB500703523 /* URLSessionExtensions.swift in Sources */,
+				272DB10C2A1AE1EF00C82C8D /* OnboardingBulkRequest.swift in Sources */,
 				04B949782960AF9B00703523 /* DebouncedText.swift in Sources */,
 				04314389296B65220094D7E0 /* ConnectionGroupList.swift in Sources */,
 				04B948FC295DEA5C00703523 /* NevviApp.swift in Sources */,
@@ -739,7 +743,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -830,7 +834,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -982,7 +986,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1019,7 +1023,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;

@@ -39,7 +39,7 @@ struct UserSearch: View {
         .navigationBarTitleDisplayMode(.inline)
         .disableAutocorrection(true)
         .onChange(of: self.nameFilter.debouncedText) { text in
-            self.usersStore.load(nameFilter: text)
+            self.usersStore.searchByName(nameFilter: text)
         }
         .onAppear {
             self.nameFilter.text = ""

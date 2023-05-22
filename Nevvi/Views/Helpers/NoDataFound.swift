@@ -21,6 +21,7 @@ struct NoDataFound: View {
                     .resizable()
                     .frame(width: width, height: height)
                 Text(self.text)
+                    .multilineTextAlignment(.center)
             }
             Spacer()
         }

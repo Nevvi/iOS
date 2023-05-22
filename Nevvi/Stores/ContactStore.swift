@@ -9,6 +9,7 @@ import Contacts
 
 class ContactStore: ObservableObject {
     var authorization: Authorization? = nil
+    var phoneNumbers: [String] = []
     
     @Published var error: Swift.Error?
     
@@ -21,6 +22,25 @@ class ContactStore: ObservableObject {
         
         let userId: String? = self.authorization?.id
         return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/\(connectionId)")!
+    }
+    
+    func loadContactPhoneNumbers(callback: @escaping (Result<[String], Error>) -> Void) {
+        let store = CNContactStore()
+        let keysToFetch = [CNContactPhoneNumbersKey] as [CNKeyDescriptor]
+        
+        var phoneNumbers: Set<String> = Set<String>()
+        let request = CNContactFetchRequest(keysToFetch: keysToFetch)
+        do {
+            try store.enumerateContacts(with: request) { (contact, stop) in
+                for phoneNumber in contact.phoneNumbers {
+                    phoneNumbers.insert(phoneNumber.value.stringValue)
+                }
+            }
+        } catch(let error) {
+            callback(.failure(error))
+        }
+        
+        callback(.success(Array(phoneNumbers)))
     }
     
     func updateConnection(connectionId: String, callback: @escaping (Result<Connection, Error>) -> Void) {
@@ -120,12 +140,10 @@ class ContactStore: ObservableObject {
                         if let birthday = contact.birthday {
                             existingBirthday = utcDateFormatter.string(from: birthday.date!)
                         }
-
-                        let newBirthday = utcDateFormatter.string(from: detail.birthday!)
                         
                         if detail.birthday != nil {
+                            let newBirthday = utcDateFormatter.string(from: detail.birthday!)
                             contact.birthday = Calendar.current.dateComponents([.year, .month, .day], from: detail.birthday!)
-                            
                             let birthdayChange = ContactSyncFieldInfo(field: "Birthday", oldValue: existingBirthday, newValue: newBirthday)
                             contactFieldChanges.append(birthdayChange)
                         }

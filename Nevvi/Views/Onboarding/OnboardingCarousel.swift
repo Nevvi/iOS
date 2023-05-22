@@ -42,10 +42,16 @@ struct OnboardingCarousel: View {
             }).tabStyle(page: 3)
             
             OnboardingSync(primaryClick: {
-                print("Done onboarding!")
+                self.index = 5
             }, secondaryClick: {
                 self.index = 3
             }).tabStyle(page: 4)
+            
+            OnboardingBulkRequest(primaryClick: {
+                print("Done onboarding!")
+            }, secondaryClick: {
+                self.index = 4
+            }).tabStyle(page: 5)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .edgesIgnoringSafeArea([.all])
@@ -57,6 +63,5 @@ struct Onboarding_Previews: PreviewProvider {
     static var previews: some View {
         OnboardingCarousel()
             .environmentObject(AccountStore(user: ModelData().user))
-            .environment(\.colorScheme, .dark)
     }
 }

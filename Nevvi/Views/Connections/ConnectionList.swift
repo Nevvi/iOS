@@ -36,7 +36,6 @@ struct ConnectionList: View {
                 }
             }
             .listStyle(.plain)
-            .background(Color.black.ignoresSafeArea())
             .scrollContentBackground(self.connectionsStore.connectionCount == 0 ? .hidden : .visible)
             .navigationTitle("Connections")
             .navigationBarTitleDisplayMode(.large)

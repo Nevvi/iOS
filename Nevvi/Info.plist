@@ -20,7 +20,5 @@
 		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
-	<key>UIUserInterfaceStyle</key>
-	<string></string>
 </dict>
 </plist>
