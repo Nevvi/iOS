@@ -21,7 +21,7 @@ class ContactStore: ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "https://api.development.nevvi.net/user/v1/users/\(userId!)/connections/\(connectionId)")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/\(connectionId)")!
     }
     
     func loadContactPhoneNumbers(callback: @escaping (Result<[String], Error>) -> Void) {

@@ -10,6 +10,9 @@ import SwiftUI
 struct OnboardingDescriptionCont: View {    
     var primaryClick: () -> Void
     var secondaryClick: () -> Void
+    
+    @State private var animateIntro = false
+    @State private var animateDescription = false
 
     var body: some View {
         VStack(spacing: 20.0) {
@@ -23,10 +26,22 @@ struct OnboardingDescriptionCont: View {
             Text("In other words...")
                 .onboardingStyle()
                 .padding(10)
+                .opacity(animateIntro ? 1.0 : 0.0)
+                .onAppear {
+                    withAnimation(Animation.spring().speed(0.2)) {
+                        animateIntro = true
+                    }
+                }
             
             Text("Anytime you update your data it will automatically be sent to the connections that are allowed to see it.")
                 .onboardingStyle()
                 .padding(10)
+                .opacity(animateDescription ? 1.0 : 0.0)
+                .onAppear {
+                    withAnimation(Animation.spring().speed(0.2).delay(2)) {
+                        animateDescription = true
+                    }
+                }
             
             Spacer()
             

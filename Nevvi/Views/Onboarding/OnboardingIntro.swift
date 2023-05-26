@@ -12,14 +12,14 @@ struct OnboardingIntro: View {
 
     var body: some View {
         VStack(spacing: 20.0) {
+            Spacer()
             Text("Welcome to Nevvi!")
                 .onboardingTitle()
             
-            Spacer()
             Image("OnboardingOne")
-            Spacer()
+                .padding([.top, .bottom], 50)
                         
-            Text("We keep the personal information of all your connections up to date, so you don't have to.")
+            Text("We keep the personal information of all your contacts up to date, so you don't have to.")
                 .onboardingStyle()
                 .padding()
 

@@ -35,23 +35,29 @@ struct OnboardingCarousel: View {
                 self.index = 1
             }).tabStyle(page: 2)
             
-            OnboardingInformation(primaryClick: {
+            OnboardingPermissionGroups(primaryClick: {
                 self.index = 4
             }, secondaryClick: {
                 self.index = 2
             }).tabStyle(page: 3)
             
-            OnboardingSync(primaryClick: {
+            OnboardingInformation(primaryClick: {
                 self.index = 5
             }, secondaryClick: {
                 self.index = 3
             }).tabStyle(page: 4)
             
-            OnboardingBulkRequest(primaryClick: {
-                print("Done onboarding!")
+            OnboardingSync(primaryClick: {
+                self.index = 6
             }, secondaryClick: {
                 self.index = 4
             }).tabStyle(page: 5)
+            
+            OnboardingBulkRequest(primaryClick: {
+                print("Done onboarding!")
+            }, secondaryClick: {
+                self.index = 5
+            }).tabStyle(page: 6)
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
         .edgesIgnoringSafeArea([.all])

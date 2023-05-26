@@ -20,7 +20,7 @@ extension Text {
     
     func onboardingStyle() -> some View {
         return self
-            .font(.system(size: 18))
+            .font(.system(size: 20))
             .multilineTextAlignment(.center)
             .foregroundColor(ColorConstants.accent)
             .shadow(color: Color.black.opacity(0.1), radius: 1, x: 2, y: 2)

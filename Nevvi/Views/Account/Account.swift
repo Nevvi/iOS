@@ -100,6 +100,5 @@ struct AccountView_Previews: PreviewProvider {
            .environmentObject(authStore)
            .environmentObject(usersStore)
            .environmentObject(connectionsStore)
-           .environment(\.colorScheme, .dark)
     }
 }

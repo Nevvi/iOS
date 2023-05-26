@@ -10,6 +10,9 @@ import SwiftUI
 struct OnboardingDescription: View {
     var primaryClick: () -> Void
     var secondaryClick: () -> Void
+    
+    @State private var animateIntro = false
+    @State private var animateDescription = false
 
     var body: some View {
         VStack(spacing: 20.0) {
@@ -23,10 +26,22 @@ struct OnboardingDescription: View {
             Text("The heart and soul of Nevvi is the connections you make with others.")
                 .onboardingStyle()
                 .padding(10)
+                .opacity(animateIntro ? 1.0 : 0.0)
+                .onAppear {
+                    withAnimation(Animation.spring().speed(0.2)) {
+                        animateIntro = true
+                    }
+                }
             
             Text("Think of a connection like an entry in your contacts, but instead of you managing someone else's information, they manage it themselves.")
                 .onboardingStyle()
                 .padding(10)
+                .opacity(animateDescription ? 1.0 : 0.0)
+                .onAppear {
+                    withAnimation(Animation.spring().speed(0.2).delay(2)) {
+                        animateDescription = true
+                    }
+                }
             
             Spacer()
             
