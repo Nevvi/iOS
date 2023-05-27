@@ -12,23 +12,20 @@ struct OnboardingPermissionGroups: View {
     var secondaryClick: () -> Void
     
     @State private var animateIntro = false
+    @State private var animateGroups = false
     @State private var animateDescription = false
 
     var body: some View {
         VStack(spacing: 20.0) {
-            Text("Nevvi")
+            Text("Permission Groups")
                 .onboardingTitle()
             
-            VStack {
-                Image(systemName: "lock")
-                    .font(.system(size: 100))
-                Text("Permission Groups")
-                    .onboardingTitle()
-            }
-            .foregroundColor(.white)
-            .padding([.top, .bottom], 60)
-                        
-            Text("Permission groups let you control what information of yours is seen by others.")
+            Image(systemName: "lock")
+                .font(.system(size: 100))
+                .foregroundColor(.white)
+                .padding([.top, .bottom], 40)
+                            
+            Text("Permission groups let you control what information of yours is seen by the person you connect with.")
                 .onboardingStyle()
                 .padding(10)
                 .opacity(animateIntro ? 1.0 : 0.0)
@@ -38,12 +35,31 @@ struct OnboardingPermissionGroups: View {
                     }
                 }
             
-            Text("You can configure your permission groups from your account page.")
+            Spacer()
+            
+            Text("We have created 2 permission groups for you already:")
+                .onboardingStyle()
+                .padding([.leading, .trailing], 10)
+                .opacity(animateGroups ? 1.0 : 0.0)
+                .onAppear {
+                    withAnimation(Animation.spring().speed(0.2).delay(2)) {
+                        animateGroups = true
+                    }
+                }
+            
+            Text("**ALL**: All of your info\n**CONTACT_INFO**: Email and phone")
+                .onboardingStyle()
+                .padding(10)
+                .opacity(animateGroups ? 1.0 : 0.0)
+            
+            Spacer()
+            
+            Text("You can configure more permission groups from your account page.")
                 .onboardingStyle()
                 .padding(10)
                 .opacity(animateDescription ? 1.0 : 0.0)
                 .onAppear {
-                    withAnimation(Animation.spring().speed(0.2).delay(2)) {
+                    withAnimation(Animation.spring().speed(0.2).delay(4)) {
                         animateDescription = true
                     }
                 }

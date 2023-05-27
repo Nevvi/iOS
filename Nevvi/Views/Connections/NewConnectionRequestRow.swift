@@ -16,6 +16,7 @@ struct NewConnectionRequestRow: View {
     @State var user: Connection
     @State var loading: Bool = false
     @State var showSheet: Bool = false
+    @State private var animate = false
     @State var selectedPermissionGroup: String = "ALL"
     
     var body: some View {
@@ -31,6 +32,7 @@ struct NewConnectionRequestRow: View {
                 connectButton
             }
         }
+        .opacity(animate ? 0.0 : 1.0)
         .padding([.top, .bottom], 5)
         .padding([.leading, .trailing], 5)
         .sheet(isPresented: self.$showSheet) {
@@ -97,12 +99,19 @@ struct NewConnectionRequestRow: View {
         self.usersStore.requestConnection(userId: self.user.id, groupName: self.selectedPermissionGroup) { (result: Result<Bool, Error>) in
             switch result {
             case .success(_):
-                self.requestCallback()
+                withAnimation(Animation.spring().speed(0.75)) {
+                    animate = true
+                    self.requestCallback()
+                }
             case .failure(let error):
                 print("Something bad happened", error)
             }
             self.loading = false
             self.showSheet = false
+            withAnimation(Animation.spring().speed(0.75)) {
+                animate = true
+                self.requestCallback()
+            }
         }
     }
 }

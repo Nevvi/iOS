@@ -21,7 +21,7 @@ struct ContentView: View {
     
     var body: some View {
         if (!accountStore.id.isEmpty) {
-            if (!accountStore.onboardingCompleted) {
+            if (accountStore.onboardingCompleted) {
                 TabView {
                     ConnectionList(connectionStore: self.connectionStore)
                         .tabItem() {

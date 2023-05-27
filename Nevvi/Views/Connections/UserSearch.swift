@@ -69,6 +69,7 @@ struct UserSearch: View {
         ForEach(self.usersStore.users) { user in
             NewConnectionRequestRow(requestCallback: {
                 self.showToast = true
+                self.usersStore.removeUser(user: user)
             }, user: user)
         }
         .redacted(when: self.usersStore.loading, redactionType: .customPlaceholder)

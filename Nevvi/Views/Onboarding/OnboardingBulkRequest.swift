@@ -18,6 +18,10 @@ struct OnboardingBulkRequest: View {
     
     @State private var showToast: Bool = false
 
+    var notConnectedUsers: [Connection] {
+        self.usersStore.users.filter { $0.connected != nil && !$0.connected! }
+    }
+    
     var body: some View {
         VStack {
             Text("Nevvi")
@@ -25,7 +29,8 @@ struct OnboardingBulkRequest: View {
                 .padding([.bottom], 30)
             
             
-            if self.usersStore.userCount == 0 {
+            if self.notConnectedUsers.count == 0 {
+                Spacer()
                 noUsersView
             } else {
                 Text("Connect with your phone contacts")
@@ -47,7 +52,7 @@ struct OnboardingBulkRequest: View {
             .padding([.top, .leading, .trailing])
         }
         .background(BackgroundGradient())
-        .scrollContentBackground(self.usersStore.userCount == 0 ? .hidden : .visible)
+        .scrollContentBackground(self.notConnectedUsers.count == 0 ? .hidden : .visible)
         .navigationBarTitleDisplayMode(.inline)
         .toast(isPresenting: $showToast){
             AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Request sent!")
@@ -72,8 +77,11 @@ struct OnboardingBulkRequest: View {
             Spacer()
             if self.usersStore.loading {
                 ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle(tint: Color.white))
+                    .scaleEffect(3.0, anchor: .center)
             } else {
-                NoDataFound(imageName: "person.2.slash", height: 100, width: 120, text: "None of your phone contacts are currently on Nevvi :(")
+                // TODO - check if we have access to contacts
+                NoDataFound(imageName: "person.2.slash", height: 100, width: 120, text: "There are no more contacts in your phone to connect with")
                     .foregroundColor(.white)
             }
             Spacer()
@@ -83,10 +91,11 @@ struct OnboardingBulkRequest: View {
     var usersView: some View {
         ScrollView {
             VStack {
-                ForEach(self.usersStore.users) { user in
+                ForEach(self.notConnectedUsers) { user in
                     HStack {
                         NewConnectionRequestRow(requestCallback: {
                             self.showToast = true
+                            self.usersStore.removeUser(user: user)
                         }, user: user)
                     }
                     .font(.system(size: 20))

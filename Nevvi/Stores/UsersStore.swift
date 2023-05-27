@@ -119,6 +119,13 @@ class UsersStore : ObservableObject {
         }
     }
     
+    func removeUser(user: Connection) {
+        self.users = self.users.filter { $0 != user }
+        
+        // TODO - Need to be smarter about this
+        self.userCount = self.userCount - 1
+    }
+    
     func reset() {
         self.users = []
         self.userCount = 0

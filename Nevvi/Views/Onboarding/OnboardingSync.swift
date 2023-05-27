@@ -38,6 +38,8 @@ struct OnboardingSync: View {
                     }
                 }
             
+            Spacer()
+            
             Text("Let's find some people you may know to connect with...")
                 .onboardingStyle()
                 .padding([.leading, .trailing, .bottom], 20)
