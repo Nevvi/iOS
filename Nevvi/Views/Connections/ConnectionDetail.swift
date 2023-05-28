@@ -110,7 +110,7 @@ struct ConnectionDetail: View {
                 Text("Group Membership")
                     .font(.title3)
                     .fontWeight(.semibold)
-                    .padding([.bottom], 5)
+                    .padding([.bottom], 15)
                     
                                             
                 ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
@@ -118,14 +118,13 @@ struct ConnectionDetail: View {
                                                  isMember: group.connections.contains(self.connectionStore.id),
                                                  group: group)
                 }
-                .padding([.leading, .trailing])
                 .padding([.bottom], 5)
             }
+            .padding([.leading, .trailing], 80)
             
             Spacer()
         }
         .padding([.top], 40)
-        .padding([.leading, .trailing], 20)
     }
     
     func connectionData(label: String, value: String) -> some View {
