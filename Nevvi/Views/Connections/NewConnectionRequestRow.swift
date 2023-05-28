@@ -108,10 +108,6 @@ struct NewConnectionRequestRow: View {
             }
             self.loading = false
             self.showSheet = false
-            withAnimation(Animation.spring().speed(0.75)) {
-                animate = true
-                self.requestCallback()
-            }
         }
     }
 }

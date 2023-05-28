@@ -204,7 +204,7 @@ struct PersonalInformation: View {
                 } label: {
                     Text("Verify")
                 }
-                .fontWeight(.light)
+                .fontWeight(.bold)
                 .font(.system(size: 14))
             }
         }
