@@ -41,7 +41,7 @@ struct ConnectionRequestList: View {
             if self.connectionsStore.loadingRequests {
                 ProgressView()
             } else {
-                NoDataFound(imageName: "person.2.slash", height: 100, width: 120, text: "No requests found")
+                NoDataFound(imageName: "person.2.slash", height: 100, width: 120, text: "You have no open requests")
             }
             Spacer()
         }
