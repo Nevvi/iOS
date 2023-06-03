@@ -21,6 +21,9 @@ struct OnboardingDescription: View {
             
             Spacer()
             Image("OnboardingThree")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 200)
             Spacer()
             
             Text("The heart and soul of Nevvi is the connections you make with others.")
@@ -33,7 +36,7 @@ struct OnboardingDescription: View {
                     }
                 }
             
-            Text("Think of a connection like an entry in your contacts, but instead of you managing someone else's information, they manage it themselves.")
+            Text("A connection is like an entry in your contacts, but instead of you managing someone else's information, they manage it themselves.")
                 .onboardingStyle()
                 .padding(10)
                 .opacity(animateDescription ? 1.0 : 0.0)

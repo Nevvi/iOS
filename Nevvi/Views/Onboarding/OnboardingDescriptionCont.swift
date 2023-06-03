@@ -21,6 +21,9 @@ struct OnboardingDescriptionCont: View {
             
             Spacer()
             Image("OnboardingFour")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 200)
             Spacer()
             
             Text("In other words...")

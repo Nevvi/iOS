@@ -21,9 +21,9 @@ struct OnboardingPermissionGroups: View {
                 .onboardingTitle()
             
             Image(systemName: "lock")
-                .font(.system(size: 100))
+                .font(.system(size: 80))
                 .foregroundColor(.white)
-                .padding([.top, .bottom], 40)
+                .padding([.top, .bottom], 30)
                             
             Text("Permission groups let you control what information of yours is seen by the person you connect with.")
                 .onboardingStyle()
@@ -34,10 +34,8 @@ struct OnboardingPermissionGroups: View {
                         animateIntro = true
                     }
                 }
-            
-            Spacer()
-            
-            Text("We have created 2 permission groups for you already:")
+                        
+            Text("We've created 2 permission groups for you already:")
                 .onboardingStyle()
                 .padding([.leading, .trailing], 10)
                 .opacity(animateGroups ? 1.0 : 0.0)
@@ -49,10 +47,9 @@ struct OnboardingPermissionGroups: View {
             
             Text("**ALL**: All of your info\n**CONTACT_INFO**: Email and phone")
                 .onboardingStyle()
+                .fixedSize()
                 .padding(10)
                 .opacity(animateGroups ? 1.0 : 0.0)
-            
-            Spacer()
             
             Text("You can configure more permission groups from your account page.")
                 .onboardingStyle()

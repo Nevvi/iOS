@@ -26,7 +26,7 @@ struct OnboardingInformation: View {
             
             Text("Let's get some more information so that others can find you.")
                 .onboardingStyle()
-                .padding(20)
+                .padding(30)
             
             ProfileImageSelector(height: 120, width: 120)
             

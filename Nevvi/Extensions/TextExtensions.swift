@@ -21,6 +21,7 @@ extension Text {
     func onboardingStyle() -> some View {
         return self
             .font(.system(size: 20))
+            .font(.caption)
             .multilineTextAlignment(.center)
             .foregroundColor(ColorConstants.accent)
             .shadow(color: Color.black.opacity(0.1), radius: 1, x: 2, y: 2)

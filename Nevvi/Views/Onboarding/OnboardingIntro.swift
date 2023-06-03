@@ -17,6 +17,9 @@ struct OnboardingIntro: View {
                 .onboardingTitle()
             
             Image("OnboardingOne")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 200)
                 .padding([.top, .bottom], 50)
                         
             Text("We keep the personal information of all your contacts up to date, so you don't have to.")

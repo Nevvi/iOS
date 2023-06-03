@@ -18,15 +18,15 @@ struct OnboardingSync: View {
 
     var body: some View {
         VStack(spacing: 20.0) {
-            Text("Nevvi")
-                .onboardingTitle()
-            
-            Spacer()
-            Image("OnboardingTwo")
-            
             Text("\"Do you still live at ...?\"")
                 .onboardingTitle()
-                .padding([.bottom], 20)
+            Spacer()
+            
+            Image("OnboardingTwo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 200)
+            Spacer()
             
             Text("With Nevvi, as long as you stay connected with a person we can keep the contact in your phone in sync when their data, such as address, changes.")
                 .onboardingStyle()
@@ -37,9 +37,7 @@ struct OnboardingSync: View {
                         animateIntro = true
                     }
                 }
-            
-            Spacer()
-            
+                        
             Text("Let's find some people you may know to connect with...")
                 .onboardingStyle()
                 .padding([.leading, .trailing, .bottom], 20)
@@ -50,7 +48,6 @@ struct OnboardingSync: View {
                     }
                 }
             
-            Spacer()
             Spacer()
             
             HStack {
