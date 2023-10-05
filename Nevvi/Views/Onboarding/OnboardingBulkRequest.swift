@@ -19,7 +19,10 @@ struct OnboardingBulkRequest: View {
     @State private var showToast: Bool = false
 
     var notConnectedUsers: [Connection] {
-        self.usersStore.users.filter { $0.connected != nil && !$0.connected! }
+        self.usersStore.users.filter {
+            $0.connected != nil && !$0.connected! &&
+            $0.requested != nil && !$0.requested!
+        }
     }
     
     var body: some View {

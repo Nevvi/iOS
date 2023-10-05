@@ -21,6 +21,7 @@ struct Connection: Hashable, Codable, Identifiable {
     var profileImage: String
     var permissionGroup: String?
     var connected: Bool?
+    var requested: Bool?
     var inSync: Bool?
     
     var birthdayStr: String? {

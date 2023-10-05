@@ -19,6 +19,18 @@ struct NewConnectionRequestRow: View {
     @State private var animate = false
     @State var selectedPermissionGroup: String = "ALL"
     
+    var showConnectButton: Bool {
+        if (user.connected != nil && user.connected!) {
+            return false
+        }
+        
+        if (user.requested != nil && user.requested!) {
+            return false
+        }
+        
+        return true
+    }
+    
     var body: some View {
         HStack {
             ProfileImage(imageUrl: user.profileImage, height: 50, width: 50)
@@ -28,7 +40,7 @@ struct NewConnectionRequestRow: View {
             
             Spacer()
             
-            if user.connected == nil || !user.connected! {
+            if showConnectButton {
                 connectButton
             }
         }
@@ -110,6 +122,7 @@ struct NewConnectionRequestRow: View {
             self.showSheet = false
         }
     }
+    
 }
 
 struct ConnectionRequest_Previews: PreviewProvider {
