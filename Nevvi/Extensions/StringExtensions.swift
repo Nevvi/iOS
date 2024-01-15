@@ -23,4 +23,25 @@ extension String {
     func stripLineBreaks() -> String {
         return self.replacingOccurrences(of: "\n", with: " ")
     }
+    
+    func humanReadable() -> String {
+        let indexes = Set(self
+            .enumerated()
+            .filter { $0.element.isUppercase }
+            .map { $0.offset })
+        
+        let chunks = self
+            .map { String($0) }
+            .enumerated()
+            .reduce([String]()) { chunks, elm -> [String] in
+                guard !chunks.isEmpty else { return [elm.element.uppercased()] }
+                guard !indexes.contains(elm.offset) else { return chunks + [String(elm.element)] }
+
+                var chunks = chunks
+                chunks[chunks.count-1] += String(elm.element)
+                return chunks
+            }
+        
+        return chunks.joined(separator: " ")
+    }
 }

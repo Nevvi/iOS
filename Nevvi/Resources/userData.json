@@ -28,6 +28,10 @@
                 "email",
                 "phoneNumber"
             ]
+        },
+        {
+            "name": "Nothing",
+            "fields": []
         }
     ],
     "blockedUsers": [],

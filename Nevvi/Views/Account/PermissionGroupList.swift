@@ -16,34 +16,29 @@ struct PermissionGroupList: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(self.accountStore.permissionGroups, id: \.name) { group in
-                    HStack {
-                        Text(group.name.uppercased())
-                        if group.name.uppercased() != "ALL" {
-                            Spacer()
-                            Text("(\(group.fields.count) fields)")
+            ScrollView {
+                VStack {
+                    ForEach(self.accountStore.permissionGroups, id: \.name) { group in
+                        PermissionGroupRow(group: group)
+                            .padding([.leading, .trailing, .bottom])
+                        .onTapGesture {
+                            // Can't edit the ALL group
+                            if group.name.uppercased() != "ALL" {
+                                self.selectedGroup = group
+                                self.showGroupEdit = true
+                            }
                         }
                     }
-                    .padding([.top, .bottom])
-                    .onTapGesture {
-                        // Can't edit the ALL group
-                        if group.name.uppercased() != "ALL" {
-                            self.selectedGroup = group
-                            self.showGroupEdit = true
-                        }
-                    }
+                    .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
                 }
-                .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
             }
-            .padding([.top], -20)
             .sheet(isPresented: self.$showGroupEdit) {
                 editPermissionGroupSheet
             }
             .sheet(isPresented: self.$showNewGroup) {
                 newPermissionGroupSheet
             }
-            
+
             Text("\(self.selectedGroup?.name ?? "")")
                 .hidden()
         }
@@ -53,6 +48,7 @@ struct PermissionGroupList: View {
                     self.showNewGroup = true
                 }
         })
+        .padding([.top])
         .navigationTitle("Permission Groups")
         .navigationBarTitleDisplayMode(.inline)
     }

@@ -28,6 +28,32 @@ struct ColorConstants {
     static var accent: Color {
         return Color(UIColor(hexString: "#ffffff"))
     }
+    
+    static var badgeText: Color {
+        return Color(UIColor(hexString: "#00112b"))
+    }
+    
+    static var badgeTextSuccess: Color {
+        return Color(UIColor(hexString: "#176348"))
+    }
+    
+    static var badgeTextWarning: Color {
+        return Color(UIColor(hexString: "#631732"))
+    }
+    
+    static var badgeBackground: Color {
+        return Color(UIColor(hexString: "#e6e6e6"))
+    }
+    
+    static var badgeSuccess: Color {
+        return Color(UIColor(hexString: "#cbf5e5"))
+    }
+    
+    static var badgeWarning: Color {
+        return Color(UIColor(hexString: "#F5CBDB"))
+    }
+    
+    
 }
 
 /**

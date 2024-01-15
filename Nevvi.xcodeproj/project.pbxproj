@@ -102,6 +102,9 @@
 		272DB10C2A1AE1EF00C82C8D /* OnboardingBulkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272DB10B2A1AE1EF00C82C8D /* OnboardingBulkRequest.swift */; };
 		272DB10E2A202E2400C82C8D /* OnboardingPermissionGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272DB10D2A202E2400C82C8D /* OnboardingPermissionGroups.swift */; };
 		277D25152B55A23000D1D717 /* NotificationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25142B55A23000D1D717 /* NotificationList.swift */; };
+		277D25172B55A96400D1D717 /* PermissionGroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25162B55A96400D1D717 /* PermissionGroupRow.swift */; };
+		277D251A2B55ADF000D1D717 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 277D25192B55ADF000D1D717 /* WrappingHStack */; };
+		277D251C2B55B39F00D1D717 /* CharacterExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D251B2B55B39F00D1D717 /* CharacterExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -194,6 +197,8 @@
 		272DB10B2A1AE1EF00C82C8D /* OnboardingBulkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingBulkRequest.swift; sourceTree = "<group>"; };
 		272DB10D2A202E2400C82C8D /* OnboardingPermissionGroups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPermissionGroups.swift; sourceTree = "<group>"; };
 		277D25142B55A23000D1D717 /* NotificationList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationList.swift; sourceTree = "<group>"; };
+		277D25162B55A96400D1D717 /* PermissionGroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGroupRow.swift; sourceTree = "<group>"; };
+		277D251B2B55B39F00D1D717 /* CharacterExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +210,7 @@
 				04B1584C2987F47B00846FDB /* NukeUI in Frameworks */,
 				04B158522987F49600846FDB /* FirebaseAuth in Frameworks */,
 				04B1585D29903AFA00846FDB /* AlertToast in Frameworks */,
+				277D251A2B55ADF000D1D717 /* WrappingHStack in Frameworks */,
 				04B158482987F47B00846FDB /* Nuke in Frameworks */,
 				04B1584E2987F47F00846FDB /* SwiftKeychainWrapper in Frameworks */,
 				04B158502987F49600846FDB /* FirebaseAnalytics in Frameworks */,
@@ -390,6 +396,7 @@
 				04038E2C29662FFF00D3C7AC /* ViewExtensions.swift */,
 				0431439C2975AC830094D7E0 /* TextExtensions.swift */,
 				04B2495D29AD7F6300F56C97 /* BundleExtensions.swift */,
+				277D251B2B55B39F00D1D717 /* CharacterExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -403,6 +410,7 @@
 				0431437C2969B3F50094D7E0 /* AddressSearch.swift */,
 				04314396297438D70094D7E0 /* PermissionGroupList.swift */,
 				0431439829743F8F0094D7E0 /* PermissionGroupDetail.swift */,
+				277D25162B55A96400D1D717 /* PermissionGroupRow.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -514,6 +522,7 @@
 				04B158532987F49600846FDB /* FirebaseFirestore */,
 				04B158552987F49600846FDB /* FirebaseMessaging */,
 				04B1585C29903AFA00846FDB /* AlertToast */,
+				277D25192B55ADF000D1D717 /* WrappingHStack */,
 			);
 			productName = Nevvi;
 			productReference = 04B948F8295DEA5C00703523 /* Nevvi.app */;
@@ -548,6 +557,7 @@
 				041412FC2978C82B008A35DA /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				0414130D297C5CFC008A35DA /* XCRemoteSwiftPackageReference "Nuke" */,
 				04B1585B29903AF900846FDB /* XCRemoteSwiftPackageReference "AlertToast" */,
+				277D25182B55ADF000D1D717 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
 			);
 			productRefGroup = 04B948F9295DEA5C00703523 /* Products */;
 			projectDirPath = "";
@@ -602,6 +612,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				04B94922295DEDAF00703523 /* PermissionGroup.swift in Sources */,
+				277D251C2B55B39F00D1D717 /* CharacterExtensions.swift in Sources */,
 				041412F9297604BC008A35DA /* NoDataFound.swift in Sources */,
 				04B94953295F21D200703523 /* CreateAccount.swift in Sources */,
 				04038E322966324E00D3C7AC /* Redactable.swift in Sources */,
@@ -627,6 +638,7 @@
 				041412FB2976182D008A35DA /* ProfileImage.swift in Sources */,
 				041413182983571D008A35DA /* ColorConstants.swift in Sources */,
 				04B94914295DEB1100703523 /* ModelData.swift in Sources */,
+				277D25172B55A96400D1D717 /* PermissionGroupRow.swift in Sources */,
 				04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */,
 				04314387296B64A50094D7E0 /* ConnectionGroup.swift in Sources */,
 				04B94947295E57C500703523 /* UIApplicationExtensions.swift in Sources */,
@@ -773,7 +785,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -864,7 +876,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1016,7 +1028,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1053,7 +1065,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3;
+				MARKETING_VERSION = 1.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1123,6 +1135,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		277D25182B55ADF000D1D717 /* XCRemoteSwiftPackageReference "WrappingHStack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ksemianov/WrappingHStack";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1170,6 +1190,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 04B1585B29903AF900846FDB /* XCRemoteSwiftPackageReference "AlertToast" */;
 			productName = AlertToast;
+		};
+		277D25192B55ADF000D1D717 /* WrappingHStack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 277D25182B55ADF000D1D717 /* XCRemoteSwiftPackageReference "WrappingHStack" */;
+			productName = WrappingHStack;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
