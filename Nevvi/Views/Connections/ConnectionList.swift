@@ -53,13 +53,6 @@ struct ConnectionList: View {
                         }
                     }
                 }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: UserSearch()) {
-                        Image(systemName: "plus")
-                    }
-                    .padding([.trailing], 5)
-                }
             })
             .searchable(text: self.$nameFilter.text)
             .disableAutocorrection(true)

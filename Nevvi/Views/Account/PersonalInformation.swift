@@ -176,6 +176,8 @@ struct PersonalInformation: View {
                     phoneVerificationSheet
                 }
             }
+            .navigationTitle("Profile")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .toolbar(content: {
             if self.canSave {

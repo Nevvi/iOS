@@ -30,17 +30,22 @@ struct ContentView: View {
                     
                     ConnectionRequestList()
                         .tabItem() {
-                            Label("Requests", systemImage: "person.fill.questionmark")
+                            Label("New", systemImage: "plus.circle.fill")
                         }
                     
-                    ConnectionGroupList(connectionGroupStore: self.connectionGroupStore, connectionStore: self.connectionStore)
+                    NotificationList()
                         .tabItem() {
-                            Label("Groups", systemImage: "person.3.fill")
+                            Label("Notification", systemImage: "bell")
                         }
                     
-                    Account()
+                    PersonalInformation()
                         .tabItem() {
-                            Label("Account", systemImage: "person.fill")
+                            Label("Profile", systemImage: "person.circle.fill")
+                        }
+                    
+                    Settings()
+                        .tabItem() {
+                            Label("Settings", systemImage: "gearshape.fill")
                         }
                 }
                 .errorAlert(error: self.$accountStore.error)

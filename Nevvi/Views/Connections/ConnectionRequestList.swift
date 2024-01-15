@@ -24,11 +24,19 @@ struct ConnectionRequestList: View {
             }
             .listStyle(.plain)
             .scrollContentBackground(self.connectionsStore.requestCount == 0 ? .hidden : .visible)
-            .navigationTitle("Requests")
+            .navigationTitle("New Connections")
             .navigationBarTitleDisplayMode(.large)
             .refreshable {
                 self.connectionsStore.loadRequests()
             }
+            .toolbar(content: {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: UserSearch()) {
+                        Image(systemName: "plus")
+                    }
+                    .padding([.trailing], 5)
+                }
+            })
         }
         .alert(isPresented: self.$showDeleteAlert) {
             deleteAlert

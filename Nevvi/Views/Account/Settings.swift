@@ -29,55 +29,114 @@ struct Settings: View {
     
     var body: some View {
         NavigationView {
-            VStack(alignment: .leading) {
-                HStack {
-                    Image(systemName: "rectangle.portrait.and.arrow.forward").padding([.trailing], 5)
-                    Toggle("Auto-sync Contacts", isOn: self.$autoSync)
-                        .onChange(of: self.autoSync) { newValue in
-                            self.autoSyncSaving = true
-                            self.accountStore.deviceSettings.autoSync = newValue
-                            self.accountStore.save { _ in self.autoSyncSaving = false }
+            List {
+                Section {
+                    NavigationLink {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "exclamationmark.lock").padding([.trailing])
+                            Text("Change Password")
                         }
-                        .disabled(self.autoSyncSaving)
-                        .tint(ColorConstants.secondary)
-                }
-                Text("Automatically sync all updated Nevvi connections with your device contacts when you log in. Otherwise you will have the option to sync manually.")
-                    .settingsStyle()
-                
-                Divider().padding()
-                
-                HStack {
-                    Image(systemName: "rectangle.portrait.and.arrow.forward").padding([.trailing], 5)
-                    Toggle("Update all information", isOn: self.$syncAllInformation)
-                        .onChange(of: self.syncAllInformation) { newValue in
-                            self.syncAllInformationSaving = true
-                            self.accountStore.deviceSettings.syncAllInformation = newValue
-                            self.accountStore.save { _ in self.syncAllInformationSaving = false }
+                    }.padding(10)
+                    
+                    NavigationLink {
+                        PermissionGroupList()
+                    } label: {
+                        HStack {
+                            Image(systemName: "person.badge.key").padding([.trailing])
+                            Text("Permission Groups")
                         }
-                        .disabled(self.syncAllInformationSaving)
-                        .tint(ColorConstants.secondary)
+                    }.padding(10)
+                    
+                    NavigationLink {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "bell").padding([.trailing])
+                            Text("Notifications")
+                        }
+                    }.padding(10)
+                    
+                    NavigationLink {
+                        BlockedUserList()
+                    } label: {
+                        HStack {
+                            Image(systemName: "circle.slash").padding([.trailing])
+                            Text("Blocked Users")
+                        }
+                    }.padding(10)
                 }
-                Text("Update all contact information available including name and birthday when a connection changes instead of just email, phone, and address")
-                    .settingsStyle()
                 
-                Spacer()
+                Section {
+                    NavigationLink {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "checkmark.shield").padding([.trailing])
+                            Text("Privacy and security")
+                        }
+                    }.padding(10)
+                    
+                    NavigationLink {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "cloud").padding([.trailing])
+                            Text("Data and storage")
+                        }
+                    }.padding(10)
+                    
+                    NavigationLink {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "questionmark.square").padding([.trailing])
+                            Text("FAQ")
+                        }
+                    }.padding(10)
+                    
+                    NavigationLink {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "headphones").padding([.trailing])
+                            Text("Help Center")
+                        }
+                    }.padding(10)
+                    
+                    NavigationLink {
+                        
+                    } label: {
+                        HStack {
+                            Image(systemName: "bolt").padding([.trailing])
+                            Text("Feature Update")
+                        }
+                    }.padding(10)
+                }
                 
-                HStack(alignment: .center) {
-                    Spacer()
-                    Text("Version \(Bundle.main.releaseVersionNumber!)")
-                        .settingsStyle()
-                    Spacer()
+                Section {
+                    Button(action: {}, label: {
+                        HStack {
+                            Image(systemName: "rectangle.portrait.and.arrow.forward").padding([.trailing])
+                            Text("Logout")
+                            
+                            Spacer ()
+                            
+                            Image(systemName: "chevron.right")
+                                .resizable()
+                                .frame(width: 8, height: 12)
+                                .foregroundColor(.gray)
+                        }.foregroundColor(.red)
+                    }).padding(10)
                 }
             }
-            .padding(30)
-        }
-        .navigationTitle("Settings")
-        .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            self.autoSync = self.accountStore.deviceSettings.autoSync
-            self.syncAllInformation = self.accountStore.deviceSettings.syncAllInformation
+            .listStyle(.insetGrouped)
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
+    
 }
 
 struct Settings_Previews: PreviewProvider {
