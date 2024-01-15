@@ -18,17 +18,21 @@ struct ActionableConnectionRequestRow: View {
     @State var selectedPermissionGroup: String = "ALL"
     
     var body: some View {
-        HStack {
-            ProfileImage(imageUrl: request.requesterImage, height: 50, width: 50)
+        HStack(alignment: .top) {
+            ProfileImage(imageUrl: request.requesterImage, height: 60, width: 60)
                 .padding([.trailing], 10)
             
-            Text(self.request.requestText)
+            VStack(alignment: .leading) {
+                Text(self.request.requestText)
+                HStack {
+                    approveButton
+                    rejectButton
+                }
+            }
             
             Spacer()
-            
-            approveButton
         }
-        .padding(5)
+        .padding()
         .sheet(isPresented: self.$showSheet) {
             approveSheet
         }
@@ -38,27 +42,48 @@ struct ActionableConnectionRequestRow: View {
         Button {
             self.showSheet = true
         } label: {
-            Text("Approve")
+            Text("ACCEPT")
+                .fontWeight(.bold)
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .foregroundColor(ColorConstants.primary)
+                )
+        }
+    }
+    
+    var rejectButton: some View {
+        Button {
+//            self.showSheet = true
+        } label: {
+            Text("REJECT")
+                .fontWeight(.bold)
+                .font(.headline)
+                .foregroundColor(ColorConstants.badgeTextWarning)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .foregroundColor(ColorConstants.badgeWarning)
+                )
         }
     }
     
     var approveSheet: some View {
         ZStack {
-            VStack {
-                ProfileImage(imageUrl: request.requesterImage, height: 50, width: 50)
-                    .padding([.top], 30)
+            VStack(alignment: .leading) {
+                Text("Select permission group")
+                    .font(.title)
+                    .fontWeight(.light)
+                    .padding([.leading, .trailing, .top])
+                    .padding([.bottom], 6)
                 
-                Text("Which permission group should this new connection belong to?")
-                    .font(.title2)
-                    .padding([.top, .leading, .trailing])
-                                    
-                Picker("Which permission group should this new connection belong to?", selection: self.$selectedPermissionGroup) {
-                    ForEach(self.accountStore.permissionGroups, id: \.name) {
-                        Text($0.name.uppercased())
-                    }
-                }
-                .pickerStyle(.wheel)
-                .padding([.top], -25)
+                PermissionGroupPicker(selectedGroup: $selectedPermissionGroup)
+                
+                Spacer()
                 
                 Button(action: {
                     self.loading = true
@@ -66,21 +91,24 @@ struct ActionableConnectionRequestRow: View {
                     self.loading = false
                     self.showSheet = false
                 }, label: {
-                    Text("Confirm")
+                    Text("CONFIRM")
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity)
                         .font(.headline)
                         .foregroundColor(.white)
-                        .padding(.horizontal, 50)
                         .padding(.vertical, 16)
                         .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .foregroundColor(ColorConstants.secondary)
+                            RoundedRectangle(cornerRadius: 24)
+                                .foregroundColor(ColorConstants.primary)
                         )
                         .opacity(self.loading ? 0.5 : 1.0)
                 })
                 .disabled(self.loading)
-                .padding([.bottom])
-            }
-        }.presentationDetents([.medium])
+                .padding()
+                .padding([.top], 12)
+            }.padding(4)
+        }
+        .presentationDetents([.fraction(0.30)])
     }
 }
 

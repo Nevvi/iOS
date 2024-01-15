@@ -69,8 +69,8 @@ struct PermissionGroupRow: View {
 
 struct PermissionGroupRow_Previews: PreviewProvider {
     static var previews: some View {
-//        PermissionGroupRow(group: PermissionGroup(name: "Family", fields: ["firstName", "lastName", "email", "phoneNumber", "address", "birthday"]))
-        PermissionGroupRow(group: PermissionGroup(name: "Family", fields: []))
+        PermissionGroupRow(group: PermissionGroup(name: "Family", fields: ["firstName", "lastName", "email", "phoneNumber", "address", "birthday"]))
+//        PermissionGroupRow(group: PermissionGroup(name: "Family", fields: []))
 //        PermissionGroupRow(group: PermissionGroup(name: "All", fields: []))
     }
 }

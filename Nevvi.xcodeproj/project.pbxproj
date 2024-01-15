@@ -105,6 +105,7 @@
 		277D25172B55A96400D1D717 /* PermissionGroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25162B55A96400D1D717 /* PermissionGroupRow.swift */; };
 		277D251A2B55ADF000D1D717 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 277D25192B55ADF000D1D717 /* WrappingHStack */; };
 		277D251C2B55B39F00D1D717 /* CharacterExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D251B2B55B39F00D1D717 /* CharacterExtensions.swift */; };
+		277D25222B55C21F00D1D717 /* PermissionGroupPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25212B55C21F00D1D717 /* PermissionGroupPicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -199,6 +200,7 @@
 		277D25142B55A23000D1D717 /* NotificationList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationList.swift; sourceTree = "<group>"; };
 		277D25162B55A96400D1D717 /* PermissionGroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGroupRow.swift; sourceTree = "<group>"; };
 		277D251B2B55B39F00D1D717 /* CharacterExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterExtensions.swift; sourceTree = "<group>"; };
+		277D25212B55C21F00D1D717 /* PermissionGroupPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGroupPicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -361,6 +363,7 @@
 				041412F62976009F008A35DA /* ProfileImageSelector.swift */,
 				041412F8297604BC008A35DA /* NoDataFound.swift */,
 				041412FA2976182D008A35DA /* ProfileImage.swift */,
+				277D25212B55C21F00D1D717 /* PermissionGroupPicker.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -640,6 +643,7 @@
 				04B94914295DEB1100703523 /* ModelData.swift in Sources */,
 				277D25172B55A96400D1D717 /* PermissionGroupRow.swift in Sources */,
 				04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */,
+				277D25222B55C21F00D1D717 /* PermissionGroupPicker.swift in Sources */,
 				04314387296B64A50094D7E0 /* ConnectionGroup.swift in Sources */,
 				04B94947295E57C500703523 /* UIApplicationExtensions.swift in Sources */,
 				0431438B296B655F0094D7E0 /* ConnectionGroupsStore.swift in Sources */,

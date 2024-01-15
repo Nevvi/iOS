@@ -45,6 +45,10 @@ struct ColorConstants {
         return Color(UIColor(hexString: "#e6e6e6"))
     }
     
+    static var badgeBorder: Color {
+        return Color(UIColor(hexString: "#00112b"))
+    }
+    
     static var badgeSuccess: Color {
         return Color(UIColor(hexString: "#cbf5e5"))
     }
