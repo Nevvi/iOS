@@ -19,6 +19,7 @@ class AccountStore: ObservableObject {
     @Published var id: String = ""
     @Published var firstName: String = ""
     @Published var lastName: String = ""
+    @Published var bio: String = ""
     @Published var deviceId: String = ""
     @Published var email: String = ""
     @Published var emailConfirmed: Bool = false

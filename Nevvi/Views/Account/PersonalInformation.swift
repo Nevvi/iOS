@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WrappingHStack
 
 extension VStack {
     func personalInfoStyle() -> some View {
@@ -42,59 +43,63 @@ struct PersonalInformation: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack {
-                    VStack {
-                        ProfileImageSelector(height: 80, width: 80)
-                        
-                        Text(self.accountStore.email)
-                            .foregroundColor(.secondary)
-                            .font(.system(size: 14))
-                    }.padding(10)
-                    
+            List {
+                Section {
+                    HStack {
+                        Spacer()
+                        ProfileImageSelector(height: 100, width: 100)
+                        Spacer()
+                    }
+                }.listRowBackground(Color.clear)
+
+                Section {
                     VStack(alignment: .leading) {
-                        Text("First Name")
-                            .personalInfoLabel()
-                        
-                        TextField("Jane", text: self.$accountStore.firstName)
+                        Text("Name").personalInfoLabel()
+
+                        TextField("First Name", text: self.$accountStore.firstName)
                             .personalInfoStyle()
-                    }.personalInfoStyle()
-                    
+
+                        TextField("Last Name", text: self.$accountStore.lastName)
+                            .personalInfoStyle()
+                    }
+                }
+
+                Section {
                     VStack(alignment: .leading) {
-                        Text("Last Name")
-                            .personalInfoLabel()
-                        
-                        TextField("Doe", text: self.$accountStore.lastName)
+                        Text("Bio").personalInfoLabel()
+
+                        TextField("Role & company name", text: self.$accountStore.bio)
                             .personalInfoStyle()
-                    }.personalInfoStyle()
-                    
+                    }
+                }.listRowInsets(.none)
+
+                Section {
                     VStack(alignment: .leading) {
                         phoneVerificationLabel
-                        
-                        TextField("", text: self.$accountStore.phoneNumber)
+
+                        TextField("Phone Number", text: self.$accountStore.phoneNumber)
                             .personalInfoStyle()
-                    }.personalInfoStyle()
-                    
-                    VStack(alignment: .leading) {
-                        Text("Birthday")
-                            .personalInfoLabel()
                         
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
-                            
-                            Text(self.accountStore.birthday.yyyyMMdd() != Date().yyyyMMdd() ?
-                                 self.accountStore.birthday.toString() :
-                                 "")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(14)
-                        }
-                        .contentShape(RoundedRectangle(cornerRadius: 10.0))
-                        .onTapGesture {
-                            self.showBirthdayPicker.toggle()
-                        }
+                        Divider()
+                        
+                        FieldPermissionGroupPicker(fieldName: "phoneNumber")
                     }
-                    .personalInfoStyle()
-                    
+                }
+
+                Section {
+                    VStack(alignment: .leading) {
+                        Text("Email").personalInfoLabel()
+
+                        TextField("Email", text: self.$accountStore.email)
+                            .personalInfoStyle()
+                        
+                        Divider()
+                        
+                        FieldPermissionGroupPicker(fieldName: "email")
+                    }
+                }
+
+                Section {
                     VStack(alignment: .leading) {
                         Text("Street Address")
                             .personalInfoLabel()
@@ -110,10 +115,7 @@ struct PersonalInformation: View {
                         .onTapGesture {
                             self.showAddressSearch = true
                         }
-                    }
-                    .personalInfoStyle()
-                    
-                    VStack(alignment: .leading) {
+                        
                         HStack {
                             Text("Mailing Address")
                                 .personalInfoLabel()
@@ -140,45 +142,91 @@ struct PersonalInformation: View {
                                 self.showMailingAddressSearch = true
                             }
                         }
-                    }
-                    .personalInfoStyle()
                         
-                    Spacer()
+                        Divider()
+                        
+                        FieldPermissionGroupPicker(fieldName: "birthday")
+                    }
+                    .padding([.top, .bottom], 5)
                 }
-                .onChange(of: self.accountStore.firstName, perform: { newValue in
-                    self.tryToggle()
-                })
-                .onChange(of: self.accountStore.lastName, perform: { newValue in
-                    self.tryToggle()
-                })
-                .onChange(of: self.accountStore.phoneNumber, perform: { newValue in
-                    self.tryToggle()
-                })
-                .onChange(of: self.accountStore.birthday, perform: { newValue in
-                    self.tryToggle()
-                })
-                .sheet(isPresented: self.$showBirthdayPicker) {
-                    datePickerSheet
+
+                Section {
+                    VStack(alignment: .leading) {
+                        Text("Birthday")
+                            .personalInfoLabel()
+
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
+
+                            Text(self.accountStore.birthday.yyyyMMdd() != Date().yyyyMMdd() ?
+                                 self.accountStore.birthday.toString() :
+                                    "")
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(14)
+                        }
+                        .contentShape(RoundedRectangle(cornerRadius: 10.0))
+                        .onTapGesture {
+                            self.showBirthdayPicker.toggle()
+                        }
+                        
+                        Divider()
+                        
+                        FieldPermissionGroupPicker(fieldName: "birthday")
+                    }
+                    .padding([.top, .bottom], 5)
                 }
-                .sheet(isPresented: self.$showAddressSearch) {
-                    AddressSearch(address: self.accountStore.address, callback: { address in
-                        self.updateAddress(address: address, isMailing: false)
-                        self.showAddressSearch = false
-                    }).presentationDetents([.large])
-                }
-                .sheet(isPresented: self.$showMailingAddressSearch) {
-                    AddressSearch(address: self.accountStore.mailingAddress, callback: { address in
-                        self.updateAddress(address: address, isMailing: true)
-                        self.showMailingAddressSearch = false
-                    }).presentationDetents([.large])
-                }
-                .sheet(isPresented: self.$showPhoneVerification) {
-                    phoneVerificationSheet
-                }
+
+                Section {
+                    Button(action: {
+                        self.accountStore.save()
+                    }, label: {
+                        Text("Save".uppercased())
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 24)
+                                    .foregroundColor(ColorConstants.primary)
+                            )
+                            .opacity(self.accountStore.saving ? 0.5 : 1.0)
+                    }).disabled(self.accountStore.saving)
+                }.listRowBackground(Color.clear)
             }
-            .navigationTitle("Profile")
-            .navigationBarTitleDisplayMode(.inline)
+            .onChange(of: self.accountStore.firstName, perform: { newValue in
+                self.tryToggle()
+            })
+            .onChange(of: self.accountStore.lastName, perform: { newValue in
+                self.tryToggle()
+            })
+            .onChange(of: self.accountStore.phoneNumber, perform: { newValue in
+                self.tryToggle()
+            })
+            .onChange(of: self.accountStore.birthday, perform: { newValue in
+                self.tryToggle()
+            })
+            .sheet(isPresented: self.$showBirthdayPicker) {
+                datePickerSheet
+            }
+            .sheet(isPresented: self.$showAddressSearch) {
+                AddressSearch(address: self.accountStore.address, callback: { address in
+                    self.updateAddress(address: address, isMailing: false)
+                    self.showAddressSearch = false
+                }).presentationDetents([.large])
+            }
+            .sheet(isPresented: self.$showMailingAddressSearch) {
+                AddressSearch(address: self.accountStore.mailingAddress, callback: { address in
+                    self.updateAddress(address: address, isMailing: true)
+                    self.showMailingAddressSearch = false
+                }).presentationDetents([.large])
+            }
+            .sheet(isPresented: self.$showPhoneVerification) {
+                phoneVerificationSheet
+            }
         }
+        .navigationTitle("Profile")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar(content: {
             if self.canSave {
                 updateAccountButton
@@ -287,6 +335,7 @@ struct PersonalInformation: View {
         })
         .disabled(self.accountStore.saving)
     }
+
     
     func updateAddress(address: AddressViewModel, isMailing: Bool) {
         if isMailing {
