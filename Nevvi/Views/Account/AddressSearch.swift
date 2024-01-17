@@ -174,17 +174,17 @@ struct AddressSearch: View {
                 Button(action: {
                     self.callback(self.address)
                 }, label: {
-                    Text("Done")
+                    Text("Confirm")
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity)
                         .font(.headline)
                         .foregroundColor(.white)
-                        .padding(.horizontal, 50)
                         .padding(.vertical, 16)
                         .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .foregroundColor(ColorConstants.secondary)
+                            RoundedRectangle(cornerRadius: 24)
+                                .foregroundColor(ColorConstants.primary)
                         )
                 })
-                .shadow(radius: 10)
                 .padding([.top], 20)
             }
         }

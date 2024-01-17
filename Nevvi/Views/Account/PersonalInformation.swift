@@ -41,6 +41,10 @@ struct PersonalInformation: View {
         }
     )}
     
+    private var isBirthdayEmpty: Bool {
+        return self.accountStore.birthday.yyyyMMdd() == Date().yyyyMMdd()
+    }
+    
     var body: some View {
         NavigationView {
             List {
@@ -101,51 +105,65 @@ struct PersonalInformation: View {
 
                 Section {
                     VStack(alignment: .leading) {
-                        Text("Street Address")
-                            .personalInfoLabel()
-                        
-                        ZStack {
+                        Text("Address").personalInfoLabel()
+                            
+                        HStack(alignment: self.accountStore.address.isEmpty ? .center : .top) {
+                            Button {
+                                self.accountStore.address = AddressViewModel()
+                            } label: {
+                                Image(systemName: "minus.circle")
+                                    .foregroundColor(Color.red)
+                                    .opacity(self.accountStore.address.isEmpty ? 0.5 : 1.0)
+                            }
+                            .disabled(self.accountStore.address.isEmpty)
+                            .buttonStyle(.borderless)
+                            
+                            Text(self.accountStore.address.isEmpty ? "" : self.accountStore.address.toString())
+                                .onTapGesture {
+                                    self.showAddressSearch = true
+                                }
+                            
+                            Spacer()
+                            
+                            Text("Home")
+                                .font(.system(size: 12))
+                                .padding([.leading, .trailing], 10)
+                                .padding([.top, .bottom], 6)
+                                .foregroundColor(Color.white)
+                                .background(ColorConstants.primary)
+                                .cornerRadius(30)
+                                .fontWeight(.semibold)
+                        }
+                        .padding(12)
+                        .overlay {
                             RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
-                            
-                            Text(self.accountStore.address.street != "" ? self.accountStore.address.toString() : "")
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(16)
                         }
-                        .contentShape(RoundedRectangle(cornerRadius: 10.0))
                         .onTapGesture {
-                            self.showAddressSearch = true
+                            if self.accountStore.address.isEmpty { self.showAddressSearch = true
+                            }
                         }
                         
-                        HStack {
-                            Text("Mailing Address")
-                                .personalInfoLabel()
-                            
-                            Toggle(isOn: self.sameMailingAddress) {
-                                Text("Same as address")
-                                    .personalInfoLabel()
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                            }
-                            .tint(ColorConstants.secondary)
-                        }
-                        
-                        if !self.sameMailingAddress.wrappedValue {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 10.0)
-                                    .strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
-                                
-                                Text(self.accountStore.mailingAddress.street != "" ? self.accountStore.mailingAddress.toString() : "")
-                                    .frame(maxWidth: .infinity, minHeight: 50, alignment: .leading)
-                                    .padding(16)
-                            }
-                            .contentShape(RoundedRectangle(cornerRadius: 10.0))
-                            .onTapGesture {
-                                self.showMailingAddressSearch = true
-                            }
-                        }
+//                        Button {
+//                            self.showAddressSearch = true
+//                        } label: {
+//                            HStack {
+//                                Image(systemName: "plus.circle")
+//                                Text("Add Address")
+//                            }
+//                        }
+//                        .fontWeight(.semibold)
+//                        .font(.system(size: 12))
+//                        .foregroundColor(.white)
+//                        .padding([.vertical], 6)
+//                        .padding([.horizontal], 8)
+//                        .background(
+//                            RoundedRectangle(cornerRadius: 24)
+//                                .foregroundColor(ColorConstants.primary)
+//                        )
                         
                         Divider()
                         
-                        FieldPermissionGroupPicker(fieldName: "birthday")
+                        FieldPermissionGroupPicker(fieldName: "address")
                     }
                     .padding([.top, .bottom], 5)
                 }
@@ -155,20 +173,33 @@ struct PersonalInformation: View {
                         Text("Birthday")
                             .personalInfoLabel()
 
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
-
-                            Text(self.accountStore.birthday.yyyyMMdd() != Date().yyyyMMdd() ?
-                                 self.accountStore.birthday.toString() :
-                                    "")
+                        HStack(alignment: .top) {
+                            Button {
+                                self.accountStore.birthday = Date()
+                            } label: {
+                                Image(systemName: "minus.circle")
+                                    .foregroundColor(Color.red)
+                                    .opacity(self.isBirthdayEmpty ? 0.5 : 1.0)
+                            }
+                            .disabled(self.isBirthdayEmpty)
+                            .buttonStyle(.borderless)
+                            
+                            Text(self.isBirthdayEmpty ? "" : self.accountStore.birthday.toString())
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(14)
+                            
+                            Spacer()
+                            
+                            Button {
+                                self.showBirthdayPicker.toggle()
+                            } label: {
+                                Image(systemName: "calendar")
+                            }.buttonStyle(.borderless)
                         }
-                        .contentShape(RoundedRectangle(cornerRadius: 10.0))
-                        .onTapGesture {
-                            self.showBirthdayPicker.toggle()
+                        .padding(14)
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
                         }
-                        
+                            
                         Divider()
                         
                         FieldPermissionGroupPicker(fieldName: "birthday")

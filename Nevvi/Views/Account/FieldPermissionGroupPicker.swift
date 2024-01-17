@@ -37,7 +37,7 @@ struct FieldPermissionGroupPicker: View {
             } label: {
                 Image(systemName: "plus.circle")
                     .foregroundStyle(ColorConstants.primary)
-            }
+            }.buttonStyle(.borderless)
         }
         .sheet(isPresented: self.$showPicker) {
             permissionGroupPicker

@@ -173,7 +173,7 @@ class AccountStore: ObservableObject {
                                        lastName: self.lastName != "" ? self.lastName : nil,
                                        address: self.address.toModel(),
                                        mailingAddress: self.mailingAddress.toModel(),
-                                       birthday: self.birthday.yyyyMMdd(),
+                                       birthday: self.birthday != Date() ? self.birthday.yyyyMMdd() : nil,
                                        phoneNumber: self.phoneNumber != "" ? self.phoneNumber : nil,  // TODO - format this to +1XXXXXXXXXX
                                        deviceId: self.deviceId,
                                        permissionGroups: self.permissionGroups,
