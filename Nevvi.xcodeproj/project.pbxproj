@@ -362,6 +362,7 @@
 		04B9490C295DEA9E00703523 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				277D25272B55F4E300D1D717 /* FieldPermissionGroupPicker.swift */,
 				04B948FD295DEA5C00703523 /* ContentView.swift */,
 				04B94966295F972500703523 /* ImagePicker.swift */,
 				04B9496A2960964500703523 /* NavigationLazyView.swift */,
@@ -425,7 +426,6 @@
 				04314396297438D70094D7E0 /* PermissionGroupList.swift */,
 				0431439829743F8F0094D7E0 /* PermissionGroupDetail.swift */,
 				277D25162B55A96400D1D717 /* PermissionGroupRow.swift */,
-				277D25272B55F4E300D1D717 /* FieldPermissionGroupPicker.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";

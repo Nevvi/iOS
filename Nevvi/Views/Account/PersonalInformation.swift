@@ -86,7 +86,7 @@ struct PersonalInformation: View {
                         
                         Divider()
                         
-                        FieldPermissionGroupPicker(fieldName: "phoneNumber")
+                        fieldPermissionGroupPicker(field: "phoneNumber")
                     }
                 }
 
@@ -99,7 +99,7 @@ struct PersonalInformation: View {
                         
                         Divider()
                         
-                        FieldPermissionGroupPicker(fieldName: "email")
+                        fieldPermissionGroupPicker(field: "email")
                     }
                 }
 
@@ -163,7 +163,7 @@ struct PersonalInformation: View {
                         
                         Divider()
                         
-                        FieldPermissionGroupPicker(fieldName: "address")
+                        fieldPermissionGroupPicker(field: "address")
                     }
                     .padding([.top, .bottom], 5)
                 }
@@ -202,30 +202,13 @@ struct PersonalInformation: View {
                             
                         Divider()
                         
-                        FieldPermissionGroupPicker(fieldName: "birthday")
+                        fieldPermissionGroupPicker(field: "birthday")
                     }
                     .padding([.top, .bottom], 5)
                 }
-
-                Section {
-                    Button(action: {
-                        self.accountStore.save()
-                    }, label: {
-                        Text("Save".uppercased())
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity)
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding(.vertical, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 24)
-                                    .foregroundColor(ColorConstants.primary)
-                            )
-                            .opacity(self.accountStore.saving ? 0.5 : 1.0)
-                    }).disabled(self.accountStore.saving)
-                }.listRowBackground(Color.clear)
             }
             .onChange(of: self.accountStore.firstName, perform: { newValue in
+                print("First name change: \(newValue)")
                 self.tryToggle()
             })
             .onChange(of: self.accountStore.lastName, perform: { newValue in
@@ -255,14 +238,14 @@ struct PersonalInformation: View {
             .sheet(isPresented: self.$showPhoneVerification) {
                 phoneVerificationSheet
             }
+            .navigationTitle("Profile")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(content: {
+                if self.canSave {
+                    updateAccountButton
+                }
+            })
         }
-        .navigationTitle("Profile")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar(content: {
-            if self.canSave {
-                updateAccountButton
-            }
-        })
     }
     
     var phoneVerificationLabel: some View {
@@ -366,6 +349,10 @@ struct PersonalInformation: View {
         })
         .disabled(self.accountStore.saving)
     }
+    
+    func fieldPermissionGroupPicker(field: String) -> some View {
+        FieldPermissionGroupPicker(fieldName: field, permissionGroups: self.accountStore.permissionGroups.map { $0.copy() })
+    }
 
     
     func updateAddress(address: AddressViewModel, isMailing: Bool) {
@@ -400,9 +387,13 @@ struct PersonalInformation: View {
         didPropChange(type: String.self, a: user.mailingAddress.zipCode, b: mailingAddressModel.zipCode) ||
         didPropChange(type: Date.self, a: user.birthday, b: self.accountStore.birthday)
         
+        print("Did Change \(didChange), Can Save: \(self.canSave)")
+        
         if (!self.canSave && didChange) || (self.canSave && !didChange) {
+            print("CHANGING UPDATE TOGGLE")
             withAnimation {
                 self.canSave.toggle()
+                print(self.canSave)
             }
         }
     }

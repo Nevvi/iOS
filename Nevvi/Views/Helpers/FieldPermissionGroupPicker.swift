@@ -14,12 +14,11 @@ struct FieldPermissionGroupPicker: View {
     @State private var showPicker: Bool = false
     
     @State var fieldName: String
-    
-    @State var permissionGroupCopy: [PermissionGroup] = []
+    @State var permissionGroups: [PermissionGroup]
 
     var buttonDisabled: Bool {
         // TODO - this isn't working right
-        self.accountStore.saving || self.accountStore.permissionGroups == self.permissionGroupCopy
+        self.accountStore.saving || self.accountStore.permissionGroups == self.permissionGroups
     }
     
     var body: some View {
@@ -42,10 +41,6 @@ struct FieldPermissionGroupPicker: View {
         .sheet(isPresented: self.$showPicker) {
             permissionGroupPicker
         }
-        .onAppear {
-            // TODO - kinda hacky
-            self.permissionGroupCopy = self.accountStore.permissionGroups.map { $0.copy() }
-        }
     }
     
     var permissionGroupPicker: some View {
@@ -61,7 +56,7 @@ struct FieldPermissionGroupPicker: View {
                 .padding([.leading])
             
             List {
-                ForEach(self.permissionGroupCopy, id: \.name) { group in
+                ForEach(self.permissionGroups, id: \.name) { group in
                     HStack {
                         PermissionGroupToggle(isOn: group.fields.contains(self.fieldName), groupName: group.name) { enabled in
                             processChange(groupName: group.name, enabled: enabled)
@@ -75,7 +70,7 @@ struct FieldPermissionGroupPicker: View {
             Spacer()
             
             Button(action: {
-                self.accountStore.permissionGroups = self.permissionGroupCopy
+                self.accountStore.permissionGroups = self.permissionGroups
                 self.accountStore.save { res in
                     self.showPicker = false
                 }
@@ -99,7 +94,7 @@ struct FieldPermissionGroupPicker: View {
     }
     
     func processChange(groupName: String, enabled: Bool) {
-        self.permissionGroupCopy = self.permissionGroupCopy
+        self.permissionGroups = self.permissionGroups
             .map({ group in
                 if group.name != groupName {
                     return group
@@ -134,7 +129,7 @@ struct FieldPermissionGroupPicker_Previews: PreviewProvider {
     static let accountStore = AccountStore(user: modelData.user)
     
     static var previews: some View {
-        FieldPermissionGroupPicker(fieldName: "email", permissionGroupCopy: accountStore.permissionGroups.map { $0.copy() })
+        FieldPermissionGroupPicker(fieldName: "email", permissionGroups: accountStore.permissionGroups.map { $0.copy() })
             .environmentObject(accountStore)
     }
 }

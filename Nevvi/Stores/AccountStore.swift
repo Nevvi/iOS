@@ -16,6 +16,8 @@ class AccountStore: ObservableObject {
     @Published var saving: Bool = false
     @Published var savingImage: Bool = false
     
+    // TODO - stash unsaved changes here and ability to revert?
+    
     @Published var id: String = ""
     @Published var firstName: String = ""
     @Published var lastName: String = ""
