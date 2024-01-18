@@ -116,7 +116,16 @@ struct Settings: View {
                 }
                 
                 Section {
-                    Button(action: {}, label: {
+                    Button(action: {
+                        self.authStore.logout { res in
+                            switch res {
+                            case .success(_):
+                                print("Logged out!")
+                            case .failure(_):
+                                print("Failed to log out!")
+                            }
+                        }
+                    }, label: {
                         HStack {
                             Image(systemName: "rectangle.portrait.and.arrow.forward").padding([.trailing])
                             Text("Logout")
@@ -128,7 +137,10 @@ struct Settings: View {
                                 .frame(width: 8, height: 12)
                                 .foregroundColor(.gray)
                         }.foregroundColor(.red)
-                    }).padding(10)
+                    })
+                    .padding(10)
+                    .disabled(self.authStore.loggingOut)
+                    .opacity(self.authStore.loggingOut ? 0.5 : 1.0)
                 }
             }
             .listStyle(.insetGrouped)

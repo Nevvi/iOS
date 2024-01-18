@@ -13,6 +13,7 @@ struct FieldPermissionGroupPicker: View {
     
     @State private var showPicker: Bool = false
     
+    @State var canEdit: Bool = true
     @State var fieldName: String
     @State var permissionGroups: [PermissionGroup]
 
@@ -31,12 +32,14 @@ struct FieldPermissionGroupPicker: View {
             
             Spacer()
             
-            Button {
-                self.showPicker.toggle()
-            } label: {
-                Image(systemName: "plus.circle")
-                    .foregroundStyle(ColorConstants.primary)
-            }.buttonStyle(.borderless)
+            if self.canEdit {
+                Button {
+                    self.showPicker.toggle()
+                } label: {
+                    Image(systemName: "plus.circle")
+                        .foregroundStyle(ColorConstants.primary)
+                }.buttonStyle(.borderless)
+            }
         }
         .sheet(isPresented: self.$showPicker) {
             permissionGroupPicker

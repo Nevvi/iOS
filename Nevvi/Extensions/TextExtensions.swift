@@ -45,6 +45,15 @@ extension Text {
             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
     }
     
+    func personalInfoStyle() -> some View {
+        return self
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding([.vertical], 6)
+            .textInputAutocapitalization(.never)
+            .disableAutocorrection(true)
+            .tint(ColorConstants.text)
+    }
+    
     func asTextField() -> some View {
         return self
             .frame(maxWidth: .infinity, alignment: .leading)
