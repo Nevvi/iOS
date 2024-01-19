@@ -46,7 +46,7 @@ struct PersonalInformationEdit: View {
                 Section {
                     HStack {
                         Spacer()
-                        ProfileImageSelector(height: 100, width: 100)
+                        ProfileImageSelector(height: 108, width: 108)
                         Spacer()
                     }
                 }.listRowBackground(Color.clear)
@@ -56,10 +56,10 @@ struct PersonalInformationEdit: View {
                         Text("Name").personalInfoLabel()
 
                         TextField("First Name", text: self.$accountStore.firstName)
-                            .personalInfoStyle()
+                            .defaultStyle(size: 16, opacity: 1.0)
 
                         TextField("Last Name", text: self.$accountStore.lastName)
-                            .personalInfoStyle()
+                            .defaultStyle(size: 16, opacity: 1.0)
                     }
                 }
 
@@ -68,7 +68,7 @@ struct PersonalInformationEdit: View {
                         Text("Bio").personalInfoLabel()
 
                         TextField("Role & company name", text: self.$accountStore.bio)
-                            .personalInfoStyle()
+                            .bioStyle(size: 16, opacity: 1.0)
                     }
                 }.listRowInsets(.none)
 
@@ -77,9 +77,9 @@ struct PersonalInformationEdit: View {
                         phoneVerificationLabel
 
                         TextField("Phone Number", text: self.$accountStore.phoneNumber)
-                            .personalInfoStyle()
+                            .defaultStyle(size: 16, opacity: 1.0)
                         
-                        Divider()
+                        Divider().padding([.vertical], 4)
                         
                         fieldPermissionGroupPicker(field: "phoneNumber")
                     }
@@ -90,9 +90,9 @@ struct PersonalInformationEdit: View {
                         Text("Email").personalInfoLabel()
 
                         TextField("Email", text: self.$accountStore.email)
-                            .personalInfoStyle()
+                            .defaultStyle(size: 16, opacity: 1.0)
                         
-                        Divider()
+                        Divider().padding([.vertical], 4)
                         
                         fieldPermissionGroupPicker(field: "email")
                     }
@@ -102,7 +102,7 @@ struct PersonalInformationEdit: View {
                     VStack(alignment: .leading) {
                         Text("Address").personalInfoLabel()
                             
-                        HStack(alignment: self.accountStore.address.isEmpty ? .center : .top) {
+                        HStack(alignment: self.accountStore.address.isEmpty ? .center : .top, spacing: 8) {
                             Button {
                                 self.accountStore.address = AddressViewModel()
                             } label: {
@@ -114,49 +114,29 @@ struct PersonalInformationEdit: View {
                             .buttonStyle(.borderless)
                             
                             Text(self.accountStore.address.isEmpty ? "" : self.accountStore.address.toString())
+                                .defaultStyle(size: 16, opacity: 1.0)
                                 .onTapGesture {
                                     self.showAddressSearch = true
                                 }
                             
                             Spacer()
                             
-                            Text("Home")
-                                .font(.system(size: 12))
-                                .padding([.leading, .trailing], 10)
-                                .padding([.top, .bottom], 6)
-                                .foregroundColor(Color.white)
-                                .background(ColorConstants.primary)
-                                .cornerRadius(30)
-                                .fontWeight(.semibold)
+                            Text("Home").asPrimaryBadge()
                         }
-                        .padding(12)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
-                        }
+                        .padding([.vertical], 12)
+                        .padding([.horizontal], 10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .inset(by: 0.5)
+                                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
+                        )
                         .onTapGesture {
-                            if self.accountStore.address.isEmpty { self.showAddressSearch = true
+                            if self.accountStore.address.isEmpty {
+                                self.showAddressSearch = true
                             }
                         }
                         
-//                        Button {
-//                            self.showAddressSearch = true
-//                        } label: {
-//                            HStack {
-//                                Image(systemName: "plus.circle")
-//                                Text("Add Address")
-//                            }
-//                        }
-//                        .fontWeight(.semibold)
-//                        .font(.system(size: 12))
-//                        .foregroundColor(.white)
-//                        .padding([.vertical], 6)
-//                        .padding([.horizontal], 8)
-//                        .background(
-//                            RoundedRectangle(cornerRadius: 24)
-//                                .foregroundColor(ColorConstants.primary)
-//                        )
-                        
-                        Divider()
+                        Divider().padding([.vertical], 4)
                         
                         fieldPermissionGroupPicker(field: "address")
                     }
@@ -180,7 +160,7 @@ struct PersonalInformationEdit: View {
                             .buttonStyle(.borderless)
                             
                             Text(self.isBirthdayEmpty ? "" : self.accountStore.birthday.toString())
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                                .defaultStyle(size: 16, opacity: 1.0)
                             
                             Spacer()
                             
@@ -190,12 +170,15 @@ struct PersonalInformationEdit: View {
                                 Image(systemName: "calendar")
                             }.buttonStyle(.borderless)
                         }
-                        .padding(14)
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0))
-                        }
+                        .padding([.vertical], 12)
+                        .padding([.horizontal], 10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .inset(by: 0.5)
+                                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
+                        )
                             
-                        Divider()
+                        Divider().padding([.vertical], 4)
                         
                         fieldPermissionGroupPicker(field: "birthday")
                     }
@@ -204,7 +187,6 @@ struct PersonalInformationEdit: View {
             }
             .padding([.top], -25)
             .onChange(of: self.accountStore.firstName, perform: { newValue in
-                print("First name change: \(newValue)")
                 self.tryToggle()
             })
             .onChange(of: self.accountStore.lastName, perform: { newValue in
@@ -248,7 +230,7 @@ struct PersonalInformationEdit: View {
     var cancelButton : some View { Button(action: {
         self.presentationMode.wrappedValue.dismiss()
         }) {
-            Text("Cancel")
+            Text("Back")
                 .foregroundColor(.gray)
         }
     }
@@ -391,14 +373,10 @@ struct PersonalInformationEdit: View {
         didPropChange(type: String.self, a: user.mailingAddress.state, b: mailingAddressModel.state) ||
         didPropChange(type: String.self, a: user.mailingAddress.zipCode, b: mailingAddressModel.zipCode) ||
         didPropChange(type: Date.self, a: user.birthday, b: self.accountStore.birthday)
-        
-        print("Did Change \(didChange), Can Save: \(self.canSave)")
-        
+                
         if (!self.canSave && didChange) || (self.canSave && !didChange) {
-            print("CHANGING UPDATE TOGGLE")
             withAnimation {
                 self.canSave.toggle()
-                print(self.canSave)
             }
         }
     }

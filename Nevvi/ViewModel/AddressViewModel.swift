@@ -40,6 +40,6 @@ class AddressViewModel : ObservableObject {
             return ""
         }
         
-        return "\(self.street)\(self.unit != "" ? " \(self.unit)" : "" )\n\(self.city), \(self.state) \(self.zipCode)"
+        return "\(self.street)\(self.unit != "" ? " \(self.unit)" : "" ), \(self.city), \(self.state) \(self.zipCode)"
     }
 }

@@ -9,8 +9,15 @@ import SwiftUI
 
 struct NotificationList: View {        
     var body: some View {
-        VStack {
-            Text("Hello world")
+        NavigationView {
+            VStack {
+                Image("NotificationBell")
+                
+                Text("No Notifications")
+                    .defaultStyle(size: 24, opacity: 0.7)
+            }
+            .navigationTitle("Notifications")
+            .navigationBarTitleDisplayMode(.large)
         }
     }
 }

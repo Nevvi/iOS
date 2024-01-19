@@ -68,6 +68,7 @@ class AccountStore: ObservableObject {
         self.deviceSettings.update(settings: user.deviceSettings)
         self.permissionGroups = user.permissionGroups
         self.profileImage = user.profileImage
+        self.bio = user.bio == nil ? "" : user.bio!
     }
     
     func reset() {

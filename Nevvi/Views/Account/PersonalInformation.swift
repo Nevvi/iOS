@@ -30,13 +30,14 @@ struct PersonalInformation: View {
                 Section {
                     HStack(alignment: .center) {
                         Spacer()
-                        VStack {
-                            ProfileImage(imageUrl: self.accountStore.profileImage, height: 100, width: 100)
+                        VStack(alignment: .center, spacing: 4) {
+                            ProfileImage(imageUrl: self.accountStore.profileImage, height: 108, width: 108)
                             
                             Text("\(self.accountStore.firstName) \(self.accountStore.lastName)")
-                                .font(.system(size: 22, weight: .medium))
+                                .defaultStyle(size: 22, opacity: 1.0)
                             
                             Text(self.accountStore.bio)
+                                .defaultStyle(size: 16, opacity: 0.6)
                         }
                         Spacer()
                     }
@@ -44,66 +45,80 @@ struct PersonalInformation: View {
                 .listRowBackground(Color.clear)
 
                 Section {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 2) {
                         Text("Phone Number").personalInfoLabel()
-
-                        Text(self.accountStore.phoneNumber)
-                            .personalInfoStyle()
                         
-                        Divider()
+                        HStack(alignment: .center, spacing: 8) {
+                            Text(self.accountStore.phoneNumber)
+                                .defaultStyle(size: 16, opacity: 1.0)
+                            
+                            Spacer()
+                            
+                            Text("Home").asDefaultBadge()
+                        }
+                        .padding(.horizontal, 0)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        Divider().padding([.bottom], 4)
                         
                         fieldPermissionGroups(field: "phoneNumber")
                     }
                 }
 
                 Section {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 2) {
                         Text("Email").personalInfoLabel()
-
-                        Text(self.accountStore.email)
-                            .personalInfoStyle()
                         
-                        Divider()
+                        HStack(alignment: .center, spacing: 8) {
+                            Text(self.accountStore.email)
+                                .defaultStyle(size: 16, opacity: 1.0)
+                            
+                            Spacer()
+                            
+                            Text("Personal").asDefaultBadge()
+                        }
+                        .padding(.horizontal, 0)
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        
+                        Divider().padding([.bottom], 4)
                         
                         fieldPermissionGroups(field: "email")
                     }
                 }
 
                 Section {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 2) {
                         Text("Address").personalInfoLabel()
                         
-                        HStack(alignment: self.accountStore.address.isEmpty ? .center : .top) {
+                        HStack(alignment: .top, spacing: 8) {
                             Text(self.accountStore.address.isEmpty ? "" : self.accountStore.address.toString())
+                                .defaultStyle(size: 16, opacity: 1.0)
                             
                             Spacer()
                             
-                            Text("Home")
-                                .font(.system(size: 12))
-                                .padding([.leading, .trailing], 10)
-                                .padding([.top, .bottom], 6)
-                                .foregroundColor(Color.white)
-                                .background(ColorConstants.primary)
-                                .cornerRadius(30)
-                                .fontWeight(.semibold)
+                            Text("Home").asDefaultBadge()
                         }
-                        .padding([.vertical], 6)
+                        .padding([.vertical], 8)
+                        .padding([.horizontal], 0)
+                        .frame(maxWidth: .infinity, alignment: .topLeading)
                         
-                        Divider()
+                        Divider().padding([.bottom], 4)
 
                         fieldPermissionGroups(field: "address")
                     }
                 }
 
                 Section {
-                    VStack(alignment: .leading) {
-                        Text("Birthday")
-                            .personalInfoLabel()
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Birthday").personalInfoLabel()
 
                         Text(self.isBirthdayEmpty ? "" : self.accountStore.birthday.toString())
-                            .personalInfoStyle()
+                            .defaultStyle(size: 16, opacity: 1.0)
+                            .padding([.vertical], 8)
 
-                        Divider()
+                        Divider().padding([.bottom], 4)
 
                         fieldPermissionGroups(field: "birthday")
                     }
@@ -129,9 +144,8 @@ struct PersonalInformation: View {
                     }
                 }.listRowBackground(Color.clear)
             }
-            .padding([.top], -25)
             .navigationTitle("Profile")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
         }
     }
     

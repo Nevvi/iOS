@@ -29,9 +29,9 @@ extension Text {
     
     func personalInfoLabel() -> some View {
         return self
-            .foregroundColor(.secondary)
-            .fontWeight(.light)
-            .font(.system(size: 14))
+            .font(Font.custom("SF Pro", size: 12).weight(.medium))
+            .multilineTextAlignment(.center)
+            .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
     }
     
     func personalInfo() -> some View {
@@ -60,6 +60,39 @@ extension Text {
             .padding()
             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
     }
+    
+    func defaultStyle() -> some View {
+        return self.defaultStyle(size: nil, opacity: nil)
+    }
+    
+    func defaultStyle(size: CGFloat?, opacity: CGFloat?) -> some View {
+        let finalSize = size ?? 24
+        let finalOpacity = opacity ?? 1.0
+        return self
+            .font(Font.custom("SF Pro", size: finalSize).weight(.semibold))
+            .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
+    }
+    
+    func asPrimaryBadge() -> some View {
+        self.asBadge(size: 12, color: nil, bgColor: nil)
+    }
+    
+    func asDefaultBadge() -> some View {
+        self.asBadge(size: 12, color: Color(red: 0, green: 0.07, blue: 0.17).opacity(0.5), bgColor: Color(red: 0, green: 0.07, blue: 0.17).opacity(0.04))
+    }
+    
+    func asBadge(size: CGFloat?, color: Color?, bgColor: Color?) -> some View {
+        let finalSize = size ?? 12
+        let finalColor = color ?? Color(red: 0, green: 0.6, blue: 1)
+        let finalBgColor = bgColor ?? Color(red: 0, green: 0.6, blue: 1).opacity(0.14)
+        return self
+            .font(Font.custom("SF Pro", size: finalSize).weight(.medium))
+            .foregroundColor(finalColor)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .background(finalBgColor)
+            .cornerRadius(Constants.Full)
+    }
 }
 
 extension TextField {
@@ -80,6 +113,48 @@ extension TextField {
             .textInputAutocapitalization(.never)
             .disableAutocorrection(true)
             .tint(ColorConstants.text)
+    }
+    
+    func defaultStyle() -> some View {
+        return self.defaultStyle(size: nil, opacity: nil)
+    }
+    
+    func defaultStyle(size: CGFloat?, opacity: CGFloat?) -> some View {
+        let finalSize = size ?? 24
+        let finalOpacity = opacity ?? 1.0
+        return self
+            .font(Font.custom("SF Pro", size: finalSize).weight(.semibold))
+            .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
+            .textInputAutocapitalization(.never)
+            .disableAutocorrection(true)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .inset(by: 0.5)
+                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
+            )
+    }
+    
+    func bioStyle(size: CGFloat?, opacity: CGFloat?) -> some View {
+        let finalSize = size ?? 24
+        let finalOpacity = opacity ?? 1.0
+        return self
+            .font(Font.custom("SF Pro", size: finalSize).weight(.semibold))
+            .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
+            .textInputAutocapitalization(.never)
+            .disableAutocorrection(true)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, minHeight: 87, maxHeight: 87, alignment: .topLeading)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .inset(by: 0.5)
+                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
+            )
     }
 }
 

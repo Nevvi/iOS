@@ -111,6 +111,7 @@
 		277D252A2B55F84900D1D717 /* PermissionGroupToggle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25292B55F84900D1D717 /* PermissionGroupToggle.swift */; };
 		277D252C2B55F8E900D1D717 /* CheckboxToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D252B2B55F8E900D1D717 /* CheckboxToggleStyle.swift */; };
 		277D25302B58B00800D1D717 /* PersonalInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D252F2B58B00800D1D717 /* PersonalInformation.swift */; };
+		277D25322B5A069A00D1D717 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25312B5A069A00D1D717 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -211,6 +212,7 @@
 		277D25292B55F84900D1D717 /* PermissionGroupToggle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGroupToggle.swift; sourceTree = "<group>"; };
 		277D252B2B55F8E900D1D717 /* CheckboxToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleStyle.swift; sourceTree = "<group>"; };
 		277D252F2B58B00800D1D717 /* PersonalInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInformation.swift; sourceTree = "<group>"; };
+		277D25312B5A069A00D1D717 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -274,6 +276,7 @@
 			isa = PBXGroup;
 			children = (
 				041413172983571D008A35DA /* ColorConstants.swift */,
+				277D25312B5A069A00D1D717 /* Constants.swift */,
 			);
 			path = Constants;
 			sourceTree = "<group>";
@@ -634,6 +637,7 @@
 				041412F9297604BC008A35DA /* NoDataFound.swift in Sources */,
 				04B94953295F21D200703523 /* CreateAccount.swift in Sources */,
 				04038E322966324E00D3C7AC /* Redactable.swift in Sources */,
+				277D25322B5A069A00D1D717 /* Constants.swift in Sources */,
 				04B948FE295DEA5C00703523 /* ContentView.swift in Sources */,
 				04B94963295F814100703523 /* OperatorOverloads.swift in Sources */,
 				04B94918295DEB9900703523 /* Connection.swift in Sources */,
