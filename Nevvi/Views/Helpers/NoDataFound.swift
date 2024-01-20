@@ -26,6 +26,7 @@ struct NoDataFound: View {
             Spacer()
         }
         .padding([.top], 50)
+        .background(.clear)
     }
 }
 

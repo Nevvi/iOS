@@ -29,33 +29,46 @@ struct ConnectionList: View {
     var body: some View {
         NavigationView {
             List {
-                if self.connectionsStore.connectionCount == 0 {
+                if self.accountStore.firstName.isEmpty {
+                    profileUpdateView
+                } else if self.connectionsStore.connectionCount == 0 {
                     noConnectionsView
                 } else {
                     connectionsView
                 }
             }
-            .listStyle(.plain)
+            .listStyle(.insetGrouped)
             .scrollContentBackground(self.connectionsStore.connectionCount == 0 ? .hidden : .visible)
             .navigationTitle("Connections")
             .navigationBarTitleDisplayMode(.large)
-            .toolbar(content: {
-                if self.connectionsStore.outOfSyncCount > 0 {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        if syncing {
-                            ProgressView()
-                        } else if (!self.accountStore.deviceSettings.autoSync) {
-                            Button {
-                                self.sync(dryRun: true)
-                            } label: {
-                                Text("Sync (\(self.connectionsStore.outOfSyncCount))")
-                            }
-                        }
-                    }
-                }
-            })
             .searchable(text: self.$nameFilter.text)
             .disableAutocorrection(true)
+            .toolbar(content: {
+//                if self.connectionsStore.outOfSyncCount > 0 {
+//                    ToolbarItem(placement: .navigationBarLeading) {
+//                        if syncing {
+//                            ProgressView()
+//                        } else if (!self.accountStore.deviceSettings.autoSync) {
+//                            Button {
+//                                self.sync(dryRun: true)
+//                            } label: {
+//                                Text("Sync (\(self.connectionsStore.outOfSyncCount))")
+//                            }
+//                        }
+//                    }
+//                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    // TODO
+                    Image(systemName: "qrcode.viewfinder")
+                        .toolbarButtonStyle()
+                }
+
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    // TODO
+                    Image(systemName: "qrcode")
+                        .toolbarButtonStyle()
+                }
+            })
             .onChange(of: self.nameFilter.debouncedText) { text in
                 self.connectionsStore.load(nameFilter: text)
             }
@@ -78,6 +91,46 @@ struct ConnectionList: View {
             if self.accountStore.deviceSettings.autoSync {
                 self.sync(dryRun: false)
             }
+        }
+    }
+    
+    var profileUpdateView: some View {
+        HStack(alignment: .center) {
+            Spacer()
+            VStack(alignment: .center, spacing: 24) {
+                Spacer()
+                
+                Image("UpdateProfile")
+                
+                Text("Update Your Profile")
+                    .defaultStyle(size: 24, opacity: 1.0)
+                
+                // 16/Regular
+                Text("You're almost there! Finish your profile and get the best experience with your connection members.")
+                    .defaultStyle(size: 16, opacity: 0.7)
+                    .multilineTextAlignment(.center)
+                
+                
+                ZStack {
+                    Text("Update Profile".uppercased())
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24)
+                                .foregroundColor(ColorConstants.primary)
+                        )
+                    
+                    NavigationLink(destination: PersonalInformationEdit()) {
+                        EmptyView()
+                    }.opacity(0)
+                }
+                
+                Spacer()
+            }
+            Spacer()
         }
     }
     

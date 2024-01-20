@@ -93,6 +93,12 @@ extension Text {
             .background(finalBgColor)
             .cornerRadius(Constants.Full)
     }
+    
+    func toolbarTitle() -> some View {
+        self
+            .fontWeight(.bold)
+            .defaultStyle(size: 30, opacity: 1.0)
+    }
 }
 
 extension TextField {
@@ -102,15 +108,6 @@ extension TextField {
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.7))
             .textInputAutocapitalization(.never)
             .disableAutocorrection(true)
-//            .padding(.horizontal, 10)
-//            .padding(.vertical, 12)
-//            .frame(maxWidth: .infinity, alignment: .leading)
-//            .cornerRadius(12)
-//            .overlay(
-//                RoundedRectangle(cornerRadius: 12)
-//                    .inset(by: 0.5)
-//                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
-//            )
     }
     
     func personalInfoStyle() -> some View {

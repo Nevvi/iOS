@@ -30,7 +30,7 @@ struct ContentView: View {
                     
                     ConnectionRequestList()
                         .tabItem() {
-                            Label("New", systemImage: "plus.circle.fill")
+                            Label("Requests", systemImage: "plus.circle.fill")
                         }
                     
                     NotificationList()

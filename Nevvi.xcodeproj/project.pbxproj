@@ -109,6 +109,7 @@
 		277D25302B58B00800D1D717 /* PersonalInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D252F2B58B00800D1D717 /* PersonalInformation.swift */; };
 		277D25322B5A069A00D1D717 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25312B5A069A00D1D717 /* Constants.swift */; };
 		277D25342B5BED4700D1D717 /* OnboardingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25332B5BED4700D1D717 /* OnboardingButton.swift */; };
+		277D25362B5C18C500D1D717 /* ImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25352B5C18C500D1D717 /* ImageExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -207,6 +208,7 @@
 		277D252F2B58B00800D1D717 /* PersonalInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInformation.swift; sourceTree = "<group>"; };
 		277D25312B5A069A00D1D717 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		277D25332B5BED4700D1D717 /* OnboardingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingButton.swift; sourceTree = "<group>"; };
+		277D25352B5C18C500D1D717 /* ImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -411,6 +413,7 @@
 				0431439C2975AC830094D7E0 /* TextExtensions.swift */,
 				04B2495D29AD7F6300F56C97 /* BundleExtensions.swift */,
 				277D251B2B55B39F00D1D717 /* CharacterExtensions.swift */,
+				277D25352B5C18C500D1D717 /* ImageExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -668,6 +671,7 @@
 				04B9495F295F3BE000703523 /* OnboardingSync.swift in Sources */,
 				277D25262B55F02C00D1D717 /* PermissionGroupBadge.swift in Sources */,
 				04038E2B29660F2300D3C7AC /* PersonalInformationEdit.swift in Sources */,
+				277D25362B5C18C500D1D717 /* ImageExtensions.swift in Sources */,
 				04B9495B295F386F00703523 /* OnboardingIntro.swift in Sources */,
 				04B94950295E731E00703523 /* KeychainStore.swift in Sources */,
 				04B94942295E0B6500703523 /* GenericError.swift in Sources */,

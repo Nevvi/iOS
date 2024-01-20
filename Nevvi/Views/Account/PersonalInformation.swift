@@ -140,7 +140,7 @@ struct PersonalInformation: View {
                         
                         NavigationLink(destination: PersonalInformationEdit()) {
                             EmptyView()
-                        }
+                        }.opacity(0)
                     }
                 }.listRowBackground(Color.clear)
             }
