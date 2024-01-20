@@ -46,6 +46,7 @@ struct Login: View {
                                         
                     Text("Log in to your account")
                         .defaultStyle(size: 26, opacity: 0.7)
+                        .padding([.bottom], 16)
                     
                     HStack(alignment: .center, spacing: 6) {
                         Image(systemName: "envelope")
@@ -122,6 +123,8 @@ struct Login: View {
                         Spacer()
                     }
                     
+                    Spacer()
+                    
                     Button(action: self.signIn, label: {
                         HStack {
                             Text("Log In".uppercased())
@@ -134,13 +137,14 @@ struct Login: View {
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding(.vertical, 16)
+                        .disabled(self.loginDisabled)
                         .background(
                             RoundedRectangle(cornerRadius: 24)
                                 .foregroundColor(ColorConstants.primary)
+                                .opacity(self.loginDisabled ? 0.5 : 1.0)
                         )
                     })
-                    
-                    Spacer()
+                    .padding([.bottom], 16)
                     
                     HStack {
                         Text("No account?")
