@@ -277,6 +277,7 @@ struct CreateAccount: View {
                     .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
                 
                 TextField("Code", text: self.$confirmationCode)
+                    .keyboardType(.numberPad)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)

@@ -9,7 +9,9 @@ import SwiftUI
 
 extension View {
     func tabStyle(page: Int) -> some View {
-        return self.tag(page).gesture(DragGesture())
+        return self
+            .tag(page)
+            .gesture(DragGesture())
     }
 }
 
@@ -18,50 +20,35 @@ struct OnboardingCarousel: View {
     @EnvironmentObject var accountStore: AccountStore
     
     var body: some View {
-        TabView(selection: $index) {
-            OnboardingIntro(primaryClick: {
-                self.index = 1
-            }).tabStyle(page: 0)
+        VStack {
+            TabView(selection: $index) {
+                OnboardingIntro(primaryClick: {
+                    self.index = 1
+                })
+                .tabStyle(page: 0)
+                
+                OnboardingDescription(primaryClick: {
+                    self.index = 2
+                }).tabStyle(page: 1)
+                
+                OnboardingSync(primaryClick: {
+                    print("Done onboarding!")
+                }).tabStyle(page: 2)
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .edgesIgnoringSafeArea([.top])
+            .animation(.easeOut(duration: 0.2), value: index)
             
-            OnboardingDescription(primaryClick: {
-                self.index = 2
-            }, secondaryClick: {
-                self.index = 0
-            }).tabStyle(page: 1)
-            
-            OnboardingDescriptionCont(primaryClick: {
-                self.index = 3
-            }, secondaryClick: {
-                self.index = 1
-            }).tabStyle(page: 2)
-            
-            OnboardingPermissionGroups(primaryClick: {
-                self.index = 4
-            }, secondaryClick: {
-                self.index = 2
-            }).tabStyle(page: 3)
-            
-            OnboardingInformation(primaryClick: {
-                self.index = 5
-            }, secondaryClick: {
-                self.index = 3
-            }).tabStyle(page: 4)
-            
-            OnboardingSync(primaryClick: {
-                self.index = 6
-            }, secondaryClick: {
-                self.index = 4
-            }).tabStyle(page: 5)
-            
-            OnboardingBulkRequest(primaryClick: {
-                print("Done onboarding!")
-            }, secondaryClick: {
-                self.index = 5
-            }).tabStyle(page: 6)
+            HStack(spacing: 3) {
+                ForEach((0..<3), id: \.self) { index in
+                    Rectangle()
+                        .fill(index == self.index ? Color.black : Color.black.opacity(0.2))
+                        .frame(width: 30, height: 3)
+
+                }
+            }
+            .padding()
         }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        .edgesIgnoringSafeArea([.all])
-        .animation(.easeOut(duration: 0.2), value: index)
     }
 }
 

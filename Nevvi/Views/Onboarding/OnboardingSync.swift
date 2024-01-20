@@ -9,7 +9,6 @@ import SwiftUI
 
 struct OnboardingSync: View {
     var primaryClick: () -> Void
-    var secondaryClick: () -> Void
     
     @EnvironmentObject var accountStore: AccountStore
     
@@ -17,74 +16,56 @@ struct OnboardingSync: View {
     @State private var animateDescription = false
 
     var body: some View {
-        VStack(spacing: 20.0) {
-            Text("\"Do you still live at ...?\"")
-                .onboardingTitle()
-            Spacer()
-            
-            Image("OnboardingTwo")
+        ZStack {
+            Image("BackgroundBlur")
                 .resizable()
-                .scaledToFit()
-                .frame(width: 200)
-            Spacer()
+                .aspectRatio(contentMode: .fill)
             
-            Text("With Nevvi, as long as you stay connected with a person we can keep the contact in your phone in sync when their data, such as address, changes.")
-                .onboardingStyle()
-                .padding([.leading, .trailing, .bottom], 20)
-                .opacity(animateIntro ? 1.0 : 0.0)
-                .onAppear {
-                    withAnimation(Animation.spring().speed(0.2)) {
-                        animateIntro = true
-                    }
-                }
+            VStack(alignment: .center, spacing: 20) {
+                Image("AppLogo")
+                    .frame(width: 68, height: 68)
+                    .padding([.top], 80)
+
+                VStack(alignment: .center, spacing: 6) {
+                    ZStack {
+                        Image("OnboardingSyncBackground")
+                            .resizable()
+                            .scaledToFit()
                         
-            Text("Let's find some people you may know to connect with...")
-                .onboardingStyle()
-                .padding([.leading, .trailing, .bottom], 20)
-                .opacity(animateDescription ? 1.0 : 0.0)
-                .onAppear {
-                    withAnimation(Animation.spring().speed(0.2).delay(2)) {
-                        animateDescription = true
+                        Image("OnboardingSync")
+                          .foregroundColor(.clear)
+                          .background(.clear)
+                          .cornerRadius(24)
+                          .shadow(color: Color(red: 0.06, green: 0.4, blue: 0.64).opacity(0.16), radius: 30, x: 0, y: 4)
                     }
-                }
-            
-            Spacer()
-            
-            HStack {
-                secondaryButton
+                    
+                    Text("Get Updated Information")
+                        .defaultStyle(size: 36, opacity: 1.0)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+                        .padding([.top], -48)
+                    
+                    Text("Know as soon as a connection updates info you have access to.")
+                        .defaultStyle(size: 26, opacity: 0.7)
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.center)
+                }.padding([.top], -48)
+                
                 Spacer()
-                primaryButton
+                                
+                OnboardingButton(text: "Finish", action: self.primaryAction)
+                    .padding([.bottom], 80)
+                
             }
             .padding([.leading, .trailing])
         }
-        .padding()
-        .background(BackgroundGradient())
     }
     
-    var primaryButton: some View {
-        Button(action: self.primaryClick, label: {
-            HStack {
-                Text("Next")
-                    .font(.headline)
-                
-                Image(systemName: "chevron.right")
-            }
-            .foregroundColor(ColorConstants.accent)
-            .opacity(self.accountStore.saving ? 0.5 : 1.0)
-        })
-        .disabled(self.accountStore.saving)
-    }
-    
-    var secondaryButton: some View {
-        Button(action: self.secondaryClick, label: {
-            HStack {
-                Image(systemName: "chevron.left")
-                
-                Text("Back")
-                    .font(.headline)
-            }
-            .foregroundColor(ColorConstants.accent)
-        })
+    func primaryAction() {
+        let request = AccountStore.PatchRequest(onboardingCompleted: true)
+        self.accountStore.update(request: request) { _ in
+            self.primaryClick()
+        }
     }
 }
 
@@ -93,7 +74,7 @@ struct OnboardingSync_Previews: PreviewProvider {
     static let accountStore = AccountStore(user: modelData.user)
     
     static var previews: some View {
-        OnboardingSync(primaryClick: {}, secondaryClick: {})
+        OnboardingSync(primaryClick: {})
             .environmentObject(accountStore)
     }
 }

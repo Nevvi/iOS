@@ -11,44 +11,46 @@ struct OnboardingIntro: View {
     var primaryClick: () -> Void
 
     var body: some View {
-        VStack(spacing: 20.0) {
-            Spacer()
-            Text("Welcome to Nevvi!")
-                .onboardingTitle()
-            
-            Image("OnboardingOne")
+        ZStack {
+            Image("BackgroundBlur")
                 .resizable()
-                .scaledToFit()
-                .frame(width: 200)
-                .padding([.top, .bottom], 50)
-                        
-            Text("We keep the personal information of all your contacts up to date, so you don't have to.")
-                .onboardingStyle()
-                .padding()
-
-            Spacer()
+                .aspectRatio(contentMode: .fill)
             
-            HStack {
-                Spacer()
-                primaryButton
-            }
-            .padding()
+            VStack(alignment: .center) {
+                Image("AppLogo")
+                    .frame(width: 68, height: 68)
+                    .padding([.top], 80)
 
-        }
-        .padding([.leading, .trailing])
-        .background(BackgroundGradient())
-    }
-    
-    var primaryButton: some View {
-        Button(action: self.primaryClick, label: {
-            HStack {
-                Text("Get Started")
-                    .font(.headline)
+                VStack(alignment: .center, spacing: 6) {
+                    ZStack {
+                        Image("OnboardingIntroBackground")
+                            .resizable()
+                            .scaledToFit()
+                        
+                        Image("OnboardingIntro")
+                          .foregroundColor(.clear)
+                          .cornerRadius(24)
+                          .shadow(color: Color(red: 0.06, green: 0.4, blue: 0.64).opacity(0.16), radius: 30, x: 0, y: 4)
+                    }
+                    
+                    Text("Cloud-Based")
+                        .defaultStyle(size: 36, opacity: 1.0)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+                    
+                    Text("Contact Management Platform")
+                        .defaultStyle(size: 26, opacity: 0.7)
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.center)
+                }.padding([.top], 32)
                 
-                Image(systemName: "chevron.right")
+                Spacer()
+                                
+                OnboardingButton(text: "Let's Start", action: self.primaryClick)
+                    .padding([.bottom], 80)
             }
-            .foregroundColor(ColorConstants.accent)
-        })
+            .padding([.leading, .trailing])
+        }
     }
 }
 

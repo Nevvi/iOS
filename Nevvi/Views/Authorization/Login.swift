@@ -41,8 +41,7 @@ struct Login: View {
                 VStack(alignment: .center, spacing: 20) {
                     Image("AppLogo")
                         .frame(width: 68, height: 68)
-                        .padding([.top], 32)
-                        .padding([.bottom], 32)
+                        .padding([.vertical], 32)
                                         
                     Text("Log in to your account")
                         .defaultStyle(size: 26, opacity: 0.7)
