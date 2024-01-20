@@ -80,7 +80,7 @@ struct ConnectionGroupDetail: View {
         ForEach(self.connectionGroupStore.connections) { connection in
             NavigationLink {
                 NavigationLazyView(
-                    ConnectionDetail(connectionStore: self.connectionStore)
+                    ConnectionDetail()
                         .onAppear {
                             self.connectionStore.load(connectionId: connection.id) { (result: Result<Connection, Error>) in
                                 switch result {

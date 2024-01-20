@@ -100,10 +100,10 @@ class ConnectionsStore : ObservableObject {
     }
     
     func load() {
-        self.load(nameFilter: nil)
+        self.load(nameFilter: nil, permissionGroup: nil)
     }
     
-    func load(nameFilter: String?) {
+    func load(nameFilter: String?, permissionGroup: String?) {
         do {
             self.loading = true
             let idToken: String? = self.authorization?.idToken

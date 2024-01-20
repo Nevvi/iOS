@@ -13,6 +13,7 @@ class ConnectionStore : ObservableObject {
     @Published var id: String = ""
     @Published var firstName: String = ""
     @Published var lastName: String = ""
+    @Published var bio: String = ""
     @Published var email: String = ""
     @Published var phoneNumber: String = ""
     @Published var birthday: Date = Date()
@@ -38,6 +39,7 @@ class ConnectionStore : ObservableObject {
         self.id = connection.id
         self.firstName = connection.firstName
         self.lastName = connection.lastName
+        self.bio = connection.bio == nil ? "" : connection.bio!
         self.email = connection.email == nil ? "" : connection.email!
         self.phoneNumber = connection.phoneNumber == nil ? "" : connection.phoneNumber!
         self.birthday = connection.birthday == nil ? Date() : connection.birthday!
@@ -56,6 +58,7 @@ class ConnectionStore : ObservableObject {
         self.id = ""
         self.firstName = ""
         self.lastName = ""
+        self.bio = ""
         self.email = ""
         self.phoneNumber = ""
         self.birthday = Date()

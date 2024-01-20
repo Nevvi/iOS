@@ -45,7 +45,7 @@ struct Login: View {
                                         
                     Text("Log in to your account")
                         .defaultStyle(size: 26, opacity: 0.7)
-                        .padding([.bottom], 16)
+                        .padding([.vertical], 16)
                     
                     HStack(alignment: .center, spacing: 6) {
                         Image(systemName: "envelope")

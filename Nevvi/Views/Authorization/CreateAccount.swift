@@ -113,7 +113,7 @@ struct CreateAccount: View {
             Text("Create free Nevvi account")
                 .defaultStyle(size: 26, opacity: 0.7)
                 .multilineTextAlignment(.center)
-                .padding([.bottom], 16)
+                .padding([.vertical], 16)
             
             HStack(alignment: .center, spacing: 6) {
                 Image(systemName: "envelope")
@@ -251,7 +251,7 @@ struct CreateAccount: View {
             Text("Confirm your Nevvi account")
                 .defaultStyle(size: 26, opacity: 0.7)
                 .multilineTextAlignment(.center)
-                .padding([.bottom], 16)
+                .padding([.vertical], 16)
             
             HStack(alignment: .center, spacing: 6) {
                 Image(systemName: "envelope")

@@ -25,6 +25,7 @@ struct ConnectionList: View {
     @State private var showContactUpdates: Bool = false
     
     @StateObject var nameFilter = DebouncedText()
+    @State var selectedGroup: String = "ALL"
         
     var body: some View {
         NavigationView {
@@ -37,7 +38,6 @@ struct ConnectionList: View {
                     connectionsView
                 }
             }
-            .padding()
             .navigationTitle("Connections")
             .navigationBarTitleDisplayMode(.large)
         }
@@ -79,7 +79,7 @@ struct ConnectionList: View {
                 Spacer()
             }
             .padding()
-        }
+        }.padding()
     }
     
     var noConnectionsView: some View {
@@ -106,28 +106,59 @@ struct ConnectionList: View {
                 Spacer()
             }
             .padding()
-        }
+        }.padding()
     }
     
     var connectionsView: some View {
-        List {
-            ForEach(self.connectionsStore.connections) { connection in
-                NavigationLink {
-                    NavigationLazyView(
-                        ConnectionDetail(connectionStore: self.connectionStore)
-                            .onAppear {
-                                loadConnection(connectionId: connection.id)
+        ScrollView(.vertical) {
+            VStack {
+                ScrollView(.horizontal) {
+                    HStack(spacing: 6) {
+                        ForEach(self.accountStore.permissionGroups, id: \.name) { group in
+                            if group.name.uppercased() == self.selectedGroup.uppercased() {
+                                Text(group.name.uppercased())
+                                    .asSelectedGroupFilter()
+                            } else {
+                                Text(group.name.uppercased())
+                                    .asGroupFilter()
+                                    .onTapGesture {
+                                        self.selectedGroup = group.name
+                                    }
                             }
-                    )
-                } label: {
-                    ConnectionRow(connection: connection)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                    .padding(.horizontal, 20)
                 }
+                
+                
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Total Members (\(self.connectionsStore.connectionCount))")
+                        .defaultStyle(size: 14, opacity: 0.4)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 6)
+                        .frame(width: .infinity, alignment: .center)
+                    
+                    ForEach(self.connectionsStore.connections) { connection in
+                        NavigationLink {
+                            NavigationLazyView(
+                                ConnectionDetail()
+                                    .onAppear {
+                                        loadConnection(connectionId: connection.id)
+                                    }
+                            )
+                        } label: {
+                            ConnectionRow(connection: connection)
+                        }
+                    }
+                    .onDelete(perform: self.delete)
+                    .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
+                }
+                .frame(width: .infinity, alignment: .topLeading)
+                
+                Spacer()
             }
-            .onDelete(perform: self.delete)
-            .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
         }
-        .listStyle(.plain)
-        .scrollContentBackground(self.connectionsStore.connectionCount == 0 ? .hidden : .visible)
         .navigationTitle("Connections")
         .navigationBarTitleDisplayMode(.large)
         .searchable(text: self.$nameFilter.text)
@@ -159,10 +190,13 @@ struct ConnectionList: View {
             }
         })
         .onChange(of: self.nameFilter.debouncedText) { text in
-            self.connectionsStore.load(nameFilter: text)
+            self.connectionsStore.load(nameFilter: text, permissionGroup: self.selectedGroup)
+        }
+        .onChange(of: self.selectedGroup) { group in
+            self.connectionsStore.load(nameFilter: self.nameFilter.text, permissionGroup: group)
         }
         .refreshable {
-            self.connectionsStore.load(nameFilter: self.nameFilter.debouncedText)
+            self.connectionsStore.load(nameFilter: self.nameFilter.debouncedText, permissionGroup: self.selectedGroup)
             self.connectionsStore.loadOutOfSync { _ in
                 if self.accountStore.deviceSettings.autoSync {
                     self.sync(dryRun: false)

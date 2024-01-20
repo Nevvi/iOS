@@ -73,6 +73,53 @@ extension Text {
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
     }
     
+    func asSelectedGroupFilter() -> some View {
+        self
+            .font(Font.custom("SF Pro", size: 14).weight(.bold))
+            .kerning(0.2)
+            .foregroundColor(.white)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(Color(red: 0, green: 0.6, blue: 1))
+            .cornerRadius(32)
+            .overlay(
+                RoundedRectangle(cornerRadius: 32)
+                    .inset(by: 0.5)
+                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
+            )
+    }
+    
+    func asGroupFilter() -> some View {
+        self
+            .font(Font.custom("SF Pro", size: 14).weight(.bold))
+            .kerning(0.2)
+            .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.7))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.02))
+            .cornerRadius(32)
+            .overlay(
+                RoundedRectangle(cornerRadius: 32)
+                    .inset(by: 0.5)
+                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
+            )
+    }
+    
+    func asPermissionGroupBadge(bgColor: Color) -> some View {
+        self
+            .font(Font.custom("SF Pro", size: 9).weight(.semibold))
+            .foregroundColor(Color(red: 0.09, green: 0.15, blue: 0.39))
+            .padding(.horizontal, 6)
+            .padding(.vertical, 3)
+            .background(bgColor)
+            .cornerRadius(Constants.Full)
+            .overlay(
+                RoundedRectangle(cornerRadius: Constants.Full)
+                    .inset(by: -1)
+                    .stroke(.white, lineWidth: 2)
+            )
+    }
+    
     func asPrimaryBadge() -> some View {
         self.asBadge(size: 12, color: nil, bgColor: nil)
     }

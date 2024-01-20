@@ -13,6 +13,7 @@ struct Connection: Hashable, Codable, Identifiable {
     var id: String
     var firstName: String
     var lastName: String
+    var bio: String?
     var email: String?
     var phoneNumber: String?
     var birthday: Date?

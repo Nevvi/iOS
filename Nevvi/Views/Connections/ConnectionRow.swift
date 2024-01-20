@@ -6,18 +6,42 @@
 //
 
 import SwiftUI
+import NukeUI
 
 struct ConnectionRow: View {
     var connection: Connection
     
     var body: some View {
-        HStack {
-            ProfileImage(imageUrl: connection.profileImage, height: 50, width: 50)
-                .padding([.trailing], 10)
+        HStack(alignment: .center, spacing: 12) {
+            ZStack(alignment: .bottom) {
+                Rectangle()
+                .foregroundColor(.clear)
+                .frame(width: 63, height: 63)
+                .background(
+                    LazyImage(url: URL(string: connection.profileImage), resizingMode: .aspectFill)
+                )
+                .cornerRadius(63)
+                .padding([.bottom], 8)
+                                
+                Text(self.connection.permissionGroup ?? "Unknown")
+                    .asPermissionGroupBadge(bgColor: Color(red: 0.82, green: 0.88, blue: 1))
+            }
             
-            Text("\(connection.firstName) \(connection.lastName)")
+            VStack {
+                Text("\(connection.firstName) \(connection.lastName)")
+                    .defaultStyle(size: 18, opacity: 1.0)
+                
+                // TODO - add phone/email if we have access
+            }
         }
-        .padding(5)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(
+            Rectangle()
+                .inset(by: 0.5)
+                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.04), lineWidth: 1)
+        )
     }
 }
 

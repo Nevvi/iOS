@@ -57,6 +57,9 @@ struct ColorConstants {
         return Color(UIColor(hexString: "#F5CBDB"))
     }
     
+    static var background: Color {
+        return Color(UIColor(hexString: "#f2f2f7"))
+    }
     
 }
 
