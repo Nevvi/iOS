@@ -59,10 +59,12 @@ struct NevviApp: App {
     var body: some Scene {
         WindowGroup {
             if (self.authStore.authorization != nil) {
-                ContentView(connectionStore: self.connectionStore, connectionGroupStore: self.connectionGroupStore)
+                ContentView()
                     .environmentObject(accountStore)
                     .environmentObject(authStore)
+                    .environmentObject(connectionStore)
                     .environmentObject(connectionsStore)
+                    .environmentObject(connectionGroupStore)
                     .environmentObject(connectionGroupsStore)
                     .environmentObject(usersStore)
                     .environmentObject(contactStore)

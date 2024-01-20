@@ -12,8 +12,7 @@ struct ConnectionList: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var usersStore: UsersStore
     @EnvironmentObject var contactStore: ContactStore
-    
-    @ObservedObject var connectionStore: ConnectionStore
+    @EnvironmentObject var connectionStore: ConnectionStore
     
     @State private var syncing: Bool = false
     @State private var showSyncConfirmation: Bool = false
@@ -365,10 +364,11 @@ struct ConnectionList_Previews: PreviewProvider {
     static let accountStore = AccountStore(user: modelData.user)
     
     static var previews: some View {
-        ConnectionList(connectionStore: connectionStore)
+        ConnectionList()
             .environmentObject(connectionsStore)
             .environmentObject(usersStore)
             .environmentObject(contactStore)
             .environmentObject(accountStore)
+            .environmentObject(connectionStore)
     }
 }

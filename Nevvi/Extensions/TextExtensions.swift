@@ -44,23 +44,7 @@ extension Text {
             .cornerRadius(10)
             .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
     }
-    
-    func personalInfoStyle() -> some View {
-        return self
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding([.vertical], 6)
-            .textInputAutocapitalization(.never)
-            .disableAutocorrection(true)
-            .tint(ColorConstants.text)
-    }
-    
-    func asTextField() -> some View {
-        return self
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding()
-            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-    }
-    
+
     func defaultStyle() -> some View {
         return self.defaultStyle(size: nil, opacity: nil)
     }
@@ -168,15 +152,6 @@ extension TextField {
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.7))
             .textInputAutocapitalization(.never)
             .disableAutocorrection(true)
-    }
-    
-    func personalInfoStyle() -> some View {
-        return self
-            .padding(12)
-            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-            .textInputAutocapitalization(.never)
-            .disableAutocorrection(true)
-            .tint(ColorConstants.text)
     }
     
     func defaultStyle() -> some View {

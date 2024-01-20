@@ -12,7 +12,7 @@ struct ConnectionDetail: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
     
-    @State var showEditSheet = true
+    @State var showEditSheet = false
     
     var body: some View {
         if self.connectionStore.loading == false && !self.connectionStore.id.isEmpty {

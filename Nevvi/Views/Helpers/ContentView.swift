@@ -15,15 +15,14 @@ struct ContentView: View {
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
     @EnvironmentObject var usersStore: UsersStore
     @EnvironmentObject var contactStore: ContactStore
-    
-    @ObservedObject var connectionStore: ConnectionStore
-    @ObservedObject var connectionGroupStore: ConnectionGroupStore
+    @EnvironmentObject var connectionStore: ConnectionStore
+    @EnvironmentObject var connectionGroupStore: ConnectionGroupStore
     
     var body: some View {
         if (!accountStore.id.isEmpty) {
             if (accountStore.onboardingCompleted) {
                 TabView {
-                    ConnectionList(connectionStore: self.connectionStore)
+                    ConnectionList()
                         .tabItem() {
                             Label("Connections", systemImage: "person.line.dotted.person.fill")
                         }
@@ -83,8 +82,7 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static let modelData = ModelData()
     static var previews: some View {
-        ContentView(connectionStore: ConnectionStore(connection: modelData.connection),
-                    connectionGroupStore: ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users))
+        ContentView()
         .environmentObject(AccountStore(user: modelData.user))
         .environmentObject(ConnectionsStore(connections: modelData.connectionResponse.users,
                                             requests: modelData.requests,
@@ -93,5 +91,7 @@ struct ContentView_Previews: PreviewProvider {
         .environmentObject(UsersStore(users: modelData.connectionResponse.users))
         .environmentObject(ConnectionGroupsStore(groups: modelData.groups))
         .environmentObject(ContactStore())
+        .environmentObject(ConnectionStore(connection: modelData.connection))
+        .environmentObject(ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users))
     }
 }

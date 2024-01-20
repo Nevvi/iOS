@@ -13,7 +13,7 @@ extension VStack {
         self
             .padding(.horizontal, 16)
             .padding(.top, 12)
-            .padding(.bottom, 4)
+            .padding(.bottom, 8)
             .frame(maxWidth: .infinity, alignment: .topLeading)
             .background(.white)
             .cornerRadius(16)

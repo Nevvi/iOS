@@ -41,182 +41,167 @@ struct PersonalInformationEdit: View {
     }
     
     var body: some View {
-        NavigationView {
-            List {
-                Section {
-                    HStack {
-                        Spacer()
-                        ProfileImageSelector(height: 108, width: 108)
-                        Spacer()
-                    }
-                }.listRowBackground(Color.clear)
-
-                Section {
-                    VStack(alignment: .leading) {
-                        Text("Name").personalInfoLabel()
-
-                        TextField("First Name", text: self.$accountStore.firstName)
-                            .defaultStyle(size: 16, opacity: 1.0)
-
-                        TextField("Last Name", text: self.$accountStore.lastName)
-                            .defaultStyle(size: 16, opacity: 1.0)
-                    }
+        ScrollView {
+            VStack(spacing: 12) {
+                HStack {
+                    Spacer()
+                    ProfileImageSelector(height: 108, width: 108)
+                    Spacer()
                 }
-
-                Section {
-                    VStack(alignment: .leading) {
-                        Text("Bio").personalInfoLabel()
-
-                        TextField("Role & company name", text: self.$accountStore.bio)
-                            .bioStyle(size: 16, opacity: 1.0)
-                    }
-                }.listRowInsets(.none)
-
-                Section {
-                    VStack(alignment: .leading) {
-                        phoneVerificationLabel
-
-                        TextField("Phone Number", text: self.$accountStore.phoneNumber)
-                            .defaultStyle(size: 16, opacity: 1.0)
-                        
-                        Divider().padding([.vertical], 4)
-                        
-                        fieldPermissionGroupPicker(field: "phoneNumber")
-                    }
-                }
-
-                Section {
-                    VStack(alignment: .leading) {
-                        Text("Email").personalInfoLabel()
-
-                        TextField("Email", text: self.$accountStore.email)
-                            .defaultStyle(size: 16, opacity: 1.0)
-                        
-                        Divider().padding([.vertical], 4)
-                        
-                        fieldPermissionGroupPicker(field: "email")
-                    }
-                }
-
-                Section {
-                    VStack(alignment: .leading) {
-                        Text("Address").personalInfoLabel()
-                            
-                        HStack(alignment: self.accountStore.address.isEmpty ? .center : .top, spacing: 8) {
-                            Button {
-                                self.accountStore.address = AddressViewModel()
-                            } label: {
-                                Image(systemName: "minus.circle")
-                                    .foregroundColor(Color.red)
-                                    .opacity(self.accountStore.address.isEmpty ? 0.5 : 1.0)
-                            }
-                            .disabled(self.accountStore.address.isEmpty)
-                            .buttonStyle(.borderless)
-                            
-                            Text(self.accountStore.address.isEmpty ? "" : self.accountStore.address.toString())
-                                .defaultStyle(size: 16, opacity: 1.0)
-                                .onTapGesture {
-                                    self.showAddressSearch = true
-                                }
-                            
-                            Spacer()
-                            
-                            Text("Home").asPrimaryBadge()
+                .padding(.bottom)
+                
+                VStack(alignment: .leading) {
+                    Text("Name").personalInfoLabel()
+                    
+                    TextField("First Name", text: self.$accountStore.firstName)
+                        .defaultStyle(size: 16, opacity: 1.0)
+                    
+                    TextField("Last Name", text: self.$accountStore.lastName)
+                        .defaultStyle(size: 16, opacity: 1.0)
+                }.informationSection()
+                
+                VStack(alignment: .leading) {
+                    Text("Bio").personalInfoLabel()
+                    
+                    TextField("Role & company name", text: self.$accountStore.bio)
+                        .bioStyle(size: 16, opacity: 1.0)
+                }.informationSection()
+                
+                VStack(alignment: .leading) {
+                    phoneVerificationLabel
+                    
+                    TextField("Phone Number", text: self.$accountStore.phoneNumber)
+                        .defaultStyle(size: 16, opacity: 1.0)
+                    
+                    Divider().padding([.vertical], 4)
+                    
+                    fieldPermissionGroupPicker(field: "phoneNumber")
+                }.informationSection()
+                
+                VStack(alignment: .leading) {
+                    Text("Email").personalInfoLabel()
+                    
+                    TextField("Email", text: self.$accountStore.email)
+                        .defaultStyle(size: 16, opacity: 1.0)
+                    
+                    Divider().padding([.vertical], 4)
+                    
+                    fieldPermissionGroupPicker(field: "email")
+                }.informationSection()
+                
+                VStack(alignment: .leading) {
+                    Text("Address").personalInfoLabel()
+                    
+                    HStack(alignment: self.accountStore.address.isEmpty ? .center : .top, spacing: 8) {
+                        Button {
+                            self.accountStore.address = AddressViewModel()
+                        } label: {
+                            Image(systemName: "minus.circle")
+                                .foregroundColor(Color.red)
+                                .opacity(self.accountStore.address.isEmpty ? 0.5 : 1.0)
                         }
-                        .padding([.vertical], 12)
-                        .padding([.horizontal], 10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .inset(by: 0.5)
-                                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
-                        )
-                        .onTapGesture {
-                            if self.accountStore.address.isEmpty {
+                        .disabled(self.accountStore.address.isEmpty)
+                        .buttonStyle(.borderless)
+                        
+                        Text(self.accountStore.address.isEmpty ? "" : self.accountStore.address.toString())
+                            .defaultStyle(size: 16, opacity: 1.0)
+                            .onTapGesture {
                                 self.showAddressSearch = true
                             }
-                        }
                         
-                        Divider().padding([.vertical], 4)
+                        Spacer()
                         
-                        fieldPermissionGroupPicker(field: "address")
+                        Text("Home").asPrimaryBadge()
                     }
-                    .padding([.top, .bottom], 5)
-                }
-
-                Section {
-                    VStack(alignment: .leading) {
-                        Text("Birthday")
-                            .personalInfoLabel()
-
-                        HStack(alignment: .top) {
-                            Button {
-                                self.accountStore.birthday = Date()
-                            } label: {
-                                Image(systemName: "minus.circle")
-                                    .foregroundColor(Color.red)
-                                    .opacity(self.isBirthdayEmpty ? 0.5 : 1.0)
-                            }
-                            .disabled(self.isBirthdayEmpty)
-                            .buttonStyle(.borderless)
-                            
-                            Text(self.isBirthdayEmpty ? "" : self.accountStore.birthday.toString())
-                                .defaultStyle(size: 16, opacity: 1.0)
-                            
-                            Spacer()
-                            
-                            Button {
-                                self.showBirthdayPicker.toggle()
-                            } label: {
-                                Image(systemName: "calendar")
-                            }.buttonStyle(.borderless)
+                    .padding([.vertical], 12)
+                    .padding([.horizontal], 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .inset(by: 0.5)
+                            .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
+                    )
+                    .onTapGesture {
+                        if self.accountStore.address.isEmpty {
+                            self.showAddressSearch = true
                         }
-                        .padding([.vertical], 12)
-                        .padding([.horizontal], 10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .inset(by: 0.5)
-                                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
-                        )
-                            
-                        Divider().padding([.vertical], 4)
-                        
-                        fieldPermissionGroupPicker(field: "birthday")
                     }
-                    .padding([.top, .bottom], 5)
-                }
+                    
+                    Divider().padding([.vertical], 4)
+                    
+                    fieldPermissionGroupPicker(field: "address")
+                }.informationSection()
+                
+                VStack(alignment: .leading) {
+                    Text("Birthday")
+                        .personalInfoLabel()
+                    
+                    HStack(alignment: .top) {
+                        Button {
+                            self.accountStore.birthday = Date()
+                        } label: {
+                            Image(systemName: "minus.circle")
+                                .foregroundColor(Color.red)
+                                .opacity(self.isBirthdayEmpty ? 0.5 : 1.0)
+                        }
+                        .disabled(self.isBirthdayEmpty)
+                        .buttonStyle(.borderless)
+                        
+                        Text(self.isBirthdayEmpty ? "" : self.accountStore.birthday.toString())
+                            .defaultStyle(size: 16, opacity: 1.0)
+                        
+                        Spacer()
+                        
+                        Button {
+                            self.showBirthdayPicker.toggle()
+                        } label: {
+                            Image(systemName: "calendar")
+                        }.buttonStyle(.borderless)
+                    }
+                    .padding([.vertical], 12)
+                    .padding([.horizontal], 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .inset(by: 0.5)
+                            .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
+                    )
+                    
+                    Divider().padding([.vertical], 4)
+                    
+                    fieldPermissionGroupPicker(field: "birthday")
+                }.informationSection()
             }
-            .padding([.top], -25)
-            .onChange(of: self.accountStore.firstName, perform: { newValue in
-                self.tryToggle()
-            })
-            .onChange(of: self.accountStore.lastName, perform: { newValue in
-                self.tryToggle()
-            })
-            .onChange(of: self.accountStore.phoneNumber, perform: { newValue in
-                self.tryToggle()
-            })
-            .onChange(of: self.accountStore.birthday, perform: { newValue in
-                self.tryToggle()
-            })
-            .sheet(isPresented: self.$showBirthdayPicker) {
-                datePickerSheet
-            }
-            .sheet(isPresented: self.$showAddressSearch) {
-                AddressSearch(address: self.accountStore.address, callback: { address in
-                    self.updateAddress(address: address, isMailing: false)
-                    self.showAddressSearch = false
-                }).presentationDetents([.large])
-            }
-            .sheet(isPresented: self.$showMailingAddressSearch) {
-                AddressSearch(address: self.accountStore.mailingAddress, callback: { address in
-                    self.updateAddress(address: address, isMailing: true)
-                    self.showMailingAddressSearch = false
-                }).presentationDetents([.large])
-            }
-            .sheet(isPresented: self.$showPhoneVerification) {
-                phoneVerificationSheet
-            }
-            
+            .padding()
+        }
+        .background(ColorConstants.background)
+        .onChange(of: self.accountStore.firstName, perform: { newValue in
+            self.tryToggle()
+        })
+        .onChange(of: self.accountStore.lastName, perform: { newValue in
+            self.tryToggle()
+        })
+        .onChange(of: self.accountStore.phoneNumber, perform: { newValue in
+            self.tryToggle()
+        })
+        .onChange(of: self.accountStore.birthday, perform: { newValue in
+            self.tryToggle()
+        })
+        .sheet(isPresented: self.$showBirthdayPicker) {
+            datePickerSheet
+        }
+        .sheet(isPresented: self.$showAddressSearch) {
+            AddressSearch(address: self.accountStore.address, callback: { address in
+                self.updateAddress(address: address, isMailing: false)
+                self.showAddressSearch = false
+            }).presentationDetents([.large])
+        }
+        .sheet(isPresented: self.$showMailingAddressSearch) {
+            AddressSearch(address: self.accountStore.mailingAddress, callback: { address in
+                self.updateAddress(address: address, isMailing: true)
+                self.showMailingAddressSearch = false
+            }).presentationDetents([.large])
+        }
+        .sheet(isPresented: self.$showPhoneVerification) {
+            phoneVerificationSheet
         }
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: cancelButton)

@@ -19,7 +19,7 @@ struct PermissionGroupList: View {
             ScrollView {
                 VStack {
                     ForEach(self.accountStore.permissionGroups, id: \.name) { group in
-                        PermissionGroupRow(group: group)
+                        PermissionGroupRow(group: group, selectable: false)
                             .padding([.leading, .trailing, .bottom])
                         .onTapGesture {
                             // Can't edit the ALL group

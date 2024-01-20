@@ -8,14 +8,6 @@
 import SwiftUI
 import WrappingHStack
 
-extension VStack {
-    func personalInfoStyle() -> some View {
-        return self
-            .padding([.leading, .trailing])
-            .padding([.bottom], 12)
-    }
-}
-
 struct PersonalInformation: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var authStore: AuthorizationStore
@@ -26,8 +18,8 @@ struct PersonalInformation: View {
     
     var body: some View {
         NavigationView {
-            List {
-                Section {
+            ScrollView {
+                VStack(spacing: 12) {
                     HStack(alignment: .center) {
                         Spacer()
                         VStack(alignment: .center, spacing: 4) {
@@ -40,11 +32,8 @@ struct PersonalInformation: View {
                                 .defaultStyle(size: 16, opacity: 0.6)
                         }
                         Spacer()
-                    }
-                }
-                .listRowBackground(Color.clear)
-
-                Section {
+                    }.padding(.bottom)
+                    
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Phone Number").personalInfoLabel()
                         
@@ -63,10 +52,8 @@ struct PersonalInformation: View {
                         Divider().padding([.bottom], 4)
                         
                         fieldPermissionGroups(field: "phoneNumber")
-                    }
-                }
-
-                Section {
+                    }.informationSection()
+                    
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Email").personalInfoLabel()
                         
@@ -85,10 +72,8 @@ struct PersonalInformation: View {
                         Divider().padding([.bottom], 4)
                         
                         fieldPermissionGroups(field: "email")
-                    }
-                }
-
-                Section {
+                    }.informationSection()
+                    
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Address").personalInfoLabel()
                         
@@ -105,28 +90,25 @@ struct PersonalInformation: View {
                         .frame(maxWidth: .infinity, alignment: .topLeading)
                         
                         Divider().padding([.bottom], 4)
-
+                        
                         fieldPermissionGroups(field: "address")
-                    }
-                }
-
-                Section {
+                    }.informationSection()
+                    
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Birthday").personalInfoLabel()
-
+                        
                         Text(self.isBirthdayEmpty ? "" : self.accountStore.birthday.toString())
                             .defaultStyle(size: 16, opacity: 1.0)
                             .padding([.vertical], 8)
-
+                        
                         Divider().padding([.bottom], 4)
-
+                        
                         fieldPermissionGroups(field: "birthday")
-                    }
-                    .padding([.top, .bottom], 5)
-                }
-                
-                Section {
-                    ZStack {
+                    }.informationSection()
+                    
+                    Spacer()
+                    
+                    NavigationLink(destination: PersonalInformationEdit()) {
                         Text("Edit Profile".uppercased())
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity)
@@ -137,13 +119,12 @@ struct PersonalInformation: View {
                                 RoundedRectangle(cornerRadius: 24)
                                     .foregroundColor(ColorConstants.primary)
                             )
-                        
-                        NavigationLink(destination: PersonalInformationEdit()) {
-                            EmptyView()
-                        }.opacity(0)
                     }
-                }.listRowBackground(Color.clear)
+                }
+                .padding()
+                .background(ColorConstants.background)
             }
+            .background(ColorConstants.background)
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.large)
         }
