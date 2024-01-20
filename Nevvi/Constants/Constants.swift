@@ -9,4 +9,6 @@ import Foundation
 
 struct Constants {
     static let Full: CGFloat = 1000
+    static let Width: CGFloat = 393
+    static let Height: CGFloat = 852
 }

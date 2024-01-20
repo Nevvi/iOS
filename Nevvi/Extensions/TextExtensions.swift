@@ -98,12 +98,19 @@ extension Text {
 extension TextField {
     func authStyle() -> some View {
         return self
-            .padding()
+            .font(Font.custom("SF Pro", size: 16).weight(.semibold))
+            .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.7))
+            .textInputAutocapitalization(.never)
             .disableAutocorrection(true)
-            .autocapitalization(.none)
-            .background(.white)
-            .cornerRadius(10.0)
-            .tint(ColorConstants.text)
+//            .padding(.horizontal, 10)
+//            .padding(.vertical, 12)
+//            .frame(maxWidth: .infinity, alignment: .leading)
+//            .cornerRadius(12)
+//            .overlay(
+//                RoundedRectangle(cornerRadius: 12)
+//                    .inset(by: 0.5)
+//                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
+//            )
     }
     
     func personalInfoStyle() -> some View {

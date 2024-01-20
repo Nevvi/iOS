@@ -16,6 +16,8 @@ struct Login: View {
     @State private var toastText: String = ""
     @State private var showToast: Bool = false
     
+    @State private var hidePassword: Bool = true
+    
     @ObservedObject var authStore: AuthorizationStore
     
     var loginDisabled: Bool {
@@ -31,82 +33,138 @@ struct Login: View {
       
     var body: some View {
         NavigationView {
-            VStack() {
-                Spacer()
+            ZStack {
+                Image("BackgroundBlur")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
                 
-                Text("Welcome to Nevvi!")
-                    .font(.largeTitle).foregroundColor(Color.white)
-                
-                Text("Keep your contacts up to date!")
-                    .font(.subheadline).foregroundColor(Color.white)
-                    .padding([.top], 1)
-                    .padding([.bottom], 50)
-                
-                VStack(alignment: .leading, spacing: 15) {
-                    TextField("Email", text: self.$email)
-                        .authStyle()
-                        .keyboardType(.emailAddress)
+                VStack(alignment: .center, spacing: 20) {
+                    Image("AppLogo")
+                        .frame(width: 68, height: 68)
+                        .padding([.top], 32)
+                        .padding([.bottom], 32)
+                                        
+                    Text("Log in to your account")
+                        .defaultStyle(size: 26, opacity: 0.7)
                     
-                    SecureField("Password", text: self.$password)
-                        .authStyle()
-                        .padding([.bottom])
-
-                    Button(action: self.signIn) {
-                        if self.authStore.loggingIn {
-                            ProgressView()
-                                .tint(.white)
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                        } else {
-                            Text("Sign In")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .padding()
-                                .frame(maxWidth: .infinity)
+                    HStack(alignment: .center, spacing: 6) {
+                        Image(systemName: "envelope")
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
+                        
+                        TextField("Email", text: self.$email)
+                            .keyboardType(.emailAddress)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 14)
+                    .background(.white)
+                    .cornerRadius(40)
+                    .overlay(
+                      RoundedRectangle(cornerRadius: 40)
+                        .inset(by: 0.5)
+                        .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
+                    )
+                    
+                    HStack(alignment: .center, spacing: 6) {
+                        Image(systemName: "lock")
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
+                        
+                        if self.hidePassword {
+                            SecureField("Password", text: self.$password)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "eye.slash")
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
+                                .onTapGesture {
+                                    self.hidePassword.toggle()
+                                }
+                        } else  {
+                            TextField("Password", text: self.$password)
+                            
+                            Spacer()
+                            
+                            Image(systemName: "eye")
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
+                                .onTapGesture {
+                                    self.hidePassword.toggle()
+                                }
                         }
                     }
-                    .disabled(self.loginDisabled)
-                    .background(ColorConstants.tertiary)
-                    .opacity(self.loginDisabled ? 0.5 : 1.0)
-                    .frame(maxWidth: .infinity)
-                    .cornerRadius(10.0)
-                }.padding(27.5)
-                
-                if self.authStore.biometricType() != .none {
-                    biometricLoginButton
-                }
-                
-                Spacer()
-                
-                HStack {
-                    NavigationLink("Forgot Password?") {
-                        ForgotPassword(authStore: self.authStore, callback: { email, password in
-                            self.email = email
-                            self.password = password
-                            self.toastText = "Password reset!"
-                            self.showToast = true
-                        })
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 14)
+                    .background(.white)
+                    .cornerRadius(40)
+                    .overlay(
+                      RoundedRectangle(cornerRadius: 40)
+                        .inset(by: 0.5)
+                        .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
+                    )
+                    
+                    HStack {
+                        NavigationLink {
+                            ForgotPassword(authStore: self.authStore, callback: { email, password in
+                                self.email = email
+                                self.password = password
+                                self.toastText = "Password reset!"
+                                self.showToast = true
+                            })
+                        } label: {
+                            Text("Forget Password?")
+                                .font(Font.custom("SF Pro Text", size: 14).weight(.medium)
+                                )
+                                .foregroundColor(Color(red: 0, green: 0.6, blue: 1))
+                        }
+                        
+                        Spacer()
                     }
-                    .padding([.leading], 25)
-                    .padding([.bottom])
+                    
+                    Button(action: self.signIn, label: {
+                        HStack {
+                            Text("Log In".uppercased())
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 14))
+                        }
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24)
+                                .foregroundColor(ColorConstants.primary)
+                        )
+                    })
                     
                     Spacer()
                     
-                    NavigationLink("Create account") {
-                        CreateAccount(authStore: self.authStore, callback: self.callback)
+                    HStack {
+                        Text("No account?")
+                            .defaultStyle(size: 14, opacity: 0.5)
+                        
+                        NavigationLink {
+                            CreateAccount(authStore: self.authStore, callback: self.callback)
+                        } label: {
+                            Text("Create an account")
+                                .foregroundColor(Color.blue)
+                                .defaultStyle(size: 14, opacity: 0.5)
+                        }
                     }
-                    .padding([.trailing], 25)
-                    .padding([.bottom])
                 }
-                .foregroundColor(.white)
-                
+                .padding(.horizontal, 24)
+                .padding(.vertical, 48)
+                .frame(width: Constants.Width, alignment: .top)
             }
+            .edgesIgnoringSafeArea(.top)
             .autocapitalization(.none)
             .disabled(self.authStore.loggingIn)
             .alert(item: self.$error) { error in
                 return Alert(title: Text("Invalid login"), message: Text(error.localizedDescription))
             }
-            .background(BackgroundGradient())
             .toast(isPresenting: $showToast){
                 AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: self.toastText)
             }
@@ -114,8 +172,6 @@ struct Login: View {
                 self.hideKeyboard()
             }
         }
-        .accentColor(.white)
-        .preferredColorScheme(.light)
         
     }
     
