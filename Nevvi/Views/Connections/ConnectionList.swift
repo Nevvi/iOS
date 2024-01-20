@@ -28,7 +28,7 @@ struct ConnectionList: View {
         
     var body: some View {
         NavigationView {
-            List {
+            VStack {
                 if self.accountStore.firstName.isEmpty {
                     profileUpdateView
                 } else if self.connectionsStore.connectionCount == 0 {
@@ -37,49 +37,9 @@ struct ConnectionList: View {
                     connectionsView
                 }
             }
-            .listStyle(.insetGrouped)
-            .scrollContentBackground(self.connectionsStore.connectionCount == 0 ? .hidden : .visible)
+            .padding()
             .navigationTitle("Connections")
             .navigationBarTitleDisplayMode(.large)
-            .searchable(text: self.$nameFilter.text)
-            .disableAutocorrection(true)
-            .toolbar(content: {
-//                if self.connectionsStore.outOfSyncCount > 0 {
-//                    ToolbarItem(placement: .navigationBarLeading) {
-//                        if syncing {
-//                            ProgressView()
-//                        } else if (!self.accountStore.deviceSettings.autoSync) {
-//                            Button {
-//                                self.sync(dryRun: true)
-//                            } label: {
-//                                Text("Sync (\(self.connectionsStore.outOfSyncCount))")
-//                            }
-//                        }
-//                    }
-//                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    // TODO
-                    Image(systemName: "qrcode.viewfinder")
-                        .toolbarButtonStyle()
-                }
-
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    // TODO
-                    Image(systemName: "qrcode")
-                        .toolbarButtonStyle()
-                }
-            })
-            .onChange(of: self.nameFilter.debouncedText) { text in
-                self.connectionsStore.load(nameFilter: text)
-            }
-            .refreshable {
-                self.connectionsStore.load(nameFilter: self.nameFilter.debouncedText)
-                self.connectionsStore.loadOutOfSync { _ in
-                    if self.accountStore.deviceSettings.autoSync {
-                        self.sync(dryRun: false)
-                    }
-                }
-            }
         }
         .alert(isPresented: self.$showDeleteAlert) {
             deleteAlert
@@ -96,7 +56,6 @@ struct ConnectionList: View {
     
     var profileUpdateView: some View {
         HStack(alignment: .center) {
-            Spacer()
             VStack(alignment: .center, spacing: 24) {
                 Spacer()
                 
@@ -111,58 +70,105 @@ struct ConnectionList: View {
                     .multilineTextAlignment(.center)
                 
                 
-                ZStack {
+                NavigationLink(destination: PersonalInformationEdit()) {
                     Text("Update Profile".uppercased())
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.vertical, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 24)
-                                .foregroundColor(ColorConstants.primary)
-                        )
-                    
-                    NavigationLink(destination: PersonalInformationEdit()) {
-                        EmptyView()
-                    }.opacity(0)
+                        .asPrimaryButton()
                 }
                 
                 Spacer()
+                Spacer()
             }
-            Spacer()
+            .padding()
         }
     }
     
     var noConnectionsView: some View {
-        HStack {
-            Spacer()
-            if self.connectionsStore.loading {
-                ProgressView()
-            } else {
-                NoDataFound(imageName: "person.2.slash", height: 100, width: 120, text: "No connections")
+        HStack(alignment: .center) {
+            VStack(alignment: .center, spacing: 24) {
+                Spacer()
+                
+                Image("UpdateProfile")
+                
+                Text("No connections")
+                    .defaultStyle(size: 24, opacity: 1.0)
+                
+                // 16/Regular
+                Text("Let's find some people for you to connect with.")
+                    .defaultStyle(size: 16, opacity: 0.7)
+                    .multilineTextAlignment(.center)
+                
+                NavigationLink(destination: UserSearch()) {
+                    Text("Find Connections".uppercased())
+                        .asPrimaryButton()
+                }
+                
+                Spacer()
+                Spacer()
             }
-            Spacer()
+            .padding()
         }
-        .padding([.top], 100)
-        .listRowSeparator(.hidden)
     }
     
     var connectionsView: some View {
-        ForEach(self.connectionsStore.connections) { connection in
-            NavigationLink {
-                NavigationLazyView(
-                    ConnectionDetail(connectionStore: self.connectionStore)
-                        .onAppear {
-                            loadConnection(connectionId: connection.id)
-                        }
-                )
-            } label: {
-                ConnectionRow(connection: connection)
+        List {
+            ForEach(self.connectionsStore.connections) { connection in
+                NavigationLink {
+                    NavigationLazyView(
+                        ConnectionDetail(connectionStore: self.connectionStore)
+                            .onAppear {
+                                loadConnection(connectionId: connection.id)
+                            }
+                    )
+                } label: {
+                    ConnectionRow(connection: connection)
+                }
+            }
+            .onDelete(perform: self.delete)
+            .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
+        }
+        .listStyle(.plain)
+        .scrollContentBackground(self.connectionsStore.connectionCount == 0 ? .hidden : .visible)
+        .navigationTitle("Connections")
+        .navigationBarTitleDisplayMode(.large)
+        .searchable(text: self.$nameFilter.text)
+        .disableAutocorrection(true)
+        .toolbar(content: {
+//                if self.connectionsStore.outOfSyncCount > 0 {
+//                    ToolbarItem(placement: .navigationBarLeading) {
+//                        if syncing {
+//                            ProgressView()
+//                        } else if (!self.accountStore.deviceSettings.autoSync) {
+//                            Button {
+//                                self.sync(dryRun: true)
+//                            } label: {
+//                                Text("Sync (\(self.connectionsStore.outOfSyncCount))")
+//                            }
+//                        }
+//                    }
+//                }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                // TODO
+                Image(systemName: "qrcode.viewfinder")
+                    .toolbarButtonStyle()
+            }
+
+            ToolbarItem(placement: .navigationBarTrailing) {
+                // TODO
+                Image(systemName: "qrcode")
+                    .toolbarButtonStyle()
+            }
+        })
+        .onChange(of: self.nameFilter.debouncedText) { text in
+            self.connectionsStore.load(nameFilter: text)
+        }
+        .refreshable {
+            self.connectionsStore.load(nameFilter: self.nameFilter.debouncedText)
+            self.connectionsStore.loadOutOfSync { _ in
+                if self.accountStore.deviceSettings.autoSync {
+                    self.sync(dryRun: false)
+                }
             }
         }
-        .onDelete(perform: self.delete)
-        .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
     }
     
     var deleteAlert: Alert {
@@ -317,7 +323,7 @@ struct ConnectionList: View {
 struct ConnectionList_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
-    static let connectionsStore = ConnectionsStore(connections: [],
+    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
                                                    requests: modelData.requests,
                                                    blockedUsers: modelData.connectionResponse.users)
     static let connectionStore = ConnectionStore()

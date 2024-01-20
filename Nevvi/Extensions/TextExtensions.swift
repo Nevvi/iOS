@@ -94,6 +94,19 @@ extension Text {
             .cornerRadius(Constants.Full)
     }
     
+    func asPrimaryButton() -> some View {
+        self
+            .fontWeight(.bold)
+            .frame(maxWidth: .infinity)
+            .font(.headline)
+            .foregroundColor(.white)
+            .padding(.vertical, 16)
+            .background(
+                RoundedRectangle(cornerRadius: 24)
+                    .foregroundColor(ColorConstants.primary)
+            )
+    }
+    
     func toolbarTitle() -> some View {
         self
             .fontWeight(.bold)
