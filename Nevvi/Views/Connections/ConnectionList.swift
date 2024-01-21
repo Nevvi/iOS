@@ -31,7 +31,7 @@ struct ConnectionList: View {
             VStack {
                 if self.accountStore.firstName.isEmpty {
                     profileUpdateView
-                } else if self.connectionsStore.connectionCount == 0 {
+                } else if self.nameFilter.text.isEmpty && self.connectionsStore.connectionCount == 0 {
                     noConnectionsView
                 } else {
                     connectionsView

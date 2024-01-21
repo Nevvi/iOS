@@ -30,6 +30,7 @@ struct PermissionGroupRow: View {
                                 .fontWeight(.medium)
                                 .foregroundColor(.white)
                                 .background(ColorConstants.primary)
+                                .opacity(self.connectionStore.saving ? 0.5 : 1.0)
                                 .cornerRadius(8)
                                 .fontWeight(.light)
                                 .overlay(
@@ -41,13 +42,15 @@ struct PermissionGroupRow: View {
                                 .foregroundColor(ColorConstants.badgeText)
                                 .background(.white)
                                 .onTapGesture {
-                                    self.connectionStore.permissionGroup = self.group.name
-                                    self.connectionStore.update { (result: Result<Connection, Error>) in
-                                        switch result {
-                                        case .success(let connection):
-                                            print("Updated connection with \(connection.id)")
-                                        case .failure(let error):
-                                            print("Something bad happened", error)
+                                    if !self.connectionStore.saving {
+                                        self.connectionStore.permissionGroup = self.group.name
+                                        self.connectionStore.update { (result: Result<Connection, Error>) in
+                                            switch result {
+                                            case .success(let connection):
+                                                print("Updated connection with \(connection.id)")
+                                            case .failure(let error):
+                                                print("Something bad happened", error)
+                                            }
                                         }
                                     }
                                 }
