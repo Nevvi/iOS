@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import NukeUI
 
 struct NewConnectionRequestRow: View {
     @EnvironmentObject var accountStore: AccountStore
@@ -32,78 +33,81 @@ struct NewConnectionRequestRow: View {
     }
     
     var body: some View {
-        HStack {
-            ProfileImage(imageUrl: user.profileImage, height: 50, width: 50)
-                .padding([.trailing], 10)
+        HStack(alignment: .center, spacing: 12) {
+            ZStack(alignment: .bottom) {
+                Rectangle()
+                .foregroundColor(.clear)
+                .frame(width: 63, height: 63)
+                .background(
+                    LazyImage(url: URL(string: user.profileImage), resizingMode: .aspectFill)
+                )
+                .cornerRadius(63)
+                .padding([.bottom], 8)
+                                
+                Text(self.user.permissionGroup ?? "Unknown")
+                    .asPermissionGroupBadge(bgColor: Color(red: 0.82, green: 0.88, blue: 1))
+            }
             
-            Text("\(user.firstName) \(user.lastName)")
+            VStack {
+                Text("\(user.firstName) \(user.lastName)")
+                    .defaultStyle(size: 18, opacity: 1.0)
+                
+                // TODO - add phone/email if we have access
+            }
             
             Spacer()
             
-            if showConnectButton {
-                connectButton
-            }
+            Image(systemName: "plus")
+                .toolbarButtonStyle()
+                .onTapGesture {
+                    self.showSheet = true
+                }
         }
-        .opacity(animate ? 0.0 : 1.0)
-        .padding([.top, .bottom], 5)
-        .padding([.leading, .trailing], 5)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(
+            Rectangle()
+                .inset(by: 0.5)
+                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.04), lineWidth: 1)
+        )
         .sheet(isPresented: self.$showSheet) {
             requestConnectionSheet
         }
     }
     
-    var connectButton: some View {
-        Button {
-            self.showSheet = true
-        } label: {
-            Text("Connect")
-        }
-    }
-    
     var requestConnectionSheet: some View {
         ZStack {
-            VStack {
-                AsyncImage(url: URL(string: user.profileImage), content: { image in
-                    image.resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 70, height: 70)
-                        .clipShape(Circle())
-                }, placeholder: {
-                    ProgressView()
-                        .padding(15)
-                }).padding([.top], 30)
+            VStack(alignment: .leading) {
+                Text("Select permission group")
+                    .font(.title)
+                    .fontWeight(.light)
+                    .padding([.leading, .trailing, .top])
+                    .padding([.bottom], 6)
                 
-                Text("Which permission group should \(self.user.firstName) belong to if they accept?")
-                    .font(.title2)
-                    .padding([.top, .leading, .trailing])
-                    .foregroundColor(.black)
+                PermissionGroupPicker(selectedGroup: $selectedPermissionGroup)
                 
-                Picker("Which permission group should \(self.user.firstName) belong to?", selection: self.$selectedPermissionGroup) {
-                    ForEach(self.accountStore.permissionGroups, id: \.name) {
-                        Text($0.name.uppercased())
-                    }
-                }
-                .pickerStyle(.wheel)
-                .padding([.top], -30)
-                .padding([.bottom], 10)
-                .foregroundColor(.black)
+                Spacer()
                 
-                Button(action: self.requestConnection, label: {
-                    Text("Request")
+                Button(action: self.requestConnection) {
+                    Text("Request Connection")
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity)
                         .font(.headline)
                         .foregroundColor(.white)
-                        .padding(.horizontal, 50)
                         .padding(.vertical, 16)
                         .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .foregroundColor(ColorConstants.secondary)
+                            RoundedRectangle(cornerRadius: 24)
+                                .foregroundColor(ColorConstants.primary)
                         )
                         .opacity(self.loading ? 0.5 : 1.0)
-                })
+                }
                 .disabled(self.loading)
-                .padding([.bottom])
-            }
-        }.presentationDetents([.height(400)])
+                .padding()
+                .padding([.top], 12)
+            }.padding(4)
+        }
+        .presentationDetents([.fraction(0.30)])
     }
     
     func requestConnection() {

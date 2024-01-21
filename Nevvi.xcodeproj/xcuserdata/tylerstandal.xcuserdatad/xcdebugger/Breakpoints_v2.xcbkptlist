@@ -125,8 +125,8 @@
             filePath = "Nevvi/Views/Connections/NewConnectionRequestRow.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "114"
-            endingLineNumber = "114"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
             landmarkName = "requestConnection()"
             landmarkType = "7">
             <Locations>
@@ -173,8 +173,8 @@
             filePath = "Nevvi/Views/Connections/NewConnectionRequestRow.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "119"
-            endingLineNumber = "119"
+            startingLineNumber = "123"
+            endingLineNumber = "123"
             landmarkName = "requestConnection()"
             landmarkType = "7">
          </BreakpointContent>
@@ -189,8 +189,8 @@
             filePath = "Nevvi/Views/Connections/NewConnectionRequestRow.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "121"
-            endingLineNumber = "121"
+            startingLineNumber = "125"
+            endingLineNumber = "125"
             landmarkName = "requestConnection()"
             landmarkType = "7">
          </BreakpointContent>

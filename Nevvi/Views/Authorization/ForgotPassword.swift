@@ -14,6 +14,7 @@ struct ForgotPassword: View {
     @State private var error: AuthorizationStore.AuthorizationError?
     
     @State private var showConfirmationCode: Bool
+    @State private var hidePassword: Bool = true
     
     @ObservedObject var authStore: AuthorizationStore
     
@@ -78,130 +79,250 @@ struct ForgotPassword: View {
       
     var body: some View {
         VStack() {
-            Spacer()
-            
-            Text(self.showConfirmationCode ? "Almost done!" : "Forgot password?")
-                .font(.largeTitle).foregroundColor(Color.white)
-                .padding([.top], 30)
-            
-            Text(self.showConfirmationCode ? "Enter the code you received in your email along with your new password" : "No worries... we're here to help")
-                .font(.subheadline)
-                .foregroundColor(Color.white)
-                .multilineTextAlignment(.center)
-                .padding([.top], 1)
-                .padding([.leading, .trailing], 30)
-                .padding([.bottom], 50)
-            
-            if self.showConfirmationCode {
-                resetPasswordView
-            } else {
-                sendResetCodeView
+            ZStack {
+                Image("BackgroundBlur")
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                
+                VStack(alignment: .center, spacing: 20) {
+                    Image("AppLogo")
+                        .frame(width: 68, height: 68)
+                        .padding([.top], 32)
+                        .padding([.bottom], 32)
+                    
+                    if self.showConfirmationCode {
+                        resetPasswordView
+                    } else {
+                        sendResetCodeView
+                    }
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 48)
+                .frame(width: Constants.Width, alignment: .top)
             }
-            
-            Spacer()
-            Spacer()
-        }
-        .autocapitalization(.none)
-        .disabled(self.authStore.signingUp)
-        .background(BackgroundGradient())
-        .alert(item: self.$error) { error in
-            if self.showConfirmationCode {
-                return Alert(title: Text("Failed to reset password"), message: Text(error.localizedDescription))
-            } else {
-                return Alert(title: Text("Failed to send code"), message: Text(error.localizedDescription))
+            .autocapitalization(.none)
+            .edgesIgnoringSafeArea(.top)
+            .onTapGesture {
+                self.hideKeyboard()
+            }
+            .disabled(self.authStore.signingUp)
+            .alert(item: self.$error) { error in
+                if self.showConfirmationCode {
+                    return Alert(title: Text("Failed to reset password"), message: Text(error.localizedDescription))
+                } else {
+                    return Alert(title: Text("Failed to send code"), message: Text(error.localizedDescription))
+                }
             }
         }
-        .preferredColorScheme(.light)
     }
     
     var sendResetCodeView: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            TextField("Email", text: self.$email)
-                .authStyle()
-                .keyboardType(.emailAddress)
+        VStack {
+            Text("Forgot your password?")
+                .defaultStyle(size: 26, opacity: 0.7)
+                .padding([.top], 16)
+            
+            Text("Where can we send a recovery code?")
+                .defaultStyle(size: 18, opacity: 0.5)
+                .multilineTextAlignment(.center)
+                .padding([.vertical], 16)
+            
+            HStack(alignment: .center, spacing: 6) {
+                Image(systemName: "envelope")
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
+                
+                TextField("Email", text: self.$email)
+                    .keyboardType(.emailAddress)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(.white)
+            .cornerRadius(40)
+            .overlay(
+              RoundedRectangle(cornerRadius: 40)
+                .inset(by: 0.5)
+                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
+            )
             
             Spacer()
             
-            Button(action: self.sendResetCode) {
-                Text("Send Code")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-            }
-            .disabled(self.sendResetCodeDisabled)
-            .background(ColorConstants.tertiary)
-            .opacity(self.sendResetCodeDisabled ? 0.5 : 1.0)
-            .frame(maxWidth: .infinity)
-            .cornerRadius(10.0)
+            Button(action: self.sendResetCode, label: {
+                HStack {
+                    Text("Send reset code".uppercased())
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14))
+                }
+                .fontWeight(.bold)
+                .frame(maxWidth: .infinity)
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.vertical, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .foregroundColor(ColorConstants.primary)
+                        .opacity(self.authStore.sendingResetCode ? 0.5 : 1.0)
+                )
+            })
+            .disabled(self.authStore.sendingResetCode)
+            .padding([.bottom], 16)
         }
-        .padding([.leading, .trailing], 27.5)
+        .padding(.horizontal, 24)
+        .padding(.vertical, 48)
+        .frame(width: Constants.Width, alignment: .top)
+        .edgesIgnoringSafeArea(.top)
+        .disabled(self.authStore.sendingResetCode)
+        .alert(item: self.$error) { error in
+            return Alert(title: Text("Invalid login"), message: Text(error.localizedDescription))
+        }
+        .onTapGesture {
+            self.hideKeyboard()
+        }
     }
     
     var resetPasswordView: some View {
-        VStack(alignment: .leading, spacing: 15) {
-            TextField("Email", text: self.$email)
-                .authStyle()
-                .disabled(true)
-                .keyboardType(.emailAddress)
+        VStack {
+            Text("Reset your password")
+                .defaultStyle(size: 26, opacity: 0.7)
+                .multilineTextAlignment(.center)
+                .padding([.vertical], 16)
             
-            TextField("Code", text: self.$confirmationCode)
-                .authStyle()
+            HStack(alignment: .center, spacing: 6) {
+                Image(systemName: "envelope")
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
+                
+                TextField("Email", text: self.$email)
+                    .keyboardType(.emailAddress)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(.white)
+            .cornerRadius(40)
+            .overlay(
+              RoundedRectangle(cornerRadius: 40)
+                .inset(by: 0.5)
+                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
+            )
             
-            SecureField("New Password", text: self.$password)
-                .authStyle()
+            HStack(alignment: .center, spacing: 6) {
+                Image(systemName: "number")
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
+                
+                TextField("Code", text: self.$confirmationCode)
+                    .keyboardType(.numberPad)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(.white)
+            .cornerRadius(40)
+            .overlay(
+              RoundedRectangle(cornerRadius: 40)
+                .inset(by: 0.5)
+                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
+            )
+            
+            HStack(alignment: .center, spacing: 6) {
+                Image(systemName: "lock")
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
+                
+                if self.hidePassword {
+                    SecureField("New Password", text: self.$password)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "eye.slash")
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
+                        .onTapGesture {
+                            self.hidePassword.toggle()
+                        }
+                } else  {
+                    TextField("New Password", text: self.$password)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "eye")
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
+                        .onTapGesture {
+                            self.hidePassword.toggle()
+                        }
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(.white)
+            .cornerRadius(40)
+            .overlay(
+              RoundedRectangle(cornerRadius: 40)
+                .inset(by: 0.5)
+                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
+            )
             
             VStack(alignment: .leading, spacing: 15) {
                 HStack {
                     Image(systemName: "checkmark.seal.fill")
                     Text("Contains uppercase letter")
                 }
-                .foregroundColor(self.passwordContainsUppercase ? .white : ColorConstants.secondary)
+                .foregroundColor(self.passwordContainsUppercase ? ColorConstants.primary : ColorConstants.secondary)
                 
                 HStack {
                     Image(systemName: "checkmark.seal.fill")
                     Text("Contains lowercase letter")
                 }
-                .foregroundColor(self.passwordContainsLowercase ? .white : ColorConstants.secondary)
+                .foregroundColor(self.passwordContainsLowercase ? ColorConstants.primary : ColorConstants.secondary)
                 
                 HStack {
                     Image(systemName: "checkmark.seal.fill")
                     Text("Contains special character")
                 }
-                .foregroundColor(self.passwordContainsSpecialChar ? .white : ColorConstants.secondary)
+                .foregroundColor(self.passwordContainsSpecialChar ? ColorConstants.primary : ColorConstants.secondary)
                 
                 HStack {
                     Image(systemName: "checkmark.seal.fill")
                     Text("Contains number")
                 }
-                .foregroundColor(self.passwordContainsNumber ? .white : ColorConstants.secondary)
+                .foregroundColor(self.passwordContainsNumber ? ColorConstants.primary : ColorConstants.secondary)
                 
                 HStack {
                     Image(systemName: "checkmark.seal.fill")
                     Text("Contains at least 8 characters")
                 }
-                .foregroundColor(self.passwordMinimumLength ? .white : ColorConstants.secondary)
+                .foregroundColor(self.passwordMinimumLength ? ColorConstants.primary : ColorConstants.secondary)
             }
-            .padding([.leading, .bottom])
+            .padding()
             .fontWeight(.regular)
             .font(.system(size: 14))
             
             Spacer()
             
-            Button(action: self.resetPassword) {
-                Text("Reset Password")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(maxWidth: .infinity)
-            }
+            Button(action: self.resetPassword, label: {
+                HStack {
+                    Text("Reset Password".uppercased())
+                    
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14))
+                }
+                .fontWeight(.bold)
+                .frame(maxWidth: .infinity)
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.vertical, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .foregroundColor(ColorConstants.primary)
+                        .opacity(self.authStore.loggingIn ? 0.5 : 1.0)
+                )
+                .opacity(self.resetPasswordDisabled ? 0.5 : 1.0)
+            })
             .disabled(self.resetPasswordDisabled)
-            .background(ColorConstants.tertiary)
-            .opacity(self.resetPasswordDisabled ? 0.5 : 1.0)
-            .frame(maxWidth: .infinity)
-            .cornerRadius(10.0)
+            .padding([.bottom], 16)
         }
-        .padding([.leading, .trailing], 27.5)
+        .disabled(self.authStore.signingUp)
     }
     
     func sendResetCode() {
@@ -234,6 +355,6 @@ struct ForgotPassword: View {
 
 struct ForgotPassword_Previews: PreviewProvider {
     static var previews: some View {
-        ForgotPassword(authStore: AuthorizationStore(), callback: { email, password in }, showConfirmationCode: true)
+        ForgotPassword(authStore: AuthorizationStore(), callback: { email, password in }, showConfirmationCode: false)
     }
 }

@@ -18,9 +18,8 @@ struct ActionableConnectionRequestRow: View {
     @State var selectedPermissionGroup: String = "ALL"
     
     var body: some View {
-        HStack(alignment: .top) {
+        HStack(alignment: .center, spacing: 12) {
             ProfileImage(imageUrl: request.requesterImage, height: 60, width: 60)
-                .padding([.trailing], 10)
             
             VStack(alignment: .leading) {
                 Text(self.request.requestText)
@@ -32,7 +31,14 @@ struct ActionableConnectionRequestRow: View {
             
             Spacer()
         }
-        .padding()
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(
+            Rectangle()
+                .inset(by: 0.5)
+                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.04), lineWidth: 1)
+        )
         .sheet(isPresented: self.$showSheet) {
             approveSheet
         }
@@ -91,7 +97,7 @@ struct ActionableConnectionRequestRow: View {
                     self.loading = false
                     self.showSheet = false
                 }, label: {
-                    Text("CONFIRM")
+                    Text("ACCEPT")
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity)
                         .font(.headline)
