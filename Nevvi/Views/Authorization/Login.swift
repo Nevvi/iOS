@@ -42,6 +42,8 @@ struct Login: View {
                     Image("AppLogo")
                         .frame(width: 68, height: 68)
                         .padding([.vertical], 32)
+                    
+                    Spacer()
                                         
                     Text("Log in to your account")
                         .defaultStyle(size: 26, opacity: 0.7)
@@ -122,7 +124,7 @@ struct Login: View {
                         Spacer()
                     }
                     
-                    Spacer()
+//                    Spacer()
                     
                     Button(action: self.signIn, label: {
                         HStack {
@@ -144,6 +146,9 @@ struct Login: View {
                         )
                     })
                     .padding([.bottom], 16)
+                    
+                    Spacer()
+                    Spacer()
                     
                     HStack {
                         Text("No account?")

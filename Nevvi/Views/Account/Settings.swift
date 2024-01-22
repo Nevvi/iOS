@@ -35,37 +35,41 @@ struct Settings: View {
                         
                     } label: {
                         HStack {
-                            Image(systemName: "exclamationmark.lock").padding([.trailing])
+                            Image(systemName: "exclamationmark.lock")
+                                .settingsButtonStyle()
                             Text("Change Password")
                         }
-                    }.padding(10)
+                    }.padding(.vertical, 10)
                     
                     NavigationLink {
-                        PermissionGroupList()
+                        GroupSettings()
                     } label: {
                         HStack {
-                            Image(systemName: "person.badge.key").padding([.trailing])
-                            Text("Permission Groups")
+                            Image(systemName: "person.2")
+                                .settingsButtonStyle()
+                            Text("Permissions & Groups")
                         }
-                    }.padding(10)
+                    }.padding(.vertical, 10)
                     
                     NavigationLink {
                         
                     } label: {
                         HStack {
-                            Image(systemName: "bell").padding([.trailing])
+                            Image(systemName: "bell")
+                                .settingsButtonStyle()
                             Text("Notifications")
                         }
-                    }.padding(10)
+                    }.padding(.vertical, 10)
                     
                     NavigationLink {
                         BlockedUserList()
                     } label: {
                         HStack {
-                            Image(systemName: "circle.slash").padding([.trailing])
+                            Image(systemName: "circle.slash")
+                                .settingsButtonStyle()
                             Text("Blocked Users")
                         }
-                    }.padding(10)
+                    }.padding(.vertical, 10)
                 }
                 
                 Section {
@@ -73,46 +77,51 @@ struct Settings: View {
                         
                     } label: {
                         HStack {
-                            Image(systemName: "checkmark.shield").padding([.trailing])
+                            Image(systemName: "checkmark.shield")
+                                .settingsButtonStyle()
                             Text("Privacy and security")
                         }
-                    }.padding(10)
+                    }.padding(.vertical, 10)
                     
                     NavigationLink {
                         
                     } label: {
                         HStack {
-                            Image(systemName: "cloud").padding([.trailing])
+                            Image(systemName: "cloud")
+                                .settingsButtonStyle()
                             Text("Data and storage")
                         }
-                    }.padding(10)
+                    }.padding(.vertical, 10)
                     
                     NavigationLink {
                         
                     } label: {
                         HStack {
-                            Image(systemName: "questionmark.square").padding([.trailing])
+                            Image(systemName: "questionmark.square")
+                                .settingsButtonStyle()
                             Text("FAQ")
                         }
-                    }.padding(10)
+                    }.padding(.vertical, 10)
                     
                     NavigationLink {
                         
                     } label: {
                         HStack {
-                            Image(systemName: "headphones").padding([.trailing])
+                            Image(systemName: "headphones")
+                                .settingsButtonStyle()
                             Text("Help Center")
                         }
-                    }.padding(10)
+                    }.padding(.vertical, 10)
                     
                     NavigationLink {
                         
                     } label: {
                         HStack {
-                            Image(systemName: "bolt").padding([.trailing])
+                            Image(systemName: "bolt")
+                                .settingsButtonStyle()
                             Text("Feature Update")
                         }
-                    }.padding(10)
+                    }.padding(.vertical, 10)
                 }
                 
                 Section {
@@ -154,10 +163,16 @@ struct Settings: View {
 struct Settings_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let accountStore = AccountStore(user: modelData.user)
+    static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
+    static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users)
+    static let connectionStore = ConnectionStore()
     
     static var previews: some View {
         Settings()
             .environmentObject(accountStore)
+            .environmentObject(connectionStore)
+            .environmentObject(connectionGroupStore)
+            .environmentObject(connectionGroupsStore)
             .environmentObject(AuthorizationStore())
     }
 }

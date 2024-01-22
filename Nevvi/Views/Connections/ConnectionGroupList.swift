@@ -19,29 +19,26 @@ struct ConnectionGroupList: View {
     @State private var showGroupForm: Bool = false
         
     var body: some View {
-        NavigationView {
-            List {
+        ScrollView {
+            VStack {
                 if self.connectionGroupsStore.groupsCount == 0 {
                     noGroupsView
                 } else {
                     groupsView
                 }
+            }.padding([.top])
+        }
+        .toolbar(content: {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    self.showGroupForm = true
+                } label: {
+                    Image(systemName: "plus")
+                }.padding([.trailing], 5)
             }
-            .scrollContentBackground(self.connectionGroupsStore.groupsCount == 0 ? .hidden : .visible)
-            .navigationTitle("Groups")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar(content: {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        self.showGroupForm = true
-                    } label: {
-                        Image(systemName: "plus")
-                    }.padding([.trailing], 5)
-                }
-            })
-            .refreshable {
-                self.connectionGroupsStore.load()
-            }
+        })
+        .refreshable {
+            self.connectionGroupsStore.load()
         }
         .alert("Create Group", isPresented: $showGroupForm, actions: {
             TextField("Group Name", text: self.$newGroupName)
@@ -79,17 +76,12 @@ struct ConnectionGroupList: View {
     
     var groupsView: some View {
         ForEach(self.connectionGroupsStore.groups, id: \.id) { group in
-            NavigationLink {
-                NavigationLazyView(
-                    ConnectionGroupDetail(connectionGroupStore: connectionGroupStore, connectionStore: self.connectionStore)
-                        .onAppear {
-                            self.connectionGroupStore.load(group: group)
-                        }
-                )
-            } label: {
-                ConnectionGroupRow(connectionGroup: group)
-            }
-            .padding(5)
+            ConnectionGroupRow(
+                connectionGroupStore: self.connectionGroupStore,
+                connectionStore: self.connectionStore,
+                connectionGroup: group
+            )
+            .padding([.leading, .trailing, .bottom])
         }
         .onDelete(perform: self.delete)
         .redacted(when: self.connectionGroupsStore.loading, redactionType: .customPlaceholder)

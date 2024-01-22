@@ -15,32 +15,27 @@ struct PermissionGroupList: View {
     @State var selectedGroup: PermissionGroup? = nil
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack {
-                    ForEach(self.accountStore.permissionGroups, id: \.name) { group in
-                        PermissionGroupRow(group: group, selectable: false)
-                            .padding([.leading, .trailing, .bottom])
-                        .onTapGesture {
-                            // Can't edit the ALL group
-                            if group.name.uppercased() != "ALL" {
-                                self.selectedGroup = group
-                                self.showGroupEdit = true
-                            }
+        ScrollView {
+            VStack {
+                ForEach(self.accountStore.permissionGroups, id: \.name) { group in
+                    PermissionGroupRow(group: group, selectable: false)
+                        .padding([.leading, .trailing, .bottom])
+                    .onTapGesture {
+                        // Can't edit the ALL group
+                        if group.name.uppercased() != "ALL" {
+                            self.selectedGroup = group
+                            self.showGroupEdit = true
                         }
                     }
-                    .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
                 }
+                .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
             }
-            .sheet(isPresented: self.$showGroupEdit) {
-                editPermissionGroupSheet
-            }
-            .sheet(isPresented: self.$showNewGroup) {
-                newPermissionGroupSheet
-            }
-
-            Text("\(self.selectedGroup?.name ?? "")")
-                .hidden()
+        }
+        .sheet(isPresented: self.$showGroupEdit) {
+            editPermissionGroupSheet
+        }
+        .sheet(isPresented: self.$showNewGroup) {
+            newPermissionGroupSheet
         }
         .toolbar(content: {
             Image(systemName: "plus").foregroundColor(.blue)
@@ -49,8 +44,6 @@ struct PermissionGroupList: View {
                 }
         })
         .padding([.top])
-        .navigationTitle("Permission Groups")
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     var editPermissionGroupSheet: some View {

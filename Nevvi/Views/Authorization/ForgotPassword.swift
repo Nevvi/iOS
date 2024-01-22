@@ -118,6 +118,8 @@ struct ForgotPassword: View {
     
     var sendResetCodeView: some View {
         VStack {
+            Spacer()
+            
             Text("Forgot your password?")
                 .defaultStyle(size: 26, opacity: 0.7)
                 .padding([.top], 16)
@@ -144,9 +146,7 @@ struct ForgotPassword: View {
                 .inset(by: 0.5)
                 .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
             )
-            
-            Spacer()
-            
+                        
             Button(action: self.sendResetCode, label: {
                 HStack {
                     Text("Send reset code".uppercased())
@@ -167,6 +167,9 @@ struct ForgotPassword: View {
             })
             .disabled(self.authStore.sendingResetCode)
             .padding([.bottom], 16)
+            
+            Spacer()
+            Spacer()
         }
         .padding(.horizontal, 24)
         .padding(.vertical, 48)
@@ -183,6 +186,8 @@ struct ForgotPassword: View {
     
     var resetPasswordView: some View {
         VStack {
+            Spacer()
+            
             Text("Reset your password")
                 .defaultStyle(size: 26, opacity: 0.7)
                 .multilineTextAlignment(.center)
@@ -297,9 +302,7 @@ struct ForgotPassword: View {
             .padding()
             .fontWeight(.regular)
             .font(.system(size: 14))
-            
-            Spacer()
-            
+                        
             Button(action: self.resetPassword, label: {
                 HStack {
                     Text("Reset Password".uppercased())
@@ -321,6 +324,9 @@ struct ForgotPassword: View {
             })
             .disabled(self.resetPasswordDisabled)
             .padding([.bottom], 16)
+            
+            Spacer()
+            Spacer()
         }
         .disabled(self.authStore.signingUp)
     }
@@ -355,6 +361,6 @@ struct ForgotPassword: View {
 
 struct ForgotPassword_Previews: PreviewProvider {
     static var previews: some View {
-        ForgotPassword(authStore: AuthorizationStore(), callback: { email, password in }, showConfirmationCode: false)
+        ForgotPassword(authStore: AuthorizationStore(), callback: { email, password in }, showConfirmationCode: true)
     }
 }

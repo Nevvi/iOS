@@ -110,6 +110,8 @@ struct CreateAccount: View {
     
     var createAccountView: some View {
         VStack {
+            Spacer()
+            
             Text("Create free Nevvi account")
                 .defaultStyle(size: 26, opacity: 0.7)
                 .multilineTextAlignment(.center)
@@ -207,8 +209,6 @@ struct CreateAccount: View {
             .fontWeight(.regular)
             .font(.system(size: 14))
             
-            Spacer()
-            
             Button(action: self.createAccount, label: {
                 HStack {
                     Text("Create Account".uppercased())
@@ -230,6 +230,9 @@ struct CreateAccount: View {
                 .disabled(self.createAccountDisabled)
             })
             .padding([.bottom], 16)
+            
+            Spacer()
+            Spacer()
                         
             HStack {
                 Text("Need to confirm an account?")

@@ -111,6 +111,7 @@
 		277D25342B5BED4700D1D717 /* OnboardingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25332B5BED4700D1D717 /* OnboardingButton.swift */; };
 		277D25362B5C18C500D1D717 /* ImageExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25352B5C18C500D1D717 /* ImageExtensions.swift */; };
 		277D25382B5C578000D1D717 /* StackExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25372B5C578000D1D717 /* StackExtensions.swift */; };
+		277D253A2B5E9D5300D1D717 /* GroupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25392B5E9D5300D1D717 /* GroupSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -211,6 +212,7 @@
 		277D25332B5BED4700D1D717 /* OnboardingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingButton.swift; sourceTree = "<group>"; };
 		277D25352B5C18C500D1D717 /* ImageExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageExtensions.swift; sourceTree = "<group>"; };
 		277D25372B5C578000D1D717 /* StackExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackExtensions.swift; sourceTree = "<group>"; };
+		277D25392B5E9D5300D1D717 /* GroupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -432,6 +434,7 @@
 				04314396297438D70094D7E0 /* PermissionGroupList.swift */,
 				0431439829743F8F0094D7E0 /* PermissionGroupDetail.swift */,
 				277D25162B55A96400D1D717 /* PermissionGroupRow.swift */,
+				277D25392B5E9D5300D1D717 /* GroupSettings.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -664,6 +667,7 @@
 				04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */,
 				277D25222B55C21F00D1D717 /* PermissionGroupPicker.swift in Sources */,
 				04314387296B64A50094D7E0 /* ConnectionGroup.swift in Sources */,
+				277D253A2B5E9D5300D1D717 /* GroupSettings.swift in Sources */,
 				04B94947295E57C500703523 /* UIApplicationExtensions.swift in Sources */,
 				0431438B296B655F0094D7E0 /* ConnectionGroupsStore.swift in Sources */,
 				04B94931295DFBBA00703523 /* Authorization.swift in Sources */,

@@ -24,7 +24,7 @@ struct ContentView: View {
                 TabView {
                     ConnectionList()
                         .tabItem() {
-                            Label("Connections", systemImage: "person.line.dotted.person.fill")
+                            Label("Connections", systemImage: "person.3.sequence.fill")
                         }
                     
                     ConnectionRequestList()
