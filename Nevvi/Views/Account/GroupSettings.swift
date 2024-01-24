@@ -10,10 +10,6 @@ import SwiftUI
 struct GroupSettings: View {
     @State var tabSelectedValue = 0
     
-    @EnvironmentObject var connectionGroupStore: ConnectionGroupStore
-    @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
-    @EnvironmentObject var connectionStore: ConnectionStore
-    
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Picker("", selection: self.$tabSelectedValue) {
@@ -27,8 +23,7 @@ struct GroupSettings: View {
             TabView(selection: $tabSelectedValue) {
                 PermissionGroupList().tag(0)
 
-                ConnectionGroupList(connectionGroupStore: self.connectionGroupStore, connectionStore: self.connectionStore)
-                    .tag(1)
+                ConnectionGroupList().tag(1)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeIn, value: tabSelectedValue)

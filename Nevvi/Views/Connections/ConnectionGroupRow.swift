@@ -7,33 +7,21 @@
 
 import SwiftUI
 
-struct ConnectionGroupRow: View {
-    var connectionGroupStore: ConnectionGroupStore
-    var connectionStore: ConnectionStore
-    
+struct ConnectionGroupRow: View {    
     var connectionGroup: ConnectionGroup
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .top) {
-                NavigationLink {
-                    NavigationLazyView(
-                        ConnectionGroupDetail(connectionGroupStore: self.connectionGroupStore, connectionStore: self.connectionStore)
-                            .onAppear {
-                                self.connectionGroupStore.load(group: self.connectionGroup)
-                            }
-                    )
-                } label: {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("\(self.connectionGroup.name)")
-                            .defaultStyle(size: 20, opacity: 1.0)
-                        
-                        Text("\(connectionGroup.connections.count) \(connectionGroup.connections.count == 1 ? "member" : "members")")
-                            .defaultStyle(size: 14, opacity: 0.4)
-                    }
-                    .padding(0)
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(self.connectionGroup.name)")
+                        .defaultStyle(size: 20, opacity: 1.0)
+                    
+                    Text("\(connectionGroup.connections.count) \(connectionGroup.connections.count == 1 ? "member" : "members")")
+                        .defaultStyle(size: 14, opacity: 0.4)
                 }
+                .padding(0)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
                 
                 Spacer()
                 
@@ -74,15 +62,10 @@ struct ConnectionGroupRow: View {
 
 struct ConnectionGroup_Previews: PreviewProvider {
     static var modelData = ModelData()
-
-    static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users)
-    static let connectionStore = ConnectionStore()
     
     static var previews: some View {
         Group {
             ConnectionGroupRow(
-                connectionGroupStore: self.connectionGroupStore,
-                connectionStore: self.connectionStore, 
                 connectionGroup: modelData.groups[0]
             )
         }

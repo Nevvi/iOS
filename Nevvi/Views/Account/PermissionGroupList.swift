@@ -20,19 +20,9 @@ struct PermissionGroupList: View {
                 ForEach(self.accountStore.permissionGroups, id: \.name) { group in
                     PermissionGroupRow(group: group, selectable: false)
                         .padding([.leading, .trailing, .bottom])
-                    .onTapGesture {
-                        // Can't edit the ALL group
-                        if group.name.uppercased() != "ALL" {
-                            self.selectedGroup = group
-                            self.showGroupEdit = true
-                        }
-                    }
                 }
                 .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
             }
-        }
-        .sheet(isPresented: self.$showGroupEdit) {
-            editPermissionGroupSheet
         }
         .sheet(isPresented: self.$showNewGroup) {
             newPermissionGroupSheet

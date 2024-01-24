@@ -9,14 +9,15 @@ import SwiftUI
 
 struct ConnectionGroupList: View {
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
-    @ObservedObject var connectionGroupStore: ConnectionGroupStore
-    var connectionStore: ConnectionStore
+    @EnvironmentObject var connectionGroupStore: ConnectionGroupStore
     
     @State private var toBeDeleted: IndexSet?
     @State private var showDeleteAlert: Bool = false
     
     @State private var newGroupName: String = ""
     @State private var showGroupForm: Bool = false
+    
+    @State private var showGroupDetails: Bool = false
         
     var body: some View {
         ScrollView {
@@ -40,6 +41,9 @@ struct ConnectionGroupList: View {
         .refreshable {
             self.connectionGroupsStore.load()
         }
+        .sheet(isPresented: self.$showGroupDetails, content: {
+            ConnectionGroupDetail()
+        })
         .alert("Create Group", isPresented: $showGroupForm, actions: {
             TextField("Group Name", text: self.$newGroupName)
             Button("Cancel", role: .cancel, action: {})
@@ -76,14 +80,13 @@ struct ConnectionGroupList: View {
     
     var groupsView: some View {
         ForEach(self.connectionGroupsStore.groups, id: \.id) { group in
-            ConnectionGroupRow(
-                connectionGroupStore: self.connectionGroupStore,
-                connectionStore: self.connectionStore,
-                connectionGroup: group
-            )
+            ConnectionGroupRow(connectionGroup: group)
             .padding([.leading, .trailing, .bottom])
+            .onTapGesture {
+                self.connectionGroupStore.load(group: group)
+                self.showGroupDetails = true
+            }
         }
-        .onDelete(perform: self.delete)
         .redacted(when: self.connectionGroupsStore.loading, redactionType: .customPlaceholder)
     }
     
@@ -122,11 +125,11 @@ struct ConnectionGroupList_Previews: PreviewProvider {
     static let accountStore = AccountStore(user: modelData.user)
     static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
     static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users)
-    static let connectionStore = ConnectionStore()
     
     static var previews: some View {
-        ConnectionGroupList(connectionGroupStore: connectionGroupStore, connectionStore: connectionStore)
+        ConnectionGroupList()
             .environmentObject(connectionGroupsStore)
+            .environmentObject(connectionGroupStore)
             .environmentObject(accountStore)
     }
 }

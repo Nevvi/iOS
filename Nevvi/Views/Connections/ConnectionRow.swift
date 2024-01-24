@@ -10,7 +10,7 @@ import NukeUI
 
 struct ConnectionRow: View {
     var connection: Connection
-    
+        
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
             ZStack(alignment: .bottom) {
@@ -34,7 +34,7 @@ struct ConnectionRow: View {
                 // TODO - add phone/email if we have access
             }
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 20)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .overlay(
