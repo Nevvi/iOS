@@ -202,6 +202,7 @@ struct ConnectionDetail: View {
                     
                     ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
                         ConnectionGroupRow(connectionGroup: group, selectable: true)
+                            .padding([.leading, .trailing, .bottom])
                     }
                     .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
                 }

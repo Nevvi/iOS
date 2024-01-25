@@ -40,7 +40,14 @@ struct ConnectionGroupRow: View {
                     
                     Menu {
                         Button(role: .destructive) {
-                            
+                            self.connectionGroupsStore.delete(groupId: self.connectionGroup.id) { (result: Result<Bool, Error>) in
+                                switch result {
+                                    case .success(_):
+                                    self.connectionGroupsStore.load()
+                                    case .failure(let error):
+                                    print("Failed to delete group", error)
+                                }
+                            }
                         } label: {
                             Label("Delete Group", systemImage: "trash")
                         }
@@ -86,7 +93,6 @@ struct ConnectionGroupRow: View {
                                         }
                                     }
                             }
-
                     }
                 }
             }

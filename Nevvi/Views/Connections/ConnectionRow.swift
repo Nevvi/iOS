@@ -34,7 +34,6 @@ struct ConnectionRow: View {
                 // TODO - add phone/email if we have access
             }
         }
-        .padding(.horizontal, 20)
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .overlay(
