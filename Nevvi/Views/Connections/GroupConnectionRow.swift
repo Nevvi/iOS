@@ -12,6 +12,8 @@ struct GroupConnectionRow: View {
     var connection: Connection
     
     @ObservedObject var connectionGroupStore: ConnectionGroupStore
+    @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
+    
     @State private var toBeDeleted: Connection?
     @State private var showDeleteAlert: Bool = false
     
@@ -67,6 +69,7 @@ struct GroupConnectionRow: View {
             self.connectionGroupStore.removeFromGroup(userId: self.connection.id) { (result: Result<Bool, Error>) in
                 switch result {
                 case.success(_):
+                    self.connectionGroupsStore.load()
                     self.connectionGroupStore.loadConnections(groupId: self.connectionGroupStore.id, name: "")
                 case .failure(let error):
                     print("Something bad happened", error)

@@ -7,12 +7,24 @@
 
 import SwiftUI
 
-struct ConnectionGroupRow: View {    
+struct ConnectionGroupRow: View {
+    @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var connectionStore: ConnectionStore
+    @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
+    
     var connectionGroup: ConnectionGroup
+    
+    @State var selectable: Bool = false
+    @State var actionable: Bool = false
+    
+    var isSelected: Bool {
+        return self.connectionGroup.connections.contains(self.connectionStore.id)
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .top) {
+            HStack(alignment: .center) {
+                
                 VStack(alignment: .leading, spacing: 4) {
                     Text("\(self.connectionGroup.name)")
                         .defaultStyle(size: 20, opacity: 1.0)
@@ -23,25 +35,59 @@ struct ConnectionGroupRow: View {
                 .padding(0)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
                 
-                Spacer()
-                
-                Menu {
-                    Button(role: .destructive) {
-                        
-                    } label: {
-                        Label("Delete Group", systemImage: "trash")
-                    }
+                if self.actionable {
+                    Spacer()
                     
-                    Button {
+                    Menu {
+                        Button(role: .destructive) {
+                            
+                        } label: {
+                            Label("Delete Group", systemImage: "trash")
+                        }
                         
+                        Button {
+                            
+                        } label: {
+                            Label("Export to CSV", systemImage: "envelope")
+                        }
                     } label: {
-                        Label("Export to CSV", systemImage: "envelope")
+                        Image(systemName: "ellipsis")
+                            .frame(width: 24, height: 24)
+                            .rotationEffect(.degrees(-90))
+                            .foregroundColor(.gray)
                     }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .frame(width: 24, height: 24)
-                        .rotationEffect(.degrees(-90))
-                        .foregroundColor(.gray)
+                } else if self.selectable {
+                    if self.isSelected {
+                        Image(systemName: "minus")
+                            .toolbarButtonStyle()
+                            .foregroundColor(.red)
+                            .opacity(self.connectionGroupsStore.loading ? 0.5 : 1.0)
+                            .onTapGesture {
+                                self.connectionGroupsStore.removeFromGroup(groupId: self.connectionGroup.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
+                                        switch result {
+                                            case .success(_):
+                                            self.connectionGroupsStore.load()
+                                            case .failure(let error):
+                                            print("Failed to remove from group", error)
+                                        }
+                                    }
+                            }
+                    } else {
+                        Image(systemName: "plus")
+                            .toolbarButtonStyle()
+                            .opacity(self.connectionGroupsStore.loading ? 0.5 : 1.0)
+                            .onTapGesture {
+                                self.connectionGroupsStore.addToGroup(groupId: self.connectionGroup.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
+                                        switch result {
+                                            case .success(_):
+                                            self.connectionGroupsStore.load()
+                                            case .failure(let error):
+                                            print("Failed to add to group", error)
+                                        }
+                                    }
+                            }
+
+                    }
                 }
             }
             .padding(.horizontal, 0)
@@ -61,14 +107,23 @@ struct ConnectionGroupRow: View {
 }
 
 struct ConnectionGroup_Previews: PreviewProvider {
-    static var modelData = ModelData()
+    static let modelData = ModelData()
+    
+    static let accountStore = AccountStore(user: modelData.user)
+    static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
+    static let connectionStore = ConnectionStore()
     
     static var previews: some View {
         Group {
             ConnectionGroupRow(
-                connectionGroup: modelData.groups[0]
+                connectionGroup: modelData.groups[0],
+                selectable: true,
+                actionable: false
             )
         }
         .previewLayout(.fixed(width: 300, height: 70))
+        .environmentObject(accountStore)
+        .environmentObject(connectionGroupsStore)
+        .environmentObject(connectionStore)
     }
 }

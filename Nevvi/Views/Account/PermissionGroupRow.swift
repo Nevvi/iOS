@@ -15,7 +15,7 @@ struct PermissionGroupRow: View {
     @State var group: PermissionGroup = PermissionGroup(name: "", fields: [])
     
     @State var selectable: Bool = false
-    @State var actionable: Bool = true
+    @State var actionable: Bool = false
     @State var editting: Bool = false
     
     

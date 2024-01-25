@@ -13,6 +13,7 @@ struct ConnectionDetail: View {
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
     
     @State var showEditSheet = false
+    @State var tabSelectedValue = 0
     
     var body: some View {
         if self.connectionStore.loading == false && !self.connectionStore.id.isEmpty {
@@ -108,6 +109,22 @@ struct ConnectionDetail: View {
                         }
                         .informationSection()
                     }
+                    
+                    Spacer()
+                    
+                    Text("Edit".uppercased())
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24)
+                                .foregroundColor(ColorConstants.primary)
+                        )
+                        .onTapGesture {
+                            self.showEditSheet = true
+                        }
                 }
                 .padding()
             }
@@ -135,18 +152,56 @@ struct ConnectionDetail: View {
     }
     
     var editSheet: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Picker("", selection: self.$tabSelectedValue) {
+                Text("Permission Group".uppercased()).tag(0)
+                Text("Connection Groups".uppercased()).tag(1)
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+
+            TabView(selection: $tabSelectedValue) {
+                editPermissionGroup.tag(0)
+
+                editConnectionGroups.tag(1)
+            }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .animation(.easeIn, value: tabSelectedValue)
+        }
+    }
+    
+    var editPermissionGroup: some View {
         VStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    // 20/Medium
-                    Text("Change Permission Group")
+                    Text("Change Permission Group(s)")
                       .font(Font.custom("SF Pro", size: 20).weight(.medium))
                       .foregroundColor(Color(red: 0.12, green: 0.19, blue: 0.29))
                       .padding([.leading, .bottom], 16)
                     
                     ForEach(self.accountStore.permissionGroups, id: \.name) { group in
-                        PermissionGroupRow(group: group, selectable: true)
+                        PermissionGroupRow(group: group, selectable: true, actionable: false)
                             .padding([.leading, .trailing, .bottom])
+                    }
+                    .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
+                }
+            }
+        }
+        .padding([.top], 40)
+    }
+    
+    var editConnectionGroups: some View {
+        VStack {
+            ScrollView {
+                VStack(alignment: .leading) {
+                    Text("Select Connection Group")
+                      .font(Font.custom("SF Pro", size: 20).weight(.medium))
+                      .foregroundColor(Color(red: 0.12, green: 0.19, blue: 0.29))
+                      .padding([.leading, .bottom], 16)
+                    
+                    ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
+                        ConnectionGroupRow(connectionGroup: group, selectable: true)
                     }
                     .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
                 }

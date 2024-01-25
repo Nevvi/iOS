@@ -80,7 +80,7 @@ struct ConnectionGroupList: View {
     
     var groupsView: some View {
         ForEach(self.connectionGroupsStore.groups, id: \.id) { group in
-            ConnectionGroupRow(connectionGroup: group)
+            ConnectionGroupRow(connectionGroup: group, actionable: true)
             .padding([.leading, .trailing, .bottom])
             .onTapGesture {
                 self.connectionGroupStore.load(group: group)

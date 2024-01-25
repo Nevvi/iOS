@@ -16,6 +16,35 @@ struct ConnectionGroupDetail: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            VStack(alignment: .trailing, spacing: 0) {
+                if self.connectionGroupStore.loading || self.connectionGroupStore.connectionCount == 0 {
+                    noConnectionsView
+                } else {
+                    connectionsView
+                }
+            }
+        }
+        .navigationTitle(self.connectionGroupStore.name)
+        .navigationBarTitleDisplayMode(.inline)
+        .toast(isPresenting: $showToast){
+            AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Export sent to \(self.accountStore.email)")
+        }
+    }
+    
+    var noConnectionsView: some View {
+        HStack {
+            Spacer()
+            if self.connectionGroupStore.loadingConnections {
+                ProgressView()
+            } else {
+                NoDataFound(imageName: "person.2.slash", height: 100, width: 120)
+            }
+            Spacer()
+        }
+    }
+    
+    var connectionsView: some View {
+        VStack {
             HStack(alignment: .top, spacing: 8) {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("\(self.connectionGroupStore.name)")
@@ -51,47 +80,20 @@ struct ConnectionGroupDetail: View {
             .padding(.vertical, 16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .overlay(
-              Rectangle()
-                .inset(by: 0.5)
-                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.08), lineWidth: 1)
+                Rectangle()
+                    .inset(by: 0.5)
+                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.08), lineWidth: 1)
             )
             
-            VStack(alignment: .trailing, spacing: 0) {
-                if self.connectionGroupStore.loading || self.connectionGroupStore.connectionCount == 0 {
-                    noConnectionsView
-                } else {
-                    connectionsView
+            ScrollView(.vertical) {
+                VStack(alignment: .trailing, spacing: 0) {
+                    ForEach(self.connectionGroupStore.connections) { connection in
+                        GroupConnectionRow(connection: connection, connectionGroupStore: self.connectionGroupStore)
+                    }
+                    .redacted(when: self.connectionGroupStore.loadingConnections || self.connectionGroupStore.deleting, redactionType: .customPlaceholder)
                 }
+                .frame(maxWidth: .infinity, alignment: .topTrailing)
             }
-        }
-        .navigationTitle(self.connectionGroupStore.name)
-        .navigationBarTitleDisplayMode(.inline)
-        .toast(isPresenting: $showToast){
-            AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Export sent to \(self.accountStore.email)")
-        }
-    }
-    
-    var noConnectionsView: some View {
-        HStack {
-            Spacer()
-            if self.connectionGroupStore.loadingConnections {
-                ProgressView()
-            } else {
-                NoDataFound(imageName: "person.2.slash", height: 100, width: 120)
-            }
-            Spacer()
-        }
-    }
-    
-    var connectionsView: some View {
-        ScrollView(.vertical) {
-            VStack(alignment: .trailing, spacing: 0) {
-                ForEach(self.connectionGroupStore.connections) { connection in
-                    GroupConnectionRow(connection: connection, connectionGroupStore: self.connectionGroupStore)
-                }
-                .redacted(when: self.connectionGroupStore.loadingConnections || self.connectionGroupStore.deleting, redactionType: .customPlaceholder)
-            }
-            .frame(maxWidth: .infinity, alignment: .topTrailing)
         }
     }
 }
