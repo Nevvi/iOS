@@ -40,7 +40,6 @@
 		04314393296CCD010094D7E0 /* ConnectionGroupDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */; };
 		04314395297087210094D7E0 /* ConnectionGroupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314394297087210094D7E0 /* ConnectionGroupStore.swift */; };
 		04314397297438D70094D7E0 /* PermissionGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314396297438D70094D7E0 /* PermissionGroupList.swift */; };
-		0431439929743F8F0094D7E0 /* PermissionGroupDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431439829743F8F0094D7E0 /* PermissionGroupDetail.swift */; };
 		0431439B2975A77E0094D7E0 /* BackgroundGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431439A2975A77E0094D7E0 /* BackgroundGradient.swift */; };
 		0431439D2975AC830094D7E0 /* TextExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431439C2975AC830094D7E0 /* TextExtensions.swift */; };
 		04B158482987F47B00846FDB /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 04B158472987F47B00846FDB /* Nuke */; };
@@ -150,7 +149,6 @@
 		04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupDetail.swift; sourceTree = "<group>"; };
 		04314394297087210094D7E0 /* ConnectionGroupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupStore.swift; sourceTree = "<group>"; };
 		04314396297438D70094D7E0 /* PermissionGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGroupList.swift; sourceTree = "<group>"; };
-		0431439829743F8F0094D7E0 /* PermissionGroupDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGroupDetail.swift; sourceTree = "<group>"; };
 		0431439A2975A77E0094D7E0 /* BackgroundGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundGradient.swift; sourceTree = "<group>"; };
 		0431439C2975AC830094D7E0 /* TextExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextExtensions.swift; sourceTree = "<group>"; };
 		04B158572987FA2300846FDB /* NotificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationStore.swift; sourceTree = "<group>"; };
@@ -435,7 +433,6 @@
 				04038E3729679FEF00D3C7AC /* Settings.swift */,
 				0431437C2969B3F50094D7E0 /* AddressSearch.swift */,
 				04314396297438D70094D7E0 /* PermissionGroupList.swift */,
-				0431439829743F8F0094D7E0 /* PermissionGroupDetail.swift */,
 				277D25162B55A96400D1D717 /* PermissionGroupRow.swift */,
 				277D25392B5E9D5300D1D717 /* GroupSettings.swift */,
 			);
@@ -646,7 +643,6 @@
 				04B94963295F814100703523 /* OperatorOverloads.swift in Sources */,
 				04B94918295DEB9900703523 /* Connection.swift in Sources */,
 				04314397297438D70094D7E0 /* PermissionGroupList.swift in Sources */,
-				0431439929743F8F0094D7E0 /* PermissionGroupDetail.swift in Sources */,
 				04038E3629679CCE00D3C7AC /* ContactStore.swift in Sources */,
 				04038E1B2960CE9500D3C7AC /* ConnectionRequest.swift in Sources */,
 				277D25382B5C578000D1D717 /* StackExtensions.swift in Sources */,

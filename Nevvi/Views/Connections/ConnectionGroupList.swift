@@ -20,24 +20,36 @@ struct ConnectionGroupList: View {
     @State private var showGroupDetails: Bool = false
         
     var body: some View {
-        ScrollView {
-            VStack {
-                if self.connectionGroupsStore.groupsCount == 0 {
-                    noGroupsView
-                } else {
-                    groupsView
-                }
-            }.padding([.top])
-        }
-        .toolbar(content: {
-            ToolbarItem(placement: .navigationBarTrailing) {
+        ZStack(alignment: .bottom) {
+            ScrollView {
+                VStack {
+                    if self.connectionGroupsStore.groupsCount == 0 {
+                        noGroupsView
+                    } else {
+                        groupsView
+                    }
+                }.padding([.top])
+            }
+            
+            Spacer()
+            
+            HStack {
                 Button {
                     self.showGroupForm = true
                 } label: {
-                    Image(systemName: "plus")
-                }.padding([.trailing], 5)
-            }
-        })
+                    Text("New Connection Group".uppercased())
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24)
+                                .foregroundColor(ColorConstants.primary)
+                        )
+                }
+            }.padding()
+        }
         .refreshable {
             self.connectionGroupsStore.load()
         }

@@ -6,68 +6,137 @@
 //
 
 import SwiftUI
+import WrappingHStack
 
 struct PermissionGroupList: View {
     @EnvironmentObject var accountStore: AccountStore
     
     @State var showNewGroup: Bool = false
-    @State var showGroupEdit: Bool = false
     @State var selectedGroup: PermissionGroup? = nil
     
+    @State var newGroupName: String = ""
+    @State var newGroupFields: [String] = []
+    
     var body: some View {
-        ScrollView {
-            VStack {
-                ForEach(self.accountStore.permissionGroups, id: \.name) { group in
-                    PermissionGroupRow(group: group, selectable: false, actionable: true)
-                        .padding([.leading, .trailing, .bottom])
+        ZStack(alignment: .bottom) {
+            ScrollView {
+                VStack {
+                    ForEach(self.accountStore.permissionGroups, id: \.name) { group in
+                        PermissionGroupRow(group: group, selectable: false, actionable: true)
+                            .padding([.leading, .trailing, .bottom])
+                    }
+                    .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
                 }
-                .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
             }
+            
+            Spacer()
+            
+            HStack {
+                Button {
+                    self.showNewGroup = true
+                } label: {
+                    Text("New Permission Group".uppercased())
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24)
+                                .foregroundColor(ColorConstants.primary)
+                        )
+                }
+            }.padding()
         }
         .sheet(isPresented: self.$showNewGroup) {
             newPermissionGroupSheet
         }
-        .toolbar(content: {
-            Image(systemName: "plus").foregroundColor(.blue)
-                .onTapGesture {
-                    self.showNewGroup = true
-                }
-        })
         .padding([.top])
     }
     
-    var editPermissionGroupSheet: some View {
-        PermissionGroupDetail(group: self.selectedGroup!, callback: { (group: PermissionGroup) in
-            self.accountStore.permissionGroups = self.accountStore.permissionGroups.map { existingGroup in
-                return existingGroup.name == group.name ? group : existingGroup
-            }
-            self.accountStore.save { (result: Result<User, Error>) in
-                switch result {
-                case .success(_):
-                    self.showGroupEdit = false
-                case .failure(let error):
-                    print("Something went wrong", error)
+    var newPermissionGroupSheet: some View {
+        VStack {
+            TextField("Group Name", text: self.$newGroupName)
+                .padding()
+                .overlay(RoundedRectangle(cornerRadius: 16.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+                .padding([.top])
+            
+            Divider().padding(.vertical)
+            
+            VStack(alignment: .leading) {
+                Text("Permission to view")
+                    .fontWeight(.ultraLight)
+                    .padding([.top, .bottom], 6)
+                
+                WrappingHStack(alignment: .leading) {
+                    ForEach(Constants.AllFields.sorted(), id: \.self) { field in
+                        permissionGroupField(field: field)
+                    }
                 }
+            }.padding(.bottom, 32)
+            
+            Spacer()
+            
+            HStack {
+                Button {
+                    self.accountStore.permissionGroups.append(
+                        PermissionGroup(name: self.newGroupName, fields: self.newGroupFields)
+                    )
+                    self.accountStore.save { (result: Result<User, Error>) in
+                        switch result {
+                        case .success(_):
+                            self.showNewGroup = false
+                        case .failure(let error):
+                            print("Something went wrong", error)
+                        }
+                    }
+                } label: {
+                    Text("Save".uppercased())
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24)
+                                .foregroundColor(ColorConstants.primary)
+                        )
+                        .opacity(self.newGroupName.isEmpty || self.accountStore.saving ? 0.5 : 1.0)
+                }
+                .disabled(self.newGroupName.isEmpty || self.accountStore.saving)
             }
-        })
+        }
         .padding()
-        .presentationDetents([.fraction(0.66)])
+        .presentationDetents([.fraction(0.50)])
     }
     
-    var newPermissionGroupSheet: some View {
-        PermissionGroupDetail(callback: { (group: PermissionGroup) in
-            self.accountStore.permissionGroups.append(group)
-            self.accountStore.save { (result: Result<User, Error>) in
-                switch result {
-                case .success(_):
-                    self.showNewGroup = false
-                case .failure(let error):
-                    print("Something went wrong", error)
+    func permissionGroupField(field: String) -> some View {
+        var textColor = ColorConstants.badgeText
+        var backgroundColor = ColorConstants.badgeBackground
+        
+        if (self.newGroupFields.contains(field)) {
+            textColor = .white
+            backgroundColor = ColorConstants.primary
+        }
+        
+        return Text(field.humanReadable())
+            .padding([.leading, .trailing], 14)
+            .padding([.top, .bottom], 8)
+            .foregroundColor(textColor)
+            .background(backgroundColor)
+            .cornerRadius(30)
+            .fontWeight(.light)
+            .onTapGesture {
+                if self.newGroupFields.contains(field) {
+                    self.newGroupFields.removeAll { groupField in
+                        groupField == field
+                    }
+                } else {
+                    self.newGroupFields.append(field)
                 }
             }
-        })
-        .padding()
-        .presentationDetents([.fraction(0.66)])
     }
 }
 

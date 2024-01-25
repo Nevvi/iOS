@@ -155,7 +155,7 @@ struct PermissionGroupRow: View {
         var textColor = ColorConstants.badgeText
         var backgroundColor = ColorConstants.badgeBackground
         var opacity = 1.0
-        var canSelect = true
+        var canSelect = self.editting
         
         if field.uppercased() == "EVERYTHING" {
             textColor = ColorConstants.badgeTextSuccess
