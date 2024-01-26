@@ -133,7 +133,6 @@ struct NevviApp: App {
             Spacer()
         }
         .padding([.leading, .trailing])
-        .background(BackgroundGradient())
         .interactiveDismissDisabled()
     }
     

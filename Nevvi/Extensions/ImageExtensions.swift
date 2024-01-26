@@ -10,10 +10,14 @@ import SwiftUI
 
 extension Image {
     func toolbarButtonStyle() -> some View {
+        self.toolbarButtonStyle(bgColor: Color(red: 0, green: 0.07, blue: 0.17).opacity(0.03))
+    }
+    
+    func toolbarButtonStyle(bgColor: Color) -> some View {
         self
             .frame(width: 28, height: 28)
             .padding(8)
-            .background(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.03))
+            .background(bgColor)
             .cornerRadius(40)
     }
     

@@ -22,7 +22,7 @@ struct PermissionGroupList: View {
             ScrollView {
                 VStack {
                     ForEach(self.accountStore.permissionGroups, id: \.name) { group in
-                        PermissionGroupRow(group: group, selectable: false, actionable: true)
+                        ActionablePermissionGroupRow(group: group)
                             .padding([.leading, .trailing, .bottom])
                     }
                     .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)

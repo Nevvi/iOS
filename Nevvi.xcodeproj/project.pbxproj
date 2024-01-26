@@ -36,11 +36,9 @@
 		04314389296B65220094D7E0 /* ConnectionGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314388296B65220094D7E0 /* ConnectionGroupList.swift */; };
 		0431438B296B655F0094D7E0 /* ConnectionGroupsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431438A296B655F0094D7E0 /* ConnectionGroupsStore.swift */; };
 		0431438D296B6E020094D7E0 /* ConnectionGroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431438C296B6E020094D7E0 /* ConnectionGroupRow.swift */; };
-		04314391296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314390296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift */; };
 		04314393296CCD010094D7E0 /* ConnectionGroupDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */; };
 		04314395297087210094D7E0 /* ConnectionGroupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314394297087210094D7E0 /* ConnectionGroupStore.swift */; };
 		04314397297438D70094D7E0 /* PermissionGroupList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04314396297438D70094D7E0 /* PermissionGroupList.swift */; };
-		0431439B2975A77E0094D7E0 /* BackgroundGradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431439A2975A77E0094D7E0 /* BackgroundGradient.swift */; };
 		0431439D2975AC830094D7E0 /* TextExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431439C2975AC830094D7E0 /* TextExtensions.swift */; };
 		04B158482987F47B00846FDB /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 04B158472987F47B00846FDB /* Nuke */; };
 		04B1584A2987F47B00846FDB /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = 04B158492987F47B00846FDB /* NukeExtensions */; };
@@ -112,6 +110,7 @@
 		277D25382B5C578000D1D717 /* StackExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25372B5C578000D1D717 /* StackExtensions.swift */; };
 		277D253A2B5E9D5300D1D717 /* GroupSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25392B5E9D5300D1D717 /* GroupSettings.swift */; };
 		277D253C2B5F4D7500D1D717 /* GroupConnectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D253B2B5F4D7500D1D717 /* GroupConnectionRow.swift */; };
+		277D253E2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D253D2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -145,11 +144,9 @@
 		04314388296B65220094D7E0 /* ConnectionGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupList.swift; sourceTree = "<group>"; };
 		0431438A296B655F0094D7E0 /* ConnectionGroupsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupsStore.swift; sourceTree = "<group>"; };
 		0431438C296B6E020094D7E0 /* ConnectionGroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupRow.swift; sourceTree = "<group>"; };
-		04314390296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupMembershipRow.swift; sourceTree = "<group>"; };
 		04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupDetail.swift; sourceTree = "<group>"; };
 		04314394297087210094D7E0 /* ConnectionGroupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionGroupStore.swift; sourceTree = "<group>"; };
 		04314396297438D70094D7E0 /* PermissionGroupList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGroupList.swift; sourceTree = "<group>"; };
-		0431439A2975A77E0094D7E0 /* BackgroundGradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundGradient.swift; sourceTree = "<group>"; };
 		0431439C2975AC830094D7E0 /* TextExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextExtensions.swift; sourceTree = "<group>"; };
 		04B158572987FA2300846FDB /* NotificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationStore.swift; sourceTree = "<group>"; };
 		04B1586829AC301600846FDB /* ForgotPassword.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgotPassword.swift; sourceTree = "<group>"; };
@@ -213,6 +210,7 @@
 		277D25372B5C578000D1D717 /* StackExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackExtensions.swift; sourceTree = "<group>"; };
 		277D25392B5E9D5300D1D717 /* GroupSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupSettings.swift; sourceTree = "<group>"; };
 		277D253B2B5F4D7500D1D717 /* GroupConnectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupConnectionRow.swift; sourceTree = "<group>"; };
+		277D253D2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionablePermissionGroupRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -373,7 +371,6 @@
 				04B9496A2960964500703523 /* NavigationLazyView.swift */,
 				04B949772960AF9B00703523 /* DebouncedText.swift */,
 				04038E242961EF3900D3C7AC /* RefreshableView.swift */,
-				0431439A2975A77E0094D7E0 /* BackgroundGradient.swift */,
 				041412F62976009F008A35DA /* ProfileImageSelector.swift */,
 				041412F8297604BC008A35DA /* NoDataFound.swift */,
 				041412FA2976182D008A35DA /* ProfileImage.swift */,
@@ -397,7 +394,6 @@
 				04038E1C2960D16300D3C7AC /* ActionableConnectionRequestRow.swift */,
 				04314388296B65220094D7E0 /* ConnectionGroupList.swift */,
 				0431438C296B6E020094D7E0 /* ConnectionGroupRow.swift */,
-				04314390296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift */,
 				04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */,
 				277D253B2B5F4D7500D1D717 /* GroupConnectionRow.swift */,
 			);
@@ -435,6 +431,7 @@
 				04314396297438D70094D7E0 /* PermissionGroupList.swift */,
 				277D25162B55A96400D1D717 /* PermissionGroupRow.swift */,
 				277D25392B5E9D5300D1D717 /* GroupSettings.swift */,
+				277D253D2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -651,7 +648,6 @@
 				04038E1D2960D16300D3C7AC /* ActionableConnectionRequestRow.swift in Sources */,
 				04B9494E295E718A00703523 /* Credentials.swift in Sources */,
 				277D252C2B55F8E900D1D717 /* CheckboxToggleStyle.swift in Sources */,
-				04314391296CC7DE0094D7E0 /* ConnectionGroupMembershipRow.swift in Sources */,
 				04038E3829679FEF00D3C7AC /* Settings.swift in Sources */,
 				04B94912295DEAFC00703523 /* CircleImage.swift in Sources */,
 				0431437D2969B3F50094D7E0 /* AddressSearch.swift in Sources */,
@@ -664,6 +660,7 @@
 				04B94914295DEB1100703523 /* ModelData.swift in Sources */,
 				277D25172B55A96400D1D717 /* PermissionGroupRow.swift in Sources */,
 				04B9493E295E09E400703523 /* AuthorizationStore.swift in Sources */,
+				277D253E2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift in Sources */,
 				277D25222B55C21F00D1D717 /* PermissionGroupPicker.swift in Sources */,
 				04314387296B64A50094D7E0 /* ConnectionGroup.swift in Sources */,
 				277D253A2B5E9D5300D1D717 /* GroupSettings.swift in Sources */,
@@ -717,7 +714,6 @@
 				04038E302966323600D3C7AC /* RedactionType.swift in Sources */,
 				041413082978D853008A35DA /* DeviceSettingsViewModel.swift in Sources */,
 				04B94910295DEAD800703523 /* User.swift in Sources */,
-				0431439B2975A77E0094D7E0 /* BackgroundGradient.swift in Sources */,
 				04B1586929AC301600846FDB /* ForgotPassword.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

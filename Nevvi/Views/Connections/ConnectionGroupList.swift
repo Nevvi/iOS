@@ -82,12 +82,41 @@ struct ConnectionGroupList: View {
     
     var groupsView: some View {
         ForEach(self.connectionGroupsStore.groups, id: \.id) { group in
-            ConnectionGroupRow(connectionGroup: group, actionable: true)
-            .padding([.leading, .trailing, .bottom])
-            .onTapGesture {
-                self.connectionGroupStore.load(group: group)
-                self.showGroupDetails = true
-            }
+            ZStack(alignment: .trailing) {
+                ConnectionGroupRow(connectionGroup: group)
+                    .onTapGesture {
+                        self.connectionGroupStore.load(group: group)
+                        self.showGroupDetails = true
+                    }
+                
+                Spacer()
+                
+                Menu {
+                    Button(role: .destructive) {
+                        self.connectionGroupsStore.delete(groupId: group.id) { (result: Result<Bool, Error>) in
+                            switch result {
+                                case .success(_):
+                                self.connectionGroupsStore.load()
+                                case .failure(let error):
+                                print("Failed to delete group", error)
+                            }
+                        }
+                    } label: {
+                        Label("Delete Group", systemImage: "trash")
+                    }
+                    
+                    Button {
+                        
+                    } label: {
+                        Label("Export to CSV", systemImage: "envelope")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .frame(width: 24, height: 24)
+                        .rotationEffect(.degrees(-90))
+                        .foregroundColor(.gray)
+                }
+            }.padding([.leading, .trailing, .bottom])
         }
         .redacted(when: self.connectionGroupsStore.loading, redactionType: .customPlaceholder)
     }
@@ -146,9 +175,9 @@ struct ConnectionGroupList: View {
                             Spacer()
                             
                             if self.isConnectionSelected(connection: connection) {
-                                Image(systemName: "checkmark.seal.fill")
-                                    .toolbarButtonStyle()
-                                    .foregroundColor(ColorConstants.primary)
+                                Image(systemName: "checkmark")
+                                    .toolbarButtonStyle(bgColor: ColorConstants.primary)
+                                    .foregroundColor(.white)
                                     .opacity(self.creatingGroup ? 0.5 : 1.0)
                                     .onTapGesture {
                                         if !creatingGroup {

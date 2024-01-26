@@ -175,14 +175,54 @@ struct ConnectionDetail: View {
         VStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    Text("Change Permission Group(s)")
+                    Text("Change Permission Group")
                       .font(Font.custom("SF Pro", size: 20).weight(.medium))
                       .foregroundColor(Color(red: 0.12, green: 0.19, blue: 0.29))
                       .padding([.leading, .bottom], 16)
                     
                     ForEach(self.accountStore.permissionGroups, id: \.name) { group in
-                        PermissionGroupRow(group: group, selectable: true, actionable: false)
-                            .padding([.leading, .trailing, .bottom])
+                        ZStack(alignment: .top) {
+                            PermissionGroupRow(group: group)
+                            
+                            Spacer()
+                            
+                            HStack {
+                                Spacer()
+                                
+                                if self.connectionStore.permissionGroup == group.name {
+                                    Image(systemName: "checkmark")
+                                        .frame(width: 28, height: 28)
+                                        .foregroundColor(.white)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.white)
+                                        .background(ColorConstants.primary)
+                                        .opacity(self.connectionStore.saving ? 0.5 : 1.0)
+                                        .cornerRadius(8)
+                                        .fontWeight(.light)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 8).stroke(ColorConstants.primary, lineWidth: 1)
+                                        )
+                                } else {
+                                    RoundedRectangle(cornerRadius: 8).stroke(.gray, lineWidth: 1)
+                                        .frame(width: 28, height: 28)
+                                        .foregroundColor(ColorConstants.badgeText)
+                                        .background(.white)
+                                        .onTapGesture {
+                                            if !self.connectionStore.saving {
+                                                self.connectionStore.permissionGroup = group.name
+                                                self.connectionStore.update { (result: Result<Connection, Error>) in
+                                                    switch result {
+                                                    case .success(let connection):
+                                                        print("Updated connection with \(connection.id)")
+                                                    case .failure(let error):
+                                                        print("Something bad happened", error)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                }
+                            }.padding()
+                        }.padding([.leading, .trailing, .bottom])
                     }
                     .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
                 }
@@ -195,14 +235,51 @@ struct ConnectionDetail: View {
         VStack {
             ScrollView {
                 VStack(alignment: .leading) {
-                    Text("Select Connection Group")
+                    Text("Select Connection Group(s)")
                       .font(Font.custom("SF Pro", size: 20).weight(.medium))
                       .foregroundColor(Color(red: 0.12, green: 0.19, blue: 0.29))
                       .padding([.leading, .bottom], 16)
                     
                     ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
-                        ConnectionGroupRow(connectionGroup: group, selectable: true)
-                            .padding([.leading, .trailing, .bottom])
+                        ZStack(alignment: .trailing) {
+                            ConnectionGroupRow(connectionGroup: group)
+                            
+                            Spacer()
+                            
+                            if group.connections.contains(self.connectionStore.id) {
+                                Image(systemName: "checkmark")
+                                    .toolbarButtonStyle(bgColor: ColorConstants.primary)
+                                    .foregroundColor(.white)
+                                    .opacity(self.connectionGroupsStore.loading ? 0.5 : 1.0)
+                                    .opacity(self.connectionGroupsStore.loading ? 0.5 : 1.0)
+                                    .padding(.horizontal, 16)
+                                    .onTapGesture {
+                                        self.connectionGroupsStore.removeFromGroup(groupId: group.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
+                                                switch result {
+                                                    case .success(_):
+                                                    self.connectionGroupsStore.load()
+                                                    case .failure(let error):
+                                                    print("Failed to remove from group", error)
+                                                }
+                                            }
+                                    }
+                            } else {
+                                Image(systemName: "plus")
+                                    .toolbarButtonStyle()
+                                    .opacity(self.connectionGroupsStore.loading ? 0.5 : 1.0)
+                                    .padding(.horizontal, 16)
+                                    .onTapGesture {
+                                        self.connectionGroupsStore.addToGroup(groupId: group.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
+                                                switch result {
+                                                    case .success(_):
+                                                    self.connectionGroupsStore.load()
+                                                    case .failure(let error):
+                                                    print("Failed to add to group", error)
+                                                }
+                                            }
+                                    }
+                            }
+                        }.padding()
                     }
                     .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
                 }

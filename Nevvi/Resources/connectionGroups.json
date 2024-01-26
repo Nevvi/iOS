@@ -4,7 +4,8 @@
         "userId": "49259105-818b-4e85-881b-e12122c4d272",
         "name": "Family",
         "connections": [
-            "0578c4ca-813f-4fd7-8087-cc1b200411b4"
+            "0578c4ca-813f-4fd7-8087-cc1b200411b4",
+            "759a30e6-23f6-4898-b23a-8c8fb0095279"
         ],
         "createDate": "2023-01-08T21:48:30.924Z",
         "createBy": "HARDCODED_FOR_NOW",
