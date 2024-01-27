@@ -63,8 +63,8 @@ struct NewConnectionRequestRow: View {
                     self.showSheet = true
                 }
         }
-        .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .padding(.horizontal, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .overlay(
             Rectangle()
@@ -77,37 +77,38 @@ struct NewConnectionRequestRow: View {
     }
     
     var requestConnectionSheet: some View {
-        ZStack {
-            VStack(alignment: .leading) {
-                Text("Select permission group")
-                    .font(.title)
-                    .fontWeight(.light)
-                    .padding([.leading, .trailing, .top])
-                    .padding([.bottom], 6)
-                
-                PermissionGroupPicker(selectedGroup: $selectedPermissionGroup)
-                
-                Spacer()
-                
-                Button(action: self.requestConnection) {
-                    Text("Request Connection")
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.vertical, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 24)
-                                .foregroundColor(ColorConstants.primary)
-                        )
-                        .opacity(self.loading ? 0.5 : 1.0)
-                }
-                .disabled(self.loading)
-                .padding()
-                .padding([.top], 12)
-            }.padding(4)
-        }
-        .presentationDetents([.fraction(0.30)])
+        DynamicSheet(
+            ZStack {
+                VStack(alignment: .leading) {
+                    Text("Select permission group")
+                        .font(.title)
+                        .fontWeight(.light)
+                        .padding([.leading, .trailing, .top])
+                        .padding([.bottom], 6)
+                    
+                    PermissionGroupPicker(selectedGroup: $selectedPermissionGroup)
+                    
+                    Spacer()
+                    
+                    Button(action: self.requestConnection) {
+                        Text("Request Connection")
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 24)
+                                    .foregroundColor(ColorConstants.primary)
+                            )
+                            .opacity(self.loading ? 0.5 : 1.0)
+                    }
+                    .disabled(self.loading)
+                    .padding()
+                    .padding([.top], 12)
+                }.padding(4)
+            }
+        )
     }
     
     func requestConnection() {

@@ -36,7 +36,7 @@ struct ConnectionRequestList: View {
                                     
                     if self.notConnectedUsers.count > 0 {
                         suggestionsView
-                            .padding([.top], 8)
+                            .padding([.top], 12)
                     }
                 }
             }

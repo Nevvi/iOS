@@ -47,53 +47,54 @@ struct FieldPermissionGroupPicker: View {
     }
     
     var permissionGroupPicker: some View {
-        VStack(alignment: .leading) {
-            Text("Permission to view")
-                .font(.title)
-                .padding([.top, .leading])
-                .padding([.bottom], 5)
-            
-            Text("Your information is secure. It's only accessible to people in the following permission group(s).")
-                .fontWeight(.thin)
-                .font(.system(size: 16))
-                .padding([.leading])
-            
-            List {
-                ForEach(self.permissionGroups, id: \.name) { group in
-                    HStack {
-                        PermissionGroupToggle(isOn: group.fields.contains(self.fieldName), groupName: group.name) { enabled in
-                            processChange(groupName: group.name, enabled: enabled)
+        DynamicSheet(
+            VStack(alignment: .leading) {
+                Text("Permission to view")
+                    .font(.title)
+                    .padding([.top, .leading])
+                    .padding([.bottom], 5)
+                
+                Text("Your information is secure. It's only accessible to people in the following permission group(s).")
+                    .fontWeight(.thin)
+                    .font(.system(size: 16))
+                    .padding([.leading])
+                
+                List {
+                    ForEach(self.permissionGroups, id: \.name) { group in
+                        HStack {
+                            PermissionGroupToggle(isOn: group.fields.contains(self.fieldName), groupName: group.name) { enabled in
+                                processChange(groupName: group.name, enabled: enabled)
+                            }
+                            Spacer()
                         }
-                        Spacer()
+                        .padding([.top, .bottom], 8)
                     }
-                    .padding([.top, .bottom], 8)
-                }
-            }.listStyle(.plain)
-            
-            Spacer()
-            
-            Button(action: {
-                self.accountStore.permissionGroups = self.permissionGroups
-                self.accountStore.save { res in
-                    self.showPicker = false
-                }
-            }, label: {
-                Text("Save".uppercased())
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity)
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 24)
-                            .foregroundColor(ColorConstants.primary)
-                    )
-                    .opacity(self.buttonDisabled ? 0.5 : 1.0)
-            }).disabled(self.buttonDisabled)
+                }.listStyle(.plain)
+                
+                Spacer()
+                
+                Button(action: {
+                    self.accountStore.permissionGroups = self.permissionGroups
+                    self.accountStore.save { res in
+                        self.showPicker = false
+                    }
+                }, label: {
+                    Text("Save".uppercased())
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity)
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24)
+                                .foregroundColor(ColorConstants.primary)
+                        )
+                        .opacity(self.buttonDisabled ? 0.5 : 1.0)
+                }).disabled(self.buttonDisabled)
 
-        }
-        .padding()
-        .presentationDetents([.large])
+            }
+            .padding()
+        )
     }
     
     func processChange(groupName: String, enabled: Bool) {

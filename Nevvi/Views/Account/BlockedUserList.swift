@@ -19,15 +19,13 @@ struct BlockedUserList: View {
         
     var body: some View {
         NavigationView {
-            List {
+            VStack {
                 if self.connectionsStore.blockedUserCount == 0 {
                     noDataView
                 } else {
                     blockedUsersView
                 }
             }
-            .listStyle(.plain)
-            .scrollContentBackground(self.connectionsStore.blockedUserCount == 0 ? .hidden : .visible)
             .refreshable {
                 self.connectionsStore.loadRejectedUsers()
             }
@@ -55,27 +53,33 @@ struct BlockedUserList: View {
     }
     
     var noDataView: some View {
-        HStack {
-            Spacer()
+        HStack(alignment: .center) {
             if self.connectionsStore.loadingBlockerUsers == true {
                 ProgressView()
             } else {
-                NoDataFound(imageName: "person.2.slash", height: 100, width: 120, text: "No blocked users")
+                VStack(alignment: .center, spacing: 24) {
+                    Image("UpdateProfile")
+                    
+                    Text("No blocked users")
+                        .defaultStyle(size: 24, opacity: 1.0)
+                }
+                .padding()
             }
-            Spacer()
         }
-        .padding([.top], 100)
-        .listRowSeparator(.hidden)
     }
     
     var blockedUsersView: some View {
-        ForEach(self.connectionsStore.blockedUsers) { user in
-            NewConnectionRequestRow(requestCallback: {
-                self.showToast = true
-                self.connectionsStore.loadRejectedUsers()
-            }, user: user)
+        List {
+            ForEach(self.connectionsStore.blockedUsers) { user in
+                NewConnectionRequestRow(requestCallback: {
+                    self.showToast = true
+                    self.connectionsStore.loadRejectedUsers()
+                }, user: user)
+            }
+            .redacted(when: self.connectionsStore.loadingBlockerUsers, redactionType: .customPlaceholder)
         }
-        .redacted(when: self.connectionsStore.loadingBlockerUsers, redactionType: .customPlaceholder)
+        .listStyle(.plain)
+        .scrollContentBackground(self.connectionsStore.blockedUserCount == 0 ? .hidden : .visible)
     }
 }
 

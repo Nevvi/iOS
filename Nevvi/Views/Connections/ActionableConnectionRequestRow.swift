@@ -79,42 +79,43 @@ struct ActionableConnectionRequestRow: View {
     }
     
     var approveSheet: some View {
-        ZStack {
-            VStack(alignment: .leading) {
-                Text("Select permission group")
-                    .font(.title)
-                    .fontWeight(.light)
-                    .padding([.leading, .trailing, .top])
-                    .padding([.bottom], 6)
-                
-                PermissionGroupPicker(selectedGroup: $selectedPermissionGroup)
-                
-                Spacer()
-                
-                Button(action: {
-                    self.loading = true
-                    self.approvalCallback(self.request.requestingUserId, self.selectedPermissionGroup)
-                    self.loading = false
-                    self.showSheet = false
-                }, label: {
-                    Text("ACCEPT")
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.vertical, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 24)
-                                .foregroundColor(ColorConstants.primary)
-                        )
-                        .opacity(self.loading ? 0.5 : 1.0)
-                })
-                .disabled(self.loading)
-                .padding()
-                .padding([.top], 12)
-            }.padding(4)
-        }
-        .presentationDetents([.fraction(0.30)])
+        DynamicSheet(
+            ZStack {
+                VStack(alignment: .leading) {
+                    Text("Select permission group")
+                        .font(.title)
+                        .fontWeight(.light)
+                        .padding([.leading, .trailing, .top])
+                        .padding([.bottom], 6)
+                    
+                    PermissionGroupPicker(selectedGroup: $selectedPermissionGroup)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        self.loading = true
+                        self.approvalCallback(self.request.requestingUserId, self.selectedPermissionGroup)
+                        self.loading = false
+                        self.showSheet = false
+                    }, label: {
+                        Text("ACCEPT")
+                            .fontWeight(.bold)
+                            .frame(maxWidth: .infinity)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 24)
+                                    .foregroundColor(ColorConstants.primary)
+                            )
+                            .opacity(self.loading ? 0.5 : 1.0)
+                    })
+                    .disabled(self.loading)
+                    .padding()
+                    .padding([.top], 12)
+                }.padding(4)
+            }
+        )
     }
 }
 

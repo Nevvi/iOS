@@ -35,6 +35,7 @@ struct ConnectionRow: View {
             }
         }
         .padding(.vertical, 12)
+        .padding(.horizontal, 16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .overlay(
             Rectangle()

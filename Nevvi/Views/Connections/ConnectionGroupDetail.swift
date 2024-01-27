@@ -32,14 +32,18 @@ struct ConnectionGroupDetail: View {
     }
     
     var noConnectionsView: some View {
-        HStack {
-            Spacer()
+        HStack(alignment: .center) {
             if self.connectionGroupStore.loadingConnections {
                 ProgressView()
             } else {
-                NoDataFound(imageName: "person.2.slash", height: 100, width: 120)
+                VStack(alignment: .center, spacing: 24) {
+                    Image("UpdateProfile")
+                    
+                    Text("No connections")
+                        .defaultStyle(size: 24, opacity: 1.0)
+                }
+                .padding()
             }
-            Spacer()
         }
     }
     
@@ -101,7 +105,7 @@ struct ConnectionGroupDetail: View {
 struct ConnectionGroupDetail_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let accountStore = AccountStore(user: modelData.user)
-    static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users)
+    static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: [])
     
     static var previews: some View {
         ConnectionGroupDetail()

@@ -11,10 +11,7 @@ struct ConnectionGroupList: View {
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
     @EnvironmentObject var connectionGroupStore: ConnectionGroupStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
-    
-    @State private var toBeDeleted: IndexSet?
-    @State private var showDeleteAlert: Bool = false
-    
+        
     @State private var newGroupName: String = ""
     @State private var newGroupConnections: [Connection] = []
     @State private var showGroupForm: Bool = false
@@ -23,35 +20,12 @@ struct ConnectionGroupList: View {
     @State private var showGroupDetails: Bool = false
         
     var body: some View {
-        ZStack(alignment: .bottom) {
-            ScrollView {
-                VStack {
-                    if self.connectionGroupsStore.groupsCount == 0 {
-                        noGroupsView
-                    } else {
-                        groupsView
-                    }
-                }.padding([.top])
+        VStack(alignment: .center) {
+            if self.connectionGroupsStore.groupsCount == 0 {
+                noGroupsView
+            } else {
+                groupsView
             }
-            
-            Spacer()
-            
-            HStack {
-                Button {
-                    self.showGroupForm = true
-                } label: {
-                    Text("New Connection Group".uppercased())
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 24)
-                                .foregroundColor(ColorConstants.primary)
-                        )
-                }
-            }.padding()
         }
         .refreshable {
             self.connectionGroupsStore.load()
@@ -62,86 +36,99 @@ struct ConnectionGroupList: View {
         .sheet(isPresented: self.$showGroupForm) {
             newGroupSheet
         }
-        .alert(isPresented: self.$showDeleteAlert) {
-            deleteAlert
+    }
+    
+    var newGroupButton: some View {
+        HStack {
+            Button {
+                self.showGroupForm = true
+            } label: {
+                Text("New Connection Group".uppercased())
+                    .fontWeight(.bold)
+                    .frame(maxWidth: .infinity)
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding(16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 24)
+                            .foregroundColor(ColorConstants.primary)
+                    )
+            }
         }
+        .padding([.horizontal], 16)
+        .padding([.vertical], 20)
     }
     
     var noGroupsView: some View {
-        HStack {
+        VStack {
             Spacer()
-            if self.connectionGroupsStore.loading {
-                ProgressView()
-            } else {
-                NoDataFound(imageName: "person.2.slash", height: 100, width: 120)
+            HStack(alignment: .center) {
+                if self.connectionGroupsStore.loading {
+                    ProgressView()
+                } else {
+                    VStack(alignment: .center, spacing: 24) {
+                        Image("UpdateProfile")
+                        
+                        Text("No connection groups")
+                            .defaultStyle(size: 24, opacity: 1.0)
+                    }
+                    .padding()
+                }
             }
             Spacer()
+            newGroupButton
         }
-        .padding([.top], 100)
     }
     
     var groupsView: some View {
-        ForEach(self.connectionGroupsStore.groups, id: \.id) { group in
-            ZStack(alignment: .trailing) {
-                ConnectionGroupRow(connectionGroup: group)
-                    .onTapGesture {
-                        self.connectionGroupStore.load(group: group)
-                        self.showGroupDetails = true
-                    }
-                
-                Spacer()
-                
-                Menu {
-                    Button(role: .destructive) {
-                        self.connectionGroupsStore.delete(groupId: group.id) { (result: Result<Bool, Error>) in
-                            switch result {
-                                case .success(_):
-                                self.connectionGroupsStore.load()
-                                case .failure(let error):
-                                print("Failed to delete group", error)
+        VStack {
+            ScrollView {
+                ForEach(self.connectionGroupsStore.groups, id: \.id) { group in
+                    ZStack(alignment: .trailing) {
+                        ConnectionGroupRow(connectionGroup: group)
+                            .onTapGesture {
+                                self.connectionGroupStore.load(group: group)
+                                self.showGroupDetails = true
                             }
-                        }
-                    } label: {
-                        Label("Delete Group", systemImage: "trash")
-                    }
-                    
-                    Button {
                         
-                    } label: {
-                        Label("Export to CSV", systemImage: "envelope")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .frame(width: 24, height: 24)
-                        .rotationEffect(.degrees(-90))
-                        .foregroundColor(.gray)
-                }
-            }.padding([.leading, .trailing, .bottom])
-        }
-        .redacted(when: self.connectionGroupsStore.loading, redactionType: .customPlaceholder)
-    }
-    
-    var deleteAlert: Alert {
-        Alert(title: Text("Delete group?"), message: Text("Are you sure you want to delete this group?"), primaryButton: .destructive(Text("Delete")) {
-                for index in self.toBeDeleted! {
-                    let groupId = self.connectionGroupsStore.groups[index].id
-                    self.connectionGroupsStore.delete(groupId: groupId) { (result: Result<Bool, Error>) in
-                        switch result {
-                        case.success(_):
-                            self.connectionGroupsStore.load()
-                        case .failure(let error):
-                            print("Something bad happened", error)
+                        Spacer()
+                        
+                        Menu {
+                            Button(role: .destructive) {
+                                self.connectionGroupsStore.delete(groupId: group.id) { (result: Result<Bool, Error>) in
+                                    switch result {
+                                    case .success(_):
+                                        self.connectionGroupsStore.load()
+                                    case .failure(let error):
+                                        print("Failed to delete group", error)
+                                    }
+                                }
+                            } label: {
+                                Label("Delete Group", systemImage: "trash")
+                            }
+                            .disabled(self.connectionGroupsStore.deleting)
+                            
+                            Button {
+                                
+                            } label: {
+                                Label("Export to CSV", systemImage: "envelope")
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis")
+                                .frame(width: 24, height: 24)
+                                .rotationEffect(.degrees(-90))
+                                .foregroundColor(.gray)
+                                .padding(.trailing)
                         }
-                    }
+                    }.padding([.leading, .trailing, .bottom])
                 }
-                
-                self.toBeDeleted = nil
-                self.showDeleteAlert = false
-            }, secondaryButton: .cancel() {
-                self.toBeDeleted = nil
-                self.showDeleteAlert = false
+                .redacted(when: self.connectionGroupsStore.loading || self.connectionGroupsStore.deleting, redactionType: .customPlaceholder)
             }
-        )
+            
+            Spacer()
+            
+            newGroupButton
+        }
     }
     
     var newGroupSheet: some View {
@@ -243,12 +230,6 @@ struct ConnectionGroupList: View {
         }
         .padding([.vertical], 12)
         .padding([.horizontal], 18)
-    }
-    
-    func delete(at offsets: IndexSet) {
-        self.toBeDeleted = offsets
-        self.showDeleteAlert = true
-        print(offsets)
     }
     
     func isConnectionSelected(connection: Connection) -> Bool {

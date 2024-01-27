@@ -247,63 +247,65 @@ struct PersonalInformationEdit: View {
     }
     
     var phoneVerificationSheet: some View {
-        VStack(alignment: .center) {
-            Text("Please enter the confirmation code we texted to you")
-                .multilineTextAlignment(.center)
-                .padding([.top], 50)
-            
-            Spacer()
-            
-            TextField("Code", text: self.$phoneVerificationCode)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .keyboardType(.numberPad)
-                .padding()
-                .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-            
-            Spacer()
-            
-            Button {
-                self.accountStore.confirmPhone(code: self.phoneVerificationCode) { (result: Result<AccountStore.ConfirmPhoneResponse, Error>) in
-                    switch result {
-                    case .success(_):
-                        // TODO - load this new value more dynamically instead of hard code?
-                        self.accountStore.phoneNumberConfirmed = true
-                        self.showPhoneVerification = false
-                    case .failure(let error):
-                        print("Something bad happened", error)
+        DynamicSheet(
+            VStack(alignment: .center) {
+                Text("Please enter the confirmation code we texted to you")
+                    .multilineTextAlignment(.center)
+                    .padding([.top], 50)
+                
+                Spacer()
+                
+                TextField("Code", text: self.$phoneVerificationCode)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .keyboardType(.numberPad)
+                    .padding()
+                    .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                
+                Spacer()
+                
+                Button {
+                    self.accountStore.confirmPhone(code: self.phoneVerificationCode) { (result: Result<AccountStore.ConfirmPhoneResponse, Error>) in
+                        switch result {
+                        case .success(_):
+                            // TODO - load this new value more dynamically instead of hard code?
+                            self.accountStore.phoneNumberConfirmed = true
+                            self.showPhoneVerification = false
+                        case .failure(let error):
+                            print("Something bad happened", error)
+                        }
+                    }
+                } label: {
+                    if self.accountStore.saving {
+                        ProgressView()
+                            .padding()
+                            .frame(width: 300, height: 50)
+                            .background(Color.green)
+                            .cornerRadius(15.0)
+                    } else {
+                        Text("Confirm Phone")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(width: 300, height: 50)
+                            .background(self.phoneVerificationCode.count != 6 ? .gray : Color.green)
+                            .cornerRadius(15.0)
                     }
                 }
-            } label: {
-                if self.accountStore.saving {
-                    ProgressView()
-                        .padding()
-                        .frame(width: 300, height: 50)
-                        .background(Color.green)
-                        .cornerRadius(15.0)
-                } else {
-                    Text("Confirm Phone")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(width: 300, height: 50)
-                        .background(self.phoneVerificationCode.count != 6 ? .gray : Color.green)
-                        .cornerRadius(15.0)
-                }
+                .disabled(self.phoneVerificationCode.count != 6)
+                .padding()
             }
-            .disabled(self.phoneVerificationCode.count != 6)
-            .padding()
-        }
-        .padding(40)
-        .disabled(self.accountStore.saving)
-        .presentationDetents([.medium])
+            .padding(40)
+            .disabled(self.accountStore.saving)
+        )
     }
     
     var datePickerSheet: some View {
-        DatePicker("", selection: self.$accountStore.birthday, in: ...Date(), displayedComponents: [.date])
-            .datePickerStyle(.wheel)
-            .labelsHidden()
-            .padding()
-            .presentationDetents([.height(250)])
+        DynamicSheet(
+            DatePicker("", selection: self.$accountStore.birthday, in: ...Date(), displayedComponents: [.date])
+                .datePickerStyle(.wheel)
+                .labelsHidden()
+                .padding()
+        )
     }
     
     var updateAccountButton: some View {

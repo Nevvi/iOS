@@ -148,7 +148,6 @@ struct ConnectionList: View {
                             )
                         } label: {
                             ConnectionRow(connection: connection)
-                                .padding(.horizontal, 20)
                         }
                     }
                     .onDelete(perform: self.delete)
