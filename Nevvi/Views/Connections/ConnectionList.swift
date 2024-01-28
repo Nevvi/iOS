@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import NukeUI
 
 struct ConnectionList: View {
     @EnvironmentObject var connectionsStore: ConnectionsStore
@@ -18,8 +19,36 @@ struct ConnectionList: View {
     @State private var showSyncConfirmation: Bool = false
     
     @State private var contactsToSyncCount: Int = 2
-    @State private var contactUpdates: [ContactStore.ContactSyncInfo] = []
-    @State private var showContactUpdates: Bool = false
+//    @State private var contactUpdates: [ContactStore.ContactSyncInfo] = []
+    @State private var contactUpdates: [ContactStore.ContactSyncInfo] = [
+        ContactStore.ContactSyncInfo(
+            connection: Connection(
+                id: "abc",
+                firstName: "Tyler",
+                lastName: "Standal",
+                profileImage: "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png"
+            ),
+            updatedFields: [
+                ContactStore.ContactSyncFieldInfo(field: "firstName", oldValue: "Ty", newValue: "Tyler"),
+                ContactStore.ContactSyncFieldInfo(field: "lastName", oldValue: "Cobb", newValue: "Standal")
+            ],
+            isUpdate: true
+        ),
+        ContactStore.ContactSyncInfo(
+            connection: Connection(
+                id: "bcd",
+                firstName: "Tyler2",
+                lastName: "Standal2",
+                profileImage: "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png"
+            ),
+            updatedFields: [
+                ContactStore.ContactSyncFieldInfo(field: "firstName", oldValue: nil, newValue: "Tyler2"),
+                ContactStore.ContactSyncFieldInfo(field: "lastName", oldValue: nil, newValue: "Standal2")
+            ],
+            isUpdate: false
+        )
+    ]
+    @State private var showContactUpdates: Bool = true
     
     @StateObject var nameFilter = DebouncedText()
     @State var selectedGroup: String = "ALL"
@@ -223,29 +252,7 @@ struct ConnectionList: View {
                 VStack {
                     ForEach(self.contactUpdates, id: \.self.connection.id) { (update: ContactStore.ContactSyncInfo) in
                         if (update.changedFields().count > 0) {
-                            VStack(alignment: .leading) {
-                                ZStack(alignment: .trailing) {
-                                    ConnectionRow(connection: update.connection)
-                                    
-                                    Spacer()
-                                    
-                                    if (!update.isUpdate) {
-                                        Text("New!")
-                                            .italic()
-                                            .fontWeight(.semibold)
-                                            .padding()
-                                    }
-                                }
-                                
-                                ForEach(update.changedFields(), id: \.self.field) { (fieldUpdate: ContactStore.ContactSyncFieldInfo) in
-                                    if fieldUpdate.oldValue != fieldUpdate.newValue {
-                                        VStack(alignment: .leading) {
-                                            Text(fieldUpdate.field).personalInfoLabel()
-                                            Text(fieldUpdate.newValue!).personalInfo()
-                                        }.padding(.horizontal)
-                                    }
-                                }
-                            }
+                            updatedConnectionView(update: update)
                         }
                     }
                 }
@@ -261,6 +268,49 @@ struct ConnectionList: View {
                         .asPrimaryButton()
                         .padding()
                 })
+            }
+        }
+    }
+    
+    func updatedConnectionView(update: ContactStore.ContactSyncInfo) -> some View {
+        VStack(alignment: .leading) {
+            ZStack(alignment: .trailing) {
+                HStack(alignment: .center, spacing: 12) {
+                    ZStack(alignment: .bottom) {
+                        Rectangle()
+                        .foregroundColor(.clear)
+                        .frame(width: 63, height: 63)
+                        .background(
+                            LazyImage(url: URL(string: update.connection.profileImage), resizingMode: .aspectFill)
+                        )
+                        .cornerRadius(63)
+                        .padding([.bottom], 8)
+                                        
+                        Text(update.connection.permissionGroup ?? "Unknown")
+                            .asPermissionGroupBadge(bgColor: Color(red: 0.82, green: 0.88, blue: 1))
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("\(update.connection.firstName) \(update.connection.lastName)")
+                            .defaultStyle(size: 18, opacity: 1.0)
+                        
+                        if (update.isUpdate) {
+                            Text("Updated \(update.changedFields().count) fields")
+                                .defaultStyle(size: 14, opacity: 0.7)
+                        } else {
+                            Text("New contact!")
+                                .defaultStyle(size: 14, opacity: 0.7)
+                        }
+                    }
+                }
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .overlay(
+                    Rectangle()
+                        .inset(by: 0.5)
+                        .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.04), lineWidth: 1)
+                )
             }
         }
     }
