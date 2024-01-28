@@ -111,6 +111,7 @@
 		277D253C2B5F4D7500D1D717 /* GroupConnectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D253B2B5F4D7500D1D717 /* GroupConnectionRow.swift */; };
 		277D253E2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D253D2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift */; };
 		277D25402B65376400D1D717 /* DynamicSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D253F2B65376400D1D717 /* DynamicSheet.swift */; };
+		277D25442B6694CF00D1D717 /* ConnectionSuggestionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25432B6694CF00D1D717 /* ConnectionSuggestionStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -211,6 +212,7 @@
 		277D253B2B5F4D7500D1D717 /* GroupConnectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupConnectionRow.swift; sourceTree = "<group>"; };
 		277D253D2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionablePermissionGroupRow.swift; sourceTree = "<group>"; };
 		277D253F2B65376400D1D717 /* DynamicSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicSheet.swift; sourceTree = "<group>"; };
+		277D25432B6694CF00D1D717 /* ConnectionSuggestionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSuggestionStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -460,6 +462,7 @@
 			children = (
 				04B9493B295E070000703523 /* AccountStore.swift */,
 				04B9493D295E09E400703523 /* AuthorizationStore.swift */,
+				277D25432B6694CF00D1D717 /* ConnectionSuggestionStore.swift */,
 				04B9494F295E731E00703523 /* KeychainStore.swift */,
 				04B949682960927F00703523 /* ConnectionStore.swift */,
 				04B9496C2960979D00703523 /* ConnectionsStore.swift */,
@@ -641,6 +644,7 @@
 				04314397297438D70094D7E0 /* PermissionGroupList.swift in Sources */,
 				04038E3629679CCE00D3C7AC /* ContactStore.swift in Sources */,
 				04038E1B2960CE9500D3C7AC /* ConnectionRequest.swift in Sources */,
+				277D25442B6694CF00D1D717 /* ConnectionSuggestionStore.swift in Sources */,
 				277D25382B5C578000D1D717 /* StackExtensions.swift in Sources */,
 				041412F72976009F008A35DA /* ProfileImageSelector.swift in Sources */,
 				04B9496B2960964500703523 /* NavigationLazyView.swift in Sources */,

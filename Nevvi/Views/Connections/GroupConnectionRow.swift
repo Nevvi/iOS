@@ -18,46 +18,18 @@ struct GroupConnectionRow: View {
     @State private var showDeleteAlert: Bool = false
     
     var body: some View {
-        HStack(alignment: .center, spacing: 12) {
-            ZStack(alignment: .bottom) {
-                Rectangle()
-                .foregroundColor(.clear)
-                .frame(width: 63, height: 63)
-                .background(
-                    LazyImage(url: URL(string: connection.profileImage), resizingMode: .aspectFill)
-                )
-                .cornerRadius(63)
-                .padding([.bottom], 8)
-                                
-                Text(self.connection.permissionGroup ?? "Unknown")
-                    .asPermissionGroupBadge(bgColor: Color(red: 0.82, green: 0.88, blue: 1))
-            }
+        ZStack(alignment: .trailing) {
+            ConnectionRow(connection: self.connection)
             
-            HStack {
-                VStack {
-                    Text("\(connection.firstName) \(connection.lastName)")
-                        .defaultStyle(size: 18, opacity: 1.0)
-                    
-                    // TODO - add phone/email if we have access
+            Spacer()
+            
+            Image(systemName: "trash")
+                .toolbarButtonStyle()
+                .onTapGesture {
+                    self.showDeleteAlert = true
                 }
-                
-                Spacer()
-                
-                Image(systemName: "trash")
-                    .toolbarButtonStyle()
-                    .onTapGesture {
-                        self.showDeleteAlert = true
-                    }
-            }
+                .padding()
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .overlay(
-            Rectangle()
-                .inset(by: 0.5)
-                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.04), lineWidth: 1)
-        )
         .alert(isPresented: self.$showDeleteAlert) {
             deleteAlert
         }

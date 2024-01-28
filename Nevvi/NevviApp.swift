@@ -46,6 +46,7 @@ struct NevviApp: App {
     @StateObject private var authStore = AuthorizationStore()
     @StateObject private var accountStore = AccountStore()
     @StateObject private var connectionStore = ConnectionStore()
+    @StateObject private var connectionSuggestionStore = ConnectionSuggestionStore()
     @StateObject private var connectionsStore = ConnectionsStore()
     @StateObject private var connectionGroupStore = ConnectionGroupStore()
     @StateObject private var connectionGroupsStore = ConnectionGroupsStore()
@@ -63,6 +64,7 @@ struct NevviApp: App {
                     .environmentObject(accountStore)
                     .environmentObject(authStore)
                     .environmentObject(connectionStore)
+                    .environmentObject(connectionSuggestionStore)
                     .environmentObject(connectionsStore)
                     .environmentObject(connectionGroupStore)
                     .environmentObject(connectionGroupsStore)
@@ -104,6 +106,7 @@ struct NevviApp: App {
                     self.accountStore.authorization = auth
                     self.connectionStore.authorization = auth
                     self.connectionsStore.authorization = auth
+                    self.connectionSuggestionStore.authorization = auth
                     self.connectionGroupStore.authorization = auth
                     self.connectionGroupsStore.authorization = auth
                     self.usersStore.authorization = auth

@@ -24,6 +24,40 @@ class ContactStore: ObservableObject {
         return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/\(connectionId)")!
     }
     
+    func hasAccess() -> Bool {
+        let authStatus = CNContactStore.authorizationStatus(for: .contacts)
+        switch authStatus {
+            case .authorized:
+                return true
+            default:
+                return false
+        }
+    }
+    
+    func canRequestAccess() -> Bool {
+        let authStatus = CNContactStore.authorizationStatus(for: .contacts)
+        return authStatus == .notDetermined
+    }
+    
+    func tryRequestAccess() -> Bool {
+        let authStatus = CNContactStore.authorizationStatus(for: .contacts)
+        switch authStatus {
+        case .authorized:
+            return true
+        case .notDetermined:
+            let store = CNContactStore()
+            store.requestAccess(for: .contacts) { success, error in
+                if !success {
+                    print("Not authorized to access contacts. Error = \(String(describing: error))")
+                }
+            }
+            return true
+        default:
+            print("Failed to request contact access because auth status is \(authStatus)")
+            return false;
+        }
+    }
+        
     func loadContactPhoneNumbers(callback: @escaping (Result<[String], Error>) -> Void) {
         let store = CNContactStore()
         let keysToFetch = [CNContactPhoneNumbersKey] as [CNKeyDescriptor]

@@ -127,6 +127,13 @@ struct PersonalInformation: View {
             .background(ColorConstants.background)
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.large)
+//            .toolbar(content: {
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    // TODO
+//                    Image(systemName: "qrcode")
+//                        .toolbarButtonStyle()
+//                }
+//            })
         }
     }
     

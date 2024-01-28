@@ -8,12 +8,17 @@
 import SwiftUI
 
 struct ConnectionDetail: View {
-    @EnvironmentObject var connectionStore: ConnectionStore
+    @Environment(\.presentationMode) var presentationMode
+    
     @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var connectionStore: ConnectionStore
+    @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
     
     @State var showEditSheet = false
     @State var tabSelectedValue = 0
+    
+    @State private var showDeleteAlert: Bool = false
     
     var body: some View {
         if self.connectionStore.loading == false && !self.connectionStore.id.isEmpty {
@@ -111,8 +116,9 @@ struct ConnectionDetail: View {
                     }
                     
                     Spacer()
-                    
-                    Text("Edit".uppercased())
+                    Spacer()
+ 
+                    Text("Delete".uppercased())
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity)
                         .font(.headline)
@@ -120,20 +126,20 @@ struct ConnectionDetail: View {
                         .padding(.vertical, 16)
                         .background(
                             RoundedRectangle(cornerRadius: 24)
-                                .foregroundColor(ColorConstants.primary)
+                                .foregroundColor(.red)
                         )
                         .onTapGesture {
-                            self.showEditSheet = true
+                            self.showDeleteAlert = true
                         }
                 }
                 .padding()
             }
             .background(ColorConstants.background)
             .toolbar(content: {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Image(systemName: "square.and.arrow.up")
-                        .toolbarButtonStyle()
-                }
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    Image(systemName: "square.and.arrow.up")
+//                        .toolbarButtonStyle()
+//                }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Image(systemName: "square.and.pencil")
@@ -143,6 +149,9 @@ struct ConnectionDetail: View {
                         }
                 }
             })
+            .alert(isPresented: self.$showDeleteAlert) {
+                deleteAlert
+            }
             .sheet(isPresented: self.$showEditSheet) {
                 editSheet
             }
@@ -288,6 +297,26 @@ struct ConnectionDetail: View {
         .padding([.top], 40)
     }
     
+    var deleteAlert: Alert {
+        Alert(title: Text("Delete confirmation"), message: Text("Are you sure you want to remove this connection?"), primaryButton: .destructive(Text("Delete")) {
+            self.connectionStore.delete(connectionId: self.connectionStore.id) { (result: Result<Bool, Error>) in
+                switch result {
+                case.success(_):
+                    self.connectionsStore.load()
+                    self.connectionsStore.loadOutOfSync(callback: { _ in })
+                    self.connectionsStore.loadRejectedUsers()
+                    self.presentationMode.wrappedValue.dismiss()
+                case .failure(let error):
+                    print("Something bad happened", error)
+                }
+            }
+            
+            self.showDeleteAlert = false
+        }, secondaryButton: .cancel() {
+            self.showDeleteAlert = false
+        })
+    }
+    
     func contactAction(image: String, text: String) -> some View {
         VStack(alignment: .center, spacing: 8) {
             Image(systemName: image)
@@ -313,11 +342,15 @@ struct ConnectionDetail_Previews: PreviewProvider {
     static let accountStore = AccountStore(user: modelData.user)
     static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
     static let connectionStore = ConnectionStore(connection: modelData.connection)
+    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
+                                                   requests: modelData.requests,
+                                                   blockedUsers: modelData.connectionResponse.users)
 
     static var previews: some View {
         ConnectionDetail()
             .environmentObject(accountStore)
             .environmentObject(connectionGroupsStore)
             .environmentObject(connectionStore)
+            .environmentObject(connectionsStore)
     }
 }

@@ -9,7 +9,6 @@ import SwiftUI
 import NukeUI
 
 struct NewConnectionRequestRow: View {
-    @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var usersStore: UsersStore
     
     var requestCallback: () -> Void
@@ -33,27 +32,8 @@ struct NewConnectionRequestRow: View {
     }
     
     var body: some View {
-        HStack(alignment: .center, spacing: 12) {
-            ZStack(alignment: .bottom) {
-                Rectangle()
-                .foregroundColor(.clear)
-                .frame(width: 63, height: 63)
-                .background(
-                    LazyImage(url: URL(string: user.profileImage), resizingMode: .aspectFill)
-                )
-                .cornerRadius(63)
-                .padding([.bottom], 8)
-                                
-                Text(self.user.permissionGroup ?? "Unknown")
-                    .asPermissionGroupBadge(bgColor: Color(red: 0.82, green: 0.88, blue: 1))
-            }
-            
-            VStack {
-                Text("\(user.firstName) \(user.lastName)")
-                    .defaultStyle(size: 18, opacity: 1.0)
-                
-                // TODO - add phone/email if we have access
-            }
+        ZStack(alignment: .trailing) {
+            ConnectionRow(connection: self.user)
             
             Spacer()
             
@@ -62,15 +42,8 @@ struct NewConnectionRequestRow: View {
                 .onTapGesture {
                     self.showSheet = true
                 }
+                .padding()
         }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .overlay(
-            Rectangle()
-                .inset(by: 0.5)
-                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.04), lineWidth: 1)
-        )
         .sheet(isPresented: self.$showSheet) {
             requestConnectionSheet
         }
@@ -132,12 +105,10 @@ struct NewConnectionRequestRow: View {
 
 struct ConnectionRequest_Previews: PreviewProvider {
     static let modelData = ModelData()
-    static let accountStore = AccountStore(user: modelData.user)
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
     
     static var previews: some View {
         NewConnectionRequestRow(requestCallback: {},user: modelData.connectionResponse.users[0])
-            .environmentObject(accountStore)
             .environmentObject(usersStore)
     }
 }

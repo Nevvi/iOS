@@ -16,10 +16,8 @@ struct ConnectionList: View {
     
     @State private var syncing: Bool = false
     @State private var showSyncConfirmation: Bool = false
-    @State private var toBeDeleted: IndexSet?
-    @State private var showDeleteAlert: Bool = false
     
-    @State private var contactsToSyncCount: Int = 0
+    @State private var contactsToSyncCount: Int = 2
     @State private var contactUpdates: [ContactStore.ContactSyncInfo] = []
     @State private var showContactUpdates: Bool = false
     
@@ -29,7 +27,9 @@ struct ConnectionList: View {
     var body: some View {
         NavigationView {
             VStack {
-                if self.accountStore.firstName.isEmpty {
+                if self.contactStore.canRequestAccess() {
+                    requestContactsView
+                } else if self.accountStore.firstName.isEmpty {
                     profileUpdateView
                 } else if self.nameFilter.text.isEmpty && self.connectionsStore.connectionCount == 0 {
                     noConnectionsView
@@ -39,18 +39,57 @@ struct ConnectionList: View {
             }
             .navigationTitle("Connections")
             .navigationBarTitleDisplayMode(.large)
-        }
-        .alert(isPresented: self.$showDeleteAlert) {
-            deleteAlert
+            .toolbar(content: {
+                if self.contactStore.hasAccess() && self.connectionsStore.outOfSyncCount > 0 {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Image(systemName: "square.and.arrow.down")
+                            .toolbarButtonStyle()
+                            .onTapGesture {
+                                if !self.syncing {
+                                    self.sync(dryRun: true)
+                                }
+                            }
+                            .opacity(self.syncing ? 0.5 : 1.0)
+                    }
+                }
+            })
         }
         .sheet(isPresented: self.$showContactUpdates) {
             contactUpdatesSheet
         }
-        .onAppear {
-            if self.accountStore.deviceSettings.autoSync {
-                self.sync(dryRun: false)
+    }
+    
+    var requestContactsView: some View {
+        HStack(alignment: .center) {
+            VStack(alignment: .center, spacing: 24) {
+                Spacer()
+                
+                Image("AllowContacts")
+                
+                Text("Allow Contact Access")
+                    .defaultStyle(size: 24, opacity: 1.0)
+                
+                Text("Your privacy is our priority. We only use your contacts to suggest relevant connections, and sync the latest connection data, never for spam.")
+                    .defaultStyle(size: 16, opacity: 0.7)
+                    .multilineTextAlignment(.center)
+                
+                
+                Text("Allow Access".uppercased())
+                    .asPrimaryButton()
+                    .onTapGesture {
+                        let result = self.contactStore.tryRequestAccess()
+                        if result {
+                            print("Got contact access!")
+                        } else {
+                            print("Failed to get contact access")
+                        }
+                    }
+                
+                Spacer()
+                Spacer()
             }
-        }
+            .padding()
+        }.padding()
     }
     
     var profileUpdateView: some View {
@@ -150,7 +189,6 @@ struct ConnectionList: View {
                             ConnectionRow(connection: connection)
                         }
                     }
-                    .onDelete(perform: self.delete)
                     .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
                 }
                 .frame(width: .infinity, alignment: .topLeading)
@@ -162,32 +200,6 @@ struct ConnectionList: View {
         .navigationBarTitleDisplayMode(.large)
         .searchable(text: self.$nameFilter.text)
         .disableAutocorrection(true)
-        .toolbar(content: {
-//                if self.connectionsStore.outOfSyncCount > 0 {
-//                    ToolbarItem(placement: .navigationBarLeading) {
-//                        if syncing {
-//                            ProgressView()
-//                        } else if (!self.accountStore.deviceSettings.autoSync) {
-//                            Button {
-//                                self.sync(dryRun: true)
-//                            } label: {
-//                                Text("Sync (\(self.connectionsStore.outOfSyncCount))")
-//                            }
-//                        }
-//                    }
-//                }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                // TODO
-                Image(systemName: "qrcode.viewfinder")
-                    .toolbarButtonStyle()
-            }
-
-            ToolbarItem(placement: .navigationBarTrailing) {
-                // TODO
-                Image(systemName: "qrcode")
-                    .toolbarButtonStyle()
-            }
-        })
         .onChange(of: self.nameFilter.debouncedText) { text in
             self.connectionsStore.load(nameFilter: text, permissionGroup: self.selectedGroup)
         }
@@ -196,109 +208,58 @@ struct ConnectionList: View {
         }
         .refreshable {
             self.connectionsStore.load(nameFilter: self.nameFilter.debouncedText, permissionGroup: self.selectedGroup)
-            self.connectionsStore.loadOutOfSync { _ in
-                if self.accountStore.deviceSettings.autoSync {
-                    self.sync(dryRun: false)
-                }
-            }
+            self.connectionsStore.loadOutOfSync { _ in }
         }
     }
     
-    var deleteAlert: Alert {
-        Alert(title: Text("Delete confirmation"), message: Text("Are you sure you want to remove this connection?"), primaryButton: .destructive(Text("Delete")) {
-            for index in self.toBeDeleted! {
-                let connectionid = self.connectionsStore.connections[index].id
-                self.connectionStore.delete(connectionId: connectionid) { (result: Result<Bool, Error>) in
-                    switch result {
-                    case.success(_):
-                        self.connectionsStore.load()
-                        self.connectionsStore.loadOutOfSync(callback: { _ in })
-                        self.connectionsStore.loadRejectedUsers()
-                    case .failure(let error):
-                        print("Something bad happened", error)
-                    }
-                }
-            }
-            
-            self.toBeDeleted = nil
-            self.showDeleteAlert = false
-        }, secondaryButton: .cancel() {
-            self.toBeDeleted = nil
-            self.showDeleteAlert = false
-        })
-    }
-    
     var contactUpdatesSheet: some View {
-        ScrollView {
-            VStack {
-                if (self.contactsToSyncCount > 0 && !self.accountStore.deviceSettings.autoSync) {
-                    Text("\(self.contactUpdates.count) contact(s) to sync")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .padding([.top], 10)
-                } else {
-                    Text("\(self.contactUpdates.count) contact(s) synced!")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .padding([.top], 10)
-                }
-                
-                Divider().padding([.top, .bottom], 10)
-                
-                ForEach(self.contactUpdates, id: \.self.connection.id) { (update: ContactStore.ContactSyncInfo) in
-                    if (update.changedFields().count > 0) {
-                        VStack(alignment: .leading) {
-                            HStack {
-                                ProfileImage(imageUrl: update.connection.profileImage, height: 50, width: 50)
-                                Text("\(update.connection.firstName) \(update.connection.lastName)")
-                                Spacer()
-                                if (!update.isUpdate) {
-                                    Text("New!")
-                                        .italic()
-                                        .fontWeight(.semibold)
+        VStack {
+            Text("\(self.contactUpdates.count) contact(s) to sync")
+                .defaultStyle()
+                .fontWeight(.semibold)
+                .padding()
+                        
+            ScrollView {
+                VStack {
+                    ForEach(self.contactUpdates, id: \.self.connection.id) { (update: ContactStore.ContactSyncInfo) in
+                        if (update.changedFields().count > 0) {
+                            VStack(alignment: .leading) {
+                                ZStack(alignment: .trailing) {
+                                    ConnectionRow(connection: update.connection)
+                                    
+                                    Spacer()
+                                    
+                                    if (!update.isUpdate) {
+                                        Text("New!")
+                                            .italic()
+                                            .fontWeight(.semibold)
+                                            .padding()
+                                    }
                                 }
-                            }
-                            .padding([.bottom], 10)
-                            
-                            ForEach(update.changedFields(), id: \.self.field) { (fieldUpdate: ContactStore.ContactSyncFieldInfo) in
-                                if fieldUpdate.oldValue != fieldUpdate.newValue {
-                                    VStack(alignment: .leading) {
-                                        Text(fieldUpdate.field).personalInfoLabel()
-                                        Text(fieldUpdate.newValue!).personalInfo()
+                                
+                                ForEach(update.changedFields(), id: \.self.field) { (fieldUpdate: ContactStore.ContactSyncFieldInfo) in
+                                    if fieldUpdate.oldValue != fieldUpdate.newValue {
+                                        VStack(alignment: .leading) {
+                                            Text(fieldUpdate.field).personalInfoLabel()
+                                            Text(fieldUpdate.newValue!).personalInfo()
+                                        }.padding(.horizontal)
                                     }
                                 }
                             }
                         }
-                        .frame(
-                            minWidth: 0,
-                            maxWidth: .infinity,
-                            minHeight: 0,
-                            maxHeight: .infinity,
-                            alignment: .topLeading
-                        )
-                        .padding([.leading, .trailing], 10)
-                        
-                        Divider().padding([.top, .bottom], 10)
                     }
                 }
             }
-            .padding()
             
             Spacer()
             
-            if (self.contactsToSyncCount > 0 && !self.accountStore.deviceSettings.autoSync) {
+            if (self.contactsToSyncCount > 0) {
                 Button(action: {
                     self.sync(dryRun: false)
                 }, label: {
                     Text("Sync")
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 50)
-                        .padding(.vertical, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .foregroundColor(ColorConstants.secondary)
-                        )
+                        .asPrimaryButton()
+                        .padding()
                 })
             }
         }
@@ -315,23 +276,21 @@ struct ConnectionList: View {
         }
     }
     
-    func delete(at offsets: IndexSet) {
-        self.toBeDeleted = offsets
-        self.showDeleteAlert = true
-    }
-    
     func sync(dryRun: Bool) {
         self.syncing = true
         self.showContactUpdates = false
         self.contactUpdates = []
         
+        print("Syncing... Dry Run: \(dryRun)")
+        
         self.connectionsStore.loadOutOfSync { (result: Result<ConnectionResponse, Error>) in
             switch result {
             case .success(let response):
+                print("Got response: \(response)")
                 if response.count > 0 {
                     self.contactStore.syncContacts(connections: response.users, dryRun: dryRun) { syncInfo in
                         self.contactUpdates.append(contentsOf: syncInfo.updatedContacts)
-                        
+
                         if (!dryRun) {
                             UIApplication.shared.applicationIconBadgeNumber = 0
                             self.contactsToSyncCount = 0
@@ -339,10 +298,12 @@ struct ConnectionList: View {
                         } else {
                             self.contactsToSyncCount = self.contactUpdates.count
                         }
-                        
+
                         self.showContactUpdates = true
                         self.syncing = false
                     }
+                } else {
+                    self.syncing = false
                 }
             case .failure(let error):
                 print("Something bad happened", error.localizedDescription)
@@ -362,6 +323,37 @@ struct ConnectionList_Previews: PreviewProvider {
     static let connectionStore = ConnectionStore()
     static let contactStore = ContactStore()
     static let accountStore = AccountStore(user: modelData.user)
+    
+    /**
+     @State private var contactUpdates: [ContactStore.ContactSyncInfo] = [
+         ContactStore.ContactSyncInfo(
+             connection: Connection(
+                 id: "abc",
+                 firstName: "Tyler",
+                 lastName: "Standal",
+                 profileImage: "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png"
+             ),
+             updatedFields: [
+                 ContactStore.ContactSyncFieldInfo(field: "firstName", oldValue: "Ty", newValue: "Tyler"),
+                 ContactStore.ContactSyncFieldInfo(field: "lastName", oldValue: "Cobb", newValue: "Standal")
+             ],
+             isUpdate: true
+         ),
+         ContactStore.ContactSyncInfo(
+             connection: Connection(
+                 id: "bcd",
+                 firstName: "Tyler2",
+                 lastName: "Standal2",
+                 profileImage: "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png"
+             ),
+             updatedFields: [
+                 ContactStore.ContactSyncFieldInfo(field: "firstName", oldValue: "Ty", newValue: "Tyler2"),
+                 ContactStore.ContactSyncFieldInfo(field: "lastName", oldValue: "Cobb", newValue: "Standal2")
+             ],
+             isUpdate: false
+         )
+     ]
+     */
     
     static var previews: some View {
         ConnectionList()

@@ -9,12 +9,12 @@ import SwiftUI
 
 struct ActionableConnectionRequestRow: View {
     @EnvironmentObject var accountStore: AccountStore
-    
-    var approvalCallback: (String, String) -> Void
-    
+    @EnvironmentObject var connectionsStore: ConnectionsStore
+        
     @State var loading: Bool = false
     @State var request: ConnectionRequest
     @State var showSheet: Bool = false
+    @State var showDeleteAlert: Bool = false
     @State var selectedPermissionGroup: String = "ALL"
     
     var body: some View {
@@ -42,6 +42,9 @@ struct ActionableConnectionRequestRow: View {
         .sheet(isPresented: self.$showSheet) {
             approveSheet
         }
+        .alert(isPresented: self.$showDeleteAlert) {
+            deleteAlert
+        }
     }
     
     var approveButton: some View {
@@ -63,7 +66,7 @@ struct ActionableConnectionRequestRow: View {
     
     var rejectButton: some View {
         Button {
-//            self.showSheet = true
+            self.showDeleteAlert = true
         } label: {
             Text("REJECT")
                 .fontWeight(.bold)
@@ -94,7 +97,14 @@ struct ActionableConnectionRequestRow: View {
                     
                     Button(action: {
                         self.loading = true
-                        self.approvalCallback(self.request.requestingUserId, self.selectedPermissionGroup)
+                        self.connectionsStore.confirmRequest(otherUserId: self.request.requestingUserId, permissionGroup: self.selectedPermissionGroup) { (result: Result<Bool, Error>) in
+                            switch result {
+                            case .success(_):
+                                self.connectionsStore.loadRequests()
+                            case .failure(let error):
+                                print("Something bad happened", error)
+                            }
+                        }
                         self.loading = false
                         self.showSheet = false
                     }, label: {
@@ -117,15 +127,35 @@ struct ActionableConnectionRequestRow: View {
             }
         )
     }
+    
+    var deleteAlert: Alert {
+        Alert(title: Text("Delete confirmation"), message: Text("Are you sure you want to reject this connection?"), primaryButton: .destructive(Text("Reject")) {
+            self.connectionsStore.denyRequest(otherUserId: self.request.requestingUserId) { (result: Result<Bool, Error>) in
+                switch result {
+                case.success(_):
+                    self.connectionsStore.loadRequests()
+                case .failure(let error):
+                    print("Something bad happened", error)
+                }
+            }
+            
+            self.showDeleteAlert = false
+        }, secondaryButton: .cancel() {
+            self.showDeleteAlert = false
+        })
+    }
 }
 
 struct ActionableConnectionRequestRow_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let accountStore = AccountStore(user: modelData.user)
+    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
+                                                   requests: modelData.requests,
+                                                   blockedUsers: modelData.connectionResponse.users)
+    
     static var previews: some View {
-        ActionableConnectionRequestRow(approvalCallback: { (id: String, group: String) in
-            print(id, group)
-        }, request: modelData.requests[0])
+        ActionableConnectionRequestRow(request: modelData.requests[0])
             .environmentObject(accountStore)
+            .environmentObject(connectionsStore)
     }
 }

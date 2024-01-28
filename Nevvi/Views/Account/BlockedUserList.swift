@@ -19,7 +19,7 @@ struct BlockedUserList: View {
         
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(alignment: .center, spacing: 0) {
                 if self.connectionsStore.blockedUserCount == 0 {
                     noDataView
                 } else {
@@ -53,33 +53,40 @@ struct BlockedUserList: View {
     }
     
     var noDataView: some View {
-        HStack(alignment: .center) {
-            if self.connectionsStore.loadingBlockerUsers == true {
-                ProgressView()
-            } else {
-                VStack(alignment: .center, spacing: 24) {
-                    Image("UpdateProfile")
-                    
-                    Text("No blocked users")
-                        .defaultStyle(size: 24, opacity: 1.0)
+        GeometryReader { geometry in
+            ScrollView(.vertical) {
+                HStack(alignment: .center) {
+                    if self.connectionsStore.loadingBlockerUsers == true {
+                        ProgressView()
+                    } else {
+                        VStack(alignment: .center, spacing: 24) {
+                            Image("UpdateProfile")
+                            
+                            Text("No blocked users")
+                                .defaultStyle(size: 24, opacity: 1.0)
+                        }
+                        .padding()
+                        .padding(.bottom, 64)
+                    }
                 }
-                .padding()
+                .frame(width: geometry.size.width)
+                .frame(minHeight: geometry.size.height)
             }
         }
     }
     
     var blockedUsersView: some View {
-        List {
-            ForEach(self.connectionsStore.blockedUsers) { user in
-                NewConnectionRequestRow(requestCallback: {
-                    self.showToast = true
-                    self.connectionsStore.loadRejectedUsers()
-                }, user: user)
+        ScrollView {
+            VStack(spacing: 0) {
+                ForEach(self.connectionsStore.blockedUsers) { user in
+                    NewConnectionRequestRow(requestCallback: {
+                        self.showToast = true
+                        self.connectionsStore.loadRejectedUsers()
+                    }, user: user)
+                }
+                .redacted(when: self.connectionsStore.loadingBlockerUsers, redactionType: .customPlaceholder)
             }
-            .redacted(when: self.connectionsStore.loadingBlockerUsers, redactionType: .customPlaceholder)
         }
-        .listStyle(.plain)
-        .scrollContentBackground(self.connectionsStore.blockedUserCount == 0 ? .hidden : .visible)
     }
 }
 
