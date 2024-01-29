@@ -11,6 +11,7 @@ class ContactStore: ObservableObject {
     var authorization: Authorization? = nil
     var phoneNumbers: [String] = []
     
+    @Published var loading: Bool = false
     @Published var error: Swift.Error?
     
     private var CNLabelMail = "mail"
@@ -79,6 +80,7 @@ class ContactStore: ObservableObject {
     
     func updateConnection(connectionId: String, callback: @escaping (Result<Connection, Error>) -> Void) {
         do {
+            self.loading = true
             let idToken: String? = self.authorization?.idToken
             let request = UpdateRequest(inSync: true)
             URLSession.shared.patchData(for: try self.connectionUrl(connectionId: connectionId), for: request, for: "Bearer \(idToken!)") { (result: Result<Connection, Error>) in
@@ -88,8 +90,10 @@ class ContactStore: ObservableObject {
                 case .failure(let error):
                     callback(.failure(error))
                 }
+                self.loading = false
             }
         } catch(let error) {
+            self.loading = false
             callback(.failure(error))
         }
     }

@@ -112,6 +112,7 @@
 		277D253E2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D253D2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift */; };
 		277D25402B65376400D1D717 /* DynamicSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D253F2B65376400D1D717 /* DynamicSheet.swift */; };
 		277D25442B6694CF00D1D717 /* ConnectionSuggestionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25432B6694CF00D1D717 /* ConnectionSuggestionStore.swift */; };
+		277D25462B673D1400D1D717 /* MessagingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25452B673D1400D1D717 /* MessagingStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -213,6 +214,7 @@
 		277D253D2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionablePermissionGroupRow.swift; sourceTree = "<group>"; };
 		277D253F2B65376400D1D717 /* DynamicSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicSheet.swift; sourceTree = "<group>"; };
 		277D25432B6694CF00D1D717 /* ConnectionSuggestionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSuggestionStore.swift; sourceTree = "<group>"; };
+		277D25452B673D1400D1D717 /* MessagingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagingStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -473,6 +475,7 @@
 				0431438A296B655F0094D7E0 /* ConnectionGroupsStore.swift */,
 				04314394297087210094D7E0 /* ConnectionGroupStore.swift */,
 				04B158572987FA2300846FDB /* NotificationStore.swift */,
+				277D25452B673D1400D1D717 /* MessagingStore.swift */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -714,6 +717,7 @@
 				04314383296B46D60094D7E0 /* BuildConfiguration.swift in Sources */,
 				277D253C2B5F4D7500D1D717 /* GroupConnectionRow.swift in Sources */,
 				04B94970296098AA00703523 /* ConnectionsResponse.swift in Sources */,
+				277D25462B673D1400D1D717 /* MessagingStore.swift in Sources */,
 				04314393296CCD010094D7E0 /* ConnectionGroupDetail.swift in Sources */,
 				04038E302966323600D3C7AC /* RedactionType.swift in Sources */,
 				041413082978D853008A35DA /* DeviceSettingsViewModel.swift in Sources */,

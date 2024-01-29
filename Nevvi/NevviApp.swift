@@ -53,6 +53,7 @@ struct NevviApp: App {
     @StateObject private var usersStore = UsersStore()
     @StateObject private var contactStore = ContactStore()
     @StateObject private var notificationStore = NotificationStore()
+    @StateObject private var messagingStore = MessagingStore()
     
     @State private var forceUpdate = false
     
@@ -71,6 +72,7 @@ struct NevviApp: App {
                     .environmentObject(usersStore)
                     .environmentObject(contactStore)
                     .environmentObject(notificationStore)
+                    .environmentObject(messagingStore)
                     .onAppear(perform: self.checkVersion)
                     .onAppear {
                         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, _ in

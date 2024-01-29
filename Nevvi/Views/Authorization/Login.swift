@@ -147,13 +147,21 @@ struct Login: View {
                     })
                     .padding([.bottom], 16)
                     
-                    Spacer()
+                    Button(action: requestBiometricUnlock, label: {
+                        Image(systemName: self.authStore.biometricType() == .face ? "faceid" : "touchid")
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(ColorConstants.primary)
+                    })
+                    .padding(30)
+                    .disabled(self.authStore.loggingIn)
+                    
                     Spacer()
                     
                     HStack {
                         Text("No account?")
                             .defaultStyle(size: 14, opacity: 0.5)
-                        
+
                         NavigationLink {
                             CreateAccount(authStore: self.authStore, callback: self.callback)
                         } label: {

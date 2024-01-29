@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MessageUI
 
 struct ConnectionDetail: View {
     @Environment(\.presentationMode) var presentationMode
@@ -14,11 +15,26 @@ struct ConnectionDetail: View {
     @EnvironmentObject var connectionStore: ConnectionStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
+    @EnvironmentObject var messagingStore: MessagingStore
     
     @State var showEditSheet = false
     @State var tabSelectedValue = 0
     
     @State private var showDeleteAlert: Bool = false
+    
+    private var canText: Bool {
+        return self.messagingStore.canSendText() && !self.connectionStore.phoneNumber.isEmpty
+    }
+    
+    private var canCall: Bool {
+        return !self.connectionStore.phoneNumber.isEmpty &&
+            UIApplication.shared.canOpenURL(URL(string: "tel://\(self.connectionStore.phoneNumber)")!)
+    }
+    
+    private var canMail: Bool {
+        return self.messagingStore.canSendMail() && !self.connectionStore.email.isEmpty &&
+            !self.accountStore.email.isEmpty
+    }
     
     var body: some View {
         if self.connectionStore.loading == false && !self.connectionStore.id.isEmpty {
@@ -39,10 +55,34 @@ struct ConnectionDetail: View {
                     }
                     
                     HStack(alignment: .top, spacing: 8) {
-                        // TODO
-                        contactAction(image: "message", text: "Message")
-                        contactAction(image: "phone", text: "Call")
-                        contactAction(image: "envelope", text: "Mail")
+                        contactAction(
+                            image: "message",
+                            text: "Message",
+                            enabled: self.canText
+                        ).onTapGesture {
+                            if self.canText {
+                                self.messagingStore.loadSms(recipient: self.connectionStore.phoneNumber)
+                                let vc = UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.rootViewController
+                                
+                                vc?.present(self.messagingStore.textComposeVC, animated: true)
+                            }
+                        }
+                        
+                        Link(destination: URL(string: "tel://:\(self.connectionStore.phoneNumber)")!) {
+                            contactAction(
+                                image: "phone",
+                                text: "Call",
+                                enabled: self.canCall
+                            )
+                        }
+                        
+                        Link(destination: URL(string: "mailto:\(self.connectionStore.email)")!) {
+                            contactAction(
+                                image: "envelope",
+                                text: "Mail",
+                                enabled: self.canMail
+                            )
+                        }
                     }
                     .frame(width: .infinity, alignment: .topLeading)
                     .padding([.bottom], 16)
@@ -317,20 +357,20 @@ struct ConnectionDetail: View {
         })
     }
     
-    func contactAction(image: String, text: String) -> some View {
-        VStack(alignment: .center, spacing: 8) {
+    func contactAction(image: String, text: String, enabled: Bool) -> some View {
+        let fgColor = enabled ? ColorConstants.primary : .gray
+        
+        return VStack(alignment: .center, spacing: 8) {
             Image(systemName: image)
                 .frame(width: 24, height: 24)
-                .foregroundColor(ColorConstants.primary)
+                .foregroundColor(fgColor)
             
             Text(text)
-                .font(Font.custom("SF Pro", size: 13).weight(.semibold))
-                .multilineTextAlignment(.center)
-                .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.6))
+                .foregroundColor(fgColor)
+                .defaultStyle(size: 13, opacity: 0.6)
         }
         .padding(.horizontal, 12)
-        .padding(.top, 18)
-        .padding(.bottom, 12)
+        .padding(.vertical, 18)
         .frame(maxWidth: .infinity, alignment: .center)
         .background(.white)
         .cornerRadius(12)
@@ -352,5 +392,6 @@ struct ConnectionDetail_Previews: PreviewProvider {
             .environmentObject(connectionGroupsStore)
             .environmentObject(connectionStore)
             .environmentObject(connectionsStore)
+            .environmentObject(MessagingStore())
     }
 }

@@ -5,6 +5,7 @@
 //  Created by Tyler Cobb on 12/29/22.
 //
 
+import AlertToast
 import SwiftUI
 import NukeUI
 
@@ -19,36 +20,10 @@ struct ConnectionList: View {
     @State private var showSyncConfirmation: Bool = false
     
     @State private var contactsToSyncCount: Int = 2
-//    @State private var contactUpdates: [ContactStore.ContactSyncInfo] = []
-    @State private var contactUpdates: [ContactStore.ContactSyncInfo] = [
-        ContactStore.ContactSyncInfo(
-            connection: Connection(
-                id: "abc",
-                firstName: "Tyler",
-                lastName: "Standal",
-                profileImage: "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png"
-            ),
-            updatedFields: [
-                ContactStore.ContactSyncFieldInfo(field: "firstName", oldValue: "Ty", newValue: "Tyler"),
-                ContactStore.ContactSyncFieldInfo(field: "lastName", oldValue: "Cobb", newValue: "Standal")
-            ],
-            isUpdate: true
-        ),
-        ContactStore.ContactSyncInfo(
-            connection: Connection(
-                id: "bcd",
-                firstName: "Tyler2",
-                lastName: "Standal2",
-                profileImage: "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png"
-            ),
-            updatedFields: [
-                ContactStore.ContactSyncFieldInfo(field: "firstName", oldValue: nil, newValue: "Tyler2"),
-                ContactStore.ContactSyncFieldInfo(field: "lastName", oldValue: nil, newValue: "Standal2")
-            ],
-            isUpdate: false
-        )
-    ]
-    @State private var showContactUpdates: Bool = true
+    @State private var contactUpdates: [ContactStore.ContactSyncInfo] = []
+    @State private var showContactUpdates: Bool = false
+    
+    @State private var showToast: Bool = false
     
     @StateObject var nameFilter = DebouncedText()
     @State var selectedGroup: String = "ALL"
@@ -85,6 +60,9 @@ struct ConnectionList: View {
         }
         .sheet(isPresented: self.$showContactUpdates) {
             contactUpdatesSheet
+        }
+        .toast(isPresenting: $showToast){
+            AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Contacts synced!")
         }
     }
     
@@ -131,7 +109,6 @@ struct ConnectionList: View {
                 Text("Update Your Profile")
                     .defaultStyle(size: 24, opacity: 1.0)
                 
-                // 16/Regular
                 Text("You're almost there! Finish your profile and get the best experience with your connection members.")
                     .defaultStyle(size: 16, opacity: 0.7)
                     .multilineTextAlignment(.center)
@@ -159,7 +136,6 @@ struct ConnectionList: View {
                 Text("No connections")
                     .defaultStyle(size: 24, opacity: 1.0)
                 
-                // 16/Regular
                 Text("Let's find some people for you to connect with.")
                     .defaultStyle(size: 16, opacity: 0.7)
                     .multilineTextAlignment(.center)
@@ -253,6 +229,7 @@ struct ConnectionList: View {
                     ForEach(self.contactUpdates, id: \.self.connection.id) { (update: ContactStore.ContactSyncInfo) in
                         if (update.changedFields().count > 0) {
                             updatedConnectionView(update: update)
+                                .redacted(when: self.contactStore.loading, redactionType: .customPlaceholder)
                         }
                     }
                 }
@@ -267,7 +244,8 @@ struct ConnectionList: View {
                     Text("Sync")
                         .asPrimaryButton()
                         .padding()
-                })
+                        .opacity(self.syncing ? 0.5 : 1.0)
+                }).disabled(self.syncing)
             }
         }
     }
@@ -295,13 +273,36 @@ struct ConnectionList: View {
                             .defaultStyle(size: 18, opacity: 1.0)
                         
                         if (update.isUpdate) {
-                            Text("Updated \(update.changedFields().count) fields")
+                            Text("Updated \(update.changedFields().count) field(s)")
                                 .defaultStyle(size: 14, opacity: 0.7)
                         } else {
                             Text("New contact!")
                                 .defaultStyle(size: 14, opacity: 0.7)
                         }
                     }
+                    
+                    Spacer()
+                    
+                    Image(systemName: "xmark")
+                        .toolbarButtonStyle()
+                        .padding(.trailing)
+                        .onTapGesture {
+                            self.contactStore.updateConnection(connectionId: update.connection.id) { result in
+                                switch result {
+                                case .success(_):
+                                    self.contactUpdates.removeAll(where: { u in
+                                        update.connection.id == u.connection.id
+                                    })
+                                    self.connectionsStore.loadOutOfSync { _ in
+                                        if self.contactUpdates.isEmpty {
+                                            self.showContactUpdates = false
+                                        }
+                                    }
+                                case .failure(let error):
+                                    print("Something bad happened", error)
+                                }
+                            }
+                        }
                 }
                 .padding(.vertical, 12)
                 .padding(.horizontal, 16)
@@ -345,11 +346,12 @@ struct ConnectionList: View {
                             UIApplication.shared.applicationIconBadgeNumber = 0
                             self.contactsToSyncCount = 0
                             self.connectionsStore.loadOutOfSync { _ in }
+                            self.showToast = true
                         } else {
                             self.contactsToSyncCount = self.contactUpdates.count
+                            self.showContactUpdates = true
                         }
 
-                        self.showContactUpdates = true
                         self.syncing = false
                     }
                 } else {
