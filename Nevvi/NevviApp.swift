@@ -124,21 +124,36 @@ struct NevviApp: App {
     }
     
     var forceUpdateView: some View {
-        VStack(spacing: 20.0) {
-            Text("Oh no!...")
-                .onboardingTitle()
+        ZStack {
+            Image("BackgroundBlur")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
             
-            Spacer()
-                        
-            Text("This version of Nevvi is not supported anymore. Please update to the latest version.")
-                .onboardingStyle()
-                .padding()
+            VStack(alignment: .center) {
+                Image("AppLogo")
+                    .frame(width: 68, height: 68)
+                    .padding([.top], 80)
+                
+                Spacer()
 
-            Spacer()
-            Spacer()
+                VStack(alignment: .center, spacing: 6) {
+                    Text("Oh no...")
+                        .defaultStyle(size: 36, opacity: 1.0)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+                        .padding(.bottom)
+                    
+                    Text("This version of Nevvi is not supported anymore. Please update to the latest version.")
+                        .defaultStyle(size: 26, opacity: 0.7)
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.center)
+                }
+                
+                Spacer()
+            }
+            .padding([.leading, .trailing])
+            .interactiveDismissDisabled()
         }
-        .padding([.leading, .trailing])
-        .interactiveDismissDisabled()
     }
     
     func checkVersion() {

@@ -50,10 +50,15 @@ extension Text {
     }
     
     func defaultStyle(size: CGFloat?, opacity: CGFloat?) -> some View {
+        return self.defaultStyle(size: size, opacity: opacity, weight: .semibold)
+    }
+    
+    func defaultStyle(size: CGFloat?, opacity: CGFloat?, weight: Font.Weight?) -> some View {
         let finalSize = size ?? 24
         let finalOpacity = opacity ?? 1.0
+        let finalWeight = weight ?? .semibold
         return self
-            .font(Font.custom("SF Pro", size: finalSize).weight(.semibold))
+            .font(Font.custom("SF Pro", size: finalSize).weight(finalWeight))
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
     }
     

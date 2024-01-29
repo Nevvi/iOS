@@ -56,6 +56,16 @@ struct Login: View {
                         
                         TextField("Email", text: self.$email)
                             .keyboardType(.emailAddress)
+                        
+                        Spacer()
+                        
+                        Button(action: requestBiometricUnlock, label: {
+                            Image(systemName: self.authStore.biometricType() == .face ? "faceid" : "touchid")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                                .foregroundColor(ColorConstants.primary)
+                        })
+                        .disabled(self.authStore.loggingIn)
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 14)
@@ -123,9 +133,7 @@ struct Login: View {
                         
                         Spacer()
                     }
-                    
-//                    Spacer()
-                    
+                                        
                     Button(action: self.signIn, label: {
                         HStack {
                             Text("Log In".uppercased())
@@ -147,15 +155,7 @@ struct Login: View {
                     })
                     .padding([.bottom], 16)
                     
-                    Button(action: requestBiometricUnlock, label: {
-                        Image(systemName: self.authStore.biometricType() == .face ? "faceid" : "touchid")
-                            .resizable()
-                            .frame(width: 50, height: 50)
-                            .foregroundColor(ColorConstants.primary)
-                    })
-                    .padding(30)
-                    .disabled(self.authStore.loggingIn)
-                    
+                    Spacer()
                     Spacer()
                     
                     HStack {

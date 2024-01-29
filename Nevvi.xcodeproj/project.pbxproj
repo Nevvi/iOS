@@ -113,6 +113,7 @@
 		277D25402B65376400D1D717 /* DynamicSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D253F2B65376400D1D717 /* DynamicSheet.swift */; };
 		277D25442B6694CF00D1D717 /* ConnectionSuggestionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25432B6694CF00D1D717 /* ConnectionSuggestionStore.swift */; };
 		277D25462B673D1400D1D717 /* MessagingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25452B673D1400D1D717 /* MessagingStore.swift */; };
+		277D25482B67E05C00D1D717 /* NotificationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25472B67E05C00D1D717 /* NotificationSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -215,6 +216,7 @@
 		277D253F2B65376400D1D717 /* DynamicSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicSheet.swift; sourceTree = "<group>"; };
 		277D25432B6694CF00D1D717 /* ConnectionSuggestionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSuggestionStore.swift; sourceTree = "<group>"; };
 		277D25452B673D1400D1D717 /* MessagingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagingStore.swift; sourceTree = "<group>"; };
+		277D25472B67E05C00D1D717 /* NotificationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -436,6 +438,7 @@
 				277D25162B55A96400D1D717 /* PermissionGroupRow.swift */,
 				277D25392B5E9D5300D1D717 /* GroupSettings.swift */,
 				277D253D2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift */,
+				277D25472B67E05C00D1D717 /* NotificationSettings.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -645,6 +648,7 @@
 				04B94963295F814100703523 /* OperatorOverloads.swift in Sources */,
 				04B94918295DEB9900703523 /* Connection.swift in Sources */,
 				04314397297438D70094D7E0 /* PermissionGroupList.swift in Sources */,
+				277D25482B67E05C00D1D717 /* NotificationSettings.swift in Sources */,
 				04038E3629679CCE00D3C7AC /* ContactStore.swift in Sources */,
 				04038E1B2960CE9500D3C7AC /* ConnectionRequest.swift in Sources */,
 				277D25442B6694CF00D1D717 /* ConnectionSuggestionStore.swift in Sources */,

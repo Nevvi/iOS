@@ -21,25 +21,19 @@ struct Settings: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var authStore: AuthorizationStore
     
-    @State private var autoSync: Bool = false
-    @State private var autoSyncSaving: Bool = false
-    
-    @State private var syncAllInformation: Bool = false
-    @State private var syncAllInformationSaving: Bool = false
-    
     var body: some View {
         NavigationView {
             List {
                 Section {
-                    NavigationLink {
-                        
-                    } label: {
-                        HStack {
-                            Image(systemName: "exclamationmark.lock")
-                                .settingsButtonStyle()
-                            Text("Change Password")
-                        }
-                    }.padding(.vertical, 10)
+//                    NavigationLink {
+//
+//                    } label: {
+//                        HStack {
+//                            Image(systemName: "exclamationmark.lock")
+//                                .settingsButtonStyle()
+//                            Text("Change Password")
+//                        }
+//                    }.padding(.vertical, 10)
                     
                     NavigationLink {
                         GroupSettings()
@@ -52,16 +46,6 @@ struct Settings: View {
                     }.padding(.vertical, 10)
                     
                     NavigationLink {
-                        
-                    } label: {
-                        HStack {
-                            Image(systemName: "bell")
-                                .settingsButtonStyle()
-                            Text("Notifications")
-                        }
-                    }.padding(.vertical, 10)
-                    
-                    NavigationLink {
                         BlockedUserList()
                     } label: {
                         HStack {
@@ -70,6 +54,17 @@ struct Settings: View {
                             Text("Blocked Users")
                         }
                     }.padding(.vertical, 10)
+                    
+                    NavigationLink {
+                        NotificationSettings()
+                    } label: {
+                        HStack {
+                            Image(systemName: "bell")
+                                .settingsButtonStyle()
+                            Text("Notifications")
+                        }
+                    }.padding(.vertical, 10)
+                    
                 }
                 
                 Section {
@@ -83,15 +78,15 @@ struct Settings: View {
                         }
                     }.padding(.vertical, 10)
                     
-                    NavigationLink {
-                        
-                    } label: {
-                        HStack {
-                            Image(systemName: "cloud")
-                                .settingsButtonStyle()
-                            Text("Data and storage")
-                        }
-                    }.padding(.vertical, 10)
+//                    NavigationLink {
+//
+//                    } label: {
+//                        HStack {
+//                            Image(systemName: "cloud")
+//                                .settingsButtonStyle()
+//                            Text("Data and storage")
+//                        }
+//                    }.padding(.vertical, 10)
                     
                     NavigationLink {
                         
@@ -103,25 +98,25 @@ struct Settings: View {
                         }
                     }.padding(.vertical, 10)
                     
-                    NavigationLink {
-                        
-                    } label: {
-                        HStack {
-                            Image(systemName: "headphones")
-                                .settingsButtonStyle()
-                            Text("Help Center")
-                        }
-                    }.padding(.vertical, 10)
+//                    NavigationLink {
+//
+//                    } label: {
+//                        HStack {
+//                            Image(systemName: "headphones")
+//                                .settingsButtonStyle()
+//                            Text("Help Center")
+//                        }
+//                    }.padding(.vertical, 10)
                     
-                    NavigationLink {
-                        
-                    } label: {
-                        HStack {
-                            Image(systemName: "bolt")
-                                .settingsButtonStyle()
-                            Text("Feature Update")
-                        }
-                    }.padding(.vertical, 10)
+//                    NavigationLink {
+//
+//                    } label: {
+//                        HStack {
+//                            Image(systemName: "bolt")
+//                                .settingsButtonStyle()
+//                            Text("Feature Updates")
+//                        }
+//                    }.padding(.vertical, 10)
                 }
                 
                 Section {
