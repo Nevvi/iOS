@@ -42,9 +42,10 @@ struct FrequentlyAskedQuestionList: View {
     ]
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             Text("Frequently Asked Questions")
                 .font(.system(size: 26, weight: .bold))
+                .padding(.horizontal, 20)
             
             Divider()
             
@@ -62,6 +63,7 @@ struct FrequentlyAskedQuestionList: View {
             }
         }
         .padding(.vertical, 16)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

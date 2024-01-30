@@ -231,6 +231,9 @@ struct CreateAccount: View {
             })
             .padding([.bottom], 16)
             
+            Text("By creating an account you agree to our [Privacy Policy](https://app.termly.io/document/privacy-policy/5dfc4b38-5260-4da5-9f7d-bcff246f6a4e)")
+                .defaultStyle(size: 14, opacity: 0.5)
+            
             Spacer()
             Spacer()
                         

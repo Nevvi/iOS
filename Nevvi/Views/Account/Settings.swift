@@ -69,7 +69,7 @@ struct Settings: View {
                 
                 Section {
                     NavigationLink {
-                        
+                        PrivacySettings()
                     } label: {
                         HStack {
                             Image(systemName: "checkmark.shield")

@@ -204,6 +204,7 @@ struct PersonalInformationEdit: View {
             phoneVerificationSheet
         }
         .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(leading: cancelButton)
         .toolbar(content: {
             if self.canSave {

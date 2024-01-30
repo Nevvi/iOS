@@ -175,6 +175,7 @@ struct ConnectionDetail: View {
                 .padding()
             }
             .background(ColorConstants.background)
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
 //                ToolbarItem(placement: .navigationBarTrailing) {
 //                    Image(systemName: "square.and.arrow.up")
