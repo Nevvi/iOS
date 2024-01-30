@@ -74,26 +74,6 @@ struct NevviApp: App {
                     .environmentObject(notificationStore)
                     .environmentObject(messagingStore)
                     .onAppear(perform: self.checkVersion)
-                    .onAppear {
-                        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, _ in
-                            guard success else {
-                                print("Notifications are disabled, not updating token")
-                                return
-                            }
-                            
-                            Messaging.messaging().token { token, error in
-                                if let error = error {
-                                    print("Error fetching FCM registration token: \(error)")
-                                } else if let token = token {
-                                    // TODO - only update on change?
-                                    self.notificationStore.updateToken(token: token)
-                                    print("FCM registration token: \(token)")
-                                }
-                            }
-                            
-                            UNUserNotificationCenter.current().setBadgeCount(0)
-                        }
-                    }
                     .onChange(of: scenePhase) { newPhase in
                         if newPhase == .active {
                             UNUserNotificationCenter.current().setBadgeCount(0)

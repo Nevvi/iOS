@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct NotificationSettings: View {
-    
-    @State private var enabled: Bool = false
+    @EnvironmentObject var notificationStore: NotificationStore
     
     var body: some View {
         VStack(alignment: .center, spacing: 16) {
@@ -20,7 +19,7 @@ struct NotificationSettings: View {
                 Text("Notification status: ")
                     .defaultStyle(size: 22, opacity: 1.0)
                 
-                Text("\(self.enabled ? "Enabled" : "Disabled")")
+                Text("\(self.notificationStore.hasAccess ? "Enabled" : "Disabled")")
                     .font(.system(size: 22, weight: .bold))
             }
             
@@ -35,22 +34,12 @@ struct NotificationSettings: View {
         .padding(.horizontal, 18)
         .navigationTitle("Notifications")
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear {
-            self.checkStatus()
-        }
-    }
-    
-    func checkStatus() -> Void {
-        let center = UNUserNotificationCenter.current()
-        center.getNotificationSettings { settings in
-            print(settings.authorizationStatus)
-            self.enabled = settings.authorizationStatus == .authorized
-        }
     }
 }
 
 struct NotificationSettings_Previews: PreviewProvider {
     static var previews: some View {
         NotificationSettings()
+            .environmentObject(NotificationStore())
     }
 }

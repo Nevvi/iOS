@@ -61,7 +61,7 @@ struct Settings: View {
                         HStack {
                             Image(systemName: "bell")
                                 .settingsButtonStyle()
-                            Text("Notifications")
+                            Text("Push Notifications")
                         }
                     }.padding(.vertical, 10)
                     

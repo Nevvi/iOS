@@ -15,9 +15,12 @@ class NotificationStore: ObservableObject {
     @Published var loading: Bool = false
     @Published var saving: Bool = false
     @Published var error: Swift.Error?
+    
+    @Published var hasAccess: Bool = false
+    @Published var canRequestAccess: Bool = false
         
     init() {
-        
+        self.checkRequestAccess()
     }
     
     private func url() throws -> URL {
@@ -36,6 +39,15 @@ class NotificationStore: ObservableObject {
         
         let userId: String? = self.authorization?.id
         return URL(string: "\(BuildConfiguration.shared.baseURL)/notification/v1/users/\(userId!)/notifications/token")!
+    }
+    
+    func checkRequestAccess() -> Void {
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
+            print(settings.authorizationStatus)
+            self.hasAccess = settings.authorizationStatus == .authorized
+            self.canRequestAccess = settings.authorizationStatus == .notDetermined
+        }
     }
     
     func updateToken(token: String) {

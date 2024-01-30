@@ -8,12 +8,14 @@
 import AlertToast
 import SwiftUI
 import NukeUI
+import FirebaseMessaging
 
 struct ConnectionList: View {
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var usersStore: UsersStore
     @EnvironmentObject var contactStore: ContactStore
+    @EnvironmentObject var notificationStore: NotificationStore
     @EnvironmentObject var connectionStore: ConnectionStore
     
     @State private var syncing: Bool = false
@@ -31,7 +33,9 @@ struct ConnectionList: View {
     var body: some View {
         NavigationView {
             VStack {
-                if self.contactStore.canRequestAccess() {
+                if self.notificationStore.canRequestAccess {
+                    requestNotificationsView
+                } else if self.contactStore.canRequestAccess() {
                     requestContactsView
                 } else if self.accountStore.firstName.isEmpty {
                     profileUpdateView
@@ -64,6 +68,48 @@ struct ConnectionList: View {
         .toast(isPresenting: $showToast){
             AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Contacts synced!")
         }
+        .onAppear {
+            if self.notificationStore.hasAccess {
+                self.updateMessagingToken()
+            }
+        }
+    }
+    
+    var requestNotificationsView: some View {
+        HStack(alignment: .center) {
+            VStack(alignment: .center, spacing: 24) {
+                Spacer()
+                
+                Image("NotificationBell")
+                
+                Text("Allow Notification Access")
+                    .defaultStyle(size: 24, opacity: 1.0)
+                
+                Text("We will only send you important notifications when someone requests you, accepts your request, or changes their information. We will never spam you with unnecessary notifications.")
+                    .defaultStyle(size: 16, opacity: 0.7)
+                    .multilineTextAlignment(.center)
+                
+                
+                Text("Allow Access".uppercased())
+                    .asPrimaryButton()
+                    .onTapGesture {
+                        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, _ in
+                            guard success else {
+                                print("Notifications are disabled, not updating token")
+                                self.notificationStore.checkRequestAccess()
+                                return
+                            }
+                            
+                            self.notificationStore.checkRequestAccess()
+                            self.updateMessagingToken()
+                        }
+                    }
+                
+                Spacer()
+                Spacer()
+            }
+            .padding()
+        }.padding()
     }
     
     var requestContactsView: some View {
@@ -250,6 +296,20 @@ struct ConnectionList: View {
         }
     }
     
+    func updateMessagingToken() -> Void {
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                print("Error fetching FCM registration token: \(error)")
+            } else if let token = token {
+                // TODO - only update on change?
+                self.notificationStore.updateToken(token: token)
+                print("FCM registration token: \(token)")
+            }
+        }
+        
+        UNUserNotificationCenter.current().setBadgeCount(0)
+    }
+    
     func updatedConnectionView(update: ContactStore.ContactSyncInfo) -> some View {
         VStack(alignment: .leading) {
             ZStack(alignment: .trailing) {
@@ -374,6 +434,7 @@ struct ConnectionList_Previews: PreviewProvider {
                                                    blockedUsers: modelData.connectionResponse.users)
     static let connectionStore = ConnectionStore()
     static let contactStore = ContactStore()
+    static let notificationStore = NotificationStore()
     static let accountStore = AccountStore(user: modelData.user)
     
     /**
@@ -414,5 +475,6 @@ struct ConnectionList_Previews: PreviewProvider {
             .environmentObject(contactStore)
             .environmentObject(accountStore)
             .environmentObject(connectionStore)
+            .environmentObject(notificationStore)
     }
 }
