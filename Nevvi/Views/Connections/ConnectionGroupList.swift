@@ -138,23 +138,24 @@ struct ConnectionGroupList: View {
                 .overlay(RoundedRectangle(cornerRadius: 16.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
                 .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
-                .padding([.top])
+                .padding([.top, .horizontal])
                 .disabled(self.creatingGroup)
             
             Divider().padding(.vertical)
             
             Spacer()
             
-            VStack {
-                HStack {
-                    Text("Add Members")
-                        .fontWeight(.light)
-                        .padding([.top, .bottom], 6)
-                    
-                    Spacer()
-                }
+            HStack {
+                Text("Add Members")
+                    .fontWeight(.light)
+                    .padding([.top, .bottom], 6)
                 
-                ScrollView {
+                Spacer()
+            }
+            .padding([.horizontal], 18)
+                
+            ScrollView {
+                VStack(spacing: 0) {
                     ForEach(self.connectionsStore.connections) { connection in
                         ZStack(alignment: .trailing) {
                             ConnectionRow(connection: connection)
@@ -166,6 +167,7 @@ struct ConnectionGroupList: View {
                                     .toolbarButtonStyle(bgColor: ColorConstants.primary)
                                     .foregroundColor(.white)
                                     .opacity(self.creatingGroup ? 0.5 : 1.0)
+                                    .padding(.trailing)
                                     .onTapGesture {
                                         if !creatingGroup {
                                             self.newGroupConnections.removeAll(where: { newConnection in newConnection == connection
@@ -176,6 +178,7 @@ struct ConnectionGroupList: View {
                                 Image(systemName: "plus")
                                     .toolbarButtonStyle()
                                     .opacity(self.creatingGroup ? 0.5 : 1.0)
+                                    .padding(.trailing)
                                     .onTapGesture {
                                         if !creatingGroup {
                                             self.newGroupConnections.append(connection)
@@ -223,13 +226,13 @@ struct ConnectionGroupList: View {
                             RoundedRectangle(cornerRadius: 24)
                                 .foregroundColor(ColorConstants.primary)
                         )
-                        .opacity(self.newGroupName.isEmpty ? 0.5 : 1.0)
+                        .opacity(self.newGroupName.isEmpty || self.creatingGroup ? 0.5 : 1.0)
                 }
-                .disabled(self.newGroupName.isEmpty)
+                .disabled(self.newGroupName.isEmpty || self.creatingGroup)
             }
+            .padding([.horizontal], 18)
         }
         .padding([.vertical], 12)
-        .padding([.horizontal], 18)
     }
     
     func isConnectionSelected(connection: Connection) -> Bool {

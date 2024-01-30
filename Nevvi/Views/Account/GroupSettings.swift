@@ -18,7 +18,7 @@ struct GroupSettings: View {
             }
             .pickerStyle(.segmented)
             .padding(.horizontal, 16)
-            .padding(.top, 16)
+            .padding(.vertical, 16)
 
             TabView(selection: $tabSelectedValue) {
                 PermissionGroupList().tag(0)

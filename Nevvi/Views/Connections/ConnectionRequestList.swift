@@ -71,13 +71,15 @@ struct ConnectionRequestList: View {
         .onAppear {
             self.suggestionsStore.users = []
             self.suggestionsStore.userCount = 0
-            self.contactStore.loadContactPhoneNumbers { (result: Result<[String], Error>) in
-                switch result {
-                case .success(let phoneNumbers):
-                    self.suggestionsStore.searchByPhoneNumbers(phoneNumbers: phoneNumbers)
-                case .failure(_):
-                    // TODO - show some sort of alert
-                    print("Something bad happened")
+            if self.contactStore.hasAccess() {
+                self.contactStore.loadContactPhoneNumbers { (result: Result<[String], Error>) in
+                    switch result {
+                    case .success(let phoneNumbers):
+                        self.suggestionsStore.searchByPhoneNumbers(phoneNumbers: phoneNumbers)
+                    case .failure(_):
+                        // TODO - show some sort of alert
+                        print("Something bad happened")
+                    }
                 }
             }
         }
