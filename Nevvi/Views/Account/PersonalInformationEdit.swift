@@ -240,7 +240,12 @@ struct PersonalInformationEdit: View {
                     }
                 } label: {
                     Text("Verify")
+                        .foregroundColor(ColorConstants.primary)
+                        .defaultStyle(size: 12, opacity: 1.0)
+                        .opacity(self.accountStore.saving ? 0.5 : 1.0)
+                        .padding(.trailing, 4)
                 }
+                .disabled(self.accountStore.saving)
                 .fontWeight(.bold)
                 .font(.system(size: 14))
             }
@@ -248,56 +253,45 @@ struct PersonalInformationEdit: View {
     }
     
     var phoneVerificationSheet: some View {
-        DynamicSheet(
-            VStack(alignment: .center) {
-                Text("Please enter the confirmation code we texted to you")
-                    .multilineTextAlignment(.center)
-                    .padding([.top], 50)
-                
-                Spacer()
-                
-                TextField("Code", text: self.$phoneVerificationCode)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .keyboardType(.numberPad)
-                    .padding()
-                    .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                
-                Spacer()
-                
-                Button {
-                    self.accountStore.confirmPhone(code: self.phoneVerificationCode) { (result: Result<AccountStore.ConfirmPhoneResponse, Error>) in
-                        switch result {
-                        case .success(_):
-                            // TODO - load this new value more dynamically instead of hard code?
-                            self.accountStore.phoneNumberConfirmed = true
-                            self.showPhoneVerification = false
-                        case .failure(let error):
-                            print("Something bad happened", error)
-                        }
-                    }
-                } label: {
-                    if self.accountStore.saving {
-                        ProgressView()
-                            .padding()
-                            .frame(width: 300, height: 50)
-                            .background(Color.green)
-                            .cornerRadius(15.0)
-                    } else {
-                        Text("Confirm Phone")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .frame(width: 300, height: 50)
-                            .background(self.phoneVerificationCode.count != 6 ? .gray : Color.green)
-                            .cornerRadius(15.0)
+        VStack(alignment: .center, spacing: 28) {
+            Text("Please enter the confirmation code we texted to you")
+                .defaultStyle(size: 22, opacity: 1.0)
+                .multilineTextAlignment(.center)
+            
+            TextField("Code", text: self.$phoneVerificationCode)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .keyboardType(.numberPad)
+                .padding()
+                .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                                    
+            Button {
+                self.accountStore.confirmPhone(code: self.phoneVerificationCode) { (result: Result<AccountStore.ConfirmPhoneResponse, Error>) in
+                    switch result {
+                    case .success(_):
+                        self.accountStore.phoneNumberConfirmed = true
+                        self.showPhoneVerification = false
+                    case .failure(let error):
+                        print("Something bad happened", error)
                     }
                 }
-                .disabled(self.phoneVerificationCode.count != 6)
-                .padding()
+            } label: {
+                if self.accountStore.saving {
+                    ProgressView()
+                        .padding()
+                        .frame(width: 300, height: 50)
+                        .background(Color.green)
+                        .cornerRadius(15.0)
+                } else {
+                    Text("Confirm Phone")
+                        .asPrimaryButton()
+                        .opacity(self.phoneVerificationCode.count != 6 ? 0.5 : 1.0)
+                }
             }
-            .padding(40)
-            .disabled(self.accountStore.saving)
-        )
+            .disabled(self.phoneVerificationCode.count != 6 || self.accountStore.saving)
+        }
+        .padding()
+        .disabled(self.accountStore.saving)
+        .presentationDetents([.fraction(0.40)])
     }
     
     var datePickerSheet: some View {
