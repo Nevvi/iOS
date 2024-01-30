@@ -89,7 +89,7 @@ struct Settings: View {
 //                    }.padding(.vertical, 10)
                     
                     NavigationLink {
-                        
+                        FrequentlyAskedQuestionList()
                     } label: {
                         HStack {
                             Image(systemName: "questionmark.square")
