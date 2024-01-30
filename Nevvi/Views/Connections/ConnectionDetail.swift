@@ -68,7 +68,7 @@ struct ConnectionDetail: View {
                             }
                         }
                         
-                        Link(destination: URL(string: "tel://:\(self.connectionStore.phoneNumber)")!) {
+                        Link(destination: URL(string: "tel:\(self.connectionStore.phoneNumber)")!) {
                             contactAction(
                                 image: "phone",
                                 text: "Call",
