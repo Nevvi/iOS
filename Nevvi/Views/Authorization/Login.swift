@@ -38,16 +38,16 @@ struct Login: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                 
-                VStack(alignment: .center, spacing: 20) {
+                VStack(alignment: .center, spacing: 16) {
                     Image("AppLogo")
                         .frame(width: 68, height: 68)
-                        .padding([.vertical], 32)
+                        .padding([.top], 64)
                     
                     Spacer()
                                         
                     Text("Log in to your account")
                         .defaultStyle(size: 26, opacity: 0.7)
-                        .padding([.vertical], 16)
+                        .padding([.bottom], 16)
                     
                     HStack(alignment: .center, spacing: 6) {
                         Image(systemName: "envelope")
@@ -160,19 +160,19 @@ struct Login: View {
                     
                     HStack {
                         Text("No account?")
-                            .defaultStyle(size: 14, opacity: 0.5)
+                            .defaultStyle(size: 16, opacity: 0.5)
 
                         NavigationLink {
                             CreateAccount(authStore: self.authStore, callback: self.callback)
                         } label: {
                             Text("Create an account")
-                                .foregroundColor(Color.blue)
-                                .defaultStyle(size: 14, opacity: 0.5)
+                                .foregroundColor(ColorConstants.primary)
+                                .defaultStyle(size: 16, opacity: 0.5)
                         }
                     }
                 }
                 .padding(.horizontal, 24)
-                .padding(.vertical, 48)
+                .padding(.bottom, 48)
                 .frame(width: Constants.Width, alignment: .top)
             }
             .edgesIgnoringSafeArea(.top)

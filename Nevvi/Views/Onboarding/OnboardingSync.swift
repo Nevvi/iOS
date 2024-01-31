@@ -24,32 +24,35 @@ struct OnboardingSync: View {
             VStack(alignment: .center, spacing: 20) {
                 Image("AppLogo")
                     .frame(width: 68, height: 68)
-                    .padding([.top], 80)
+                    .padding([.top], 64)
 
-                VStack(alignment: .center, spacing: 6) {
+                VStack(alignment: .center, spacing: 12) {
                     ZStack {
                         Image("OnboardingSyncBackground")
                             .resizable()
                             .scaledToFit()
                         
                         Image("OnboardingSync")
-                          .foregroundColor(.clear)
-                          .background(.clear)
-                          .cornerRadius(24)
-                          .shadow(color: Color(red: 0.06, green: 0.4, blue: 0.64).opacity(0.16), radius: 30, x: 0, y: 4)
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundColor(.clear)
+                            .background(.clear)
+                            .cornerRadius(24)
+                            .shadow(color: Color(red: 0.06, green: 0.4, blue: 0.64).opacity(0.16), radius: 30, x: 0, y: 4)
                     }
+                    .frame(maxHeight: 350)
                     
                     Text("Get Updated Information")
-                        .defaultStyle(size: 36, opacity: 1.0)
+                        .defaultStyle(size: 30, opacity: 1.0)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
-                        .padding([.top], -48)
+                        .padding([.top], -16)
                     
                     Text("Know as soon as a connection updates info you have access to.")
-                        .defaultStyle(size: 26, opacity: 0.7)
+                        .defaultStyle(size: 22, opacity: 0.7)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.center)
-                }.padding([.top], -48)
+                }
                 
                 Spacer()
                                 

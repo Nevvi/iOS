@@ -83,8 +83,7 @@ struct CreateAccount: View {
                 VStack(alignment: .center, spacing: 20) {
                     Image("AppLogo")
                         .frame(width: 68, height: 68)
-                        .padding([.top], 32)
-                        .padding([.bottom], 32)
+                        .padding([.top], 64)
                                       
                     if self.showConfirmationCode {
                         confirmationCodeView
@@ -93,7 +92,7 @@ struct CreateAccount: View {
                     }
                 }
                 .padding(.horizontal, 24)
-                .padding(.vertical, 48)
+                .padding(.bottom, 48)
                 .frame(width: Constants.Width, alignment: .top)
             }
             .edgesIgnoringSafeArea(.top)
@@ -109,7 +108,7 @@ struct CreateAccount: View {
     }
     
     var createAccountView: some View {
-        VStack {
+        VStack(spacing: 12) {
             Spacer()
             
             Text("Create free Nevvi account")
@@ -174,7 +173,7 @@ struct CreateAccount: View {
                 .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
             )
             
-            VStack(alignment: .leading, spacing: 15) {
+            VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Image(systemName: "checkmark.seal.fill")
                     Text("Contains uppercase letter")
@@ -239,11 +238,11 @@ struct CreateAccount: View {
                         
             HStack {
                 Text("Need to confirm an account?")
-                    .defaultStyle(size: 14, opacity: 0.5)
+                    .defaultStyle(size: 16, opacity: 0.5)
                 
                 Text("Enter code")
                     .foregroundColor(ColorConstants.primary)
-                    .defaultStyle(size: 14, opacity: 0.5)
+                    .defaultStyle(size: 16, opacity: 0.5)
                     .onTapGesture {
                         self.showConfirmationCode = true
                     }
@@ -253,7 +252,9 @@ struct CreateAccount: View {
     }
     
     var confirmationCodeView: some View {
-        VStack {
+        VStack(spacing: 12) {
+            Spacer()
+            
             Text("Confirm your Nevvi account")
                 .defaultStyle(size: 26, opacity: 0.7)
                 .multilineTextAlignment(.center)
@@ -294,9 +295,7 @@ struct CreateAccount: View {
                 .inset(by: 0.5)
                 .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
             )
-            
-            Spacer()
-            
+                        
             Button(action: self.confirmAccount, label: {
                 HStack {
                     Text("Confirm Account".uppercased())
@@ -318,14 +317,17 @@ struct CreateAccount: View {
                 .disabled(self.confirmAccountDisabled)
             })
             .padding([.bottom], 16)
+            
+            Spacer()
+            Spacer()
                         
             HStack {
                 Text("Need to create an account?")
-                    .defaultStyle(size: 14, opacity: 0.5)
+                    .defaultStyle(size: 16, opacity: 0.5)
 
                 Text("Create Account")
                     .foregroundColor(ColorConstants.primary)
-                    .defaultStyle(size: 14, opacity: 0.5)
+                    .defaultStyle(size: 16, opacity: 0.5)
                     .onTapGesture {
                         self.showConfirmationCode = false
                     }
