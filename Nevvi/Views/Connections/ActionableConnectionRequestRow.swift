@@ -101,6 +101,7 @@ struct ActionableConnectionRequestRow: View {
                             switch result {
                             case .success(_):
                                 self.connectionsStore.loadRequests()
+                                self.connectionsStore.load()
                             case .failure(let error):
                                 print("Something bad happened", error)
                             }

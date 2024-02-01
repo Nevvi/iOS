@@ -71,6 +71,11 @@ class AccountStore: ObservableObject {
         self.bio = user.bio == nil ? "" : user.bio!
     }
     
+    func updateImage(user: User) {
+        self.user?.profileImage = user.profileImage
+        self.profileImage = user.profileImage
+    }
+    
     func reset() {
         self.user = nil
         
@@ -252,7 +257,7 @@ class AccountStore: ObservableObject {
             URLSession.shared.postImage(for: try self.imageUrl(), for: image, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
-                    self.update(user: user)
+                    self.updateImage(user: user)
                 case .failure(let error):
                     self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))

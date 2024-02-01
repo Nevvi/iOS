@@ -127,6 +127,7 @@ struct PersonalInformation: View {
             .background(ColorConstants.background)
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.large)
+            .toolbar(content: {
 //            .toolbar(content: {
 //                ToolbarItem(placement: .navigationBarTrailing) {
 //                    // TODO
@@ -134,6 +135,14 @@ struct PersonalInformation: View {
 //                        .toolbarButtonStyle()
 //                }
 //            })
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: PersonalInformationEdit()) {
+                        Image(systemName: "square.and.pencil")
+                            .toolbarButtonStyle()
+                    }
+                }
+            })
         }
     }
     

@@ -311,6 +311,7 @@ struct PersonalInformationEdit: View {
                     print("Something bad happened", error)
                 case .success(_):
                     self.tryToggle()
+                    self.presentationMode.wrappedValue.dismiss()
                 }
             }
         }, label: {

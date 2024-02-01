@@ -29,6 +29,10 @@ struct ConnectionList: View {
     
     @StateObject var nameFilter = DebouncedText()
     @State var selectedGroup: String = "ALL"
+    
+    private var profileRequiresUpdate: Bool {
+        return self.accountStore.user?.firstName?.isEmpty ?? true
+    }
         
     var body: some View {
         NavigationView {
@@ -37,7 +41,7 @@ struct ConnectionList: View {
                     requestNotificationsView
                 } else if self.contactStore.canRequestAccess() {
                     requestContactsView
-                } else if self.accountStore.firstName.isEmpty {
+                } else if profileRequiresUpdate {
                     profileUpdateView
                 } else if self.nameFilter.text.isEmpty && self.connectionsStore.connectionCount == 0 {
                     noConnectionsView
