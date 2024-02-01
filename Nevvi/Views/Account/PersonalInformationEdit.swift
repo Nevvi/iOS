@@ -65,6 +65,8 @@ struct PersonalInformationEdit: View {
                     
                     TextField("Role & company name", text: self.$accountStore.bio)
                         .bioStyle(size: 16, opacity: 1.0)
+                        .textInputAutocapitalization(.sentences)
+                        .disableAutocorrection(false)
                 }.informationSection()
                 
                 VStack(alignment: .leading) {
@@ -72,6 +74,7 @@ struct PersonalInformationEdit: View {
                     
                     TextField("Phone Number", text: self.$accountStore.phoneNumber)
                         .defaultStyle(size: 16, opacity: 1.0)
+                        .keyboardType(.phonePad)
                     
                     Divider().padding([.vertical], 4)
                     
@@ -83,6 +86,9 @@ struct PersonalInformationEdit: View {
                     
                     TextField("Email", text: self.$accountStore.email)
                         .defaultStyle(size: 16, opacity: 1.0)
+                        .keyboardType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .disableAutocorrection(true)
                     
                     Divider().padding([.vertical], 4)
                     
@@ -169,6 +175,11 @@ struct PersonalInformationEdit: View {
                     
                     fieldPermissionGroupPicker(field: "birthday")
                 }.informationSection()
+                
+                if self.canSave {
+                    Text("Update".uppercased())
+                        .asPrimaryButton()
+                }
             }
             .padding()
         }

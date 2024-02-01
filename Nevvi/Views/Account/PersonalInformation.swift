@@ -110,15 +110,7 @@ struct PersonalInformation: View {
                     
                     NavigationLink(destination: PersonalInformationEdit()) {
                         Text("Edit Profile".uppercased())
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity)
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding(.vertical, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 24)
-                                    .foregroundColor(ColorConstants.primary)
-                            )
+                            .asPrimaryButton()
                     }
                 }
                 .padding()

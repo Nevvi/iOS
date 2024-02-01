@@ -169,8 +169,6 @@ extension TextField {
         return self
             .font(Font.custom("SF Pro", size: finalSize).weight(.semibold))
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
-            .textInputAutocapitalization(.never)
-            .disableAutocorrection(true)
             .padding(.horizontal, 10)
             .padding(.vertical, 12)
             .frame(maxWidth: .infinity, alignment: .leading)
