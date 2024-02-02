@@ -1,23 +1,15 @@
 [
     {
-        "requestingUserId": "49259105-818b-4e85-881b-e12122c4d272",
-        "requestedUserId": "01a4eff9-bd17-4f3d-89c7-d634060367ee",
-        "requestText": "Tyler would like to connect!",
+        "requestingUserId": "261a7b1b-aff8-465d-af27-d3da70a46e9a",
+        "requestedUserId": "870744d2-a197-46cc-968d-43feb8a0d0d2",
+        "requesterFirstName": "Tyler",
+        "requesterLastName": "Cobb",
         "requestingPermissionGroupName": "ALL",
         "requesterImage": "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png",
-    },
-    {
-        "requestingUserId": "49259105-818b-4e85-881b-e12122c4d272",
-        "requestedUserId": "01a4eff9-bd17-4f3d-89c7-d634060367ee",
-        "requestText": "Tyler would like to connect!",
-        "requestingPermissionGroupName": "ALL",
-        "requesterImage": "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png",
-    },
-    {
-        "requestingUserId": "49259105-818b-4e85-881b-e12122c4d272",
-        "requestedUserId": "01a4eff9-bd17-4f3d-89c7-d634060367ee",
-        "requestText": "Tyler would like to connect!",
-        "requestingPermissionGroupName": "ALL",
-        "requesterImage": "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png",
+        "status": "PENDING",
+        "createDate": "2024-02-02T01:36:43.156Z",
+        "createBy": "HARDCODED_FOR_NOW",
+        "updateDate": "2024-02-02T01:36:43.156Z",
+        "updateBy": "HARDCODED_FOR_NOW"
     }
 ]

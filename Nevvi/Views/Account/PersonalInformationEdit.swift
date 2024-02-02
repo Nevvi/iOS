@@ -179,6 +179,17 @@ struct PersonalInformationEdit: View {
                 if self.canSave {
                     Text("Update".uppercased())
                         .asPrimaryButton()
+                        .onTapGesture {
+                            self.accountStore.save { (result: Result<User, Error>) in
+                                switch result {
+                                case .failure(let error):
+                                    print("Something bad happened", error)
+                                case .success(_):
+                                    self.tryToggle()
+                                    self.presentationMode.wrappedValue.dismiss()
+                                }
+                            }
+                        }
                 }
             }
             .padding()

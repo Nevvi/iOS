@@ -10,7 +10,8 @@ import Foundation
 struct ConnectionRequest: Hashable, Codable {
     var requestingUserId: String
     var requestedUserId: String
-    var requestText: String
+    var requesterFirstName: String
+    var requesterLastName: String
     var requestingPermissionGroupName: String
     var requesterImage: String
 }

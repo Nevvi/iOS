@@ -21,8 +21,9 @@ struct ActionableConnectionRequestRow: View {
         HStack(alignment: .center, spacing: 12) {
             ProfileImage(imageUrl: request.requesterImage, height: 60, width: 60)
             
-            VStack(alignment: .leading) {
-                Text(self.request.requestText)
+            VStack(alignment: .leading, spacing: 6) {
+                Text("\(request.requesterFirstName) \(request.requesterLastName)")
+                    .font(.system(size: 20, weight: .semibold))
                 HStack {
                     approveButton
                     rejectButton
@@ -55,7 +56,7 @@ struct ActionableConnectionRequestRow: View {
                 .fontWeight(.bold)
                 .font(.headline)
                 .foregroundColor(.white)
-                .padding(.vertical, 12)
+                .padding(.vertical, 10)
                 .padding(.horizontal, 16)
                 .background(
                     RoundedRectangle(cornerRadius: 24)
@@ -72,7 +73,7 @@ struct ActionableConnectionRequestRow: View {
                 .fontWeight(.bold)
                 .font(.headline)
                 .foregroundColor(ColorConstants.badgeTextWarning)
-                .padding(.vertical, 12)
+                .padding(.vertical, 10)
                 .padding(.horizontal, 16)
                 .background(
                     RoundedRectangle(cornerRadius: 24)

@@ -224,7 +224,7 @@ struct ConnectionDetail: View {
     var editPermissionGroup: some View {
         VStack {
             ScrollView {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 12) {
                     Text("Change Permission Group")
                       .font(Font.custom("SF Pro", size: 20).weight(.medium))
                       .foregroundColor(Color(red: 0.12, green: 0.19, blue: 0.29))
@@ -272,7 +272,7 @@ struct ConnectionDetail: View {
                                         }
                                 }
                             }.padding()
-                        }.padding([.leading, .trailing, .bottom])
+                        }.padding([.horizontal])
                     }
                     .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
                 }
@@ -282,56 +282,73 @@ struct ConnectionDetail: View {
     }
     
     var editConnectionGroups: some View {
-        VStack {
-            ScrollView {
-                VStack(alignment: .leading) {
-                    Text("Select Connection Group(s)")
-                      .font(Font.custom("SF Pro", size: 20).weight(.medium))
-                      .foregroundColor(Color(red: 0.12, green: 0.19, blue: 0.29))
-                      .padding([.leading, .bottom], 16)
-                    
-                    ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
-                        ZStack(alignment: .trailing) {
-                            ConnectionGroupRow(connectionGroup: group)
+        VStack(spacing: 0) {
+            if self.connectionGroupsStore.groups.isEmpty {
+                HStack(alignment: .center) {
+                    if self.connectionGroupsStore.loading {
+                        ProgressView()
+                    } else {
+                        VStack(alignment: .center, spacing: 24) {
+                            Image("UpdateProfile")
                             
-                            Spacer()
-                            
-                            if group.connections.contains(self.connectionStore.id) {
-                                Image(systemName: "checkmark")
-                                    .toolbarButtonStyle(bgColor: ColorConstants.primary)
-                                    .foregroundColor(.white)
-                                    .opacity(self.connectionGroupsStore.loading ? 0.5 : 1.0)
-                                    .opacity(self.connectionGroupsStore.loading ? 0.5 : 1.0)
-                                    .padding(.horizontal, 16)
-                                    .onTapGesture {
-                                        self.connectionGroupsStore.removeFromGroup(groupId: group.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
+                            Text("No connection groups.\nCreate connection groups in your settings.")
+                                .defaultStyle(size: 24, opacity: 1.0)
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding(.horizontal)
+                    }
+                }
+            } else {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Select Connection Group(s)")
+                            .font(Font.custom("SF Pro", size: 20).weight(.medium))
+                            .foregroundColor(Color(red: 0.12, green: 0.19, blue: 0.29))
+                            .padding([.leading, .bottom], 16)
+                        
+                        ForEach(self.connectionGroupsStore.groups, id: \.name) { group in
+                            ZStack(alignment: .trailing) {
+                                ConnectionGroupRow(connectionGroup: group)
+                                
+                                Spacer()
+                                
+                                if group.connections.contains(self.connectionStore.id) {
+                                    Image(systemName: "checkmark")
+                                        .toolbarButtonStyle(bgColor: ColorConstants.primary)
+                                        .foregroundColor(.white)
+                                        .opacity(self.connectionGroupsStore.loading ? 0.5 : 1.0)
+                                        .opacity(self.connectionGroupsStore.loading ? 0.5 : 1.0)
+                                        .padding(.horizontal, 16)
+                                        .onTapGesture {
+                                            self.connectionGroupsStore.removeFromGroup(groupId: group.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
                                                 switch result {
-                                                    case .success(_):
+                                                case .success(_):
                                                     self.connectionGroupsStore.load()
-                                                    case .failure(let error):
+                                                case .failure(let error):
                                                     print("Failed to remove from group", error)
                                                 }
                                             }
-                                    }
-                            } else {
-                                Image(systemName: "plus")
-                                    .toolbarButtonStyle()
-                                    .opacity(self.connectionGroupsStore.loading ? 0.5 : 1.0)
-                                    .padding(.horizontal, 16)
-                                    .onTapGesture {
-                                        self.connectionGroupsStore.addToGroup(groupId: group.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
+                                        }
+                                } else {
+                                    Image(systemName: "plus")
+                                        .toolbarButtonStyle()
+                                        .opacity(self.connectionGroupsStore.loading ? 0.5 : 1.0)
+                                        .padding(.horizontal, 16)
+                                        .onTapGesture {
+                                            self.connectionGroupsStore.addToGroup(groupId: group.id, userId: self.connectionStore.id) { (result: Result<Bool, Error>) in
                                                 switch result {
-                                                    case .success(_):
+                                                case .success(_):
                                                     self.connectionGroupsStore.load()
-                                                    case .failure(let error):
+                                                case .failure(let error):
                                                     print("Failed to add to group", error)
                                                 }
                                             }
-                                    }
-                            }
-                        }.padding()
+                                        }
+                                }
+                            }.padding(.horizontal)
+                        }
+                        .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
                     }
-                    .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
                 }
             }
         }
