@@ -196,15 +196,23 @@ struct ConnectionGroupList: View {
                     self.connectionGroupsStore.create(name: self.newGroupName) { (result: Result<ConnectionGroup, Error>) in
                         switch result {
                         case .success(let newGroup):
-                            // TODO - bulk add members to group
-                            self.newGroupConnections.forEach { connection in
-                                self.connectionGroupsStore.addToGroup(groupId: newGroup.id, userId: connection.id) { _ in
-                                    if connection == self.newGroupConnections.last {
-                                        self.showGroupForm = false
-                                        self.creatingGroup = false
-                                        self.newGroupName = ""
-                                        self.newGroupConnections = []
-                                        self.connectionGroupsStore.load()
+                            if self.newGroupConnections.isEmpty {
+                                self.showGroupForm = false
+                                self.creatingGroup = false
+                                self.newGroupName = ""
+                                self.newGroupConnections = []
+                                self.connectionGroupsStore.load()
+                            } else {
+                                // TODO - bulk add members to group
+                                self.newGroupConnections.forEach { connection in
+                                    self.connectionGroupsStore.addToGroup(groupId: newGroup.id, userId: connection.id) { _ in
+                                        if connection == self.newGroupConnections.last {
+                                            self.showGroupForm = false
+                                            self.creatingGroup = false
+                                            self.newGroupName = ""
+                                            self.newGroupConnections = []
+                                            self.connectionGroupsStore.load()
+                                        }
                                     }
                                 }
                             }

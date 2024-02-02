@@ -28,10 +28,14 @@ struct ConnectionList: View {
     @State private var showToast: Bool = false
     
     @StateObject var nameFilter = DebouncedText()
-    @State var selectedGroup: String = "ALL"
+    @State var selectedGroup: String? = nil
     
     private var profileRequiresUpdate: Bool {
         return self.accountStore.user?.firstName?.isEmpty ?? true
+    }
+    
+    private var noConnectionsExist: Bool {
+        self.selectedGroup == nil && self.nameFilter.text.isEmpty && self.connectionsStore.connectionCount == 0
     }
         
     var body: some View {
@@ -43,7 +47,7 @@ struct ConnectionList: View {
                     requestContactsView
                 } else if profileRequiresUpdate {
                     profileUpdateView
-                } else if self.nameFilter.text.isEmpty && self.connectionsStore.connectionCount == 0 {
+                } else if noConnectionsExist {
                     noConnectionsView
                 } else {
                     connectionsView
@@ -203,57 +207,90 @@ struct ConnectionList: View {
     }
     
     var connectionsView: some View {
-        ScrollView(.vertical) {
-            VStack {
-                ScrollView(.horizontal) {
-                    HStack(spacing: 6) {
-                        ForEach(self.accountStore.permissionGroups, id: \.name) { group in
-                            if group.name.uppercased() == self.selectedGroup.uppercased() {
-                                Text(group.name.uppercased())
-                                    .asSelectedGroupFilter()
-                            } else {
-                                Text(group.name.uppercased())
-                                    .asGroupFilter()
-                                    .onTapGesture {
-                                        self.selectedGroup = group.name
-                                    }
+        VStack {
+            HStack(alignment: .center, spacing: 4) {
+                TextField("Search", text: self.$nameFilter.text)
+                    .disableAutocorrection(true)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 15.5)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(.white)
+                    .cornerRadius(40)
+                    .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 4)
+                    .overlay(
+                      RoundedRectangle(cornerRadius: 40)
+                        .inset(by: 0.5)
+                        .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.08), lineWidth: 1)
+                    )
+                
+                Image(systemName: "xmark")
+                    .toolbarButtonStyle()
+                    .onTapGesture {
+                        self.nameFilter.text = ""
+                    }
+            }
+            .padding(.horizontal, 12)
+            .padding(.top, 4)
+            .padding(.bottom, 12)
+            
+            ScrollView(.vertical) {
+                VStack {
+                    ScrollView(.horizontal) {
+                        HStack(spacing: 6) {
+                            ForEach(self.accountStore.permissionGroups, id: \.name) { group in
+                                if group.name.uppercased() == self.selectedGroup?.uppercased() {
+                                    Text(group.name.uppercased())
+                                        .asSelectedGroupFilter()
+                                        .onTapGesture {
+                                            self.selectedGroup = nil
+                                        }
+                                } else {
+                                    Text(group.name.uppercased())
+                                        .asGroupFilter()
+                                        .onTapGesture {
+                                            self.selectedGroup = group.name
+                                        }
+                                }
                             }
                         }
-                    }
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 20)
-                }
-                
-                
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Total Members (\(self.connectionsStore.connectionCount))")
-                        .defaultStyle(size: 14, opacity: 0.4)
+                        .padding(.vertical, 4)
                         .padding(.horizontal, 20)
-                        .padding(.vertical, 6)
-                        .frame(width: .infinity, alignment: .center)
-                    
-                    ForEach(self.connectionsStore.connections) { connection in
-                        NavigationLink {
-                            NavigationLazyView(
-                                ConnectionDetail()
-                                    .onAppear {
-                                        loadConnection(connectionId: connection.id)
-                                    }
-                            )
-                        } label: {
-                            ConnectionRow(connection: connection)
-                        }
                     }
-                    .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
+                    
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            Text("Total Members (\(self.connectionsStore.connectionCount))")
+                                .defaultStyle(size: 14, opacity: 0.4)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 6)
+                                .frame(width: .infinity, alignment: .center)
+                            
+                            Spacer()
+                        }
+                        
+                        ForEach(self.connectionsStore.connections) { connection in
+                            NavigationLink {
+                                NavigationLazyView(
+                                    ConnectionDetail()
+                                        .onAppear {
+                                            loadConnection(connectionId: connection.id)
+                                        }
+                                )
+                            } label: {
+                                ConnectionRow(connection: connection)
+                            }
+                        }
+                        .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
+                    }
+                    .frame(width: .infinity, alignment: .topLeading)
+                    
+                    Spacer()
                 }
-                .frame(width: .infinity, alignment: .topLeading)
-                
-                Spacer()
             }
         }
         .navigationTitle("Connections")
         .navigationBarTitleDisplayMode(.large)
-        .searchable(text: self.$nameFilter.text)
         .disableAutocorrection(true)
         .onChange(of: self.nameFilter.debouncedText) { text in
             self.connectionsStore.load(nameFilter: text, permissionGroup: self.selectedGroup)

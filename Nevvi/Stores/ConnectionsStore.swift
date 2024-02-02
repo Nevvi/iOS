@@ -44,7 +44,7 @@ class ConnectionsStore : ObservableObject {
         self.blockedUserCount = blockedUsers.count
     }
     
-    private func url(nameFilter: String?, inSync: Bool?) throws -> URL {
+    private func url(nameFilter: String?, permissionGroup: String?, inSync: Bool?) throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")
         }
@@ -52,8 +52,12 @@ class ConnectionsStore : ObservableObject {
         let userId: String? = self.authorization?.id
         var urlString = "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections"
         
-        if nameFilter != nil && nameFilter!.count >= 3 {
+        if nameFilter != nil && nameFilter!.count > 0 {
             urlString = "\(urlString)?name=\(nameFilter!)"
+        }
+        
+        if permissionGroup != nil {
+            urlString = "\(urlString)\(urlString.contains("?") ? "&": "?")permissionGroup=\(permissionGroup!)"
         }
         
         if inSync != nil {
@@ -107,7 +111,7 @@ class ConnectionsStore : ObservableObject {
         do {
             self.loading = true
             let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.url(nameFilter: nameFilter, inSync: nil), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+            URLSession.shared.fetchData(for: try self.url(nameFilter: nameFilter, permissionGroup: permissionGroup, inSync: nil), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     self.connections = response.users
@@ -126,7 +130,7 @@ class ConnectionsStore : ObservableObject {
     func loadOutOfSync(callback: @escaping (Result<ConnectionResponse, Error>) -> Void) {
         do {
             let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.url(nameFilter: nil, inSync: false), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+            URLSession.shared.fetchData(for: try self.url(nameFilter: nil, permissionGroup: nil, inSync: false), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     self.outOfSyncCount = response.count
