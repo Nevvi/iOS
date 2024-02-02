@@ -225,6 +225,7 @@ struct PersonalInformationEdit: View {
     }
     
     var cancelButton : some View { Button(action: {
+        self.accountStore.resetChanges()
         self.presentationMode.wrappedValue.dismiss()
         }) {
             Text("Back")

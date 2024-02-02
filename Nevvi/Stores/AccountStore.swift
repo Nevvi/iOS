@@ -76,6 +76,14 @@ class AccountStore: ObservableObject {
         self.profileImage = user.profileImage
     }
     
+    func resetChanges() {
+        guard let user = user else {
+            return
+        }
+        
+        self.update(user: user)
+    }
+    
     func reset() {
         self.user = nil
         
@@ -258,6 +266,7 @@ class AccountStore: ObservableObject {
                 switch result {
                 case .success(let user):
                     self.updateImage(user: user)
+                    callback(.success(user))
                 case .failure(let error):
                     self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))

@@ -93,6 +93,7 @@
 		04B949762960A94A00703523 /* UsersStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949752960A94A00703523 /* UsersStore.swift */; };
 		04B949782960AF9B00703523 /* DebouncedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949772960AF9B00703523 /* DebouncedText.swift */; };
 		04B9497A2960B3E900703523 /* NewConnectionRequestRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949792960B3E900703523 /* NewConnectionRequestRow.swift */; };
+		273CBAB82B6C5FD00051789B /* Mantis in Frameworks */ = {isa = PBXBuildFile; productRef = 273CBAB72B6C5FD00051789B /* Mantis */; };
 		277D25152B55A23000D1D717 /* NotificationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25142B55A23000D1D717 /* NotificationList.swift */; };
 		277D25172B55A96400D1D717 /* PermissionGroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25162B55A96400D1D717 /* PermissionGroupRow.swift */; };
 		277D251A2B55ADF000D1D717 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 277D25192B55ADF000D1D717 /* WrappingHStack */; };
@@ -240,6 +241,7 @@
 				04B158502987F49600846FDB /* FirebaseAnalytics in Frameworks */,
 				04B1584A2987F47B00846FDB /* NukeExtensions in Frameworks */,
 				04B158542987F49600846FDB /* FirebaseFirestore in Frameworks */,
+				273CBAB82B6C5FD00051789B /* Mantis in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -559,6 +561,7 @@
 				04B158552987F49600846FDB /* FirebaseMessaging */,
 				04B1585C29903AFA00846FDB /* AlertToast */,
 				277D25192B55ADF000D1D717 /* WrappingHStack */,
+				273CBAB72B6C5FD00051789B /* Mantis */,
 			);
 			productName = Nevvi;
 			productReference = 04B948F8295DEA5C00703523 /* Nevvi.app */;
@@ -594,6 +597,7 @@
 				0414130D297C5CFC008A35DA /* XCRemoteSwiftPackageReference "Nuke" */,
 				04B1585B29903AF900846FDB /* XCRemoteSwiftPackageReference "AlertToast" */,
 				277D25182B55ADF000D1D717 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
+				273CBAB62B6C5FD00051789B /* XCRemoteSwiftPackageReference "Mantis" */,
 			);
 			productRefGroup = 04B948F9295DEA5C00703523 /* Products */;
 			projectDirPath = "";
@@ -815,7 +819,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -906,7 +910,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1058,7 +1062,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1095,7 +1099,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1183,6 +1187,14 @@
 				minimumVersion = 4.0.0;
 			};
 		};
+		273CBAB62B6C5FD00051789B /* XCRemoteSwiftPackageReference "Mantis" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/guoyingtao/Mantis.git";
+			requirement = {
+				kind = exactVersion;
+				version = 2.18.0;
+			};
+		};
 		277D25182B55ADF000D1D717 /* XCRemoteSwiftPackageReference "WrappingHStack" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ksemianov/WrappingHStack";
@@ -1238,6 +1250,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 04B1585B29903AF900846FDB /* XCRemoteSwiftPackageReference "AlertToast" */;
 			productName = AlertToast;
+		};
+		273CBAB72B6C5FD00051789B /* Mantis */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 273CBAB62B6C5FD00051789B /* XCRemoteSwiftPackageReference "Mantis" */;
+			productName = Mantis;
 		};
 		277D25192B55ADF000D1D717 /* WrappingHStack */ = {
 			isa = XCSwiftPackageProductDependency;

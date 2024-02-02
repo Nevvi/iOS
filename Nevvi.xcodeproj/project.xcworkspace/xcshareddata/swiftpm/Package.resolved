@@ -91,6 +91,15 @@
       }
     },
     {
+      "identity" : "mantis",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/guoyingtao/Mantis.git",
+      "state" : {
+        "revision" : "c7152fa5cd09cfb71d803c652db4032640ceb1b0",
+        "version" : "2.18.0"
+      }
+    },
+    {
       "identity" : "nanopb",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/firebase/nanopb.git",
