@@ -35,7 +35,7 @@ struct ConnectionList: View {
     }
     
     private var noConnectionsExist: Bool {
-        self.selectedGroup == nil && self.nameFilter.text.isEmpty && self.connectionsStore.connectionCount == 0
+        return self.selectedGroup == nil && self.nameFilter.text.isEmpty && self.connectionsStore.connectionCount == 0 && !self.connectionsStore.loading
     }
         
     var body: some View {
@@ -53,9 +53,21 @@ struct ConnectionList: View {
                     connectionsView
                 }
             }
+            .onChange(of: self.nameFilter.debouncedText) { text in
+                self.connectionsStore.load(nameFilter: text, permissionGroup: self.selectedGroup)
+            }
+            .onChange(of: self.selectedGroup) { group in
+                self.connectionsStore.load(nameFilter: self.nameFilter.text, permissionGroup: group)
+            }
+            .refreshable {
+                self.connectionsStore.load(nameFilter: self.nameFilter.debouncedText, permissionGroup: self.selectedGroup)
+                self.connectionsStore.loadOutOfSync { _ in }
+            }
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Connections").navigationHeader()
+                    Text("Connections")
+                        .navigationHeader()
+                        .padding(.top)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -68,6 +80,7 @@ struct ConnectionList: View {
                                 }
                             }
                             .opacity(self.syncing ? 0.5 : 1.0)
+                            .padding(.top)
                     }
                 }
             })
@@ -294,16 +307,6 @@ struct ConnectionList: View {
             }
         }
         .disableAutocorrection(true)
-        .onChange(of: self.nameFilter.debouncedText) { text in
-            self.connectionsStore.load(nameFilter: text, permissionGroup: self.selectedGroup)
-        }
-        .onChange(of: self.selectedGroup) { group in
-            self.connectionsStore.load(nameFilter: self.nameFilter.text, permissionGroup: group)
-        }
-        .refreshable {
-            self.connectionsStore.load(nameFilter: self.nameFilter.debouncedText, permissionGroup: self.selectedGroup)
-            self.connectionsStore.loadOutOfSync { _ in }
-        }
     }
     
     var contactUpdatesSheet: some View {

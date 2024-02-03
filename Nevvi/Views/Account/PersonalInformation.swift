@@ -116,10 +116,13 @@ struct PersonalInformation: View {
                 .padding(.bottom)
                 .background(ColorConstants.background)
             }
+            .padding([.horizontal, .bottom])
             .background(ColorConstants.background)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Profile").navigationHeader()
+                    Text("Profile")
+                        .navigationHeader()
+                        .padding(.top)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -127,6 +130,7 @@ struct PersonalInformation: View {
                         Image(systemName: "square.and.pencil")
                             .toolbarButtonStyle()
                     }
+                    .padding(.top)
                 }
             }
         }

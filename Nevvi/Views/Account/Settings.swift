@@ -150,7 +150,9 @@ struct Settings: View {
             .listStyle(.insetGrouped)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Settings").navigationHeader()
+                    Text("Settings")
+                        .navigationHeader()
+                        .padding(.top)
                 }
             }
         }

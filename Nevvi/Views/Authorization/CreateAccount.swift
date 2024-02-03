@@ -18,6 +18,8 @@ struct CreateAccount: View {
     @State private var showConfirmationCode: Bool
     @State private var hidePassword: Bool = true
     
+    @State private var showPrivacySheet: Bool = false
+    
     
     @ObservedObject var authStore: AuthorizationStore
     
@@ -230,8 +232,17 @@ struct CreateAccount: View {
             })
             .padding([.bottom], 16)
             
-            Text("By creating an account you agree to our [Privacy Policy](https://app.termly.io/document/privacy-policy/5dfc4b38-5260-4da5-9f7d-bcff246f6a4e)")
-                .defaultStyle(size: 14, opacity: 0.5)
+            HStack {
+                Text("By creating an account you agree to our")
+                    .defaultStyle(size: 14, opacity: 0.5)
+                
+                Text("Privacy Policy")
+                    .foregroundColor(ColorConstants.primary)
+                    .defaultStyle(size: 14, opacity: 0.5)
+                    .onTapGesture {
+                        showPrivacySheet = true
+                    }
+            }
             
             Spacer()
             Spacer()
@@ -249,6 +260,10 @@ struct CreateAccount: View {
             }
         }
         .disabled(self.authStore.signingUp)
+        .sheet(isPresented: self.$showPrivacySheet) {
+            PrivacySettings()
+                .presentationDetents([.large])
+        }
     }
     
     var confirmationCodeView: some View {

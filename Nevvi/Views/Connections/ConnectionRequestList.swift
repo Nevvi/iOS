@@ -39,7 +39,6 @@ struct ConnectionRequestList: View {
                         
                         if self.notConnectedUsers.count > 0 {
                             suggestionsView
-                                .padding([.top], 12)
                         }
                     }
                 }
@@ -50,7 +49,9 @@ struct ConnectionRequestList: View {
             }
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Text("New Connections").navigationHeader()
+                    Text("New Connections")
+                        .navigationHeader()
+                        .padding(.top)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -58,7 +59,9 @@ struct ConnectionRequestList: View {
                         Image(systemName: "plus.magnifyingglass")
                             .toolbarButtonStyle()
                             .foregroundColor(.black)
-                    }.padding(.trailing, -8)
+                    }
+                    .padding(.trailing, -8)
+                    .padding(.top)
                     
                     // TODO
 //                    Image(systemName: "qrcode.viewfinder").toolbarButtonStyle()
@@ -107,6 +110,7 @@ struct ConnectionRequestList: View {
             }
             .redacted(when: self.connectionsStore.deletingRequest || self.connectionsStore.loadingRequests, redactionType: .customPlaceholder)
         }
+        .padding(.top)
     }
     
     var suggestionsView: some View {

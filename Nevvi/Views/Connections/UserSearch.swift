@@ -37,9 +37,7 @@ struct UserSearch: View {
                         self.nameFilter.text = ""
                     }
             }
-            .padding(.horizontal, 12)
-            .padding(.top, 4)
-            .padding(.bottom, 12)
+            .padding(12)
             
             if self.usersStore.userCount == 0 {
                 if (self.nameFilter.debouncedText.count < 3) {
