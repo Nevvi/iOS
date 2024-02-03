@@ -239,14 +239,20 @@ struct ConnectionList: View {
                                 if group.name.uppercased() == self.selectedGroup?.uppercased() {
                                     Text(group.name.uppercased())
                                         .asSelectedGroupFilter()
+                                        .opacity(self.connectionsStore.loading ? 0.7 : 1.0)
                                         .onTapGesture {
-                                            self.selectedGroup = nil
+                                            if !self.connectionsStore.loading {
+                                                self.selectedGroup = nil
+                                            }
                                         }
                                 } else {
                                     Text(group.name.uppercased())
                                         .asGroupFilter()
+                                        .opacity(self.connectionsStore.loading ? 0.7 : 1.0)
                                         .onTapGesture {
-                                            self.selectedGroup = group.name
+                                            if !self.connectionsStore.loading {
+                                                self.selectedGroup = group.name
+                                            }
                                         }
                                 }
                             }
