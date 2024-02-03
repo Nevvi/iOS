@@ -72,6 +72,7 @@ struct ConnectionList: View {
                                 .opacity(self.syncing ? 0.5 : 1.0)
                         }
                     }
+                    .padding(.leading, 8)
                     .padding(.horizontal, 16)
                     .padding(.vertical)
                     .frame(width: Constants.Width, alignment: .center)

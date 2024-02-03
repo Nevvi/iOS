@@ -66,6 +66,7 @@ struct ConnectionRequestList: View {
 //                        Image(systemName: "qrcode.viewfinder")
 //                            .toolbarButtonStyle()
                     }
+                    .padding(.leading, 8)
                     .padding(.horizontal, 16)
                     .padding(.top)
                     .padding(.bottom, 0)

@@ -135,6 +135,7 @@ struct PersonalInformation: View {
                         }
                         .padding(.trailing, -10)
                     }
+                    .padding(.leading, 8)
                     .padding(.horizontal, 16)
                     .padding(.top)
                     .frame(width: Constants.Width, alignment: .center)

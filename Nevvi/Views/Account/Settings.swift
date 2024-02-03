@@ -156,6 +156,7 @@ struct Settings: View {
                         
                         Spacer()
                     }
+                    .padding(.leading, 8)
                     .padding(.horizontal, 16)
                     .padding(.top)
                     .frame(width: Constants.Width, alignment: .center)
