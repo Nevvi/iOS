@@ -179,7 +179,12 @@ struct PersonalInformationEdit: View {
                 if self.canSave {
                     Text("Update".uppercased())
                         .asPrimaryButton()
+                        .opacity(self.accountStore.saving ? 0.7 : 1.0)
                         .onTapGesture {
+                            if self.accountStore.saving {
+                                return
+                            }
+                            
                             self.accountStore.save { (result: Result<User, Error>) in
                                 switch result {
                                 case .failure(let error):
@@ -199,6 +204,9 @@ struct PersonalInformationEdit: View {
             self.tryToggle()
         })
         .onChange(of: self.accountStore.lastName, perform: { newValue in
+            self.tryToggle()
+        })
+        .onChange(of: self.accountStore.bio, perform: { newValue in
             self.tryToggle()
         })
         .onChange(of: self.accountStore.phoneNumber, perform: { newValue in
@@ -367,6 +375,7 @@ struct PersonalInformationEdit: View {
         
         let didChange = didPropChange(type: String.self, a: user.firstName, b: self.accountStore.firstName) ||
         didPropChange(type: String.self, a: user.lastName, b: self.accountStore.lastName) ||
+        didPropChange(type: String.self, a: user.bio, b: self.accountStore.bio) ||
         didPropChange(type: String.self, a: user.phoneNumber, b: self.accountStore.phoneNumber) ||
         didPropChange(type: String.self, a: user.address.street, b: addressModel.street) ||
         didPropChange(type: String.self, a: user.address.unit, b: addressModel.unit) ||

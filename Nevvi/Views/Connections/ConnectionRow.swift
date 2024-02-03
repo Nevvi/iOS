@@ -31,11 +31,14 @@ struct ConnectionRow: View {
                 }
             }
             
-            VStack {
+            VStack(alignment: .leading, spacing: 4) {
                 Text("\(connection.firstName) \(connection.lastName)")
                     .defaultStyle(size: 18, opacity: 1.0)
                 
-                // TODO - add phone/email/bio if we have access
+                if connection.bio != nil {
+                    Text("\(connection.bio!)")
+                        .defaultStyle(size: 14, opacity: 0.7)
+                }
             }
         }
         .padding(.vertical, 12)

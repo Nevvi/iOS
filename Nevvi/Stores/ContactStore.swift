@@ -132,6 +132,7 @@ class ContactStore: ObservableObject {
                                            CNContactPhoneNumbersKey,
                                            CNContactEmailAddressesKey,
                                            CNContactPostalAddressesKey,
+                                           CNContactJobTitleKey,
                                            CNContactBirthdayKey] as [CNKeyDescriptor]
                         
                         var contactOpt: CNMutableContact? = nil
@@ -168,6 +169,12 @@ class ContactStore: ObservableObject {
                         }
                         
                         let contact = contactOpt == nil ? CNMutableContact() : contactOpt!
+                        
+                        if detail.bio != nil {
+                            let bioChange = ContactSyncFieldInfo(field: "Bio", oldValue: contact.jobTitle, newValue: detail.bio)
+                            contact.jobTitle = detail.bio!
+                            contactFieldChanges.append(bioChange)
+                        }
 
                         let utcDateFormatter = DateFormatter()
                         utcDateFormatter.dateStyle = .medium

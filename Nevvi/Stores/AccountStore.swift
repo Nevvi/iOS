@@ -55,6 +55,7 @@ class AccountStore: ObservableObject {
         self.id = user.id
         self.firstName = user.firstName == nil ? "" : user.firstName!
         self.lastName = user.lastName == nil ? "" : user.lastName!
+        self.bio = user.bio == nil ? "" : user.bio!
         self.deviceId = user.deviceId == nil ? "" : user.deviceId!
         self.email = user.email
         self.emailConfirmed = user.emailConfirmed
@@ -68,7 +69,6 @@ class AccountStore: ObservableObject {
         self.deviceSettings.update(settings: user.deviceSettings)
         self.permissionGroups = user.permissionGroups
         self.profileImage = user.profileImage
-        self.bio = user.bio == nil ? "" : user.bio!
     }
     
     func updateImage(user: User) {
@@ -90,6 +90,7 @@ class AccountStore: ObservableObject {
         self.id = ""
         self.firstName = ""
         self.lastName = ""
+        self.bio = ""
         self.deviceId = "" // TODO - do we want this?
         self.email = ""
         self.emailConfirmed = false
@@ -187,6 +188,7 @@ class AccountStore: ObservableObject {
             
             let request = PatchRequest(firstName: self.firstName != "" ? self.firstName : nil,
                                        lastName: self.lastName != "" ? self.lastName : nil,
+                                       bio: self.bio != "" ? self.bio : nil,
                                        address: self.address.toModel(),
                                        mailingAddress: self.mailingAddress.toModel(),
                                        birthday: self.birthday != Date() ? self.birthday.yyyyMMdd() : nil,
@@ -327,6 +329,7 @@ class AccountStore: ObservableObject {
     struct PatchRequest: Encodable {
         var firstName: String?
         var lastName: String?
+        var bio: String?
         var address: Address?
         var mailingAddress: Address?
         var birthday: String?

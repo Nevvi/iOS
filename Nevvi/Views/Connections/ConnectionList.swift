@@ -41,17 +41,17 @@ struct ConnectionList: View {
     var body: some View {
         NavigationView {
             VStack {
-                if self.notificationStore.canRequestAccess {
-                    requestNotificationsView
-                } else if self.contactStore.canRequestAccess() {
-                    requestContactsView
-                } else if profileRequiresUpdate {
-                    profileUpdateView
-                } else if noConnectionsExist {
-                    noConnectionsView
-                } else {
+//                if self.notificationStore.canRequestAccess {
+//                    requestNotificationsView
+//                } else if self.contactStore.canRequestAccess() {
+//                    requestContactsView
+//                } else if profileRequiresUpdate {
+//                    profileUpdateView
+//                } else if noConnectionsExist {
+//                    noConnectionsView
+//                } else {
                     connectionsView
-                }
+//                }
             }
             .toolbar(content: {
                 ToolbarItem(placement: .navigation) {
@@ -73,7 +73,7 @@ struct ConnectionList: View {
                         }
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top)
+                    .padding(.vertical)
                     .frame(width: Constants.Width, alignment: .center)
 
                 }
