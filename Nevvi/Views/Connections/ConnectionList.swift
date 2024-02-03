@@ -54,29 +54,21 @@ struct ConnectionList: View {
                 }
             }
             .toolbar(content: {
-                ToolbarItem(placement: .navigation) {
-                    HStack(alignment: .center) {
-                        Text("Connections")
-                            .navigationHeader()
-                        
-                        Spacer()
-                      
-                        if self.contactStore.hasAccess() && self.connectionsStore.outOfSyncCount > 0 {
-                            Image(systemName: "square.and.arrow.down")
-                                .toolbarButtonStyle()
-                                .onTapGesture {
-                                    if !self.syncing {
-                                        self.sync(dryRun: true)
-                                    }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Connections").navigationHeader()
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if self.contactStore.hasAccess() && self.connectionsStore.outOfSyncCount > 0 {
+                        Image(systemName: "square.and.arrow.down")
+                            .toolbarButtonStyle()
+                            .onTapGesture {
+                                if !self.syncing {
+                                    self.sync(dryRun: true)
                                 }
-                                .opacity(self.syncing ? 0.5 : 1.0)
-                        }
+                            }
+                            .opacity(self.syncing ? 0.5 : 1.0)
                     }
-                    .padding(.leading, 8)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical)
-                    .frame(width: Constants.Width, alignment: .center)
-
                 }
             })
         }

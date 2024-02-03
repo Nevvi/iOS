@@ -149,17 +149,8 @@ struct Settings: View {
             }
             .listStyle(.insetGrouped)
             .toolbar {
-                ToolbarItem(placement: .navigation) {
-                    HStack(alignment: .center) {
-                        Text("Settings")
-                            .navigationHeader()
-                        
-                        Spacer()
-                    }
-                    .padding(.leading, 8)
-                    .padding(.horizontal, 16)
-                    .padding(.top)
-                    .frame(width: Constants.Width, alignment: .center)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Settings").navigationHeader()
                 }
             }
         }

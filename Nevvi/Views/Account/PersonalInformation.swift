@@ -113,32 +113,20 @@ struct PersonalInformation: View {
                             .asPrimaryButton()
                     }
                 }
-                .padding()
+                .padding(.bottom)
                 .background(ColorConstants.background)
             }
             .background(ColorConstants.background)
             .toolbar {
-                ToolbarItem(placement: .navigation) {
-                    HStack(alignment: .center) {
-                        Text("Profile")
-                            .navigationHeader()
-                        
-                        Spacer()
-                        
-//                    // TODO
-//                    Image(systemName: "qrcode")
-//                        .toolbarButtonStyle()
-                        
-                        NavigationLink(destination: PersonalInformationEdit()) {
-                            Image(systemName: "square.and.pencil")
-                                .toolbarButtonStyle()
-                        }
-                        .padding(.trailing, -10)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Profile").navigationHeader()
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: PersonalInformationEdit()) {
+                        Image(systemName: "square.and.pencil")
+                            .toolbarButtonStyle()
                     }
-                    .padding(.leading, 8)
-                    .padding(.horizontal, 16)
-                    .padding(.top)
-                    .frame(width: Constants.Width, alignment: .center)
                 }
             }
         }

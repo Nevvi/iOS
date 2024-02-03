@@ -49,28 +49,19 @@ struct ConnectionRequestList: View {
                 self.connectionsStore.loadRequests()
             }
             .toolbar(content: {
-                ToolbarItem(placement: .navigation) {
-                    HStack(alignment: .center) {
-                        Text("New Connections")
-                            .navigationHeader()
-                        
-                        Spacer()
-                      
-                        NavigationLink(destination: UserSearch()) {
-                            Image(systemName: "plus.magnifyingglass")
-                                .toolbarButtonStyle()
-                                .foregroundColor(.black)
-                        }.padding(.trailing, -8)
-                        
-                        // TODO
-//                        Image(systemName: "qrcode.viewfinder")
-//                            .toolbarButtonStyle()
-                    }
-                    .padding(.leading, 8)
-                    .padding(.horizontal, 16)
-                    .padding(.top)
-                    .padding(.bottom, 0)
-                    .frame(width: Constants.Width, alignment: .center)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("New Connections").navigationHeader()
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: UserSearch()) {
+                        Image(systemName: "plus.magnifyingglass")
+                            .toolbarButtonStyle()
+                            .foregroundColor(.black)
+                    }.padding(.trailing, -8)
+                    
+                    // TODO
+//                    Image(systemName: "qrcode.viewfinder").toolbarButtonStyle()
                 }
             })
         }

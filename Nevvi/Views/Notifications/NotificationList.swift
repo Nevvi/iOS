@@ -17,15 +17,8 @@ struct NotificationList: View {
                     .defaultStyle(size: 24, opacity: 0.7)
             }
             .toolbar {
-                ToolbarItem(placement: .navigation) {
-                    HStack(alignment: .center) {
-                        Text("Notifications")
-                            .navigationHeader()
-                    }
-                    .padding(.leading, 8)
-                    .padding(.horizontal, 16)
-                    .padding(.top)
-                    .frame(width: Constants.Width, alignment: .center)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Notifications").navigationHeader()
                 }
             }
         }
