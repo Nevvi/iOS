@@ -53,20 +53,29 @@ struct ConnectionList: View {
                     connectionsView
                 }
             }
-            .navigationTitle("Connections")
-            .navigationBarTitleDisplayMode(.large)
             .toolbar(content: {
-                if self.contactStore.hasAccess() && self.connectionsStore.outOfSyncCount > 0 {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Image(systemName: "square.and.arrow.down")
-                            .toolbarButtonStyle()
-                            .onTapGesture {
-                                if !self.syncing {
-                                    self.sync(dryRun: true)
+                ToolbarItem(placement: .navigation) {
+                    HStack(alignment: .center) {
+                        Text("Connections")
+                            .navigationHeader()
+                        
+                        Spacer()
+                      
+                        if self.contactStore.hasAccess() && self.connectionsStore.outOfSyncCount > 0 {
+                            Image(systemName: "square.and.arrow.down")
+                                .toolbarButtonStyle()
+                                .onTapGesture {
+                                    if !self.syncing {
+                                        self.sync(dryRun: true)
+                                    }
                                 }
-                            }
-                            .opacity(self.syncing ? 0.5 : 1.0)
+                                .opacity(self.syncing ? 0.5 : 1.0)
+                        }
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.top)
+                    .frame(width: Constants.Width, alignment: .center)
+
                 }
             })
         }
@@ -117,7 +126,8 @@ struct ConnectionList: View {
                 Spacer()
             }
             .padding()
-        }.padding()
+        }
+        .padding()
     }
     
     var requestContactsView: some View {
@@ -211,8 +221,7 @@ struct ConnectionList: View {
             HStack(alignment: .center, spacing: 4) {
                 TextField("Search", text: self.$nameFilter.text)
                     .disableAutocorrection(true)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 15.5)
+                    .padding(16)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(.white)
                     .cornerRadius(40)
@@ -222,16 +231,12 @@ struct ConnectionList: View {
                         .inset(by: 0.5)
                         .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.08), lineWidth: 1)
                     )
-                
-                Image(systemName: "xmark")
-                    .toolbarButtonStyle()
-                    .onTapGesture {
-                        self.nameFilter.text = ""
-                    }
             }
-            .padding(.horizontal, 12)
-            .padding(.top, 4)
-            .padding(.bottom, 12)
+            .padding(.horizontal, 14)
+            .padding(.top, 8)
+            .padding(.bottom, 4)
+            
+            Divider()
             
             ScrollView(.vertical) {
                 VStack {
@@ -289,8 +294,6 @@ struct ConnectionList: View {
                 }
             }
         }
-        .navigationTitle("Connections")
-        .navigationBarTitleDisplayMode(.large)
         .disableAutocorrection(true)
         .onChange(of: self.nameFilter.debouncedText) { text in
             self.connectionsStore.load(nameFilter: text, permissionGroup: self.selectedGroup)

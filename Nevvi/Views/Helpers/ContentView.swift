@@ -90,6 +90,7 @@ struct ContentView_Previews: PreviewProvider {
         .environmentObject(AuthorizationStore())
         .environmentObject(UsersStore(users: modelData.connectionResponse.users))
         .environmentObject(ConnectionGroupsStore(groups: modelData.groups))
+        .environmentObject(NotificationStore())
         .environmentObject(ContactStore())
         .environmentObject(ConnectionSuggestionStore(users: modelData.connectionResponse.users))
         .environmentObject(ConnectionStore(connection: modelData.connection))

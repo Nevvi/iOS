@@ -44,25 +44,33 @@ struct ConnectionRequestList: View {
                     }
                 }
             }
-            .navigationTitle("New Connections")
-            .navigationBarTitleDisplayMode(.large)
+            .padding(.top)
             .refreshable {
                 self.connectionsStore.loadRequests()
             }
             .toolbar(content: {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: UserSearch()) {
-                        Image(systemName: "plus.magnifyingglass")
-                            .toolbarButtonStyle()
-                            .foregroundColor(.black)
+                ToolbarItem(placement: .navigation) {
+                    HStack(alignment: .center) {
+                        Text("New Connections")
+                            .navigationHeader()
+                        
+                        Spacer()
+                      
+                        NavigationLink(destination: UserSearch()) {
+                            Image(systemName: "plus.magnifyingglass")
+                                .toolbarButtonStyle()
+                                .foregroundColor(.black)
+                        }.padding(.trailing, -8)
+                        
+                        // TODO
+//                        Image(systemName: "qrcode.viewfinder")
+//                            .toolbarButtonStyle()
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.top)
+                    .padding(.bottom, 0)
+                    .frame(width: Constants.Width, alignment: .center)
                 }
-                
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    // TODO
-//                    Image(systemName: "qrcode.viewfinder")
-//                        .toolbarButtonStyle()
-//                }
             })
         }
         .toast(isPresenting: $showToast){
@@ -146,7 +154,7 @@ struct ConnectionRequestList_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let suggestionsStore = ConnectionSuggestionStore(users: modelData.connectionResponse.users)
     static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
-                                                   requests: [],
+                                                   requests: modelData.requests,
                                                    blockedUsers: modelData.connectionResponse.users)
     
     static var previews: some View {

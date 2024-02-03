@@ -23,15 +23,19 @@ struct ConnectionRow: View {
                 .cornerRadius(63)
                 .padding([.bottom], 8)
                                 
-                Text(self.connection.permissionGroup ?? "Unknown")
-                    .asPermissionGroupBadge(bgColor: Color(red: 0.82, green: 0.88, blue: 1))
+                if self.connection.permissionGroup != nil {
+                    // TODO - make the badge clearer for longer permission group names
+                    Text(self.connection.permissionGroup!)
+                        .asPermissionGroupBadge(bgColor: Color(red: 0.82, green: 0.88, blue: 1))
+                        .frame(maxWidth: 63, maxHeight: 16)
+                }
             }
             
             VStack {
                 Text("\(connection.firstName) \(connection.lastName)")
                     .defaultStyle(size: 18, opacity: 1.0)
                 
-                // TODO - add phone/email if we have access
+                // TODO - add phone/email/bio if we have access
             }
         }
         .padding(.vertical, 12)
@@ -50,8 +54,8 @@ struct ConnectionRow_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
-            ConnectionRow(connection: connections[0])
             ConnectionRow(connection: connections[1])
+            ConnectionRow(connection: connections[2])
         }
         .previewLayout(.fixed(width: 300, height: 70))
     }

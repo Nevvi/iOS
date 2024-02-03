@@ -148,8 +148,19 @@ struct Settings: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigation) {
+                    HStack(alignment: .center) {
+                        Text("Settings")
+                            .navigationHeader()
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top)
+                    .frame(width: Constants.Width, alignment: .center)
+                }
+            }
         }
     }
     

@@ -32,7 +32,7 @@ struct PersonalInformation: View {
                                 .defaultStyle(size: 16, opacity: 0.6)
                         }
                         Spacer()
-                    }.padding(.bottom)
+                    }.padding(.vertical)
                     
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Phone Number").personalInfoLabel()
@@ -117,24 +117,29 @@ struct PersonalInformation: View {
                 .background(ColorConstants.background)
             }
             .background(ColorConstants.background)
-            .navigationTitle("Profile")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar(content: {
-//            .toolbar(content: {
-//                ToolbarItem(placement: .navigationBarTrailing) {
+            .toolbar {
+                ToolbarItem(placement: .navigation) {
+                    HStack(alignment: .center) {
+                        Text("Profile")
+                            .navigationHeader()
+                        
+                        Spacer()
+                        
 //                    // TODO
 //                    Image(systemName: "qrcode")
 //                        .toolbarButtonStyle()
-//                }
-//            })
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: PersonalInformationEdit()) {
-                        Image(systemName: "square.and.pencil")
-                            .toolbarButtonStyle()
+                        
+                        NavigationLink(destination: PersonalInformationEdit()) {
+                            Image(systemName: "square.and.pencil")
+                                .toolbarButtonStyle()
+                        }
+                        .padding(.trailing, -10)
                     }
+                    .padding(.horizontal, 16)
+                    .padding(.top)
+                    .frame(width: Constants.Width, alignment: .center)
                 }
-            })
+            }
         }
     }
     

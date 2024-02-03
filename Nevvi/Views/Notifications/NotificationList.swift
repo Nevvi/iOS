@@ -16,8 +16,17 @@ struct NotificationList: View {
                 Text("No Notifications")
                     .defaultStyle(size: 24, opacity: 0.7)
             }
-            .navigationTitle("Notifications")
-            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .navigation) {
+                    HStack(alignment: .center) {
+                        Text("Notifications")
+                            .navigationHeader()
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top)
+                    .frame(width: Constants.Width, alignment: .center)
+                }
+            }
         }
     }
 }

@@ -9,6 +9,13 @@ import Foundation
 import SwiftUI
 
 extension Text {
+    func navigationHeader() -> some View {
+        return self
+            .font(.system(size: 30, weight: .semibold))
+            .foregroundColor(Color(red: 0.12, green: 0.19, blue: 0.29))
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+    }
+    
     func onboardingTitle() -> some View {
         return self
             .font(.system(size: 32))

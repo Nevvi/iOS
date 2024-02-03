@@ -42,7 +42,7 @@ struct UserSearch: View {
             .padding(.bottom, 12)
             
             if self.usersStore.userCount == 0 {
-                if (self.nameFilter.text.count < 3) {
+                if (self.nameFilter.debouncedText.count < 3) {
                     userSearchPrompt
                 } else {
                     noUsersView

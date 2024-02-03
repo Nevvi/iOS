@@ -37,12 +37,14 @@ struct NewConnectionRequestRow: View {
             
             Spacer()
             
-            Image(systemName: "plus")
-                .toolbarButtonStyle()
-                .onTapGesture {
-                    self.showSheet = true
-                }
-                .padding()
+            if showConnectButton {
+                Image(systemName: "plus")
+                    .toolbarButtonStyle()
+                    .onTapGesture {
+                        self.showSheet = true
+                    }
+                    .padding()
+            }
         }
         .sheet(isPresented: self.$showSheet) {
             requestConnectionSheet
