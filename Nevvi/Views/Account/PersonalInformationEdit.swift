@@ -17,7 +17,7 @@ struct PersonalInformationEdit: View {
     
     @State private var phoneVerificationCode: String = ""
     @State private var showPhoneVerification: Bool = false
-    @State private var showBirthdayPicker: Bool = true
+    @State private var showBirthdayPicker: Bool = false
     @State private var showAddressSearch: Bool = false
     @State private var showMailingAddressSearch: Bool = false
     @State private var newProfileImage = UIImage()
