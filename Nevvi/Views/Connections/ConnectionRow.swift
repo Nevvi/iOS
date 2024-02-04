@@ -38,6 +38,8 @@ struct ConnectionRow: View {
                 if connection.bio != nil {
                     Text("\(connection.bio!)")
                         .defaultStyle(size: 14, opacity: 0.7)
+                        .multilineTextAlignment(.leading)
+                        .padding(.trailing, 64)
                 }
             }
         }
@@ -57,7 +59,7 @@ struct ConnectionRow_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
-            ConnectionRow(connection: connections[1])
+            ConnectionRow(connection: connections[3])
             ConnectionRow(connection: connections[2])
         }
         .previewLayout(.fixed(width: 300, height: 70))

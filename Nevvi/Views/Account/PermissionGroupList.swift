@@ -18,9 +18,9 @@ struct PermissionGroupList: View {
     @State var newGroupFields: [String] = []
     
     var body: some View {
-        ZStack(alignment: .bottom) {
+        VStack {
             ScrollView {
-                VStack {
+                VStack(spacing: 0) {
                     ForEach(self.accountStore.permissionGroups, id: \.name) { group in
                         ActionablePermissionGroupRow(group: group)
                             .padding([.leading, .trailing, .bottom])
@@ -53,7 +53,6 @@ struct PermissionGroupList: View {
         .sheet(isPresented: self.$showNewGroup) {
             newPermissionGroupSheet
         }
-        .padding([.top])
     }
     
     var newPermissionGroupSheet: some View {

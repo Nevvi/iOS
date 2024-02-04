@@ -119,6 +119,7 @@
 		277D254C2B687C5E00D1D717 /* FrequentlyAskedQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D254B2B687C5E00D1D717 /* FrequentlyAskedQuestion.swift */; };
 		277D254E2B69490700D1D717 /* PrivacySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D254D2B69490700D1D717 /* PrivacySettings.swift */; };
 		277E95BC2B6FB8C400A3C433 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BB2B6FB8C400A3C433 /* Popup.swift */; };
+		277E95BE2B701FF700A3C433 /* BindingExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BD2B701FF700A3C433 /* BindingExtensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -226,6 +227,7 @@
 		277D254B2B687C5E00D1D717 /* FrequentlyAskedQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequentlyAskedQuestion.swift; sourceTree = "<group>"; };
 		277D254D2B69490700D1D717 /* PrivacySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettings.swift; sourceTree = "<group>"; };
 		277E95BB2B6FB8C400A3C433 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
+		277E95BD2B701FF700A3C433 /* BindingExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExtensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -433,6 +435,7 @@
 				277D251B2B55B39F00D1D717 /* CharacterExtensions.swift */,
 				277D25352B5C18C500D1D717 /* ImageExtensions.swift */,
 				277D25372B5C578000D1D717 /* StackExtensions.swift */,
+				277E95BD2B701FF700A3C433 /* BindingExtensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -659,6 +662,7 @@
 				277D25342B5BED4700D1D717 /* OnboardingButton.swift in Sources */,
 				277D254E2B69490700D1D717 /* PrivacySettings.swift in Sources */,
 				04B94953295F21D200703523 /* CreateAccount.swift in Sources */,
+				277E95BE2B701FF700A3C433 /* BindingExtensions.swift in Sources */,
 				04038E322966324E00D3C7AC /* Redactable.swift in Sources */,
 				277D25322B5A069A00D1D717 /* Constants.swift in Sources */,
 				04B948FE295DEA5C00703523 /* ContentView.swift in Sources */,
@@ -823,7 +827,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -914,7 +918,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1066,7 +1070,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1103,7 +1107,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 19;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;

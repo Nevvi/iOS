@@ -63,10 +63,11 @@ struct PersonalInformationEdit: View {
                 VStack(alignment: .leading) {
                     Text("Bio").personalInfoLabel()
                     
-                    TextField("Role & company name", text: self.$accountStore.bio)
+                    TextField("Role & company name", text: self.$accountStore.bio.max(50))
                         .bioStyle(size: 16, opacity: 1.0)
                         .textInputAutocapitalization(.sentences)
                         .disableAutocorrection(false)
+                
                 }.informationSection()
                 
                 VStack(alignment: .leading) {

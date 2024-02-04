@@ -99,6 +99,12 @@ class ConnectionGroupStore : ObservableObject {
         }
     }
     
+    func isConnectionInGroup(connection: Connection) -> Bool {
+        return self.connections.contains { groupConnection in
+            return groupConnection.id == connection.id
+        }
+    }
+    
     func addToGroup(userId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
             self.loading = true
