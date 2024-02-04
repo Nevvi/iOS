@@ -150,6 +150,20 @@ extension Text {
             )
     }
     
+    func asDefaultButton() -> some View {
+        self
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .background(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.02))
+            .cornerRadius(32)
+            .overlay(
+                RoundedRectangle(cornerRadius: 32)
+                    .inset(by: 0.5)
+                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
+            )
+    }
+    
     func toolbarTitle() -> some View {
         self
             .fontWeight(.bold)

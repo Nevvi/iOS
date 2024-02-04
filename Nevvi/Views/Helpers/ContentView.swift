@@ -58,11 +58,16 @@ struct ContentView: View {
                         self.reload()
                     } 
                 }
+                .onOpenURL { incomingURL in
+                    /// Responds to any URLs opened with our app. In this case, the URLs defined inside the URL Types section.
+                    print("App was opened via URL: \(incomingURL)")
+                    handleIncomingURL(incomingURL)
+                }
             } else {
                 OnboardingCarousel()
             }
         } else {
-            // TODO - better loading view
+            /// TODO - better loading view
             ProgressView().onAppear {
                 self.reload()
             }
@@ -76,6 +81,22 @@ struct ContentView: View {
         self.connectionsStore.loadRejectedUsers()
         self.connectionsStore.loadOutOfSync { _ in }
         self.connectionGroupsStore.load()
+    }
+    
+    /// Handles the incoming URL and performs validations before acknowledging.
+    private func handleIncomingURL(_ url: URL) {
+        guard url.scheme == "nevvi" else {
+            return
+        }
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
+            print("Invalid URL")
+            return
+        }
+
+        guard let action = components.host, action == "request-connection" else {
+            print("Unknown URL, we can't handle this one!")
+            return
+        }
     }
 }
 

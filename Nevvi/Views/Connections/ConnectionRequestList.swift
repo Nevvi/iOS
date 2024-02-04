@@ -43,30 +43,24 @@ struct ConnectionRequestList: View {
                     }
                 }
             }
-            .padding(.top)
             .refreshable {
                 self.connectionsStore.loadRequests()
             }
             .toolbar(content: {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("New Connections")
-                        .navigationHeader()
-                        .padding(.top)
-                }
-                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination: UserSearch()) {
                         Image(systemName: "plus.magnifyingglass")
                             .toolbarButtonStyle()
                             .foregroundColor(.black)
                     }
-                    .padding(.trailing, -8)
-                    .padding(.top)
+                    .padding(.bottom, 8)
                     
                     // TODO
 //                    Image(systemName: "qrcode.viewfinder").toolbarButtonStyle()
                 }
             })
+            .navigationTitle("New Connections")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .toast(isPresenting: $showToast){
             AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Request sent!")
@@ -110,7 +104,6 @@ struct ConnectionRequestList: View {
             }
             .redacted(when: self.connectionsStore.deletingRequest || self.connectionsStore.loadingRequests, redactionType: .customPlaceholder)
         }
-        .padding(.top)
     }
     
     var suggestionsView: some View {

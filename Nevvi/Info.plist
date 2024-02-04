@@ -8,7 +8,16 @@
 	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
-		<dict/>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.nevvi.Nevvi</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>nevvi</string>
+			</array>
+		</dict>
 		<dict/>
 	</array>
 	<key>Configuration</key>

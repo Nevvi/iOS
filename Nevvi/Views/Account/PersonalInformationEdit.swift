@@ -17,7 +17,7 @@ struct PersonalInformationEdit: View {
     
     @State private var phoneVerificationCode: String = ""
     @State private var showPhoneVerification: Bool = false
-    @State private var showBirthdayPicker: Bool = false
+    @State private var showBirthdayPicker: Bool = true
     @State private var showAddressSearch: Bool = false
     @State private var showMailingAddressSearch: Bool = false
     @State private var newProfileImage = UIImage()
@@ -327,10 +327,18 @@ struct PersonalInformationEdit: View {
     
     var datePickerSheet: some View {
         DynamicSheet(
-            DatePicker("", selection: self.$accountStore.birthday, in: ...Date(), displayedComponents: [.date])
-                .datePickerStyle(.wheel)
-                .labelsHidden()
-                .padding()
+            VStack(spacing: 8) {
+                DatePicker("", selection: self.$accountStore.birthday, in: ...Date(), displayedComponents: [.date])
+                    .datePickerStyle(.wheel)
+                    .labelsHidden()
+                    .padding()
+                
+                Text("Confirm")
+                    .asPrimaryButton()
+                    .onTapGesture {
+                        self.showBirthdayPicker = false
+                    }
+            }.padding(.horizontal)
         )
     }
     

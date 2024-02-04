@@ -148,13 +148,8 @@ struct Settings: View {
                 }
             }
             .listStyle(.insetGrouped)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Settings")
-                        .navigationHeader()
-                        .padding(.top)
-                }
-            }
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     

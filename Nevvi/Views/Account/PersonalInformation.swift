@@ -7,10 +7,16 @@
 
 import SwiftUI
 import WrappingHStack
+import CoreImage.CIFilterBuiltins
 
 struct PersonalInformation: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var authStore: AuthorizationStore
+    
+    let context = CIContext()
+    let filter = CIFilter.qrCodeGenerator()
+    
+    @State var showQrCode: Bool = false
     
     private var isBirthdayEmpty: Bool {
         return self.accountStore.birthday.yyyyMMdd() == Date().yyyyMMdd()
@@ -119,25 +125,103 @@ struct PersonalInformation: View {
             .padding([.horizontal, .bottom])
             .background(ColorConstants.background)
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Profile")
-                        .navigationHeader()
-                        .padding(.top)
-                }
+//                ToolbarItem(placement: .navigationBarLeading) {
+//                    Image(systemName: "qrcode")
+//                        .toolbarButtonStyle()
+//                        .onTapGesture {
+//                            self.showQrCode = true
+//                        }
+//                        .padding(.trailing, -8)
+//                }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination: PersonalInformationEdit()) {
                         Image(systemName: "square.and.pencil")
                             .toolbarButtonStyle()
                     }
-                    .padding(.top)
                 }
             }
+            .sheet(isPresented: self.$showQrCode) {
+                qrCodeSheet
+                    .presentationDetents([.fraction(0.66)])
+            }
+            .navigationTitle("Profile")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     
     func fieldPermissionGroups(field: String) -> some View {
         FieldPermissionGroupPicker(canEdit: false, fieldName: field, permissionGroups: self.accountStore.permissionGroups.map { $0.copy() })
+    }
+    
+    var qrCodeSheet: some View {
+        VStack(alignment: .center, spacing: 12) {
+            Text("Share the QR code and connect easily")
+                .defaultStyle(size: 18, opacity: 0.6)
+                .multilineTextAlignment(.center)
+
+            Spacer()
+            
+            ZStack {
+                Image(uiImage: generateQRCode())
+                    .interpolation(.none)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 200, height: 200)
+                
+                Image("AppLogo")
+                    .frame(width: 68, height: 68)
+                    .overlay(
+                      RoundedRectangle(cornerRadius: 48)
+                        .inset(by: 2)
+                        .stroke(.black, lineWidth: 4)
+                    )
+            }
+            .padding(24)
+            .cornerRadius(48)
+            .overlay(
+              RoundedRectangle(cornerRadius: 48)
+                .inset(by: 2)
+                .stroke(ColorConstants.primary, lineWidth: 4)
+            )
+            
+            Spacer ()
+            
+            HStack(alignment: .top, spacing: 8) {
+                Text("Share")
+                    .asDefaultButton()
+                
+                Text("Close")
+                    .asDefaultButton()
+                    .onTapGesture {
+                        self.showQrCode = false
+                    }
+            }
+            .padding(0)
+            .frame(maxWidth: .infinity, alignment: .topLeading)
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 32)
+        .padding(.bottom, 24)
+        .background(.white)
+        .cornerRadius(32)
+    }
+    
+    func generateQRCode() -> UIImage {
+        let data = "\(self.accountStore.id)"
+        filter.message = Data(data.utf8)
+
+        if let outputImage = filter.outputImage {
+            if let cgImage = context.createCGImage(outputImage, from: outputImage.extent) {
+                
+//                let logo = UIImage(named: "AppLogo")
+//                logo?.addToCenter(of: cgImage)
+                
+                return UIImage(cgImage: cgImage)
+            }
+        }
+
+        return UIImage(systemName: "xmark.circle") ?? UIImage()
     }
 
 }

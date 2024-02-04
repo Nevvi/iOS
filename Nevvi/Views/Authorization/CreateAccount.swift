@@ -227,9 +227,9 @@ struct CreateAccount: View {
                         .foregroundColor(ColorConstants.primary)
                         .opacity(self.authStore.loggingIn ? 0.5 : 1.0)
                 )
-                .opacity(self.createAccountDisabled ? 0.5 : 1.0)
-                .disabled(self.createAccountDisabled)
             })
+            .opacity(self.createAccountDisabled ? 0.5 : 1.0)
+            .disabled(self.createAccountDisabled)
             .padding([.bottom], 16)
             
             HStack {

@@ -11,13 +11,9 @@ struct PermissionGroupBadge: View {
     @State var groupName: String
     
     var body: some View {
-        var textColor = ColorConstants.badgeText
-        var backgroundColor = ColorConstants.badgeBackground
-        if groupName.uppercased() == "ALL" {
-            textColor = ColorConstants.badgeTextSuccess
-            backgroundColor = ColorConstants.badgeSuccess
-        }
-        
+        let textColor = ColorConstants.badgeText
+        let backgroundColor = ColorConstants.badgeBackground
+
         return Text(groupName.uppercased())
             .font(.system(size: 12))
             .padding([.leading, .trailing], 12)

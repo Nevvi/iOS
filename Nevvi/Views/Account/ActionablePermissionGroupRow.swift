@@ -16,6 +16,15 @@ struct ActionablePermissionGroupRow: View {
     
     @State var editting: Bool = false
     
+    var selectedFields: [String] {
+        self.group.fields    }
+    
+    var unSelectedFields: [String] {
+        Constants.AllFields.filter { field in
+            !self.group.fields.contains(field)
+        }
+    }
+    
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -78,6 +87,17 @@ struct ActionablePermissionGroupRow: View {
                     .fontWeight(.ultraLight)
                     .padding([.top, .bottom], 6)
                 permissionGroupFields
+                
+                if self.editting {
+                    Divider()
+                    
+                    Text("Restricted")
+                        .fontWeight(.ultraLight)
+                        .padding([.top, .bottom], 6)
+                    
+                    optionalGroupFields
+                }
+                
             }.animation(.easeIn, value: editting)
         }
         .padding()
@@ -91,14 +111,18 @@ struct ActionablePermissionGroupRow: View {
         WrappingHStack(alignment: .leading) {
             if group.name.uppercased() == "ALL" {
                 permissionGroupField(field: "Everything")
-            } else if self.editting {
-                ForEach(Constants.AllFields.sorted(), id: \.self) { field in
-                    permissionGroupField(field: field)
-                }
             } else {
-                ForEach(group.fields.sorted(), id: \.self) { field in
+                ForEach(self.selectedFields, id: \.self) { field in
                     permissionGroupField(field: field)
                 }
+            }
+        }
+    }
+    
+    var optionalGroupFields: some View {
+        WrappingHStack(alignment: .leading) {
+            ForEach(self.unSelectedFields.sorted(), id: \.self) { field in
+                permissionGroupField(field: field)
             }
         }
     }
@@ -113,14 +137,6 @@ struct ActionablePermissionGroupRow: View {
             textColor = ColorConstants.badgeTextSuccess
             backgroundColor = ColorConstants.badgeSuccess
             canSelect = false
-        } else if (self.editting && Constants.PublicFields.contains(field)) {
-            textColor = .white
-            backgroundColor = ColorConstants.primary
-            opacity = 0.7
-            canSelect = false
-        } else if (self.editting && group.fields.contains(field)) {
-            textColor = .white
-            backgroundColor = ColorConstants.primary
         }
         
         return Text(field.humanReadable())

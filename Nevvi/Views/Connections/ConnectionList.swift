@@ -64,12 +64,6 @@ struct ConnectionList: View {
                 self.connectionsStore.loadOutOfSync { _ in }
             }
             .toolbar(content: {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Connections")
-                        .navigationHeader()
-                        .padding(.top)
-                }
-                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if self.contactStore.hasAccess() && self.connectionsStore.outOfSyncCount > 0 {
                         Image(systemName: "square.and.arrow.down")
@@ -80,10 +74,11 @@ struct ConnectionList: View {
                                 }
                             }
                             .opacity(self.syncing ? 0.5 : 1.0)
-                            .padding(.top)
                     }
                 }
             })
+            .navigationTitle("Connections")
+            .navigationBarTitleDisplayMode(.inline)
         }
         .sheet(isPresented: self.$showContactUpdates) {
             contactUpdatesSheet
@@ -131,7 +126,6 @@ struct ConnectionList: View {
                 Spacer()
                 Spacer()
             }
-            .padding()
         }
         .padding()
     }
@@ -146,7 +140,7 @@ struct ConnectionList: View {
                 Text("Allow Contact Access")
                     .defaultStyle(size: 24, opacity: 1.0)
                 
-                Text("Your privacy is our priority. We only use your contacts to suggest relevant connections, and sync the latest connection data, never for spam.")
+                Text("Your privacy is our priority. We only use your contacts to make your experience better. Consult the privacy policy in the settings for more info on how contacts are used.")
                     .defaultStyle(size: 16, opacity: 0.7)
                     .multilineTextAlignment(.center)
                 
@@ -165,7 +159,6 @@ struct ConnectionList: View {
                 Spacer()
                 Spacer()
             }
-            .padding()
         }.padding()
     }
     
@@ -192,7 +185,6 @@ struct ConnectionList: View {
                 Spacer()
                 Spacer()
             }
-            .padding()
         }.padding()
     }
     

@@ -16,11 +16,8 @@ struct NotificationList: View {
                 Text("No Notifications")
                     .defaultStyle(size: 24, opacity: 0.7)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Text("Notifications").navigationHeader()
-                }
-            }
+            .navigationTitle("Notifications")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

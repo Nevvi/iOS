@@ -48,7 +48,7 @@ struct OnboardingSync: View {
                         .multilineTextAlignment(.center)
                         .padding([.top], -16)
                     
-                    Text("Know as soon as a connection updates info you have access to.")
+                    Text("We'll notify you as soon as a connection updates their info.")
                         .defaultStyle(size: 22, opacity: 0.7)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.center)
