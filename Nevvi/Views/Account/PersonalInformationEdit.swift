@@ -14,13 +14,10 @@ struct PersonalInformationEdit: View {
     @EnvironmentObject var authStore: AuthorizationStore
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
-    @State private var phoneVerificationCode: String = ""
-    @State private var showPhoneVerification: Bool = false
+
     @State private var showBirthdayPicker: Bool = false
     @State private var showAddressSearch: Bool = false
     @State private var showMailingAddressSearch: Bool = false
-    @State private var newProfileImage = UIImage()
     
     @State private var canSave: Bool = false
     
@@ -231,9 +228,6 @@ struct PersonalInformationEdit: View {
                 self.showMailingAddressSearch = false
             }).presentationDetents([.large])
         }
-        .sheet(isPresented: self.$showPhoneVerification) {
-            phoneVerificationSheet
-        }
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(leading: cancelButton)
@@ -260,71 +254,10 @@ struct PersonalInformationEdit: View {
             
             Spacer()
             
-            if !self.accountStore.phoneNumber.isEmpty && !self.accountStore.phoneNumberConfirmed && self.accountStore.phoneNumber == self.accountStore.user?.phoneNumber {
-                Button {
-                    self.accountStore.verifyPhone { (result: Result<AccountStore.VerifyPhoneResponse, Error>) in
-                        switch result {
-                        case .success(_):
-                            self.showPhoneVerification = true
-                        case .failure(let error):
-                            print("Something bad happened", error)
-                        }
-                    }
-                } label: {
-                    Text("Verify")
-                        .foregroundColor(ColorConstants.primary)
-                        .defaultStyle(size: 12, opacity: 1.0)
-                        .opacity(self.accountStore.saving ? 0.5 : 1.0)
-                        .padding(.trailing, 4)
-                }
-                .disabled(self.accountStore.saving)
-                .fontWeight(.bold)
-                .font(.system(size: 14))
-            }
+            PhoneVerifyButton()
         }
     }
-    
-    var phoneVerificationSheet: some View {
-        VStack(alignment: .center, spacing: 28) {
-            Text("Please enter the confirmation code we texted to you")
-                .defaultStyle(size: 22, opacity: 1.0)
-                .multilineTextAlignment(.center)
-            
-            TextField("Code", text: self.$phoneVerificationCode)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .keyboardType(.numberPad)
-                .padding()
-                .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                                    
-            Button {
-                self.accountStore.confirmPhone(code: self.phoneVerificationCode) { (result: Result<AccountStore.ConfirmPhoneResponse, Error>) in
-                    switch result {
-                    case .success(_):
-                        self.accountStore.phoneNumberConfirmed = true
-                        self.showPhoneVerification = false
-                    case .failure(let error):
-                        print("Something bad happened", error)
-                    }
-                }
-            } label: {
-                if self.accountStore.saving {
-                    ProgressView()
-                        .padding()
-                        .frame(width: 300, height: 50)
-                        .background(Color.green)
-                        .cornerRadius(15.0)
-                } else {
-                    Text("Confirm Phone")
-                        .asPrimaryButton()
-                        .opacity(self.phoneVerificationCode.count != 6 ? 0.5 : 1.0)
-                }
-            }
-            .disabled(self.phoneVerificationCode.count != 6 || self.accountStore.saving)
-        }
-        .padding()
-        .disabled(self.accountStore.saving)
-        .presentationDetents([.fraction(0.40)])
-    }
+
     
     var datePickerSheet: some View {
         DynamicSheet(

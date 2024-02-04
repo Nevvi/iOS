@@ -181,12 +181,12 @@ class ContactStore: ObservableObject {
                         utcDateFormatter.timeStyle = .none
                         utcDateFormatter.timeZone = TimeZone(abbreviation: "UTC")
                         
-                        var existingBirthday: String? = nil
-                        if let birthday = contact.birthday {
-                            existingBirthday = utcDateFormatter.string(from: birthday.date!)
-                        }
-                        
                         if detail.birthday != nil {
+                            var existingBirthday: String? = nil
+                            if let birthday = contact.birthday {
+                                existingBirthday = utcDateFormatter.string(from: birthday.date!)
+                            }
+                            
                             let newBirthday = utcDateFormatter.string(from: detail.birthday!)
                             contact.birthday = Calendar.current.dateComponents([.year, .month, .day], from: detail.birthday!)
                             let birthdayChange = ContactSyncFieldInfo(field: "Birthday", oldValue: existingBirthday, newValue: newBirthday)
@@ -194,13 +194,14 @@ class ContactStore: ObservableObject {
                         }
                         
                         // We own the home address and mailing address :)
-                        let existingHomeAddress = contact.postalAddresses.first { (address: CNLabeledValue<CNPostalAddress>) in
-                            address.label == CNLabelHome
-                        }
-                        contact.postalAddresses.removeAll { (address: CNLabeledValue<CNPostalAddress>) in
-                            address.label == CNLabelHome
-                        }
                         if detail.address != nil &&  detail.address!.street != nil {
+                            let existingHomeAddress = contact.postalAddresses.first { (address: CNLabeledValue<CNPostalAddress>) in
+                                address.label == CNLabelHome
+                            }
+                            contact.postalAddresses.removeAll { (address: CNLabeledValue<CNPostalAddress>) in
+                                address.label == CNLabelHome
+                            }
+                            
                             let address = CNMutablePostalAddress()
                             address.street = detail.address!.street!
                             if let unit = detail.address?.unit {
@@ -223,13 +224,14 @@ class ContactStore: ObservableObject {
                             contactFieldChanges.append(addressChange)
                         }
                         
-                        let existingMailingAddress = contact.postalAddresses.first { (address: CNLabeledValue<CNPostalAddress>) in
-                            address.label == self.CNLabelMail
-                        }
-                        contact.postalAddresses.removeAll { (address: CNLabeledValue<CNPostalAddress>) in
-                            address.label == self.CNLabelMail
-                        }
                         if detail.mailingAddress != nil &&  detail.mailingAddress!.street != nil {
+                            let existingMailingAddress = contact.postalAddresses.first { (address: CNLabeledValue<CNPostalAddress>) in
+                                address.label == self.CNLabelMail
+                            }
+                            contact.postalAddresses.removeAll { (address: CNLabeledValue<CNPostalAddress>) in
+                                address.label == self.CNLabelMail
+                            }
+                            
                             let address = CNMutablePostalAddress()
                             address.street = detail.mailingAddress!.street!
                             if let unit = detail.mailingAddress?.unit {
@@ -253,13 +255,14 @@ class ContactStore: ObservableObject {
                         }
                                                       
                         // We own the mobile number :)
-                        let existingPhoneNumber = contact.phoneNumbers.first { (phoneNumber: CNLabeledValue<CNPhoneNumber>) in
-                            phoneNumber.label == CNLabelPhoneNumberMobile
-                        }
-                        contact.phoneNumbers.removeAll(where: { (phoneNumber: CNLabeledValue<CNPhoneNumber>) in
-                            phoneNumber.label == CNLabelPhoneNumberMobile
-                        })
                         if detail.phoneNumber != nil {
+                            let existingPhoneNumber = contact.phoneNumbers.first { (phoneNumber: CNLabeledValue<CNPhoneNumber>) in
+                                phoneNumber.label == CNLabelPhoneNumberMobile
+                            }
+                            contact.phoneNumbers.removeAll(where: { (phoneNumber: CNLabeledValue<CNPhoneNumber>) in
+                                phoneNumber.label == CNLabelPhoneNumberMobile
+                            })
+                            
                             let phoneNumber = CNPhoneNumber(stringValue: detail.phoneNumber!)
                             contact.phoneNumbers.append(CNLabeledValue(label: CNLabelPhoneNumberMobile, value: phoneNumber))
                         
@@ -268,13 +271,14 @@ class ContactStore: ObservableObject {
                         }
                         
                         // We own the home email :)
-                        let existingEmail = contact.emailAddresses.first { (email: CNLabeledValue<NSString>) in
-                            email.label == CNLabelHome
-                        }
-                        contact.emailAddresses.removeAll(where: { (email: CNLabeledValue<NSString>) in
-                            email.label == CNLabelHome
-                        })
                         if detail.email != nil {
+                            let existingEmail = contact.emailAddresses.first { (email: CNLabeledValue<NSString>) in
+                                email.label == CNLabelHome
+                            }
+                            contact.emailAddresses.removeAll(where: { (email: CNLabeledValue<NSString>) in
+                                email.label == CNLabelHome
+                            })
+                            
                             let email = NSString(string: detail.email!)
                             contact.emailAddresses.append(CNLabeledValue(label: CNLabelHome, value: email))
                             

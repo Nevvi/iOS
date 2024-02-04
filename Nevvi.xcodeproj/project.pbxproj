@@ -120,6 +120,7 @@
 		277D254E2B69490700D1D717 /* PrivacySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D254D2B69490700D1D717 /* PrivacySettings.swift */; };
 		277E95BC2B6FB8C400A3C433 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BB2B6FB8C400A3C433 /* Popup.swift */; };
 		277E95BE2B701FF700A3C433 /* BindingExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BD2B701FF700A3C433 /* BindingExtensions.swift */; };
+		277E95C02B703B8500A3C433 /* PhoneVerifyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BF2B703B8500A3C433 /* PhoneVerifyButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -228,6 +229,7 @@
 		277D254D2B69490700D1D717 /* PrivacySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettings.swift; sourceTree = "<group>"; };
 		277E95BB2B6FB8C400A3C433 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 		277E95BD2B701FF700A3C433 /* BindingExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExtensions.swift; sourceTree = "<group>"; };
+		277E95BF2B703B8500A3C433 /* PhoneVerifyButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneVerifyButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -456,6 +458,7 @@
 				277D25492B686FD500D1D717 /* FrequentlyAskedQuestionList.swift */,
 				277D254B2B687C5E00D1D717 /* FrequentlyAskedQuestion.swift */,
 				277D254D2B69490700D1D717 /* PrivacySettings.swift */,
+				277E95BF2B703B8500A3C433 /* PhoneVerifyButton.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -721,6 +724,7 @@
 				04B94920295DEDA100703523 /* Address.swift in Sources */,
 				277D252A2B55F84900D1D717 /* PermissionGroupToggle.swift in Sources */,
 				04B94939295E059300703523 /* UIColorExtensions.swift in Sources */,
+				277E95C02B703B8500A3C433 /* PhoneVerifyButton.swift in Sources */,
 				04B9491C295DEBE600703523 /* ConnectionDetail.swift in Sources */,
 				04038E272961F25000D3C7AC /* DateExtensions.swift in Sources */,
 				04B9491E295DEBF700703523 /* ConnectionRow.swift in Sources */,
@@ -827,7 +831,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -918,7 +922,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1070,7 +1074,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1107,7 +1111,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;

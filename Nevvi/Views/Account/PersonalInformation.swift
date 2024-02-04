@@ -41,7 +41,11 @@ struct PersonalInformation: View {
                     }.padding(.vertical)
                     
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Phone Number").personalInfoLabel()
+                        HStack {
+                            Text("Phone Number").personalInfoLabel()
+                            Spacer()
+                            PhoneVerifyButton()
+                        }
                         
                         HStack(alignment: .center, spacing: 8) {
                             Text(self.accountStore.phoneNumber)

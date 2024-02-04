@@ -93,8 +93,8 @@
             filePath = "Nevvi/Stores/ContactStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "286"
-            endingLineNumber = "286"
+            startingLineNumber = "290"
+            endingLineNumber = "290"
             landmarkName = "syncContacts(connections:dryRun:callback:)"
             landmarkType = "7">
          </BreakpointContent>
