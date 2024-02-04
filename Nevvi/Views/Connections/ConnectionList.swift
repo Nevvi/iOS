@@ -108,6 +108,9 @@ struct ConnectionList: View {
     
     var syncHelperSheet: some View {
         VStack(spacing: 24) {
+            Image("AppLogo")
+                .frame(width: 68, height: 68)
+            
             Text("TIP")
                 .defaultStyle(size: 16, opacity: 0.5)
             
