@@ -118,6 +118,7 @@
 		277D254A2B686FD500D1D717 /* FrequentlyAskedQuestionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25492B686FD500D1D717 /* FrequentlyAskedQuestionList.swift */; };
 		277D254C2B687C5E00D1D717 /* FrequentlyAskedQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D254B2B687C5E00D1D717 /* FrequentlyAskedQuestion.swift */; };
 		277D254E2B69490700D1D717 /* PrivacySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D254D2B69490700D1D717 /* PrivacySettings.swift */; };
+		277E95BC2B6FB8C400A3C433 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BB2B6FB8C400A3C433 /* Popup.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -224,6 +225,7 @@
 		277D25492B686FD500D1D717 /* FrequentlyAskedQuestionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequentlyAskedQuestionList.swift; sourceTree = "<group>"; };
 		277D254B2B687C5E00D1D717 /* FrequentlyAskedQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrequentlyAskedQuestion.swift; sourceTree = "<group>"; };
 		277D254D2B69490700D1D717 /* PrivacySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacySettings.swift; sourceTree = "<group>"; };
+		277E95BB2B6FB8C400A3C433 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -392,6 +394,7 @@
 				277D25292B55F84900D1D717 /* PermissionGroupToggle.swift */,
 				277D252B2B55F8E900D1D717 /* CheckboxToggleStyle.swift */,
 				277D253F2B65376400D1D717 /* DynamicSheet.swift */,
+				277E95BB2B6FB8C400A3C433 /* Popup.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -663,6 +666,7 @@
 				04B94918295DEB9900703523 /* Connection.swift in Sources */,
 				04314397297438D70094D7E0 /* PermissionGroupList.swift in Sources */,
 				277D254C2B687C5E00D1D717 /* FrequentlyAskedQuestion.swift in Sources */,
+				277E95BC2B6FB8C400A3C433 /* Popup.swift in Sources */,
 				277D25482B67E05C00D1D717 /* NotificationSettings.swift in Sources */,
 				04038E3629679CCE00D3C7AC /* ContactStore.swift in Sources */,
 				04038E1B2960CE9500D3C7AC /* ConnectionRequest.swift in Sources */,
@@ -819,7 +823,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -910,7 +914,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1062,7 +1066,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1099,7 +1103,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 17;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;

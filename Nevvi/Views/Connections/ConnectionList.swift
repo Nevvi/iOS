@@ -11,6 +11,8 @@ import NukeUI
 import FirebaseMessaging
 
 struct ConnectionList: View {
+    @AppStorage("hasSyncedBefore") var hasSyncedBefore: Bool = false
+    
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var usersStore: UsersStore
@@ -36,6 +38,14 @@ struct ConnectionList: View {
     
     private var noConnectionsExist: Bool {
         return self.selectedGroup == nil && self.nameFilter.text.isEmpty && self.connectionsStore.connectionCount == 0 && !self.connectionsStore.loading
+    }
+    
+    private var syncAvailable: Bool {
+        return self.contactStore.hasAccess() && self.connectionsStore.outOfSyncCount > 0
+    }
+    
+    private var showSyncHelper: Bool {
+        return self.syncAvailable && !hasSyncedBefore
     }
         
     var body: some View {
@@ -65,7 +75,7 @@ struct ConnectionList: View {
             }
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    if self.contactStore.hasAccess() && self.connectionsStore.outOfSyncCount > 0 {
+                    if self.syncAvailable {
                         Image(systemName: "square.and.arrow.down")
                             .toolbarButtonStyle()
                             .onTapGesture {
@@ -83,6 +93,9 @@ struct ConnectionList: View {
         .sheet(isPresented: self.$showContactUpdates) {
             contactUpdatesSheet
         }
+        .modifier(Popup(isPresented: self.showSyncHelper) {
+            syncHelperSheet
+        })
         .toast(isPresenting: $showToast){
             AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Contacts synced!")
         }
@@ -91,6 +104,30 @@ struct ConnectionList: View {
                 self.updateMessagingToken()
             }
         }
+    }
+    
+    var syncHelperSheet: some View {
+        VStack(spacing: 24) {
+            Text("TIP")
+                .defaultStyle(size: 16, opacity: 0.5)
+            
+            Text("You have new updates we can sync to your phone contacts! Tap the button at the top of the screen to sync.")
+                .defaultStyle(size: 18, opacity: 0.7)
+                .multilineTextAlignment(.center)
+
+            Text("Dismiss")
+                .asPrimaryButton()
+                .onTapGesture {
+                    UserDefaults.standard.set(true, forKey: "hasSyncedBefore")
+                }
+                .padding(.top)
+        }
+        .frame(maxWidth: 250)
+        .padding(32)
+        .background(.white)
+        .clipped()
+        .shadow(color: Color(red: 0.06, green: 0.4, blue: 0.64)
+            .opacity(0.16), radius: 30, x: 0, y: 4)
     }
     
     var requestNotificationsView: some View {
