@@ -40,7 +40,7 @@ struct ConnectionRequestList: View {
                         if self.notConnectedUsers.count > 0 {
                             suggestionsView
                         }
-                    }
+                    }.padding(.top)
                 }
             }
             .refreshable {
@@ -51,9 +51,7 @@ struct ConnectionRequestList: View {
                     NavigationLink(destination: UserSearch()) {
                         Image(systemName: "plus.magnifyingglass")
                             .toolbarButtonStyle()
-                            .foregroundColor(.black)
                     }
-                    .padding(.bottom, 8)
                     
                     // TODO
 //                    Image(systemName: "qrcode.viewfinder").toolbarButtonStyle()

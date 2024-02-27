@@ -32,10 +32,10 @@ struct ContentView: View {
                             Label("Requests", systemImage: "plus.circle.fill")
                         }
                     
-                    NotificationList()
-                        .tabItem() {
-                            Label("Notification", systemImage: "bell")
-                        }
+//                    NotificationList()
+//                        .tabItem() {
+//                            Label("Notification", systemImage: "bell")
+//                        }
                     
                     PersonalInformation()
                         .tabItem() {

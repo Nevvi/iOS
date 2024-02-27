@@ -8,33 +8,39 @@
 import UIKit
 import Foundation
 
-extension URLSession {
-    enum HttpError : Error, LocalizedError, Identifiable {
-        case clientError
-        case serverError
-        
-        static func parse(statusCode: Int) -> HttpError {
-            if statusCode >= 400 && statusCode < 500 {
-                return HttpError.clientError
-            } else {
-                return HttpError.serverError
+enum HttpError : Error, LocalizedError, Identifiable {
+    case clientError
+    case serverError
+    case passwordResetError
+            
+    static func parse(statusCode: Int, error: String?) -> HttpError {
+        if statusCode >= 400 && statusCode < 500 {
+            if error != nil && error! == "Password reset required for the user" {
+                return HttpError.passwordResetError
             }
+            return HttpError.clientError
+        } else {
+            return HttpError.serverError
         }
-        
-        var id: String {
-            self.localizedDescription
-        }
-        
-        var errorDescription: String? {
-            switch self {
-            case .clientError:
-                return NSLocalizedString("Client error", comment: "")
-            case .serverError:
-                return NSLocalizedString("Server error", comment: "")
-            }
-        }
-
     }
+    
+    var id: String {
+        self.localizedDescription
+    }
+    
+    var errorDescription: String? {
+        switch self {
+        case .clientError:
+            return NSLocalizedString("Client error", comment: "")
+        case .serverError:
+            return NSLocalizedString("Server error", comment: "")
+        case .passwordResetError:
+            return NSLocalizedString("Password reset required", comment: "")
+        }
+    }
+}
+
+extension URLSession {
     
     func fetchData<T: Decodable>(for url: URL, completion: @escaping (Result<T, Error>) -> Void) {
         var request = URLRequest(url: url)
@@ -148,10 +154,6 @@ extension URLSession {
                 }
                 
                 let httpResponse = response as? HTTPURLResponse
-                if (httpResponse != nil && httpResponse!.statusCode >= 400) {
-                    completion(.failure(HttpError.parse(statusCode: httpResponse!.statusCode)))
-                    return
-                }
                 
                 if let data = data {
                     do {
@@ -160,11 +162,19 @@ extension URLSession {
                         let decoder = JSONDecoder()
                         decoder.dateDecodingStrategy = .formatted(dateFormatter)
                         
-                        let object = try decoder.decode(T.self, from: data)
-                        completion(.success(object))
+                        if (httpResponse != nil && httpResponse!.statusCode >= 400) {
+                            let error = try decoder.decode(String.self, from: data)
+                            completion(.failure(HttpError.parse(statusCode: httpResponse!.statusCode, error: error)))
+                            return
+                        } else {
+                            let object = try decoder.decode(T.self, from: data)
+                            completion(.success(object))
+                        }
                     } catch let decoderError {
                         completion(.failure(decoderError))
                     }
+                } else if (httpResponse != nil && httpResponse!.statusCode >= 400) {
+                    completion(.failure(HttpError.parse(statusCode: httpResponse!.statusCode, error: nil)))
                 }
             }
         }.resume()

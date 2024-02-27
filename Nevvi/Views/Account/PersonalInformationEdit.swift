@@ -10,6 +10,8 @@ import WrappingHStack
 
 
 struct PersonalInformationEdit: View {
+    @AppStorage("hasUpdatedProfileBefore.v1") var hasUpdatedBefore: Bool = false
+    
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var authStore: AuthorizationStore
     
@@ -18,6 +20,8 @@ struct PersonalInformationEdit: View {
     @State private var showBirthdayPicker: Bool = false
     @State private var showAddressSearch: Bool = false
     @State private var showMailingAddressSearch: Bool = false
+    @State private var showEmailVerification: Bool = false
+    @State private var verificationCode: String = ""
     
     @State private var canSave: Bool = false
     
@@ -68,11 +72,10 @@ struct PersonalInformationEdit: View {
                 }.informationSection()
                 
                 VStack(alignment: .leading) {
-                    phoneVerificationLabel
-                    
                     TextField("Phone Number", text: self.$accountStore.phoneNumber)
                         .defaultStyle(size: 16, opacity: 1.0)
                         .keyboardType(.phonePad)
+                        .disabled(true)
                     
                     Divider().padding([.vertical], 4)
                     
@@ -179,19 +182,7 @@ struct PersonalInformationEdit: View {
                         .asPrimaryButton()
                         .opacity(self.accountStore.saving ? 0.7 : 1.0)
                         .onTapGesture {
-                            if self.accountStore.saving {
-                                return
-                            }
-                            
-                            self.accountStore.save { (result: Result<User, Error>) in
-                                switch result {
-                                case .failure(let error):
-                                    print("Something bad happened", error)
-                                case .success(_):
-                                    self.tryToggle()
-                                    self.presentationMode.wrappedValue.dismiss()
-                                }
-                            }
+                            self.update()
                         }
                 }
             }
@@ -207,7 +198,7 @@ struct PersonalInformationEdit: View {
         .onChange(of: self.accountStore.bio, perform: { newValue in
             self.tryToggle()
         })
-        .onChange(of: self.accountStore.phoneNumber, perform: { newValue in
+        .onChange(of: self.accountStore.email, perform: { newValue in
             self.tryToggle()
         })
         .onChange(of: self.accountStore.birthday, perform: { newValue in
@@ -228,6 +219,13 @@ struct PersonalInformationEdit: View {
                 self.showMailingAddressSearch = false
             }).presentationDetents([.large])
         }
+        .sheet(isPresented: self.$showEmailVerification) {
+            emailVerifySheet
+                .presentationDetents([.fraction(0.40)])
+        }
+        .modifier(Popup(isPresented: !self.hasUpdatedBefore) {
+            updateHelperSheet
+        })
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(leading: cancelButton)
@@ -238,6 +236,34 @@ struct PersonalInformationEdit: View {
         })
     }
     
+    var updateHelperSheet: some View {
+        VStack(spacing: 24) {
+            Image("AppLogo")
+                .frame(width: 68, height: 68)
+            
+            Text("FYI")
+                .defaultStyle(size: 16, opacity: 0.5)
+            
+            Text("You have complete control over who sees your info and what they can see once you connect.\n\nOther users you are not connected with can only see your name and bio.")
+                .defaultStyle(size: 18, opacity: 0.7)
+                .multilineTextAlignment(.center)
+
+            Text("Dismiss")
+                .asPrimaryButton()
+                .onTapGesture {
+                    UserDefaults.standard.set(true, forKey: "hasUpdatedProfileBefore.v1")
+                }
+                .padding(.top)
+        }
+        .frame(maxWidth: 250)
+        .padding(32)
+        .background(.white)
+        .clipped()
+        .shadow(color: Color(red: 0.06, green: 0.4, blue: 0.64)
+            .opacity(0.16), radius: 30, x: 0, y: 4)
+    }
+    
+    
     var cancelButton : some View { Button(action: {
         self.accountStore.resetChanges()
         self.presentationMode.wrappedValue.dismiss()
@@ -247,24 +273,11 @@ struct PersonalInformationEdit: View {
         }
     }
     
-    var phoneVerificationLabel: some View {
-        HStack {
-            Text("Phone Number")
-                .personalInfoLabel()
-            
-            Spacer()
-            
-            PhoneVerifyButton()
-        }
-    }
-
-    
     var datePickerSheet: some View {
         DynamicSheet(
             VStack(spacing: 8) {
-                DatePicker("", selection: self.$accountStore.birthday, in: ...Date(), displayedComponents: [.date])
+                DatePicker("", selection: self.$accountStore.birthday, displayedComponents: [.date])
                     .datePickerStyle(.wheel)
-                    .labelsHidden()
                     .padding()
                 
                 Text("Confirm")
@@ -276,17 +289,43 @@ struct PersonalInformationEdit: View {
         )
     }
     
+    var emailVerifySheet: some View {
+        VStack(alignment: .center, spacing: 28) {
+            Text("Please enter the code we sent to your updated email to confirm you as the owner.")
+                .defaultStyle(size: 20, opacity: 1.0)
+                .multilineTextAlignment(.center)
+                        
+            TextField("Code", text: self.$verificationCode)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .keyboardType(.numberPad)
+                .padding()
+                .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                                                
+            Button {
+                self.accountStore.confirmEmail(code: self.verificationCode) { (result: Result<AccountStore.ConfirmResponse, Error>) in
+                    switch result {
+                    case .success(_):
+                        self.accountStore.emailConfirmed = true
+                        self.showEmailVerification = false
+                        self.presentationMode.wrappedValue.dismiss()
+                    case .failure(let error):
+                        print("Something bad happened", error)
+                    }
+                }
+            } label: {
+                Text("Confirm")
+                    .asPrimaryButton()
+                    .opacity(self.verificationCode.count != 6 || self.accountStore.saving ? 0.5 : 1.0)
+            }
+            .disabled(self.verificationCode.count != 6 || self.accountStore.saving)
+        }
+        .padding()
+        .disabled(self.accountStore.saving)
+    }
+    
     var updateAccountButton: some View {
         Button(action: {
-            self.accountStore.save { (result: Result<User, Error>) in
-                switch result {
-                case .failure(let error):
-                    print("Something bad happened", error)
-                case .success(_):
-                    self.tryToggle()
-                    self.presentationMode.wrappedValue.dismiss()
-                }
-            }
+            self.update()
         }, label: {
             Text("Update")
         })
@@ -318,7 +357,7 @@ struct PersonalInformationEdit: View {
         let didChange = didPropChange(type: String.self, a: user.firstName, b: self.accountStore.firstName) ||
         didPropChange(type: String.self, a: user.lastName, b: self.accountStore.lastName) ||
         didPropChange(type: String.self, a: user.bio, b: self.accountStore.bio) ||
-        didPropChange(type: String.self, a: user.phoneNumber, b: self.accountStore.phoneNumber) ||
+        didPropChange(type: String.self, a: user.email, b: self.accountStore.email) ||
         didPropChange(type: String.self, a: user.address.street, b: addressModel.street) ||
         didPropChange(type: String.self, a: user.address.unit, b: addressModel.unit) ||
         didPropChange(type: String.self, a: user.address.city, b: addressModel.city) ||
@@ -349,6 +388,35 @@ struct PersonalInformationEdit: View {
         }
 
         return a != b
+    }
+    
+    func update() -> Void {
+        if self.accountStore.saving {
+            return
+        }
+        
+        let emailUpdated = self.accountStore.email != self.accountStore.user?.email
+        
+        self.accountStore.save { (result: Result<User, Error>) in
+            switch result {
+            case .failure(let error):
+                print("Something bad happened", error)
+            case .success(_):
+                self.tryToggle()
+                if emailUpdated {
+                    self.accountStore.verifyEmail { (result: Result<AccountStore.VerifyResponse, Error>) in
+                        switch result {
+                        case .success(_):
+                            self.showEmailVerification = true
+                        case .failure(let error):
+                            print("Something bad happened", error)
+                        }
+                    }
+                } else {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
+        }
     }
 
 }

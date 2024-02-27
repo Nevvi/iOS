@@ -65,6 +65,16 @@ struct Settings: View {
                         }
                     }.padding(.vertical, 10)
                     
+                    NavigationLink {
+                        AppSettings()
+                    } label: {
+                        HStack {
+                            Image(systemName: "gearshape.2")
+                                .settingsButtonStyle()
+                            Text("App Settings")
+                        }
+                    }.padding(.vertical, 10)
+                    
                 }
                 
                 Section {

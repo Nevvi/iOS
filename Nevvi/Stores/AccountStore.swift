@@ -53,14 +53,15 @@ class AccountStore: ObservableObject {
         self.user = user
         
         self.id = user.id
+        self.phoneNumber = user.phoneNumber
+        self.phoneNumberConfirmed = user.phoneNumberConfirmed
+        
         self.firstName = user.firstName == nil ? "" : user.firstName!
         self.lastName = user.lastName == nil ? "" : user.lastName!
         self.bio = user.bio == nil ? "" : user.bio!
         self.deviceId = user.deviceId == nil ? "" : user.deviceId!
-        self.email = user.email
-        self.emailConfirmed = user.emailConfirmed
-        self.phoneNumber = user.phoneNumber == nil ? "" : user.phoneNumber!
-        self.phoneNumberConfirmed = user.phoneNumberConfirmed == nil ? false : user.phoneNumberConfirmed!
+        self.email = user.email == nil ? "" : user.email!
+        self.emailConfirmed = user.emailConfirmed == nil ? false : user.emailConfirmed!
         self.birthday = user.birthday == nil ? Date() : user.birthday!
         self.onboardingCompleted = user.onboardingCompleted
         self.blockedUsers = user.blockedUsers
@@ -124,22 +125,22 @@ class AccountStore: ObservableObject {
         return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/image")!
     }
     
-    private func verifyPhoneUrl() throws -> URL {
+    private func verifyEmailUrl() throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/users/\(userId!)/sendCode?attribute=phone_number")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/users/\(userId!)/sendCode?attribute=email")!
     }
     
-    private func confirmPhoneUrl(code: String) throws -> URL {
+    private func confirmEmailUrl(code: String) throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/users/\(userId!)/confirmCode?attribute=phone_number&code=\(code)")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/users/\(userId!)/confirmCode?attribute=email&code=\(code)")!
     }
     
     func load() {
@@ -192,7 +193,7 @@ class AccountStore: ObservableObject {
                                        address: self.address.toModel(),
                                        mailingAddress: self.mailingAddress.toModel(),
                                        birthday: self.birthday != Date() ? self.birthday.yyyyMMdd() : nil,
-                                       phoneNumber: self.phoneNumber != "" ? self.phoneNumber : nil,  // TODO - format this to +1XXXXXXXXXX
+                                       email: self.email != "" ? self.email : nil,
                                        deviceId: self.deviceId,
                                        permissionGroups: self.permissionGroups,
                                        deviceSettings: self.deviceSettings.toModel())
@@ -282,12 +283,12 @@ class AccountStore: ObservableObject {
         }
     }
     
-    func verifyPhone(callback: @escaping (Result<VerifyPhoneResponse, Error>) -> Void) {
+    func verifyEmail(callback: @escaping (Result<VerifyResponse, Error>) -> Void) {
         do {
             self.saving = true
             let idToken: String? = self.authorization?.idToken
             let accessToken: String? = self.authorization?.accessToken
-            URLSession.shared.postData(for: try self.verifyPhoneUrl(), for: "Bearer \(idToken!)", for: accessToken!) { (result: Result<VerifyPhoneResponse, Error>) in
+            URLSession.shared.postData(for: try self.verifyEmailUrl(), for: "Bearer \(idToken!)", for: accessToken!) { (result: Result<VerifyResponse, Error>) in
                 switch result {
                 case .success(let response):
                     callback(.success(response))
@@ -304,12 +305,12 @@ class AccountStore: ObservableObject {
         }
     }
     
-    func confirmPhone(code: String, callback: @escaping (Result<ConfirmPhoneResponse, Error>) -> Void) {
+    func confirmEmail(code: String, callback: @escaping (Result<ConfirmResponse, Error>) -> Void) {
         do {
             self.saving = true
             let idToken: String? = self.authorization?.idToken
             let accessToken: String? = self.authorization?.accessToken
-            URLSession.shared.postData(for: try self.confirmPhoneUrl(code: code), for: "Bearer \(idToken!)", for: accessToken!) { (result: Result<ConfirmPhoneResponse, Error>) in
+            URLSession.shared.postData(for: try self.confirmEmailUrl(code: code), for: "Bearer \(idToken!)", for: accessToken!) { (result: Result<ConfirmResponse, Error>) in
                 switch result {
                 case .success(let response):
                     callback(.success(response))
@@ -333,7 +334,7 @@ class AccountStore: ObservableObject {
         var address: Address?
         var mailingAddress: Address?
         var birthday: String?
-        var phoneNumber: String?
+        var email: String?
         var deviceId: String?
         var permissionGroups: [PermissionGroup]?
         var deviceSettings: DeviceSettings?
@@ -344,11 +345,11 @@ class AccountStore: ObservableObject {
         var onboardingCompleted: Bool
     }
     
-    struct VerifyPhoneResponse: Decodable {
+    struct VerifyResponse: Decodable {
         var CodeDeliveryDetails: CodeDeliveryDetails
     }
     
-    struct ConfirmPhoneResponse: Decodable {
+    struct ConfirmResponse: Decodable {
         
     }
     

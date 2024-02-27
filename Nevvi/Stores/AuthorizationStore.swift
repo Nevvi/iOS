@@ -35,6 +35,7 @@ class AuthorizationStore: ObservableObject {
         case noFingerPrintEnrolled
         case biometricError
         case credentialsNotSaved
+        case passwordResetRequired
         case unknown
         
         var id: String {
@@ -44,7 +45,7 @@ class AuthorizationStore: ObservableObject {
         var errorDescription: String? {
             switch self {
             case .invalidCredentials:
-                return NSLocalizedString("Either the email or password you entered is incorrect. Please try again.", comment: "")
+                return NSLocalizedString("Either the username or password you entered is incorrect. Please try again.", comment: "")
             case .invalidSignup:
                 return NSLocalizedString("Invalid credentials for signup", comment: "")
             case .invalidConfirmation:
@@ -59,6 +60,8 @@ class AuthorizationStore: ObservableObject {
                 return NSLocalizedString("Biometric access not recognized", comment: "")
             case .credentialsNotSaved:
                 return NSLocalizedString("No login credentials have been saved. Face ID will be enabled after the first successful login.", comment: "")
+            case .passwordResetRequired:
+                return NSLocalizedString("Password reset required", comment: "")
             case .unknown:
                 return NSLocalizedString("Unknown error occurred", comment: "")
             }
@@ -165,11 +168,11 @@ class AuthorizationStore: ObservableObject {
         }
     }
     
-    func login(email: String, password: String, callback: @escaping (Result<Authorization, AuthorizationError>) -> Void) {
+    func login(username: String, password: String, callback: @escaping (Result<Authorization, AuthorizationError>) -> Void) {
         do {
             print("Logging in")
             self.loggingIn = true
-            let request = Credentials(username: email.lowercased(), password: password)
+            let request = Credentials(username: username, password: password)
             URLSession.shared.postData(for: try self.loginUrl(), for: request) { (result: Result<Authorization, Error>) in
                 switch result {
                 case .success(let authorization):
@@ -177,7 +180,12 @@ class AuthorizationStore: ObservableObject {
                     callback(.success(authorization))
                 case .failure(let error):
                     print(error)
-                    callback(.failure(AuthorizationError.invalidCredentials))
+                    let httpError = error as? HttpError
+                    if httpError == HttpError.passwordResetError {
+                        callback(.failure(AuthorizationError.passwordResetRequired))
+                    } else {
+                        callback(.failure(AuthorizationError.invalidCredentials))
+                    }
                 }
                 self.loggingIn = false
             }
@@ -216,10 +224,10 @@ class AuthorizationStore: ObservableObject {
         }
     }
     
-    func signUp(email: String, password: String, callback: @escaping (Result<SignupResponse, AuthorizationError>) -> Void) {
+    func signUp(username: String, password: String, callback: @escaping (Result<SignupResponse, AuthorizationError>) -> Void) {
         do {
             self.signingUp = true
-            let request = SignupRequest(email: email.lowercased(), password: password)
+            let request = SignupRequest(username: username, password: password)
             URLSession.shared.postData(for: try self.signupUrl(), for: request) { (result: Result<SignupResponse, Error>) in
                 switch result {
                 case .success(let response):
@@ -237,10 +245,10 @@ class AuthorizationStore: ObservableObject {
         }
     }
     
-    func confirmAccount(email: String, code: String, callback: @escaping (Result<ConfirmResponse, AuthorizationError>) -> Void) {
+    func confirmAccount(username: String, code: String, callback: @escaping (Result<ConfirmResponse, AuthorizationError>) -> Void) {
         do {
             self.confirming = true
-            let request = ConfirmRequest(username: email.lowercased(), confirmationCode: code)
+            let request = ConfirmRequest(username: username, confirmationCode: code)
             URLSession.shared.postData(for: try self.confirmUrl(), for: request) { (result: Result<ConfirmResponse, Error>) in
                 switch result {
                 case .success(let response):
@@ -258,10 +266,10 @@ class AuthorizationStore: ObservableObject {
         }
     }
     
-    func forgotPassword(email: String, callback: @escaping (Result<ConfirmResponse, AuthorizationError>) -> Void) {
+    func forgotPassword(username: String, callback: @escaping (Result<ConfirmResponse, AuthorizationError>) -> Void) {
         do {
             self.sendingResetCode = true
-            let request = ForgotPasswordRequest(email: email.lowercased())
+            let request = ForgotPasswordRequest(username: username)
             URLSession.shared.postData(for: try self.forgotPasswordUrl(), for: request) { (result: Result<ConfirmResponse, Error>) in
                 switch result {
                 case .success(let response):
@@ -279,10 +287,10 @@ class AuthorizationStore: ObservableObject {
         }
     }
     
-    func confirmForgotPassword(email: String, code: String, password: String, callback: @escaping (Result<ConfirmResponse, AuthorizationError>) -> Void) {
+    func confirmForgotPassword(username: String, code: String, password: String, callback: @escaping (Result<ConfirmResponse, AuthorizationError>) -> Void) {
         do {
             self.resettingPassword = true
-            let request = ConfirmForgotPasswordRequest(email: email.lowercased(), code: code, password: password)
+            let request = ConfirmForgotPasswordRequest(username: username, code: code, password: password)
             URLSession.shared.postData(for: try self.confirmForgotPasswordUrl(), for: request) { (result: Result<ConfirmResponse, Error>) in
                 switch result {
                 case .success(let response):
@@ -301,7 +309,7 @@ class AuthorizationStore: ObservableObject {
     }
     
     struct SignupRequest: Encodable {
-        var email: String
+        var username: String
         var password: String
     }
     
@@ -319,11 +327,11 @@ class AuthorizationStore: ObservableObject {
     }
     
     struct ForgotPasswordRequest: Encodable {
-        var email: String
+        var username: String
     }
     
     struct ConfirmForgotPasswordRequest: Encodable {
-        var email: String
+        var username: String
         var code: String
         var password: String
     }

@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct CreateAccount: View {
-    @State private var email = ""
+    @State private var username = ""
     @State private var confirmationCode = ""
     @State private var password = ""
     @State private var error: AuthorizationStore.AuthorizationError?
     @State private var storeCredentials: Bool = false
     
-    @State private var confirmationCodeEmail: String = ""
+    @State private var confirmationCodeDestination: String = ""
     @State private var showConfirmationCode: Bool
     @State private var hidePassword: Bool = true
     
@@ -47,7 +47,7 @@ struct CreateAccount: View {
     }
     
     var createAccountDisabled: Bool {
-        self.email.isEmpty ||
+        self.username.isEmpty ||
         self.password.isEmpty ||
         self.authStore.signingUp ||
         !self.passwordContainsUppercase ||
@@ -58,7 +58,7 @@ struct CreateAccount: View {
     }
     
     var confirmAccountDisabled: Bool {
-        self.email.isEmpty || self.confirmationCode.isEmpty || self.authStore.confirming || self.authStore.loggingIn
+        self.username.isEmpty || self.confirmationCode.isEmpty || self.authStore.confirming || self.authStore.loggingIn
     }
     
     private var callback: (Authorization) -> Void
@@ -85,7 +85,7 @@ struct CreateAccount: View {
                 VStack(alignment: .center, spacing: 20) {
                     Image("AppLogo")
                         .frame(width: 68, height: 68)
-                        .padding([.top], 64)
+                        .padding([.top], 80)
                                       
                     if self.showConfirmationCode {
                         confirmationCodeView
@@ -111,20 +111,20 @@ struct CreateAccount: View {
     
     var createAccountView: some View {
         VStack(spacing: 12) {
-            Spacer()
-            
             Text("Create free Nevvi account")
                 .defaultStyle(size: 26, opacity: 0.7)
                 .multilineTextAlignment(.center)
-                .padding([.vertical], 16)
+                .padding([.top], 16)
+            
+            Spacer()
             
             HStack(alignment: .center, spacing: 6) {
-                Image(systemName: "envelope")
+                Image(systemName: "phone")
                     .frame(width: 24, height: 24)
                     .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
                 
-                TextField("Email", text: self.$email)
-                    .keyboardType(.emailAddress)
+                TextField("Phone Number", text: self.$username)
+                    .keyboardType(.phonePad)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
@@ -175,40 +175,45 @@ struct CreateAccount: View {
                 .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
             )
             
-            VStack(alignment: .leading, spacing: 12) {
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains uppercase letter")
+            HStack {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains uppercase letter")
+                    }
+                    .foregroundColor(self.passwordContainsUppercase ? ColorConstants.primary : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains lowercase letter")
+                    }
+                    .foregroundColor(self.passwordContainsLowercase ? ColorConstants.primary : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains special character")
+                    }
+                    .foregroundColor(self.passwordContainsSpecialChar ? ColorConstants.primary : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains number")
+                    }
+                    .foregroundColor(self.passwordContainsNumber ? ColorConstants.primary : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains at least 8 characters")
+                    }
+                    .foregroundColor(self.passwordMinimumLength ? ColorConstants.primary : ColorConstants.secondary)
                 }
-                .foregroundColor(self.passwordContainsUppercase ? ColorConstants.primary : ColorConstants.secondary)
+                .fontWeight(.regular)
+                .font(.system(size: 14))
                 
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains lowercase letter")
-                }
-                .foregroundColor(self.passwordContainsLowercase ? ColorConstants.primary : ColorConstants.secondary)
-                
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains special character")
-                }
-                .foregroundColor(self.passwordContainsSpecialChar ? ColorConstants.primary : ColorConstants.secondary)
-                
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains number")
-                }
-                .foregroundColor(self.passwordContainsNumber ? ColorConstants.primary : ColorConstants.secondary)
-                
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains at least 8 characters")
-                }
-                .foregroundColor(self.passwordMinimumLength ? ColorConstants.primary : ColorConstants.secondary)
+                Spacer()
             }
-            .padding()
-            .fontWeight(.regular)
-            .font(.system(size: 14))
+            .padding([.leading], 18)
+            .padding([.bottom], 32)
             
             Button(action: self.createAccount, label: {
                 HStack {
@@ -276,12 +281,12 @@ struct CreateAccount: View {
                 .padding([.vertical], 16)
             
             HStack(alignment: .center, spacing: 6) {
-                Image(systemName: "envelope")
+                Image(systemName: "phone")
                     .frame(width: 24, height: 24)
                     .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
                 
-                TextField("Email", text: self.$confirmationCodeEmail)
-                    .keyboardType(.emailAddress)
+                TextField("Phone Number", text: self.$confirmationCodeDestination)
+                    .keyboardType(.phonePad)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
@@ -351,13 +356,13 @@ struct CreateAccount: View {
     }
     
     func createAccount() {
-        self.authStore.signUp(email: email, password: password) { (result: Result<AuthorizationStore.SignupResponse, AuthorizationStore.AuthorizationError>) in
+        self.authStore.signUp(username: username, password: password) { (result: Result<AuthorizationStore.SignupResponse, AuthorizationStore.AuthorizationError>) in
             switch result {
             case .success(let response):
-                self.confirmationCodeEmail = response.codeDeliveryDestination
+                self.confirmationCodeDestination = response.codeDeliveryDestination
                 self.showConfirmationCode = true
             case .failure(let error):
-                self.email = ""
+                self.username = ""
                 self.password = ""
                 self.error = error
             }
@@ -365,10 +370,10 @@ struct CreateAccount: View {
     }
     
     func confirmAccount() {
-        self.authStore.confirmAccount(email: email, code: confirmationCode) { (result: Result<AuthorizationStore.ConfirmResponse, AuthorizationStore.AuthorizationError>) in
+        self.authStore.confirmAccount(username: username, code: confirmationCode) { (result: Result<AuthorizationStore.ConfirmResponse, AuthorizationStore.AuthorizationError>) in
             switch result {
             case .success(_):
-                if self.email.isEmpty == false && self.password.isEmpty == false {
+                if self.username.isEmpty == false && self.password.isEmpty == false {
                     self.signIn()
                 }
             case .failure(let error):
@@ -379,16 +384,16 @@ struct CreateAccount: View {
     }
     
     func signIn() {
-        self.authStore.login(email: email, password: password) { (result: Result<Authorization, AuthorizationStore.AuthorizationError>) in
+        self.authStore.login(username: username, password: password) { (result: Result<Authorization, AuthorizationStore.AuthorizationError>) in
             switch result {
             case .success(let authorization):
-                KeychainStore.saveCredentials(Credentials(username: email, password: password))
+                KeychainStore.saveCredentials(Credentials(username: username, password: password))
                 self.callback(authorization)
                 
                 // set this to false after successful signin so that we don't go back to create account page
                 self.showConfirmationCode = false
             case .failure(let error):
-                self.email = ""
+                self.username = ""
                 self.password = ""
                 self.error = error
             }

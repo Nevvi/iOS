@@ -11,7 +11,7 @@ import NukeUI
 import FirebaseMessaging
 
 struct ConnectionList: View {
-    @AppStorage("hasSyncedBefore") var hasSyncedBefore: Bool = false
+    @AppStorage("hasSyncedBefore.v1") var hasSyncedBefore: Bool = false
     
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var accountStore: AccountStore
@@ -76,8 +76,9 @@ struct ConnectionList: View {
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if self.syncAvailable {
-                        Image(systemName: "square.and.arrow.down")
-                            .toolbarButtonStyle()
+                        Text("Sync")
+                            .foregroundColor(ColorConstants.primary)
+                            .defaultStyle(size: 18, opacity: 1.0)
                             .onTapGesture {
                                 if !self.syncing {
                                     self.sync(dryRun: true)
@@ -103,6 +104,10 @@ struct ConnectionList: View {
             if self.notificationStore.hasAccess {
                 self.updateMessagingToken()
             }
+            
+            if !showSyncHelper && self.syncAvailable && self.accountStore.deviceSettings.autoSync {
+                self.sync(dryRun: true)
+            }
         }
     }
     
@@ -114,14 +119,18 @@ struct ConnectionList: View {
             Text("TIP")
                 .defaultStyle(size: 16, opacity: 0.5)
             
-            Text("You have new updates we can sync to your phone contacts! Tap the button at the top of the screen to sync.")
+            Text("You have new data to sync!")
+                .defaultStyle(size: 18, opacity: 0.7)
+                .multilineTextAlignment(.center)
+            
+            Text("You can either use the \"Sync\" button at the top of the screen, or enable auto-sync in your profile settings.")
                 .defaultStyle(size: 18, opacity: 0.7)
                 .multilineTextAlignment(.center)
 
             Text("Dismiss")
                 .asPrimaryButton()
                 .onTapGesture {
-                    UserDefaults.standard.set(true, forKey: "hasSyncedBefore")
+                    UserDefaults.standard.set(true, forKey: "hasSyncedBefore.v1")
                 }
                 .padding(.top)
         }

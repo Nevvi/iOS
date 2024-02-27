@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ForgotPassword: View {
-    @State private var email = ""
+    @State private var username: String
     @State private var confirmationCode = ""
     @State private var password = ""
     @State private var error: AuthorizationStore.AuthorizationError?
@@ -45,11 +45,11 @@ struct ForgotPassword: View {
     }
     
     var sendResetCodeDisabled: Bool {
-        self.email.isEmpty || self.authStore.sendingResetCode
+        self.username.isEmpty || self.authStore.sendingResetCode
     }
     
     var resetPasswordDisabled: Bool {
-        self.email.isEmpty ||
+        self.username.isEmpty ||
         self.confirmationCode.isEmpty ||
         self.password.isEmpty ||
         self.authStore.resettingPassword ||
@@ -66,14 +66,17 @@ struct ForgotPassword: View {
     @Environment(\.presentationMode) var presentationMode
     
     init(authStore: AuthorizationStore, callback: @escaping (String, String) -> Void) {
-        self.authStore = authStore
-        self.callback = callback
-        _showConfirmationCode = State(initialValue: false)
+        self.init(authStore: authStore, callback: callback, username: "", showConfirmationCode: false)
     }
     
     init(authStore: AuthorizationStore, callback: @escaping (String, String) -> Void, showConfirmationCode: Bool) {
+        self.init(authStore: authStore, callback: callback, username: "", showConfirmationCode: showConfirmationCode)
+    }
+    
+    init(authStore: AuthorizationStore, callback: @escaping (String, String) -> Void, username: String, showConfirmationCode: Bool) {
         self.authStore = authStore
         self.callback = callback
+        _username = State(initialValue: username)
         _showConfirmationCode = State(initialValue: showConfirmationCode)
     }
       
@@ -117,10 +120,10 @@ struct ForgotPassword: View {
     }
     
     var sendResetCodeView: some View {
-        VStack {
+        VStack(spacing: 20) {
             Spacer()
             
-            Text("Forgot your password?")
+            Text("Reset your password")
                 .defaultStyle(size: 26, opacity: 0.7)
                 .padding([.top], 16)
             
@@ -130,12 +133,12 @@ struct ForgotPassword: View {
                 .padding([.vertical], 16)
             
             HStack(alignment: .center, spacing: 6) {
-                Image(systemName: "envelope")
+                Image(systemName: "phone")
                     .frame(width: 24, height: 24)
                     .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
                 
-                TextField("Email", text: self.$email)
-                    .keyboardType(.emailAddress)
+                TextField("Phone Number", text: self.$username)
+                    .keyboardType(.phonePad)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
@@ -162,19 +165,26 @@ struct ForgotPassword: View {
                 .background(
                     RoundedRectangle(cornerRadius: 24)
                         .foregroundColor(ColorConstants.primary)
-                        .opacity(self.authStore.sendingResetCode ? 0.5 : 1.0)
+                        .opacity(self.authStore.sendingResetCode || self.username.isEmpty ? 0.5 : 1.0)
                 )
             })
-            .disabled(self.authStore.sendingResetCode)
+            .disabled(self.authStore.sendingResetCode || self.username.isEmpty)
             .padding([.bottom], 16)
             
             Spacer()
             Spacer()
+            
+            HStack {
+                Text("Enter Code")
+                    .foregroundColor(ColorConstants.primary)
+                    .defaultStyle(size: 16, opacity: 0.5)
+                    .onTapGesture {
+                        self.showConfirmationCode = true
+                    }
+            }
         }
         .padding(.horizontal, 24)
-        .padding(.vertical, 48)
         .frame(width: Constants.Width, alignment: .top)
-        .edgesIgnoringSafeArea(.top)
         .disabled(self.authStore.sendingResetCode)
         .alert(item: self.$error) { error in
             return Alert(title: Text("Invalid login"), message: Text(error.localizedDescription))
@@ -185,21 +195,21 @@ struct ForgotPassword: View {
     }
     
     var resetPasswordView: some View {
-        VStack {
-            Spacer()
-            
+        VStack(spacing: 12) {
             Text("Reset your password")
                 .defaultStyle(size: 26, opacity: 0.7)
                 .multilineTextAlignment(.center)
-                .padding([.vertical], 16)
+                .padding([.top], 16)
+            
+            Spacer()
             
             HStack(alignment: .center, spacing: 6) {
-                Image(systemName: "envelope")
+                Image(systemName: "phone")
                     .frame(width: 24, height: 24)
                     .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
                 
-                TextField("Email", text: self.$email)
-                    .keyboardType(.emailAddress)
+                TextField("Phone Number", text: self.$username)
+                    .keyboardType(.phonePad)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
@@ -268,40 +278,45 @@ struct ForgotPassword: View {
                 .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
             )
             
-            VStack(alignment: .leading, spacing: 15) {
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains uppercase letter")
+            HStack {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains uppercase letter")
+                    }
+                    .foregroundColor(self.passwordContainsUppercase ? ColorConstants.primary : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains lowercase letter")
+                    }
+                    .foregroundColor(self.passwordContainsLowercase ? ColorConstants.primary : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains special character")
+                    }
+                    .foregroundColor(self.passwordContainsSpecialChar ? ColorConstants.primary : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains number")
+                    }
+                    .foregroundColor(self.passwordContainsNumber ? ColorConstants.primary : ColorConstants.secondary)
+                    
+                    HStack {
+                        Image(systemName: "checkmark.seal.fill")
+                        Text("Contains at least 8 characters")
+                    }
+                    .foregroundColor(self.passwordMinimumLength ? ColorConstants.primary : ColorConstants.secondary)
                 }
-                .foregroundColor(self.passwordContainsUppercase ? ColorConstants.primary : ColorConstants.secondary)
+                .fontWeight(.regular)
+                .font(.system(size: 14))
                 
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains lowercase letter")
-                }
-                .foregroundColor(self.passwordContainsLowercase ? ColorConstants.primary : ColorConstants.secondary)
-                
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains special character")
-                }
-                .foregroundColor(self.passwordContainsSpecialChar ? ColorConstants.primary : ColorConstants.secondary)
-                
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains number")
-                }
-                .foregroundColor(self.passwordContainsNumber ? ColorConstants.primary : ColorConstants.secondary)
-                
-                HStack {
-                    Image(systemName: "checkmark.seal.fill")
-                    Text("Contains at least 8 characters")
-                }
-                .foregroundColor(self.passwordMinimumLength ? ColorConstants.primary : ColorConstants.secondary)
+                Spacer()
             }
-            .padding()
-            .fontWeight(.regular)
-            .font(.system(size: 14))
+            .padding([.leading], 18)
+            .padding([.bottom], 32)
                         
             Button(action: self.resetPassword, label: {
                 HStack {
@@ -327,27 +342,36 @@ struct ForgotPassword: View {
             
             Spacer()
             Spacer()
+            
+            HStack {
+                Text("Send Code")
+                    .foregroundColor(ColorConstants.primary)
+                    .defaultStyle(size: 16, opacity: 0.5)
+                    .onTapGesture {
+                        self.showConfirmationCode = false
+                    }
+            }
         }
         .disabled(self.authStore.signingUp)
     }
     
     func sendResetCode() {
-        self.authStore.forgotPassword(email: email) { (result: Result<AuthorizationStore.ConfirmResponse, AuthorizationStore.AuthorizationError>) in
+        self.authStore.forgotPassword(username: username) { (result: Result<AuthorizationStore.ConfirmResponse, AuthorizationStore.AuthorizationError>) in
             switch result {
             case .success(_):
                 self.showConfirmationCode = true
             case .failure(let error):
-                self.email = ""
+                self.username = ""
                 self.error = error
             }
         }
     }
     
     func resetPassword() {
-        self.authStore.confirmForgotPassword(email: email, code: confirmationCode, password: password) { (result: Result<AuthorizationStore.ConfirmResponse, AuthorizationStore.AuthorizationError>) in
+        self.authStore.confirmForgotPassword(username: username, code: confirmationCode, password: password) { (result: Result<AuthorizationStore.ConfirmResponse, AuthorizationStore.AuthorizationError>) in
             switch result {
             case .success(_):
-                self.callback(self.email, self.password)
+                self.callback(self.username, self.password)
                 self.presentationMode.wrappedValue.dismiss()
             case .failure(let error):
                 self.confirmationCode = ""
@@ -361,6 +385,6 @@ struct ForgotPassword: View {
 
 struct ForgotPassword_Previews: PreviewProvider {
     static var previews: some View {
-        ForgotPassword(authStore: AuthorizationStore(), callback: { email, password in }, showConfirmationCode: true)
+        ForgotPassword(authStore: AuthorizationStore(), callback: { username, password in }, username: "6129631237", showConfirmationCode: true)
     }
 }

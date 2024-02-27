@@ -21,7 +21,7 @@ struct OnboardingSync: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
             
-            VStack(alignment: .center, spacing: 20) {
+            VStack(alignment: .center) {
                 Image("AppLogo")
                     .frame(width: 68, height: 68)
                     .padding([.top], 64)
@@ -48,7 +48,7 @@ struct OnboardingSync: View {
                         .multilineTextAlignment(.center)
                         .padding([.top], -16)
                     
-                    Text("We'll notify you as soon as a connection updates their info.")
+                    Text("We'll notify you when a connection updates their info.")
                         .defaultStyle(size: 22, opacity: 0.7)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.center)

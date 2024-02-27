@@ -17,6 +17,8 @@ struct PersonalInformation: View {
     let filter = CIFilter.qrCodeGenerator()
     
     @State var showQrCode: Bool = false
+    @State var showEmailVerification: Bool = false
+    @State private var verificationCode: String = ""
     
     private var isBirthdayEmpty: Bool {
         return self.accountStore.birthday.yyyyMMdd() == Date().yyyyMMdd()
@@ -43,8 +45,6 @@ struct PersonalInformation: View {
                     VStack(alignment: .leading, spacing: 2) {
                         HStack {
                             Text("Phone Number").personalInfoLabel()
-                            Spacer()
-                            PhoneVerifyButton()
                         }
                         
                         HStack(alignment: .center, spacing: 8) {
@@ -65,7 +65,11 @@ struct PersonalInformation: View {
                     }.informationSection()
                     
                     VStack(alignment: .leading, spacing: 2) {
-                        Text("Email").personalInfoLabel()
+                        HStack {
+                            Text("Email").personalInfoLabel()
+                            Spacer()
+                            verifyButton
+                        }
                         
                         HStack(alignment: .center, spacing: 8) {
                             Text(self.accountStore.email)
@@ -149,6 +153,10 @@ struct PersonalInformation: View {
                 qrCodeSheet
                     .presentationDetents([.fraction(0.66)])
             }
+            .sheet(isPresented: self.$showEmailVerification) {
+                emailVerifySheet
+                    .presentationDetents([.fraction(0.40)])
+            }
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -156,6 +164,73 @@ struct PersonalInformation: View {
     
     func fieldPermissionGroups(field: String) -> some View {
         FieldPermissionGroupPicker(canEdit: false, fieldName: field, permissionGroups: self.accountStore.permissionGroups.map { $0.copy() })
+    }
+    
+    var verifyButton: some View {
+        HStack {
+            if !self.accountStore.email.isEmpty && !self.accountStore.emailConfirmed && self.accountStore.email == self.accountStore.user?.email {
+                Button {
+                    self.accountStore.verifyEmail { (result: Result<AccountStore.VerifyResponse, Error>) in
+                        switch result {
+                        case .success(_):
+                            self.showEmailVerification = true
+                        case .failure(let error):
+                            print("Something bad happened", error)
+                        }
+                    }
+                } label: {
+                    Text("Verify")
+                        .foregroundColor(ColorConstants.primary)
+                        .defaultStyle(size: 12, opacity: 1.0)
+                        .opacity(self.accountStore.saving ? 0.5 : 1.0)
+                        .padding(.trailing, 4)
+                }
+                .disabled(self.accountStore.saving)
+                .fontWeight(.bold)
+                .font(.system(size: 14))
+            }
+        }
+    }
+    
+    var emailVerifySheet: some View {
+        VStack(alignment: .center, spacing: 28) {
+            Text("Please enter the confirmation code we sent to your email")
+                .defaultStyle(size: 22, opacity: 1.0)
+                .multilineTextAlignment(.center)
+            
+            TextField("Code", text: self.$verificationCode)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .keyboardType(.numberPad)
+                .padding()
+                .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                                    
+            Button {
+                self.accountStore.confirmEmail(code: self.verificationCode) { (result: Result<AccountStore.ConfirmResponse, Error>) in
+                    switch result {
+                    case .success(_):
+                        self.accountStore.emailConfirmed = true
+                        self.showEmailVerification = false
+                    case .failure(let error):
+                        print("Something bad happened", error)
+                    }
+                }
+            } label: {
+                if self.accountStore.saving {
+                    ProgressView()
+                        .padding()
+                        .frame(width: 300, height: 50)
+                        .background(Color.green)
+                        .cornerRadius(15.0)
+                } else {
+                    Text("Confirm Phone")
+                        .asPrimaryButton()
+                        .opacity(self.verificationCode.count != 6 ? 0.5 : 1.0)
+                }
+            }
+            .disabled(self.verificationCode.count != 6 || self.accountStore.saving)
+        }
+        .padding()
+        .disabled(self.accountStore.saving)
     }
     
     var qrCodeSheet: some View {
