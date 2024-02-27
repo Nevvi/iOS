@@ -209,7 +209,7 @@ struct ConnectionDetail: View {
             }
             .pickerStyle(.segmented)
             .padding(.horizontal, 16)
-            .padding(.top, 16)
+            .padding(.top, 24)
 
             TabView(selection: $tabSelectedValue) {
                 editPermissionGroup.tag(0)
@@ -218,6 +218,13 @@ struct ConnectionDetail: View {
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .animation(.easeIn, value: tabSelectedValue)
+            
+            Text("Close")
+                .asDefaultButton()
+                .padding(.horizontal)
+                .onTapGesture {
+                    self.showEditSheet = false
+                }
         }
     }
     
@@ -263,7 +270,7 @@ struct ConnectionDetail: View {
                                                 self.connectionStore.update { (result: Result<Connection, Error>) in
                                                     switch result {
                                                     case .success(let connection):
-                                                        print("Updated connection with \(connection.id)")
+                                                        self.connectionsStore.load()
                                                     case .failure(let error):
                                                         print("Something bad happened", error)
                                                     }

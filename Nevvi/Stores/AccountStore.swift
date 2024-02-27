@@ -327,6 +327,15 @@ class AccountStore: ObservableObject {
         }
     }
     
+    func addPermissionGroup(newGroup: PermissionGroup, callback: @escaping (Result<User, Error>) -> Void) {
+        if self.permissionGroups.contains(where: { group in group.name == newGroup.name }) {
+            return
+        }
+        
+        self.permissionGroups.append(newGroup)
+        self.save(callback: callback)
+    }
+    
     struct PatchRequest: Encodable {
         var firstName: String?
         var lastName: String?

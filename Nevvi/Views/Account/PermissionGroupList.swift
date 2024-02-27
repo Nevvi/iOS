@@ -83,28 +83,20 @@ struct PermissionGroupList: View {
                 
                 HStack {
                     Button {
-                        self.accountStore.permissionGroups.append(
-                            PermissionGroup(name: self.newGroupName, fields: self.newGroupFields)
-                        )
-                        self.accountStore.save { (result: Result<User, Error>) in
+                        self.accountStore.addPermissionGroup(newGroup: PermissionGroup(name: self.newGroupName, fields: self.newGroupFields)
+                        ) { (result: Result<User, Error>) in
                             switch result {
                             case .success(_):
                                 self.showNewGroup = false
+                                self.newGroupName = ""
+                                self.newGroupFields = []
                             case .failure(let error):
                                 print("Something went wrong", error)
                             }
                         }
                     } label: {
                         Text("Save".uppercased())
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity)
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding(16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 24)
-                                    .foregroundColor(ColorConstants.primary)
-                            )
+                            .asPrimaryButton()
                             .opacity(self.newGroupName.isEmpty || self.accountStore.saving ? 0.5 : 1.0)
                     }
                     .disabled(self.newGroupName.isEmpty || self.accountStore.saving)

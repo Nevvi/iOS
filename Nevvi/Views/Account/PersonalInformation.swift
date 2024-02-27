@@ -215,17 +215,9 @@ struct PersonalInformation: View {
                     }
                 }
             } label: {
-                if self.accountStore.saving {
-                    ProgressView()
-                        .padding()
-                        .frame(width: 300, height: 50)
-                        .background(Color.green)
-                        .cornerRadius(15.0)
-                } else {
-                    Text("Confirm Phone")
-                        .asPrimaryButton()
-                        .opacity(self.verificationCode.count != 6 ? 0.5 : 1.0)
-                }
+                Text("Confirm")
+                    .asPrimaryButton()
+                    .opacity(self.verificationCode.count != 6 || self.accountStore.saving ? 0.5 : 1.0)
             }
             .disabled(self.verificationCode.count != 6 || self.accountStore.saving)
         }
