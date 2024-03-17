@@ -23,7 +23,7 @@ struct ConnectionList: View {
     @State private var syncing: Bool = false
     @State private var showSyncConfirmation: Bool = false
     
-    @State private var contactsToSyncCount: Int = 2
+    @State private var contactsToSyncCount: Int = 0
     @State private var contactUpdates: [ContactStore.ContactSyncInfo] = []
     @State private var showContactUpdates: Bool = false
     
@@ -487,16 +487,24 @@ struct ConnectionList: View {
                 print("Got response: \(response)")
                 if response.count > 0 {
                     self.contactStore.syncContacts(connections: response.users, dryRun: dryRun) { syncInfo in
-                        self.contactUpdates.append(contentsOf: syncInfo.updatedContacts)
+                        let validUpdates = syncInfo.updatedContacts.filter { updates in
+                            return updates.changedFields().count > 0
+                        }
+                        
+                        self.contactUpdates.append(contentsOf: validUpdates)
 
                         if (!dryRun) {
                             UIApplication.shared.applicationIconBadgeNumber = 0
                             self.contactsToSyncCount = 0
                             self.connectionsStore.loadOutOfSync { _ in }
                             self.showToast = true
-                        } else {
+                        } else if self.contactUpdates.count > 0 {
                             self.contactsToSyncCount = self.contactUpdates.count
                             self.showContactUpdates = true
+                        } else {
+                            // Sometimes the server thinks something changed but the contact book
+                            // is already up to date. In this case just sync to update the server.
+                            self.sync(dryRun: false)
                         }
 
                         self.syncing = false

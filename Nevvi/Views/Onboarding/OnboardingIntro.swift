@@ -19,34 +19,35 @@ struct OnboardingIntro: View {
             VStack(alignment: .center) {
                 Image("AppLogo")
                     .frame(width: 68, height: 68)
-                    .padding([.top], 64)
+                    .padding([.top], 80)
 
-                VStack(alignment: .center, spacing: 12) {
-                    ZStack {
-                        Image("OnboardingIntroBackground")
-                            .resizable()
-                            .scaledToFit()
-                        
-                        Image("OnboardingIntro")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(.clear)
-                            .cornerRadius(24)
-                            .shadow(color: Color(red: 0.06, green: 0.4, blue: 0.64)
-                            .opacity(0.16), radius: 30, x: 0, y: 4)
-                    }.frame(maxHeight: 350)
+                ZStack {
+                    Image("OnboardingIntroBackground")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(maxHeight: 300)
                     
-                    Text("Welcome to Nevvi")
-                        .defaultStyle(size: 30, opacity: 1.0)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                        .padding([.top], -16)
-                    
-                    Text("A Cloud-Based Contact Management Platform")
-                        .defaultStyle(size: 22, opacity: 0.7)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.center)
-                }
+                    Image("OnboardingIntro")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(.clear)
+                        .cornerRadius(24)
+                        .shadow(color: Color(red: 0.06, green: 0.4, blue: 0.64)
+                        .opacity(0.16), radius: 30, x: 0, y: 4)
+                        .frame(maxHeight: 250)
+                }.padding()
+                
+                Text("Welcome to Nevvi")
+                    .defaultStyle(size: 30, opacity: 1.0)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom)
+                
+                Text("A Cloud-Based Contact Management Platform")
+                    .defaultStyle(size: 20, opacity: 0.7)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
+                    .lineSpacing(4)
                 
                 Spacer()
                                 
