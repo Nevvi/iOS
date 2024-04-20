@@ -12,6 +12,8 @@ import SwiftUI
 class NotificationStore: ObservableObject {
     var authorization: Authorization? = nil
     
+    // TODO - grab token from API on startup
+    @Published var token: String = ""
     @Published var loading: Bool = false
     @Published var saving: Bool = false
     @Published var error: Swift.Error?
@@ -58,7 +60,7 @@ class NotificationStore: ObservableObject {
             URLSession.shared.postData(for: try self.tokenUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<UpdateTokenResponse, Error>) in
                 switch result {
                 case .success(_):
-                    print("Success")
+                    self.token = token
                 case .failure(let error):
                     self.error = GenericError(error.localizedDescription)
                 }

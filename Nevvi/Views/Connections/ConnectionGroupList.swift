@@ -45,9 +45,8 @@ struct ConnectionGroupList: View {
                 self.showGroupForm = true
             } label: {
                 Text("New Connection Group".uppercased())
-                    .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
-                    .font(.headline)
+                    .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.white)
                     .padding(16)
                     .background(

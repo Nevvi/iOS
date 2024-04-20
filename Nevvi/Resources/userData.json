@@ -37,7 +37,9 @@
     ],
     "blockedUsers": [],
     "deviceSettings": {
-      "autoSync": false
+      "autoSync": false,
+      "notifyOutOfSync": true,
+      "notifyBirthdays": true
     },
     "createDate": "2022-12-07T14:20:03.144Z",
     "createBy": "HARDCODED_FOR_NOW",

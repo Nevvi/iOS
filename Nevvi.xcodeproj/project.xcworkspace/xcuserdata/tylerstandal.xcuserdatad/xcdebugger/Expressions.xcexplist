@@ -14,7 +14,18 @@
          contextName = "closure #1 in closure #1 in NSURLSession.execute&lt;&#x3c4;_0_0&gt;(request:completion:):URLSessionExtensions.swift">
          <PersistentStrings>
             <PersistentString
-               value = "">
+               value = "String(decoding: data, as: UTF8.self)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #2 in NotificationSettings.notifyOutOfSync.getter:NotificationSettings.swift">
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in NotificationSettings.notifyOutOfSync.getter:NotificationSettings.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.accountStore.deviceSettings.notifyOutOfSync">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

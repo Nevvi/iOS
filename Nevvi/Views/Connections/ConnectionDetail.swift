@@ -7,6 +7,8 @@
 
 import SwiftUI
 import MessageUI
+import MapKit
+
 
 struct ConnectionDetail: View {
     @Environment(\.presentationMode) var presentationMode
@@ -84,7 +86,6 @@ struct ConnectionDetail: View {
                             )
                         }
                     }
-                    .frame(width: .infinity, alignment: .topLeading)
                     .padding([.bottom], 16)
                     
                     if !self.connectionStore.phoneNumber.isEmpty {
@@ -103,7 +104,7 @@ struct ConnectionDetail: View {
                             .padding(.vertical, 8)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .informationSection()
+                        .informationSection(data: self.connectionStore.phoneNumber)
                     }
                     
                     if !self.connectionStore.email.isEmpty {
@@ -122,26 +123,40 @@ struct ConnectionDetail: View {
                             .padding(.vertical, 8)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         }
-                        .informationSection()
+                        .informationSection(data: self.connectionStore.email)
                     }
                     
                     if !self.connectionStore.address.isEmpty {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Address").personalInfoLabel()
-                            
-                            HStack(alignment: .top, spacing: 8) {
+                        HStack(alignment: .center, spacing: 2) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Address").personalInfoLabel()
+                                
                                 Text(self.connectionStore.address.toString())
                                     .defaultStyle(size: 16, opacity: 1.0)
-                                
-                                Spacer()
-                                
-                                Text("Home").asDefaultBadge()
+                                    .padding([.vertical], 8)
                             }
-                            .padding([.vertical], 8)
-                            .padding([.horizontal], 0)
-                            .frame(maxWidth: .infinity, alignment: .topLeading)
+                            
+                            Spacer()
+                            
+                            if self.connectionStore.hasCoordinates  {
+                                Map(coordinateRegion: self.$connectionStore.coordinates.coordinates, annotationItems: [self.connectionStore.coordinates],
+                                    annotationContent: { location in
+                                    MapPin(coordinate: CLLocationCoordinate2D(latitude: location.coordinates.center.latitude, longitude: location.coordinates.center.longitude), tint: .red)
+                                    })
+                                    .frame(width: 70, height: 70)
+                            }
                         }
-                        .informationSection()
+                        .informationSection(data: self.connectionStore.address.toString())
+                        .onTapGesture {
+                            if self.connectionStore.hasCoordinates {
+                                let latitude = self.connectionStore.coordinates.coordinates.center.latitude
+                                let longitude = self.connectionStore.coordinates.coordinates.center.longitude
+                                let url = URL(string: "maps://?address=\(latitude),\(longitude)")
+                                if UIApplication.shared.canOpenURL(url!) {
+                                      UIApplication.shared.open(url!, options: [:], completionHandler: nil)
+                                }
+                            }
+                        }
                     }
                     
                     if self.connectionStore.birthday.toString() != Date().toString() {
@@ -152,7 +167,7 @@ struct ConnectionDetail: View {
                                 .defaultStyle(size: 16, opacity: 1.0)
                                 .padding([.vertical], 8)
                         }
-                        .informationSection()
+                        .informationSection(data: self.connectionStore.birthday.toString())
                     }
                     
                     Spacer()

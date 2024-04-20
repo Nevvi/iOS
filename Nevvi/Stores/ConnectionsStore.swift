@@ -10,7 +10,13 @@ import Foundation
 class ConnectionsStore : ObservableObject {
     var authorization: Authorization? = nil
     
+    private var nameFilter: String? = nil
+    private var permissionGroup: String? = nil
+    private var skip: Int = 0
+    private var limit: Int = 10
+    
     @Published var loading: Bool = false
+    @Published var loadingPage: Bool = false
     @Published var connections: [Connection] = []
     @Published var connectionCount: Int = 0
     
@@ -44,24 +50,24 @@ class ConnectionsStore : ObservableObject {
         self.blockedUserCount = blockedUsers.count
     }
     
-    private func url(nameFilter: String?, permissionGroup: String?, inSync: Bool?) throws -> URL {
+    private func url(inSync: Bool?) throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")
         }
         
         let userId: String? = self.authorization?.id
-        var urlString = "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections"
+        var urlString = "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections?skip=\(self.skip)&limit=\(self.limit)"
         
-        if nameFilter != nil && nameFilter!.count > 0 {
-            urlString = "\(urlString)?name=\(nameFilter!)"
+        if self.nameFilter != nil && self.nameFilter!.count > 0 {
+            urlString = "\(urlString)&name=\(self.nameFilter!)"
         }
         
-        if permissionGroup != nil {
-            urlString = "\(urlString)\(urlString.contains("?") ? "&": "?")permissionGroup=\(permissionGroup!)"
+        if self.permissionGroup != nil {
+            urlString = "\(urlString)&permissionGroup=\(self.permissionGroup!)"
         }
         
         if inSync != nil {
-            urlString = "\(urlString)\(urlString.contains("?") ? "&": "?")inSync=\(inSync!)"
+            urlString = "\(urlString)&inSync=\(inSync!)"
         }
         
         return URL(string: urlString)!
@@ -111,7 +117,16 @@ class ConnectionsStore : ObservableObject {
         do {
             self.loading = true
             let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.url(nameFilter: nameFilter, permissionGroup: permissionGroup, inSync: nil), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+            
+            // When a search param changes always reset the skip amount back to 0
+            if self.nameFilter != nameFilter || self.permissionGroup != permissionGroup {
+                self.skip = 0
+            }
+            
+            self.nameFilter = nameFilter
+            self.permissionGroup = permissionGroup
+            
+            URLSession.shared.fetchData(for: try self.url(inSync: nil), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     self.connections = response.users
@@ -127,10 +142,45 @@ class ConnectionsStore : ObservableObject {
         }
     }
     
+    func hasNextPage() -> Bool {
+        return self.connections.count < self.connectionCount
+    }
+    
+    func loadNextPage() {
+        if !self.hasNextPage() {
+            return
+        }
+        
+        do {
+            self.loadingPage = true
+            let idToken: String? = self.authorization?.idToken
+            self.skip = self.skip + self.limit
+            
+            URLSession.shared.fetchData(for: try self.url(inSync: nil), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+                switch result {
+                case .success(let response):
+                    // When loading a page we want to append to the list, not overwrite it
+                    self.connections.append(contentsOf: response.users)
+                case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
+                }
+                self.loadingPage = false
+            }
+        } catch(let error) {
+            self.loadingPage = false
+            self.error = GenericError(error.localizedDescription)
+        }
+    }
+    
     func loadOutOfSync(callback: @escaping (Result<ConnectionResponse, Error>) -> Void) {
         do {
             let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.url(nameFilter: nil, permissionGroup: nil, inSync: false), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+            
+            self.nameFilter = nil
+            self.permissionGroup = nil
+            self.skip = 0
+            
+            URLSession.shared.fetchData(for: try self.url(inSync: false), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     self.outOfSyncCount = response.count

@@ -24,16 +24,6 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
     }
-    
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        messaging.token { token, error in
-            if let error = error {
-                print("Error fetching FCM registration token: \(error)")
-            } else if let token = token {
-                print("FCM registration token: \(token)")
-            }
-        }
-    }
 }
 
 @main
@@ -62,6 +52,7 @@ struct NevviApp: App {
         WindowGroup {
             if (self.authStore.authorization != nil) {
                 ContentView()
+                    .environment(\.sizeCategory, .medium)
                     .environmentObject(accountStore)
                     .environmentObject(authStore)
                     .environmentObject(connectionStore)
@@ -95,6 +86,7 @@ struct NevviApp: App {
                     self.contactStore.authorization = auth
                     self.notificationStore.authorization = auth
                 }
+                .environment(\.sizeCategory, .medium)
                 .onAppear(perform: self.checkVersion)
                 .sheet(isPresented: self.$forceUpdate) {
                     self.forceUpdateView
@@ -139,11 +131,10 @@ struct NevviApp: App {
     func checkVersion() {
         self.authStore.getMinAppVersion { version in
             if Bundle.main.releaseVersionNumber! < version {
+                print("Forcing update to min version \(version)")
+                print("Current version \(Bundle.main.releaseVersionNumber!) \(Bundle.main.buildVersionNumber!)")
                 self.forceUpdate = true
             }
-            print(version)
-            print(Bundle.main.releaseVersionNumber!)
-            print(Bundle.main.buildVersionNumber!)
         }
     }
 }

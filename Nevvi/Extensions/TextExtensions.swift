@@ -141,7 +141,7 @@ extension Text {
         self
             .fontWeight(.bold)
             .frame(maxWidth: .infinity)
-            .font(.headline)
+            .font(.subheadline)
             .foregroundColor(.white)
             .padding(.vertical, 16)
             .background(

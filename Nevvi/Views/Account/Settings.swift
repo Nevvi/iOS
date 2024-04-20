@@ -179,5 +179,6 @@ struct Settings_Previews: PreviewProvider {
             .environmentObject(connectionGroupStore)
             .environmentObject(connectionGroupsStore)
             .environmentObject(AuthorizationStore())
+            .environmentObject(NotificationStore())
     }
 }

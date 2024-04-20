@@ -10,7 +10,6 @@ import SwiftUI
 
 struct ConnectionRequestList: View {
     @EnvironmentObject var connectionsStore: ConnectionsStore
-    @EnvironmentObject var contactStore: ContactStore
     @EnvironmentObject var suggestionsStore: ConnectionSuggestionStore
 
     var notConnectedUsers: [Connection] {
@@ -45,6 +44,7 @@ struct ConnectionRequestList: View {
             }
             .refreshable {
                 self.connectionsStore.loadRequests()
+                self.suggestionsStore.loadSuggestions()
             }
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -62,21 +62,6 @@ struct ConnectionRequestList: View {
         }
         .toast(isPresenting: $showToast){
             AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Request sent!")
-        }
-        .onAppear {
-            self.suggestionsStore.users = []
-            self.suggestionsStore.userCount = 0
-            if self.contactStore.hasAccess() {
-                self.contactStore.loadContactPhoneNumbers { (result: Result<[String], Error>) in
-                    switch result {
-                    case .success(let phoneNumbers):
-                        self.suggestionsStore.searchByPhoneNumbers(phoneNumbers: phoneNumbers)
-                    case .failure(_):
-                        // TODO - show some sort of alert
-                        print("Something bad happened")
-                    }
-                }
-            }
         }
     }
     
@@ -111,7 +96,7 @@ struct ConnectionRequestList: View {
                     Text("Found new members")
                         .defaultStyle(size: 20, opacity: 1.0)
                     
-                    Text("based on your local contact list")
+                    Text("based on your connections")
                         .defaultStyle(size: 14, opacity: 0.5)
                 }
                 .padding(0)
@@ -147,8 +132,6 @@ struct ConnectionRequestList_Previews: PreviewProvider {
     static var previews: some View {
         ConnectionRequestList()
             .environmentObject(connectionsStore)
-            .environmentObject(AccountStore(user: modelData.user))
             .environmentObject(suggestionsStore)
-            .environmentObject(ContactStore())
     }
 }

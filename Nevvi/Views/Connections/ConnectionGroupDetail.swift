@@ -34,6 +34,7 @@ struct ConnectionGroupDetail: View {
                     
                     Text("Members (\(self.connectionGroupStore.connectionCount))")
                         .defaultStyle(size: 16, opacity: 0.6)
+                        .redacted(when: self.connectionGroupStore.loadingConnections || self.connectionGroupStore.deleting, redactionType: .customPlaceholder)
                 }
                 
                 Spacer()
@@ -87,7 +88,7 @@ struct ConnectionGroupDetail: View {
         }
         .padding(.top)
         .refreshable {
-            self.connectionGroupStore.loadConnections(groupId: self.connectionGroupStore.id)
+            self.connectionGroupStore.loadConnections()
         }
         .navigationTitle(self.connectionGroupStore.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -178,7 +179,6 @@ struct ConnectionGroupDetail: View {
             
             HStack {
                 Button {
-                    self.savingUsers = true
                     if self.newGroupConnections.isEmpty {
                         self.newGroupConnections = []
                         self.connectionGroupsStore.load()
@@ -187,13 +187,15 @@ struct ConnectionGroupDetail: View {
                     }
                     
                     // TODO - bulk add members to group
+                    self.savingUsers = true
                     self.newGroupConnections.forEach { connection in
                         self.connectionGroupStore.addToGroup(userId: connection.id) { _ in
                             if connection == self.newGroupConnections.last {
                                 self.newGroupConnections = []
                                 self.connectionGroupsStore.load()
-                                self.connectionGroupStore.loadConnections(groupId: self.connectionGroupStore.id)
+                                self.connectionGroupStore.loadConnections()
                                 self.showAddUsers = false
+                                self.savingUsers = false
                             }
                         }
                     }

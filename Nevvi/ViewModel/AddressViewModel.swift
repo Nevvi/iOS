@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import CoreLocation
 
-class AddressViewModel : ObservableObject {
+
+class AddressViewModel : ObservableObject, Identifiable {
     @Published var street: String = ""
     @Published var unit: String = ""
     @Published var city: String = ""

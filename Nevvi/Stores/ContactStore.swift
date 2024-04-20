@@ -58,25 +58,6 @@ class ContactStore: ObservableObject {
             return false;
         }
     }
-        
-    func loadContactPhoneNumbers(callback: @escaping (Result<[String], Error>) -> Void) {
-        let store = CNContactStore()
-        let keysToFetch = [CNContactPhoneNumbersKey] as [CNKeyDescriptor]
-        
-        var phoneNumbers: Set<String> = Set<String>()
-        let request = CNContactFetchRequest(keysToFetch: keysToFetch)
-        do {
-            try store.enumerateContacts(with: request) { (contact, stop) in
-                for phoneNumber in contact.phoneNumbers {
-                    phoneNumbers.insert(phoneNumber.value.stringValue)
-                }
-            }
-        } catch(let error) {
-            callback(.failure(error))
-        }
-        
-        callback(.success(Array(phoneNumbers)))
-    }
     
     func updateConnection(connectionId: String, callback: @escaping (Result<Connection, Error>) -> Void) {
         do {

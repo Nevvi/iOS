@@ -10,7 +10,12 @@ import Foundation
 class ConnectionGroupStore : ObservableObject {
     var authorization: Authorization? = nil
     
+    // TODO - pagination not actually used yet so default to a high limit and just grab all connections right now (500 is max limit)
+    private var skip: Int = 0
+    private var limit: Int = 500
+    
     @Published var loading: Bool = false
+    @Published var loadingPage: Bool = false
     @Published var loadingConnections: Bool = false
     @Published var deleting: Bool = false
     @Published var exporting: Bool = false
@@ -31,6 +36,7 @@ class ConnectionGroupStore : ObservableObject {
         self.name = group.name
         self.connections = connections
         self.connectionCount = connections.count
+        self.skip = 0
     }
     
     private func groupUrl(groupId: String) throws -> URL {
@@ -39,51 +45,41 @@ class ConnectionGroupStore : ObservableObject {
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups/\(groupId)")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups/\(groupId)?skip=\(self.skip)&limit=\(self.limit)")!
     }
     
-    private func groupConnectionsUrl(groupId: String) throws -> URL {
-        return try self.groupConnectionsUrl(groupId: groupId, name: nil)
-    }
-    
-    private func groupConnectionsUrl(groupId: String, name: String?) throws -> URL {
+    private func groupConnectionsUrl() throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")
         }
         
         let userId: String? = self.authorization?.id
-        var url = "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups/\(groupId)/connections"
-        if (name != nil && name != "") {
-            url = "\(url)?name=\(name!)"
-        }
+        let url = "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups/\(self.id)/connections?skip=\(self.skip)&limit=\(self.limit)"
         
         return URL(string: url)!
     }
     
-    private func groupExportUrl(groupId: String) throws -> URL {
+    private func groupExportUrl() throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")
         }
         
         let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups/\(groupId)/export")!
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups/\(self.id)/export")!
     }
     
     func load(group: ConnectionGroup) {
         self.id = group.id
         self.name = group.name
-        self.loadConnections(groupId: group.id)
+        self.skip = 0
+        self.loadConnections()
     }
     
-    func loadConnections(groupId: String) {
-        self.loadConnections(groupId: groupId, name: nil)
-    }
-    
-    func loadConnections(groupId: String, name: String?) {
+    func loadConnections() {
         do {
             self.loadingConnections = true
             let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.groupConnectionsUrl(groupId: groupId, name: name), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+            URLSession.shared.fetchData(for: try self.groupConnectionsUrl(), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     self.connections = response.users
@@ -99,7 +95,39 @@ class ConnectionGroupStore : ObservableObject {
         }
     }
     
+    func hasNextPage() -> Bool {
+        return self.connections.count < self.connectionCount
+    }
+    
+    /// TODO - not actually called yet as it would break other business logic
+    func loadNextPage() {
+        if !self.hasNextPage() {
+            return
+        }
+        
+        do {
+            self.loadingPage = true
+            let idToken: String? = self.authorization?.idToken
+            self.skip = self.skip + self.limit
+            
+            URLSession.shared.fetchData(for: try self.groupConnectionsUrl(), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+                switch result {
+                case .success(let response):
+                    // When loading a page we want to append to the list, not overwrite it
+                    self.connections.append(contentsOf: response.users)
+                case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
+                }
+                self.loadingPage = false
+            }
+        } catch(let error) {
+            self.loadingPage = false
+            self.error = GenericError(error.localizedDescription)
+        }
+    }
+    
     func isConnectionInGroup(connection: Connection) -> Bool {
+        // TODO - call to get connections is paginated so this may not contain every actual connection in the group
         return self.connections.contains { groupConnection in
             return groupConnection.id == connection.id
         }
@@ -110,7 +138,7 @@ class ConnectionGroupStore : ObservableObject {
             self.loading = true
             let idToken: String? = self.authorization?.idToken
             let request = AddToGroupRequest(userId: userId)
-            URLSession.shared.postData(for: try self.groupConnectionsUrl(groupId: self.id), for: request, for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
+            URLSession.shared.postData(for: try self.groupConnectionsUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))
@@ -132,7 +160,7 @@ class ConnectionGroupStore : ObservableObject {
             self.deleting = true
             let idToken: String? = self.authorization?.idToken
             let request = RemoveFromGroupRequest(userId: userId)
-            URLSession.shared.deleteData(for: try self.groupConnectionsUrl(groupId: self.id), for: request, for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
+            URLSession.shared.deleteData(for: try self.groupConnectionsUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))
@@ -153,7 +181,7 @@ class ConnectionGroupStore : ObservableObject {
         do {
             self.exporting = true
             let idToken: String? = self.authorization?.idToken
-            URLSession.shared.postData(for: try self.groupExportUrl(groupId: self.id), for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
+            URLSession.shared.postData(for: try self.groupExportUrl(), for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))

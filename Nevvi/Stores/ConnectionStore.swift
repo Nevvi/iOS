@@ -6,6 +6,19 @@
 //
 
 import Foundation
+import MapKit
+
+class AddressCoordinates : Identifiable {
+    var coordinates: MKCoordinateRegion
+    
+    init() {
+        self.coordinates = MKCoordinateRegion()
+    }
+    
+    init(coordinates: MKCoordinateRegion) {
+        self.coordinates = coordinates
+    }
+}
 
 class ConnectionStore : ObservableObject {
     var authorization: Authorization? = nil
@@ -18,6 +31,9 @@ class ConnectionStore : ObservableObject {
     @Published var phoneNumber: String = ""
     @Published var birthday: Date = Date()
     @Published var address: AddressViewModel = AddressViewModel()
+    @Published var hasCoordinates: Bool = false
+    @Published var coordinates: AddressCoordinates = AddressCoordinates()
+    
     @Published var permissionGroup: String = "ALL"
     @Published var profileImage: String = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
     
@@ -46,8 +62,30 @@ class ConnectionStore : ObservableObject {
         
         if (connection.address != nil) {
             self.address.update(address: connection.address!)
+            
+            let geoCoder = CLGeocoder()
+            geoCoder.geocodeAddressString(self.address.toString()) { (placemarks, error) in
+                guard let placemarks = placemarks,
+                let coordinate = placemarks.first?.location?.coordinate else {
+                    print("no coordinates for address")
+                    self.coordinates = AddressCoordinates()
+                    self.hasCoordinates = false
+                    return
+                }
+                
+                var location = MKCoordinateRegion()
+                location.center.latitude = coordinate.latitude
+                location.center.longitude = coordinate.longitude
+                location.span.latitudeDelta = 0.01
+                location.span.longitudeDelta = 0.01
+                self.coordinates = AddressCoordinates(coordinates: location)
+                self.hasCoordinates = true
+                print(self.coordinates)
+            }
         } else {
             self.address = AddressViewModel()
+            self.coordinates = AddressCoordinates()
+            self.hasCoordinates = false
         }
         
         self.profileImage = connection.profileImage
@@ -63,6 +101,8 @@ class ConnectionStore : ObservableObject {
         self.phoneNumber = ""
         self.birthday = Date()
         self.address = AddressViewModel()
+        self.coordinates = AddressCoordinates()
+        self.hasCoordinates = false
         self.profileImage = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
         self.permissionGroup = "ALL"
     }

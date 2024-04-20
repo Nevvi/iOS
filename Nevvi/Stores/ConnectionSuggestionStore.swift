@@ -25,31 +25,18 @@ class ConnectionSuggestionStore : ObservableObject {
         self.userCount = users.count
     }
     
-    private func url(nameFilter: String?, phoneNumbers: [String]?) throws -> URL {
+    private func url() throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")
         }
         
-        var url = "\(BuildConfiguration.shared.baseURL)/user/v1/users/search"
-        if (nameFilter != nil) {
-            url = "\(url)?name=\(nameFilter!)"
-        } else if (phoneNumbers != nil) {
-            url = "\(url)?phoneNumbers=\(phoneNumbers!.joined(separator: ","))"
-        }
-        
-        let urlString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-        return URL(string: urlString)!
+        let userId: String? = self.authorization?.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/suggested")!
     }
 
-    func searchByPhoneNumbers(phoneNumbers: [String]) {
+    func loadSuggestions() {
         do {
-            if (phoneNumbers.count <= 0) {
-                self.users = []
-                self.userCount = 0
-                return
-            }
-            
-            self.search(url: try self.url(nameFilter: nil, phoneNumbers: phoneNumbers))
+            self.search(url: try self.url())
         } catch(let error) {
             self.error = GenericError(error.localizedDescription)
             self.loading = false
@@ -58,12 +45,11 @@ class ConnectionSuggestionStore : ObservableObject {
     
     private func search(url: URL) {
         self.loading = true
-        print(url.absoluteString)
         let idToken: String? = self.authorization?.idToken
-        URLSession.shared.fetchData(for: url, for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+        URLSession.shared.fetchData(for: url, for: "Bearer \(idToken!)") { (result: Result<[Connection], Error>) in
             switch result {
             case .success(let response):
-                self.users = response.users
+                self.users = response
                 self.userCount = response.count
             case .failure(let error):
                 self.error = GenericError(error.localizedDescription)

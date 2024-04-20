@@ -51,17 +51,17 @@ struct ConnectionList: View {
     var body: some View {
         NavigationView {
             VStack {
-                if self.notificationStore.canRequestAccess {
-                    requestNotificationsView
-                } else if self.contactStore.canRequestAccess() {
-                    requestContactsView
-                } else if profileRequiresUpdate {
-                    profileUpdateView
-                } else if noConnectionsExist {
-                    noConnectionsView
-                } else {
+//                if self.notificationStore.canRequestAccess {
+//                    requestNotificationsView
+//                } else if self.contactStore.canRequestAccess() {
+//                    requestContactsView
+//                } else if profileRequiresUpdate {
+//                    profileUpdateView
+//                } else if noConnectionsExist {
+//                    noConnectionsView
+//                } else {
                     connectionsView
-                }
+//                }
             }
             .onChange(of: self.nameFilter.debouncedText) { text in
                 self.connectionsStore.load(nameFilter: text, permissionGroup: self.selectedGroup)
@@ -316,13 +316,12 @@ struct ConnectionList: View {
                     }
                     
                     
-                    VStack(alignment: .leading, spacing: 0) {
+                    LazyVStack(alignment: .leading, spacing: 0) {
                         HStack {
                             Text("Total Members (\(self.connectionsStore.connectionCount))")
                                 .defaultStyle(size: 14, opacity: 0.4)
                                 .padding(.horizontal, 20)
                                 .padding(.vertical, 6)
-                                .frame(width: .infinity, alignment: .center)
                             
                             Spacer()
                         }
@@ -337,11 +336,25 @@ struct ConnectionList: View {
                                 )
                             } label: {
                                 ConnectionRow(connection: connection)
+                                    .onAppear {
+                                        let isLast = connection == self.connectionsStore.connections.last
+                                        if isLast && self.connectionsStore.hasNextPage() && !self.connectionsStore.loadingPage {
+                                            self.connectionsStore.loadNextPage()
+                                        }
+                                    }
                             }
                         }
                         .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
+                        
+                        if self.connectionsStore.loadingPage {
+                            HStack(alignment: .center) {
+                                Spacer()
+                                ProgressView()
+                                Spacer()
+                            }
+                            .padding(.vertical)
+                        }
                     }
-                    .frame(width: .infinity, alignment: .topLeading)
                     
                     Spacer()
                 }
@@ -388,9 +401,10 @@ struct ConnectionList: View {
             if let error = error {
                 print("Error fetching FCM registration token: \(error)")
             } else if let token = token {
-                // TODO - only update on change?
-                self.notificationStore.updateToken(token: token)
-                print("FCM registration token: \(token)")
+                if self.notificationStore.token != token {
+                    self.notificationStore.updateToken(token: token)
+                    print("FCM registration token: \(token)")
+                }
             }
         }
         

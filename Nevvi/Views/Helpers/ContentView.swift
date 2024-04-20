@@ -13,6 +13,7 @@ struct ContentView: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
+    @EnvironmentObject var suggestionsStore: ConnectionSuggestionStore
     @EnvironmentObject var usersStore: UsersStore
     @EnvironmentObject var contactStore: ContactStore
     @EnvironmentObject var connectionStore: ConnectionStore
@@ -55,6 +56,7 @@ struct ContentView: View {
                 .errorAlert(error: self.$usersStore.error)
                 .onChange(of: scenePhase) { newPhase in
                     if newPhase == .active {
+                        /// TODO - re-entering from maps goes back to wrong view because of this
                         self.reload()
                     } 
                 }
@@ -81,6 +83,7 @@ struct ContentView: View {
         self.connectionsStore.loadRejectedUsers()
         self.connectionsStore.loadOutOfSync { _ in }
         self.connectionGroupsStore.load()
+        self.suggestionsStore.loadSuggestions()
     }
     
     /// Handles the incoming URL and performs validations before acknowledging.
@@ -111,6 +114,7 @@ struct ContentView_Previews: PreviewProvider {
         .environmentObject(AuthorizationStore())
         .environmentObject(UsersStore(users: modelData.connectionResponse.users))
         .environmentObject(ConnectionGroupsStore(groups: modelData.groups))
+        .environmentObject(ConnectionSuggestionStore(users: []))
         .environmentObject(NotificationStore())
         .environmentObject(ContactStore())
         .environmentObject(ConnectionSuggestionStore(users: modelData.connectionResponse.users))

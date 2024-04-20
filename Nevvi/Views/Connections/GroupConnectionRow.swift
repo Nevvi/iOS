@@ -42,7 +42,7 @@ struct GroupConnectionRow: View {
                 switch result {
                 case.success(_):
                     self.connectionGroupsStore.load()
-                    self.connectionGroupStore.loadConnections(groupId: self.connectionGroupStore.id, name: "")
+                    self.connectionGroupStore.loadConnections()
                 case .failure(let error):
                     print("Something bad happened", error)
                 }
