@@ -51,17 +51,17 @@ struct ConnectionList: View {
     var body: some View {
         NavigationView {
             VStack {
-//                if self.notificationStore.canRequestAccess {
-//                    requestNotificationsView
-//                } else if self.contactStore.canRequestAccess() {
-//                    requestContactsView
-//                } else if profileRequiresUpdate {
-//                    profileUpdateView
-//                } else if noConnectionsExist {
-//                    noConnectionsView
-//                } else {
+                if self.notificationStore.canRequestAccess {
+                    requestNotificationsView
+                } else if self.contactStore.canRequestAccess() {
+                    requestContactsView
+                } else if profileRequiresUpdate {
+                    profileUpdateView
+                } else if noConnectionsExist {
+                    noConnectionsView
+                } else {
                     connectionsView
-//                }
+                }
             }
             .onChange(of: self.nameFilter.debouncedText) { text in
                 self.connectionsStore.load(nameFilter: text, permissionGroup: self.selectedGroup)
