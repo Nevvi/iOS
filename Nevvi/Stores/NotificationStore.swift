@@ -47,8 +47,10 @@ class NotificationStore: ObservableObject {
         let center = UNUserNotificationCenter.current()
         center.getNotificationSettings { settings in
             print(settings.authorizationStatus)
-            self.hasAccess = settings.authorizationStatus == .authorized
-            self.canRequestAccess = settings.authorizationStatus == .notDetermined
+            DispatchQueue.main.async {
+                self.hasAccess = settings.authorizationStatus == .authorized
+                self.canRequestAccess = settings.authorizationStatus == .notDetermined
+            }
         }
     }
     

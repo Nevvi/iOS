@@ -80,7 +80,6 @@ class ConnectionStore : ObservableObject {
                 location.span.longitudeDelta = 0.01
                 self.coordinates = AddressCoordinates(coordinates: location)
                 self.hasCoordinates = true
-                print(self.coordinates)
             }
         } else {
             self.address = AddressViewModel()
