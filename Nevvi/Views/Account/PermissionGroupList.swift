@@ -25,7 +25,7 @@ struct PermissionGroupList: View {
                         ActionablePermissionGroupRow(group: group)
                             .padding([.leading, .trailing, .bottom])
                     }
-                    .redacted(when: self.accountStore.loading, redactionType: .customPlaceholder)
+                    .redacted(when: self.accountStore.loading || self.accountStore.saving, redactionType: .customPlaceholder)
                 }
             }
             
@@ -53,57 +53,58 @@ struct PermissionGroupList: View {
         .sheet(isPresented: self.$showNewGroup) {
             newPermissionGroupSheet
         }
+        .refreshable {
+            self.accountStore.load()
+        }
     }
     
     var newPermissionGroupSheet: some View {
-        DynamicSheet(
-            VStack {
-                TextField("Group Name", text: self.$newGroupName)
-                    .padding()
-                    .overlay(RoundedRectangle(cornerRadius: 16.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                    .textInputAutocapitalization(.never)
-                    .disableAutocorrection(true)
-                    .padding([.top])
+        VStack {
+            TextField("Group Name", text: self.$newGroupName)
+                .padding()
+                .overlay(RoundedRectangle(cornerRadius: 16.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+                .padding([.top])
+            
+            Divider().padding(.vertical)
+            
+            VStack(alignment: .leading) {
+                Text("Permission to view")
+                    .fontWeight(.ultraLight)
+                    .padding([.top, .bottom], 6)
                 
-                Divider().padding(.vertical)
-                
-                VStack(alignment: .leading) {
-                    Text("Permission to view")
-                        .fontWeight(.ultraLight)
-                        .padding([.top, .bottom], 6)
-                    
-                    WrappingHStack(alignment: .leading) {
-                        ForEach(Constants.AllFields.sorted(), id: \.self) { field in
-                            permissionGroupField(field: field)
-                        }
+                WrappingHStack(alignment: .leading) {
+                    ForEach(Constants.AllFields.sorted(), id: \.self) { field in
+                        permissionGroupField(field: field)
                     }
-                }.padding(.bottom, 32)
-                
-                Spacer()
-                
-                HStack {
-                    Button {
-                        self.accountStore.addPermissionGroup(newGroup: PermissionGroup(name: self.newGroupName, fields: self.newGroupFields)
-                        ) { (result: Result<User, Error>) in
-                            switch result {
-                            case .success(_):
-                                self.showNewGroup = false
-                                self.newGroupName = ""
-                                self.newGroupFields = []
-                            case .failure(let error):
-                                print("Something went wrong", error)
-                            }
-                        }
-                    } label: {
-                        Text("Save".uppercased())
-                            .asPrimaryButton()
-                            .opacity(self.newGroupName.isEmpty || self.accountStore.saving ? 0.5 : 1.0)
-                    }
-                    .disabled(self.newGroupName.isEmpty || self.accountStore.saving)
                 }
+            }.padding(.bottom, 32)
+            
+            Spacer()
+            
+            HStack {
+                Button {
+                    self.showNewGroup = false
+                    self.accountStore.addPermissionGroup(newGroup: PermissionGroup(name: self.newGroupName, fields: self.newGroupFields)
+                    ) { (result: Result<User, Error>) in
+                        switch result {
+                        case .success(_):
+                            self.newGroupName = ""
+                            self.newGroupFields = []
+                        case .failure(let error):
+                            print("Something went wrong", error)
+                        }
+                    }
+                } label: {
+                    Text("Save".uppercased())
+                        .asPrimaryButton()
+                        .opacity(self.newGroupName.isEmpty || self.accountStore.saving ? 0.5 : 1.0)
+                }
+                .disabled(self.newGroupName.isEmpty || self.accountStore.saving)
             }
-            .padding()
-        )
+        }
+        .padding()
     }
     
     func permissionGroupField(field: String) -> some View {

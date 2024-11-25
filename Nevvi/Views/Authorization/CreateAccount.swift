@@ -6,15 +6,19 @@
 //
 
 import SwiftUI
+import AlertToast
 
 struct CreateAccount: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     @State private var username = ""
     @State private var confirmationCode = ""
     @State private var password = ""
     @State private var error: AuthorizationStore.AuthorizationError?
     @State private var storeCredentials: Bool = false
     
-    @State private var confirmationCodeDestination: String = ""
+    @State private var toastText: String = ""
+    @State private var showToast: Bool = false
     @State private var showConfirmationCode: Bool
     @State private var hidePassword: Bool = true
     
@@ -61,6 +65,10 @@ struct CreateAccount: View {
         self.username.isEmpty || self.confirmationCode.isEmpty || self.authStore.confirming || self.authStore.loggingIn
     }
     
+    var resendCodeDisabled: Bool {
+        self.username.isEmpty || self.authStore.confirming || self.authStore.loggingIn || self.authStore.sendingResetCode
+    }
+    
     private var callback: (Authorization) -> Void
     
     init(authStore: AuthorizationStore, callback: @escaping (Authorization) -> Void) {
@@ -101,6 +109,9 @@ struct CreateAccount: View {
             .autocapitalization(.none)
             .alert(item: self.$error) { error in
                 return Alert(title: Text("Failed to create account"), message: Text(error.localizedDescription))
+            }
+            .toast(isPresenting: $showToast){
+                AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: self.toastText)
             }
             .onTapGesture {
                 self.hideKeyboard()
@@ -285,7 +296,7 @@ struct CreateAccount: View {
                     .frame(width: 24, height: 24)
                     .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
                 
-                TextField("Phone Number", text: self.$confirmationCodeDestination)
+                TextField("Phone Number", text: self.$username)
                     .keyboardType(.phonePad)
             }
             .padding(.horizontal, 16)
@@ -338,6 +349,15 @@ struct CreateAccount: View {
             })
             .padding([.bottom], 16)
             
+            Text("Resend Confirmation Code")
+                .foregroundColor(ColorConstants.primary)
+                .defaultStyle(size: 16, opacity: 0.5)
+                .opacity(self.resendCodeDisabled ? 0.5 : 1.0)
+                .disabled(self.resendCodeDisabled)
+                .onTapGesture {
+                    self.resendCode()
+                }
+            
             Spacer()
             Spacer()
                         
@@ -358,8 +378,7 @@ struct CreateAccount: View {
     func createAccount() {
         self.authStore.signUp(username: username, password: password) { (result: Result<AuthorizationStore.SignupResponse, AuthorizationStore.AuthorizationError>) in
             switch result {
-            case .success(let response):
-                self.confirmationCodeDestination = response.codeDeliveryDestination
+            case .success(_):
                 self.showConfirmationCode = true
             case .failure(let error):
                 self.username = ""
@@ -375,9 +394,30 @@ struct CreateAccount: View {
             case .success(_):
                 if self.username.isEmpty == false && self.password.isEmpty == false {
                     self.signIn()
+                    self.username = ""
+                    self.confirmationCode = ""
+                } else {
+                    self.toastText = "Account confirmed!"
+                    self.showToast = true
+                    self.username = ""
+                    self.confirmationCode = ""
+                    self.presentationMode.wrappedValue.dismiss()
                 }
             case .failure(let error):
                 self.confirmationCode = ""
+                self.error = error
+            }
+        }
+    }
+    
+    func resendCode() {
+        self.authStore.resendSignupCode(username: username) { (result: Result<AuthorizationStore.ConfirmResponse, AuthorizationStore.AuthorizationError>) in
+            switch result {
+            case .success(_):
+                self.toastText = "Confirmation code sent"
+                self.showToast = true
+            case .failure(let error):
+                self.username = ""
                 self.error = error
             }
         }

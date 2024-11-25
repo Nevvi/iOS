@@ -34,7 +34,7 @@ class ConnectionStore : ObservableObject {
     @Published var hasCoordinates: Bool = false
     @Published var coordinates: AddressCoordinates = AddressCoordinates()
     
-    @Published var permissionGroup: String = "ALL"
+    @Published var permissionGroup: String = "Everything"
     @Published var profileImage: String = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
     
     @Published var saving: Bool = false
@@ -88,7 +88,7 @@ class ConnectionStore : ObservableObject {
         }
         
         self.profileImage = connection.profileImage
-        self.permissionGroup = connection.permissionGroup != nil ? connection.permissionGroup! : "ALL"
+        self.permissionGroup = connection.permissionGroup != nil ? connection.permissionGroup! : "Everything"
     }
     
     private func reset() {
@@ -103,7 +103,7 @@ class ConnectionStore : ObservableObject {
         self.coordinates = AddressCoordinates()
         self.hasCoordinates = false
         self.profileImage = "https://nevvi-user-images.s3.amazonaws.com/Default_Profile_Picture.png"
-        self.permissionGroup = "ALL"
+        self.permissionGroup = "Everything"
     }
     
     private func url(connectionId: String) throws -> URL {

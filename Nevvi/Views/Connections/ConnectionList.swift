@@ -189,7 +189,11 @@ struct ConnectionList: View {
                 Text("Allow Contact Access")
                     .defaultStyle(size: 24, opacity: 1.0)
                 
-                Text("Your privacy is our priority. We only use your contacts to make your experience better. Consult the privacy policy in the settings for more info on how contacts are used.")
+                Text("Nevvi can detect when your connection data is out of sync with your phone contacts. By giving Nevvi access to your contacts, we can automatically update your phone book with your connection data.")
+                    .defaultStyle(size: 16, opacity: 0.7)
+                    .multilineTextAlignment(.center)
+                
+                Text("Consult the privacy policy in the settings for more info on how contacts are used.")
                     .defaultStyle(size: 16, opacity: 0.7)
                     .multilineTextAlignment(.center)
                 
@@ -221,15 +225,9 @@ struct ConnectionList: View {
                 Text("Update Your Profile")
                     .defaultStyle(size: 24, opacity: 1.0)
                 
-                Text("You're almost there! Finish your profile and get the best experience with your connection members.")
+                Text("Please add your name and email before connecting with other users.")
                     .defaultStyle(size: 16, opacity: 0.7)
                     .multilineTextAlignment(.center)
-                
-                
-                NavigationLink(destination: PersonalInformationEdit()) {
-                    Text("Update Profile".uppercased())
-                        .asPrimaryButton()
-                }
                 
                 Spacer()
                 Spacer()

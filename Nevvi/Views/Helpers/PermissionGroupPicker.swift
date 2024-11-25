@@ -55,7 +55,7 @@ struct PermissionGroupPicker: View {
 
 #if DEBUG
 struct PermissionGroupPickerBinding_Previews : View {
-    @State var selectedPermissionGroup: String = "ALL"
+    @State var selectedPermissionGroup: String = "Everything"
 
      var body: some View {
           PermissionGroupPicker(selectedGroup: $selectedPermissionGroup)

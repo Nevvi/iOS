@@ -21,7 +21,7 @@ struct FrequentlyAskedQuestionList: View {
         ),
         QuestionResponse(
             question: "Why does Nevvi need access to my contacts?",
-            response: "By giving Nevvi access to your contacts, we can sync all updated connection information to your phone's contact book. Our goal is for you to use Nevvi as little as possible after you make connections. Once a connection is made you can continue to use your phone like normal, but with confidence that your contact's data is always up to date."
+            response: "By giving Nevvi access to your contacts, we give you the option to sync all updated connection information to your phone's contact book."
         ),
         QuestionResponse(
             question: "How do I find new connections?",

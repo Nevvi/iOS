@@ -1,20 +1,21 @@
 //
-//  ConnectionRequest.swift
+//  ConnectionSuggestionRow.swift
 //  Nevvi
 //
-//  Created by Tyler Cobb on 12/31/22.
+//  Created by Tyler Standal on 6/8/24.
 //
 
 import SwiftUI
-import NukeUI
 
-struct NewConnectionRequestRow: View {
+struct ConnectionSuggestionRow: View {
     @EnvironmentObject var usersStore: UsersStore
+    @EnvironmentObject var suggestionsStore: ConnectionSuggestionStore
     
     var requestCallback: () -> Void
         
     @State var user: Connection
     @State var loading: Bool = false
+    @State var showAlert: Bool = false
     @State var showSheet: Bool = false
     @State private var animate = false
     @State var selectedPermissionGroup: String = "Everything"
@@ -38,16 +39,46 @@ struct NewConnectionRequestRow: View {
             Spacer()
             
             if showConnectButton {
-                Image(systemName: "plus")
-                    .toolbarButtonStyle()
-                    .onTapGesture {
-                        self.showSheet = true
+                Menu {
+                    Button {
+                        self.showAlert = true
+                    } label: {
+                        Label("Ignore", systemImage: "trash")
                     }
-                    .padding()
+                    
+                    Button {
+                        self.showSheet = true
+                    } label: {
+                        Label("Request", systemImage: "plus")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis")
+                        .frame(width: 24, height: 24)
+                        .rotationEffect(.degrees(-90))
+                        .foregroundColor(.gray)
+                }
+                .padding([.trailing], 24)
+//                HStack {
+//                    Image(systemName: "trash")
+//                        .toolbarButtonStyle()
+//                        .onTapGesture {
+//                            self.showAlert = true
+//                        }
+//
+//                    Image(systemName: "plus")
+//                        .toolbarButtonStyle()
+//                        .onTapGesture {
+//                            self.showSheet = true
+//                        }
+//                }
+//                .padding()
             }
         }
         .sheet(isPresented: self.$showSheet) {
             requestConnectionSheet
+        }
+        .alert(isPresented: self.$showAlert) {
+            ignoreSuggestionAlert
         }
     }
     
@@ -86,6 +117,17 @@ struct NewConnectionRequestRow: View {
         )
     }
     
+    var ignoreSuggestionAlert: Alert {
+        Alert(title: Text("Confirmation"), message: Text("Are you sure you want to ignore this suggestion?"), primaryButton: .destructive(Text("Ignore")) {
+            self.ignoreSuggestion()
+            
+            self.showAlert = false
+        }, secondaryButton: .cancel() {
+            self.showAlert = false
+        })
+    }
+    
+    
     func requestConnection() {
         self.loading = true
         self.usersStore.requestConnection(userId: self.user.id, groupName: self.selectedPermissionGroup) { (result: Result<Bool, Error>) in
@@ -103,14 +145,31 @@ struct NewConnectionRequestRow: View {
         }
     }
     
+    func ignoreSuggestion() {
+        self.loading = true
+        self.suggestionsStore.ignoreSuggestion(suggestionId: self.user.id) { (result: Result<Bool, Error>) in
+            switch result {
+            case .success(_):
+                withAnimation(Animation.spring().speed(0.75)) {
+                    animate = true
+                    self.requestCallback()
+                }
+            case .failure(let error):
+                print("Something bad happened", error)
+            }
+            self.loading = false
+            self.showSheet = false
+        }
+    }
 }
 
-struct ConnectionRequest_Previews: PreviewProvider {
+struct ConnectionSuggestionRow_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
+    static let suggestionsStore = ConnectionSuggestionStore(users: modelData.connectionResponse.users)
     
     static var previews: some View {
-        NewConnectionRequestRow(requestCallback: {},user: modelData.connectionResponse.users[0])
+        ConnectionSuggestionRow(requestCallback: {},user: modelData.connectionResponse.users[0])
             .environmentObject(usersStore)
     }
 }

@@ -5,7 +5,7 @@
     "bio": "Founder - Nevvi",
     "email": "tyler.cobb@nevvi.net",
     "emailConfirmed": true,
-    "birthday": "1994-04-08",
+    "birthday": null,
     "phoneNumber": "+16129631237",
     "phoneNumberConfirmed": false,
     "onboardingCompleted": true,
@@ -20,7 +20,7 @@
     "profileImage": "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png",
     "permissionGroups": [
         {
-            "name": "ALL",
+            "name": "Everything",
             "fields": []
         },
         {
@@ -29,10 +29,6 @@
                 "email",
                 "phoneNumber"
             ]
-        },
-        {
-            "name": "Nothing",
-            "fields": []
         }
     ],
     "blockedUsers": [],

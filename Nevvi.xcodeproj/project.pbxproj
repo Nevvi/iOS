@@ -117,6 +117,7 @@
 		277E95BC2B6FB8C400A3C433 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BB2B6FB8C400A3C433 /* Popup.swift */; };
 		277E95BE2B701FF700A3C433 /* BindingExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BD2B701FF700A3C433 /* BindingExtensions.swift */; };
 		277E95C22B8104D800A3C433 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95C12B8104D800A3C433 /* AppSettings.swift */; };
+		2799F79A2C14744B00940D73 /* ConnectionSuggestionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799F7992C14744B00940D73 /* ConnectionSuggestionRow.swift */; };
 		27BBC3B32B8BE3C8003B77A5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 27BBC3B22B8BE3C8003B77A5 /* FirebaseAnalytics */; };
 		27BBC3B52B8BE3C8003B77A5 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 27BBC3B42B8BE3C8003B77A5 /* FirebaseAnalyticsOnDeviceConversion */; };
 		27BBC3B72B8BE3C8003B77A5 /* FirebaseAnalyticsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 27BBC3B62B8BE3C8003B77A5 /* FirebaseAnalyticsSwift */; };
@@ -258,6 +259,7 @@
 		277E95BB2B6FB8C400A3C433 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 		277E95BD2B701FF700A3C433 /* BindingExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExtensions.swift; sourceTree = "<group>"; };
 		277E95C12B8104D800A3C433 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		2799F7992C14744B00940D73 /* ConnectionSuggestionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSuggestionRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -473,6 +475,7 @@
 				0431438C296B6E020094D7E0 /* ConnectionGroupRow.swift */,
 				04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */,
 				277D253B2B5F4D7500D1D717 /* GroupConnectionRow.swift */,
+				2799F7992C14744B00940D73 /* ConnectionSuggestionRow.swift */,
 			);
 			path = Connections;
 			sourceTree = "<group>";
@@ -784,6 +787,7 @@
 				277D254A2B686FD500D1D717 /* FrequentlyAskedQuestionList.swift in Sources */,
 				277D253E2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift in Sources */,
 				277D25222B55C21F00D1D717 /* PermissionGroupPicker.swift in Sources */,
+				2799F79A2C14744B00940D73 /* ConnectionSuggestionRow.swift in Sources */,
 				04314387296B64A50094D7E0 /* ConnectionGroup.swift in Sources */,
 				277D253A2B5E9D5300D1D717 /* GroupSettings.swift in Sources */,
 				04B94947295E57C500703523 /* UIApplicationExtensions.swift in Sources */,
@@ -915,14 +919,14 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nevvi/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Nevvi;
-				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to keep your phone contacts up to date";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Nevvi can sync your connection data to your phone contacts when there are updates.";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -935,7 +939,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1008,14 +1012,14 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nevvi/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Nevvi;
-				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to keep your phone contacts up to date";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Nevvi can sync your connection data to your phone contacts when there are updates.";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1028,7 +1032,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1162,14 +1166,14 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nevvi/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Nevvi;
-				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to keep your phone contacts up to date";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Nevvi can sync your connection data to your phone contacts when there are updates.";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1182,7 +1186,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1201,14 +1205,14 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 3.RELEASE;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Nevvi/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Nevvi;
-				INFOPLIST_KEY_NSContactsUsageDescription = "This app needs access to keep your phone contacts up to date";
+				INFOPLIST_KEY_NSContactsUsageDescription = "Nevvi can sync your connection data to your phone contacts when there are updates.";
 				INFOPLIST_KEY_NSFaceIDUsageDescription = "Allow Face ID to access stored credentials";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1221,7 +1225,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6;
+				MARKETING_VERSION = 1.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

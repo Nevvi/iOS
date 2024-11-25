@@ -144,6 +144,10 @@ class AuthorizationStore: ObservableObject {
         return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/confirm")!
     }
     
+    private func resendCodeUrl() throws -> URL {
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/resendSignupCode")!
+    }
+    
     private func forgotPasswordUrl() throws -> URL {
         return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/forgotPassword")!
     }
@@ -181,7 +185,7 @@ class AuthorizationStore: ObservableObject {
                 case .failure(let error):
                     print(error)
                     let httpError = error as? HttpError
-                    if httpError == HttpError.passwordResetError {
+                    if httpError! == HttpError.passwordResetError {
                         callback(.failure(AuthorizationError.passwordResetRequired))
                     } else {
                         callback(.failure(AuthorizationError.invalidCredentials))
@@ -266,6 +270,27 @@ class AuthorizationStore: ObservableObject {
         }
     }
     
+    func resendSignupCode(username: String, callback: @escaping (Result<ConfirmResponse, AuthorizationError>) -> Void) {
+        do {
+            self.sendingResetCode = true
+            let request = ResendCodeRequest(username: username)
+            URLSession.shared.postData(for: try self.resendCodeUrl(), for: request) { (result: Result<ConfirmResponse, Error>) in
+                switch result {
+                case .success(let response):
+                    callback(.success(response))
+                case .failure(let error):
+                    print(error)
+                    callback(.failure(AuthorizationError.unknown))
+                }
+                self.sendingResetCode = false
+            }
+        } catch(let error) {
+            print(error)
+            callback(.failure(AuthorizationError.unknown))
+            self.sendingResetCode = false
+        }
+    }
+    
     func forgotPassword(username: String, callback: @escaping (Result<ConfirmResponse, AuthorizationError>) -> Void) {
         do {
             self.sendingResetCode = true
@@ -324,6 +349,10 @@ class AuthorizationStore: ObservableObject {
     struct ConfirmRequest: Encodable {
         var username: String
         var confirmationCode: String
+    }
+    
+    struct ResendCodeRequest: Encodable {
+        var username: String
     }
     
     struct ForgotPasswordRequest: Encodable {

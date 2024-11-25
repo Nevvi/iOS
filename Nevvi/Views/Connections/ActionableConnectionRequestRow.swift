@@ -15,7 +15,7 @@ struct ActionableConnectionRequestRow: View {
     @State var request: ConnectionRequest
     @State var showSheet: Bool = false
     @State var showDeleteAlert: Bool = false
-    @State var selectedPermissionGroup: String = "ALL"
+    @State var selectedPermissionGroup: String = "Everything"
     
     var body: some View {
         HStack(alignment: .center, spacing: 12) {

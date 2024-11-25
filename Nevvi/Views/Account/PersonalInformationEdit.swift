@@ -122,6 +122,7 @@ struct PersonalInformationEdit: View {
                     }
                     .padding([.vertical], 12)
                     .padding([.horizontal], 10)
+                    .contentShape(Rectangle())
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
                             .inset(by: 0.5)
@@ -158,19 +159,20 @@ struct PersonalInformationEdit: View {
                         
                         Spacer()
                         
-                        Button {
-                            self.showBirthdayPicker.toggle()
-                        } label: {
-                            Image(systemName: "calendar")
-                        }.buttonStyle(.borderless)
+                        Image(systemName: "calendar")
+                            .foregroundColor(ColorConstants.primary)
                     }
                     .padding([.vertical], 12)
                     .padding([.horizontal], 10)
+                    .contentShape(Rectangle())
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
                             .inset(by: 0.5)
                             .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
                     )
+                    .onTapGesture {
+                        self.showBirthdayPicker.toggle()
+                    }
                     
                     Divider().padding([.vertical], 4)
                     
@@ -278,7 +280,7 @@ struct PersonalInformationEdit: View {
             VStack(spacing: 8) {
                 DatePicker("", selection: self.$accountStore.birthday, displayedComponents: [.date])
                     .datePickerStyle(.wheel)
-                    .padding()
+                    .padding(.trailing)
                 
                 Text("Confirm")
                     .asPrimaryButton()

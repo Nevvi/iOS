@@ -5,6 +5,7 @@
 //  Created by Tyler Cobb on 1/5/23.
 //
 
+import AlertToast
 import SwiftUI
 
 extension Text {
@@ -20,6 +21,10 @@ extension Text {
 struct Settings: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var authStore: AuthorizationStore
+    
+    @State private var toastText: String = ""
+    @State private var showToast: Bool = false
+    @State private var showDeleteAlert: Bool = false
     
     var body: some View {
         NavigationView {
@@ -156,11 +161,50 @@ struct Settings: View {
                     .disabled(self.authStore.loggingOut)
                     .opacity(self.authStore.loggingOut ? 0.5 : 1.0)
                 }
+                
+                Section {
+                    Button(action: {
+                        self.showDeleteAlert = true
+                    }, label: {
+                        HStack {
+                            Image(systemName: "minus.circle").padding([.trailing])
+                            Text("Delete Account")
+                        }.foregroundColor(.red)
+                    })
+                    .padding(10)
+                    .disabled(self.authStore.loggingOut)
+                    .opacity(self.authStore.loggingOut ? 0.5 : 1.0)
+                }
+                
             }
             .listStyle(.insetGrouped)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
+            .alert(isPresented: self.$showDeleteAlert) {
+                deleteAlert
+            }
+            .toast(isPresenting: $showToast, duration: 3){
+                AlertToast(displayMode: .alert, type: .complete(Color.green), title: self.toastText)
+            }
         }
+    }
+    
+    var deleteAlert: Alert {
+        Alert(title: Text("Delete confirmation"), message: Text("Are you sure you want to delete your account and all of your connections?"), primaryButton: .destructive(Text("Delete")) {
+            self.accountStore.delete { (result: Result<String, Error>) in
+                switch result {
+                case.success(let message):
+                    self.toastText = message
+                case .failure(let error):
+                    self.toastText = error.localizedDescription
+                }
+                self.showToast = true
+            }
+            
+            self.showDeleteAlert = false
+        }, secondaryButton: .cancel() {
+            self.showDeleteAlert = false
+        })
     }
     
 }

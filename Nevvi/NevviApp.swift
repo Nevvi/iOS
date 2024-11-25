@@ -73,6 +73,7 @@ struct NevviApp: App {
                     .sheet(isPresented: self.$forceUpdate) {
                         self.forceUpdateView
                     }
+                    .navigationViewStyle(.stack)
             } else {
                 Login(authStore: authStore) { (auth: Authorization) in
                     // hacky way of restoring auth on login
@@ -91,6 +92,7 @@ struct NevviApp: App {
                 .sheet(isPresented: self.$forceUpdate) {
                     self.forceUpdateView
                 }
+                .navigationViewStyle(.stack)
             }
         }
     }

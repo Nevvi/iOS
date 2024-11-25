@@ -332,8 +332,37 @@ class AccountStore: ObservableObject {
             return
         }
         
-        self.permissionGroups.append(newGroup)
-        self.save(callback: callback)
+        var permissionGroupsCopy = self.permissionGroups
+        permissionGroupsCopy.append(newGroup)
+        let request = PatchRequest(permissionGroups: permissionGroupsCopy)
+        self.update(request: request, callback: callback)
+    }
+    
+    func removePermissionGroup(existingGroup: PermissionGroup, callback: @escaping (Result<User, Error>) -> Void) {
+        var permissionGroupsCopy = self.permissionGroups
+        permissionGroupsCopy.removeAll(where: { group in group.name == existingGroup.name })
+        let request = PatchRequest(permissionGroups: permissionGroupsCopy)
+        self.update(request: request, callback: callback)
+    }
+    
+    func delete(callback: @escaping (Result<String, Error>) -> Void) {
+        do {
+            self.loading = true
+            let idToken: String? = self.authorization?.idToken
+            URLSession.shared.deleteData(for: try self.url(), for: "Bearer \(idToken!)") { (result: Result<DeleteResponse, Error>) in
+                switch result {
+                case .success(let response):
+                    callback(.success(response.message))
+                case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
+                    callback(.failure(error))
+                }
+                self.loading = false
+            }
+        } catch(let error) {
+            self.error = GenericError(error.localizedDescription)
+            self.loading = false
+        }
     }
     
     struct PatchRequest: Encodable {
@@ -366,5 +395,9 @@ class AccountStore: ObservableObject {
         var Destination: String
         var DeliveryMedium: String
         var AttributeName: String
+    }
+    
+    struct DeleteResponse: Decodable {
+        var message: String
     }
 }

@@ -83,7 +83,6 @@ class UsersStore : ObservableObject {
     
     private func search(url: URL) {
         self.loading = true
-        print(url.absoluteString)
         let idToken: String? = self.authorization?.idToken
         URLSession.shared.fetchData(for: url, for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
             switch result {

@@ -198,11 +198,11 @@ struct ConnectionGroupList: View {
             HStack {
                 Button {
                     self.creatingGroup = true
+                    self.showGroupForm = false
                     self.connectionGroupsStore.create(name: self.newGroupName) { (result: Result<ConnectionGroup, Error>) in
                         switch result {
                         case .success(let newGroup):
                             if self.newGroupConnections.isEmpty {
-                                self.showGroupForm = false
                                 self.creatingGroup = false
                                 self.newGroupName = ""
                                 self.newGroupConnections = []
@@ -212,7 +212,6 @@ struct ConnectionGroupList: View {
                                 self.newGroupConnections.forEach { connection in
                                     self.connectionGroupsStore.addToGroup(groupId: newGroup.id, userId: connection.id) { _ in
                                         if connection == self.newGroupConnections.last {
-                                            self.showGroupForm = false
                                             self.creatingGroup = false
                                             self.newGroupName = ""
                                             self.newGroupConnections = []

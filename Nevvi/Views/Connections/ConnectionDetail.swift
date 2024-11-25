@@ -139,7 +139,8 @@ struct ConnectionDetail: View {
                             Spacer()
                             
                             if self.connectionStore.hasCoordinates  {
-                                Map(coordinateRegion: self.$connectionStore.coordinates.coordinates, annotationItems: [self.connectionStore.coordinates],
+                                Map(coordinateRegion: self.$connectionStore.coordinates.coordinates,
+                                    interactionModes: [.zoom], annotationItems: [self.connectionStore.coordinates],
                                     annotationContent: { location in
                                     MapPin(coordinate: CLLocationCoordinate2D(latitude: location.coordinates.center.latitude, longitude: location.coordinates.center.longitude), tint: .red)
                                     })

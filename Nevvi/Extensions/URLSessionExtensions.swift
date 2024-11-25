@@ -9,8 +9,8 @@ import UIKit
 import Foundation
 
 enum HttpError : Error, LocalizedError, Identifiable {
-    case clientError
-    case serverError
+    case clientError(message: String)
+    case serverError(message: String)
     case passwordResetError
             
     static func parse(statusCode: Int, error: String?) -> HttpError {
@@ -18,9 +18,9 @@ enum HttpError : Error, LocalizedError, Identifiable {
             if error != nil && error! == "Password reset required for the user" {
                 return HttpError.passwordResetError
             }
-            return HttpError.clientError
+            return HttpError.clientError(message: error ?? "Client error")
         } else {
-            return HttpError.serverError
+            return HttpError.serverError(message: error ?? "Server error")
         }
     }
     
@@ -30,13 +30,17 @@ enum HttpError : Error, LocalizedError, Identifiable {
     
     var errorDescription: String? {
         switch self {
-        case .clientError:
-            return NSLocalizedString("Client error", comment: "")
-        case .serverError:
-            return NSLocalizedString("Server error", comment: "")
+        case .clientError(let message):
+            return NSLocalizedString(message, comment: "")
+        case .serverError(let message):
+            return NSLocalizedString(message, comment: "")
         case .passwordResetError:
             return NSLocalizedString("Password reset required", comment: "")
         }
+    }
+    
+    static func ==(lhs: HttpError, rhs: HttpError) -> Bool {
+        lhs.errorDescription == rhs.errorDescription
     }
 }
 

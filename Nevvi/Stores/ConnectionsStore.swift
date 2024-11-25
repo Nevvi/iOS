@@ -13,7 +13,7 @@ class ConnectionsStore : ObservableObject {
     private var nameFilter: String? = nil
     private var permissionGroup: String? = nil
     private var skip: Int = 0
-    private var limit: Int = 10
+    private var limit: Int = 25
     
     @Published var loading: Bool = false
     @Published var loadingPage: Bool = false

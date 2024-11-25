@@ -11,6 +11,7 @@ import SwiftUI
 struct ConnectionRequestList: View {
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var suggestionsStore: ConnectionSuggestionStore
+    @EnvironmentObject var accountStore: AccountStore
 
     var notConnectedUsers: [Connection] {
         self.suggestionsStore.users.filter {
@@ -18,51 +19,85 @@ struct ConnectionRequestList: View {
             $0.requested != nil && !$0.requested!
         }
     }
+    
+    private var profileRequiresUpdate: Bool {
+        return self.accountStore.user?.firstName?.isEmpty ?? true
+    }
 
     @State private var showToast: Bool = false
         
     var body: some View {
         NavigationView {
             VStack {
-                if self.connectionsStore.requestCount == 0 && self.notConnectedUsers.count == 0 {
-                    GeometryReader { geometry in
-                        ScrollView(.vertical) {
-                            noRequestsView
-                                .frame(width: geometry.size.width)
-                                .frame(minHeight: geometry.size.height)
-                        }
-                    }
+                if profileRequiresUpdate {
+                    profileUpdateView
                 } else {
-                    ScrollView {
-                        requestsView
-                        
-                        if self.notConnectedUsers.count > 0 {
-                            suggestionsView
-                        }
-                    }.padding(.top)
+                    connectionRequestsView
                 }
             }
-            .refreshable {
-                self.connectionsStore.loadRequests()
-                self.suggestionsStore.loadSuggestions()
-            }
-            .toolbar(content: {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: UserSearch()) {
-                        Image(systemName: "plus.magnifyingglass")
-                            .toolbarButtonStyle()
-                    }
-                    
-                    // TODO
-//                    Image(systemName: "qrcode.viewfinder").toolbarButtonStyle()
-                }
-            })
             .navigationTitle("New Connections")
             .navigationBarTitleDisplayMode(.inline)
         }
         .toast(isPresenting: $showToast){
             AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Request sent!")
         }
+    }
+    
+    var profileUpdateView: some View {
+        HStack(alignment: .center) {
+            VStack(alignment: .center, spacing: 24) {
+                Spacer()
+                
+                Image("UpdateProfile")
+                
+                Text("Update Your Profile")
+                    .defaultStyle(size: 24, opacity: 1.0)
+                
+                Text("Please add your name and email before connecting with other users.")
+                    .defaultStyle(size: 16, opacity: 0.7)
+                    .multilineTextAlignment(.center)
+                
+                Spacer()
+                Spacer()
+            }
+        }.padding()
+    }
+    
+    var connectionRequestsView: some View {
+        VStack {
+            if self.connectionsStore.requestCount == 0 && self.notConnectedUsers.count == 0 {
+                GeometryReader { geometry in
+                    ScrollView(.vertical) {
+                        noRequestsView
+                            .frame(width: geometry.size.width)
+                            .frame(minHeight: geometry.size.height)
+                    }
+                }
+            } else {
+                ScrollView {
+                    requestsView
+                    
+                    if self.notConnectedUsers.count > 0 {
+                        suggestionsView
+                    }
+                }.padding(.top)
+            }
+        }
+        .refreshable {
+            self.connectionsStore.loadRequests()
+            self.suggestionsStore.loadSuggestions()
+        }
+        .toolbar(content: {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination: UserSearch()) {
+                    Image(systemName: "plus.magnifyingglass")
+                        .toolbarButtonStyle()
+                }
+                
+                // TODO
+//                    Image(systemName: "qrcode.viewfinder").toolbarButtonStyle()
+            }
+        })
     }
     
     var noRequestsView: some View {
@@ -112,9 +147,9 @@ struct ConnectionRequestList: View {
             .padding(.bottom, 4)
             
             ForEach(self.notConnectedUsers) { user in
-                NewConnectionRequestRow(requestCallback: {
+                ConnectionSuggestionRow(requestCallback: {
                     self.showToast = true
-                    self.suggestionsStore.removeUser(user: user)
+                    self.suggestionsStore.loadSuggestions()
                 }, user: user)
             }
             .redacted(when: self.suggestionsStore.loading || self.connectionsStore.loadingRequests, redactionType: .customPlaceholder)
@@ -128,10 +163,12 @@ struct ConnectionRequestList_Previews: PreviewProvider {
     static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
                                                    requests: modelData.requests,
                                                    blockedUsers: modelData.connectionResponse.users)
+    static let accountStore = AccountStore(user: modelData.user)
     
     static var previews: some View {
         ConnectionRequestList()
             .environmentObject(connectionsStore)
             .environmentObject(suggestionsStore)
+            .environmentObject(accountStore)
     }
 }

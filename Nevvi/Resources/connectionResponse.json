@@ -4,12 +4,12 @@
             "id": "d677257c-badf-46c1-afe4-f079413c883a",
             "firstName": "Tyler",
             "lastName": "Cobb",
-            "bio": "Me",
+            "bio": "A moderately long bio to take up space",
             "profileImage": "https://nevvi-user-images-dev.s3.amazonaws.com/users/d677257c-badf-46c1-afe4-f079413c883a/images/CEF67C25-5EE7-486C-91C6-E598C1EF82DE.jpeg",
-            "connected": true,
-            "requested": true,
+            "connected": false,
+            "requested": false,
             "inSync": true,
-            "permissionGroup": "ALL"
+            "permissionGroup": "Everything"
         },
         {
             "id": "759a30e6-23f6-4898-b23a-8c8fb0095279",
@@ -20,7 +20,7 @@
             "connected": true,
             "requested": true,
             "inSync": true,
-            "permissionGroup": "ALL"
+            "permissionGroup": "Everything"
         },
         {
             "id": "0682fe18-cdae-4b9c-af2a-d195d5771808",
@@ -31,7 +31,7 @@
             "connected": false,
             "requested": true,
             "inSync": true,
-            "permissionGroup": "CONTACT_INFO"
+            "permissionGroup": "Contact Info"
         },
         {
             "id": "0578c4ca-813f-4fd7-8087-cc1b200411b4",
@@ -42,7 +42,7 @@
             "connected": false,
             "requested": false,
             "inSync": true,
-            "permissionGroup": "ALL"
+            "permissionGroup": "Everything"
         }
     ],
     "count": 4

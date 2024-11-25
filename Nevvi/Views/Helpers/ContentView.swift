@@ -11,14 +11,14 @@ struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     
     @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var connectionStore: ConnectionStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
+    @EnvironmentObject var connectionGroupStore: ConnectionGroupStore
     @EnvironmentObject var suggestionsStore: ConnectionSuggestionStore
     @EnvironmentObject var usersStore: UsersStore
     @EnvironmentObject var contactStore: ContactStore
-    @EnvironmentObject var connectionStore: ConnectionStore
-    @EnvironmentObject var connectionGroupStore: ConnectionGroupStore
-    
+
     var body: some View {
         if (!accountStore.id.isEmpty) {
             if (accountStore.onboardingCompleted) {
@@ -54,6 +54,8 @@ struct ContentView: View {
                 .errorAlert(error: self.$connectionGroupStore.error)
                 .errorAlert(error: self.$connectionGroupsStore.error)
                 .errorAlert(error: self.$usersStore.error)
+                .errorAlert(error: self.$suggestionsStore.error)
+                .errorAlert(error: self.$contactStore.error)
                 .onChange(of: scenePhase) { newPhase in
                     if newPhase == .active {
                         /// TODO - re-entering from maps goes back to wrong view because of this

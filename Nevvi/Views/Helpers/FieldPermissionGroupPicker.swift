@@ -116,7 +116,7 @@ struct FieldPermissionGroupPicker: View {
     
     func matchingPermissionGroups() -> some View {
         let matchingGroups = self.accountStore.permissionGroups.filter { group in
-            group.name == "ALL" || group.fields.contains(self.fieldName)
+            group.name == "Everything" || group.fields.contains(self.fieldName)
         }
         
         return WrappingHStack(alignment: .leading) {

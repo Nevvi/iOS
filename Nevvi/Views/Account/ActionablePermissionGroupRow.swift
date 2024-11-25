@@ -15,6 +15,7 @@ struct ActionablePermissionGroupRow: View {
     @State var group: PermissionGroup = PermissionGroup(name: "", fields: [])
     
     @State var editting: Bool = false
+    @State var deleting: Bool = false
     
     var selectedFields: [String] {
         self.group.fields    }
@@ -35,7 +36,7 @@ struct ActionablePermissionGroupRow: View {
                 
                 Spacer()
                 
-                if self.group.name != "ALL" {
+                if self.group.name != "Everything" {
                     if self.editting {
                         Button(action: {
                             self.accountStore.permissionGroups = self.accountStore.permissionGroups.map { existingGroup in
@@ -63,12 +64,61 @@ struct ActionablePermissionGroupRow: View {
                                 .opacity(self.accountStore.saving ? 0.5 : 1.0)
                                 .disabled(self.accountStore.saving)
                         })
+                    } else if (self.deleting) {
+                        HStack {
+                            Button(action: {
+                                self.deleting = false
+                            }, label: {
+                                Text("Cancel".uppercased())
+                                    .fontWeight(.bold)
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .padding(.vertical, 6)
+                                    .padding(.horizontal, 16)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 24)
+                                            .foregroundColor(.gray)
+                                    )
+                                    .opacity(self.accountStore.saving ? 0.5 : 1.0)
+                                    .disabled(self.accountStore.saving)
+                            })
+                            
+                            Button(action: {
+                                self.accountStore.removePermissionGroup(existingGroup: group) { (result: Result<User, Error>) in
+                                    switch result {
+                                    case .success(_):
+                                        self.deleting = false
+                                    case .failure(let error):
+                                        print("Something went wrong", error)
+                                    }
+                                }
+                            }, label: {
+                                Text("Delete".uppercased())
+                                    .fontWeight(.bold)
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .padding(.vertical, 6)
+                                    .padding(.horizontal, 16)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 24)
+                                            .foregroundColor(.red)
+                                    )
+                                    .opacity(self.accountStore.saving ? 0.5 : 1.0)
+                                    .disabled(self.accountStore.saving)
+                            })
+                        }
                     } else {
                         Menu {
                             Button {
                                 self.editting = true
                             } label: {
                                 Label("Edit Group", systemImage: "pencil")
+                            }
+                            
+                            Button {
+                                self.deleting = true
+                            } label: {
+                                Label("Delete Group", systemImage: "trash")
                             }
                         } label: {
                             Image(systemName: "ellipsis")
@@ -109,7 +159,7 @@ struct ActionablePermissionGroupRow: View {
     
     var permissionGroupFields: some View {
         WrappingHStack(alignment: .leading) {
-            if group.name.uppercased() == "ALL" {
+            if group.name.uppercased() == "EVERYTHING" {
                 permissionGroupField(field: "Everything")
             } else {
                 ForEach(self.selectedFields, id: \.self) { field in
@@ -171,6 +221,6 @@ struct ActionablePermissionGroupRow_Previews: PreviewProvider {
             .environmentObject(accountStore)
             .environmentObject(connectionStore)
 //        PermissionGroupRow(group: PermissionGroup(name: "Family", fields: []))
-//        PermissionGroupRow(group: PermissionGroup(name: "All", fields: []))
+//        PermissionGroupRow(group: PermissionGroup(name: "Everything", fields: []))
     }
 }
