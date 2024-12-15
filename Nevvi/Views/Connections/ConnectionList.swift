@@ -32,10 +32,6 @@ struct ConnectionList: View {
     @StateObject var nameFilter = DebouncedText()
     @State var selectedGroup: String? = nil
     
-    private var profileRequiresUpdate: Bool {
-        return self.accountStore.user?.firstName?.isEmpty ?? true
-    }
-    
     private var noConnectionsExist: Bool {
         return self.selectedGroup == nil && self.nameFilter.text.isEmpty && self.connectionsStore.connectionCount == 0 && !self.connectionsStore.loading
     }
@@ -55,8 +51,6 @@ struct ConnectionList: View {
                     requestNotificationsView
                 } else if self.contactStore.canRequestAccess() {
                     requestContactsView
-                } else if profileRequiresUpdate {
-                    profileUpdateView
                 } else if noConnectionsExist {
                     noConnectionsView
                 } else {
@@ -208,26 +202,6 @@ struct ConnectionList: View {
                             print("Failed to get contact access")
                         }
                     }
-                
-                Spacer()
-                Spacer()
-            }
-        }.padding()
-    }
-    
-    var profileUpdateView: some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .center, spacing: 24) {
-                Spacer()
-                
-                Image("UpdateProfile")
-                
-                Text("Update Your Profile")
-                    .defaultStyle(size: 24, opacity: 1.0)
-                
-                Text("Please add your name and email before connecting with other users.")
-                    .defaultStyle(size: 16, opacity: 0.7)
-                    .multilineTextAlignment(.center)
                 
                 Spacer()
                 Spacer()

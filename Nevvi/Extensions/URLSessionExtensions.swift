@@ -147,9 +147,7 @@ extension URLSession {
         self.execute(request: urlRequest, completion: completion)
     }
     
-    
-    
-    private func execute<T: Decodable>(request: URLRequest, completion: @escaping (Result<T, Error>) -> Void) {
+    func execute<T: Decodable>(request: URLRequest, completion: @escaping (Result<T, Error>) -> Void) {
         self.dataTask(with: request) { (data, response, error) in
             DispatchQueue.main.async{
                 if let error = error {

@@ -397,15 +397,16 @@ struct PersonalInformationEdit: View {
             return
         }
         
-        let emailUpdated = self.accountStore.email != self.accountStore.user?.email
+        
+        let existingEmail = self.accountStore.user?.email
         
         self.accountStore.save { (result: Result<User, Error>) in
             switch result {
             case .failure(let error):
                 print("Something bad happened", error)
-            case .success(_):
+            case .success(let user):
                 self.tryToggle()
-                if emailUpdated {
+                if user.email != existingEmail {
                     self.accountStore.verifyEmail { (result: Result<AccountStore.VerifyResponse, Error>) in
                         switch result {
                         case .success(_):

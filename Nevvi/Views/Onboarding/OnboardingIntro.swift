@@ -48,6 +48,7 @@ struct OnboardingIntro: View {
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
                     .lineSpacing(4)
+                    .padding([.leading, .trailing])
                 
                 Spacer()
                                 

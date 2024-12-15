@@ -32,15 +32,19 @@ struct OnboardingCarousel: View {
                 }).tabStyle(page: 1)
                 
                 OnboardingSync(primaryClick: {
-                    print("Done onboarding!")
+                    self.index = 3
                 }).tabStyle(page: 2)
+                
+                OnboardingPrompt(primaryClick: {
+                    print("Done onboarding!")
+                }).tabStyle(page: 3)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .edgesIgnoringSafeArea([.top])
             .animation(.easeOut(duration: 0.2), value: index)
             
             HStack(spacing: 3) {
-                ForEach((0..<3), id: \.self) { index in
+                ForEach((0..<4), id: \.self) { index in
                     Rectangle()
                         .fill(index == self.index ? Color.black : Color.black.opacity(0.2))
                         .frame(width: 30, height: 3)

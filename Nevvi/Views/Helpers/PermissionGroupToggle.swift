@@ -18,13 +18,13 @@ struct PermissionGroupToggle: View {
             Text(groupName)
         }
         .toggleStyle(CheckboxToggleStyle())
-        .disabled(self.groupName == "Everything")
-        .opacity(self.groupName == "Everything" ? 0.5 : 1.0)
+        .disabled(self.groupName == "All Info")
+        .opacity(self.groupName == "All Info" ? 0.5 : 1.0)
         .onChange(of: self.isOn) { newValue in
             callback(newValue)
         }
         .onAppear {
-            self.isOn = self.isOn || self.groupName == "Everything"
+            self.isOn = self.isOn || self.groupName == "All Info"
         }
     }
 }

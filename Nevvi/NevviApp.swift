@@ -67,6 +67,7 @@ struct NevviApp: App {
                     .onAppear(perform: self.checkVersion)
                     .onChange(of: scenePhase) { newPhase in
                         if newPhase == .active {
+                            self.authStore.checkAuthorization()
                             UNUserNotificationCenter.current().setBadgeCount(0)
                         }
                     }
@@ -132,6 +133,7 @@ struct NevviApp: App {
     
     func checkVersion() {
         self.authStore.getMinAppVersion { version in
+            let bundleVersion = Bundle.main.releaseVersionNumber!
             if Bundle.main.releaseVersionNumber! < version {
                 print("Forcing update to min version \(version)")
                 print("Current version \(Bundle.main.releaseVersionNumber!) \(Bundle.main.buildVersionNumber!)")

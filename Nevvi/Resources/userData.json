@@ -20,7 +20,7 @@
     "profileImage": "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png",
     "permissionGroups": [
         {
-            "name": "Everything",
+            "name": "All Info",
             "fields": []
         },
         {

@@ -172,16 +172,39 @@ class AuthorizationStore: ObservableObject {
         }
     }
     
+    func checkAuthorization() {
+        guard let authorization = self.authorization else { return }
+        
+        if authorization.isExpired {
+            // TODO refresh instead
+            print("Tokens are expired. Logging out.")
+            self.logout { result in
+                switch result {
+                case .success:
+                    print("Logged out")
+                case .failure:
+                    print("Failed to log out")
+                }
+            }
+        }
+    }
+    
     func login(username: String, password: String, callback: @escaping (Result<Authorization, AuthorizationError>) -> Void) {
         do {
             print("Logging in")
             self.loggingIn = true
             let request = Credentials(username: username, password: password)
-            URLSession.shared.postData(for: try self.loginUrl(), for: request) { (result: Result<Authorization, Error>) in
+            URLSession.shared.postData(for: try self.loginUrl(), for: request) { (result: Result<LoginResponse, Error>) in
                 switch result {
-                case .success(let authorization):
-                    self.authorization = authorization
-                    callback(.success(authorization))
+                case .success(let response):
+                    do {
+                        let authorization = try Authorization(idToken: response.idToken, accessToken: response.accessToken, refreshToken: response.refreshToken, id: response.id)
+                        self.authorization = authorization
+                        callback(.success(self.authorization!))
+                    } catch {
+                        print("Failed to parse login response")
+                        callback(.failure(AuthorizationError.unknown))
+                    }
                 case .failure(let error):
                     print(error)
                     let httpError = error as? HttpError
@@ -368,6 +391,14 @@ class AuthorizationStore: ObservableObject {
     struct ConfirmResponse: Decodable {
         
     }
+    
+    struct LoginResponse: Decodable {
+        var idToken: String
+        var accessToken: String
+        var refreshToken: String
+        var id: String
+    }
+
     
     struct LogoutResponse: Decodable {
         

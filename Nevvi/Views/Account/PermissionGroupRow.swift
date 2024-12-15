@@ -36,7 +36,7 @@ struct PermissionGroupRow: View {
     
     var permissionGroupFields: some View {
         WrappingHStack(alignment: .leading) {
-            if group.name.uppercased() == "Everything" {
+            if group.name.uppercased() == "ALL INFO" {
                 permissionGroupField(field: "Everything")
             } else {
                 ForEach(group.fields.sorted(), id: \.self) { field in
@@ -71,6 +71,6 @@ struct PermissionGroupRow_Previews: PreviewProvider {
     static var previews: some View {
         PermissionGroupRow(group: PermissionGroup(name: "Family", fields: ["email", "phoneNumber", "birthday"]))
 //        PermissionGroupRow(group: PermissionGroup(name: "Family", fields: []))
-//        PermissionGroupRow(group: PermissionGroup(name: "Everything", fields: []))
+//        PermissionGroupRow(group: PermissionGroup(name: "All Info", fields: []))
     }
 }

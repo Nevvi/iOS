@@ -18,7 +18,7 @@ struct ConnectionSuggestionRow: View {
     @State var showAlert: Bool = false
     @State var showSheet: Bool = false
     @State private var animate = false
-    @State var selectedPermissionGroup: String = "Everything"
+    @State var selectedPermissionGroup: String = "All Info"
     
     var showConnectButton: Bool {
         if (user.connected != nil && user.connected!) {

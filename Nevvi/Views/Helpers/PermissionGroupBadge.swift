@@ -14,7 +14,7 @@ struct PermissionGroupBadge: View {
         let textColor = ColorConstants.badgeText
         let backgroundColor = ColorConstants.badgeBackground
 
-        return Text(groupName.uppercased())
+        return Text(groupName)
             .font(.system(size: 12))
             .padding([.leading, .trailing], 12)
             .padding([.top, .bottom], 6)

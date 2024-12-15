@@ -36,7 +36,7 @@ struct ActionablePermissionGroupRow: View {
                 
                 Spacer()
                 
-                if self.group.name != "Everything" {
+                if self.group.name != "All Info" {
                     if self.editting {
                         Button(action: {
                             self.accountStore.permissionGroups = self.accountStore.permissionGroups.map { existingGroup in
@@ -159,7 +159,7 @@ struct ActionablePermissionGroupRow: View {
     
     var permissionGroupFields: some View {
         WrappingHStack(alignment: .leading) {
-            if group.name.uppercased() == "EVERYTHING" {
+            if group.name.uppercased() == "ALL INFO" {
                 permissionGroupField(field: "Everything")
             } else {
                 ForEach(self.selectedFields, id: \.self) { field in
@@ -221,6 +221,6 @@ struct ActionablePermissionGroupRow_Previews: PreviewProvider {
             .environmentObject(accountStore)
             .environmentObject(connectionStore)
 //        PermissionGroupRow(group: PermissionGroup(name: "Family", fields: []))
-//        PermissionGroupRow(group: PermissionGroup(name: "Everything", fields: []))
+//        PermissionGroupRow(group: PermissionGroup(name: "All Info", fields: []))
     }
 }

@@ -10,9 +10,6 @@ import SwiftUI
 struct OnboardingDescription: View {
     var primaryClick: () -> Void
     
-    @State private var animateIntro = false
-    @State private var animateDescription = false
-
     var body: some View {
         ZStack {
             Image("BackgroundBlur")
@@ -39,17 +36,18 @@ struct OnboardingDescription: View {
                         .frame(maxHeight: 250)
                 }.padding()
                 
-                Text("Create Connections")
-                    .defaultStyle(size: 30, opacity: 1.0)
+                Text("\"What's your address again?\"")
+                    .defaultStyle(size: 26, opacity: 1.0)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
                     .padding(.bottom)
                 
-                Text("Securely request and accept connections at the click of a button.")
+                Text("How often are you asking for someone's address? With Nevvi, a connection lets both people securely view each other's information without asking each time.")
                     .defaultStyle(size: 20, opacity: 0.7)
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
                     .lineSpacing(4)
+                    .padding([.leading, .trailing])
                 
                 Spacer()
                                 

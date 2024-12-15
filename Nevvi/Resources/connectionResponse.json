@@ -9,7 +9,7 @@
             "connected": false,
             "requested": false,
             "inSync": true,
-            "permissionGroup": "Everything"
+            "permissionGroup": "All Info"
         },
         {
             "id": "759a30e6-23f6-4898-b23a-8c8fb0095279",
@@ -20,7 +20,7 @@
             "connected": true,
             "requested": true,
             "inSync": true,
-            "permissionGroup": "Everything"
+            "permissionGroup": "All Info"
         },
         {
             "id": "0682fe18-cdae-4b9c-af2a-d195d5771808",
@@ -42,7 +42,7 @@
             "connected": false,
             "requested": false,
             "inSync": true,
-            "permissionGroup": "Everything"
+            "permissionGroup": "All Info"
         }
     ],
     "count": 4

@@ -181,21 +181,44 @@ extension TextField {
     }
     
     func defaultStyle() -> some View {
-        return self.defaultStyle(size: nil, opacity: nil)
+        return self.defaultStyle(size: nil, opacity: nil, hPadding: nil, vPadding: nil)
     }
     
     func defaultStyle(size: CGFloat?, opacity: CGFloat?) -> some View {
+        return self.defaultStyle(size: size, opacity: opacity, hPadding: nil, vPadding: nil)
+    }
+    
+    func defaultStyle(size: CGFloat?, opacity: CGFloat?, hPadding: CGFloat?, vPadding: CGFloat?) -> some View {
         let finalSize = size ?? 24
         let finalOpacity = opacity ?? 1.0
+        let finalHPadding = hPadding ?? 10.0
+        let finalVPadding = vPadding ?? 12.0
+        
         return self
             .font(Font.custom("SF Pro", size: finalSize).weight(.semibold))
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 12)
+            .padding(.horizontal, finalHPadding)
+            .padding(.vertical, finalVPadding)
             .frame(maxWidth: .infinity, alignment: .leading)
             .cornerRadius(12)
             .overlay(
                 RoundedRectangle(cornerRadius: 12)
+                    .inset(by: 0.5)
+                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
+            )
+    }
+    
+    func onboardingStyle() -> some View {
+        return self
+            .font(Font.custom("SF Pro", size: 24).weight(.semibold))
+            .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(1.0))
+            .padding(.horizontal, 22)
+            .disableAutocorrection(true)
+            .padding(.vertical, 16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 40)
                     .inset(by: 0.5)
                     .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
             )
