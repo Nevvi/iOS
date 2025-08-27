@@ -195,11 +195,14 @@ struct ConnectionList: View {
                 Text("Allow Access".uppercased())
                     .asPrimaryButton()
                     .onTapGesture {
-                        let result = self.contactStore.tryRequestAccess()
-                        if result {
-                            print("Got contact access!")
-                        } else {
-                            print("Failed to get contact access")
+                        self.contactStore.tryRequestAccess { result in
+                            switch(result) {
+                            case .success():
+                                print("Got contact access!")
+                            case .failure(let error):
+                                print("Failed to get contact access: \(error.localizedDescription)")
+                            }
+                            
                         }
                     }
                 
@@ -210,29 +213,33 @@ struct ConnectionList: View {
     }
     
     var noConnectionsView: some View {
-        HStack(alignment: .center) {
-            VStack(alignment: .center, spacing: 24) {
-                Spacer()
-                
-                Image("UpdateProfile")
-                
-                Text("No connections")
-                    .defaultStyle(size: 24, opacity: 1.0)
-                
-                Text("Let's find some people for you to connect with.")
-                    .defaultStyle(size: 16, opacity: 0.7)
-                    .multilineTextAlignment(.center)
-                
-                NavigationLink(destination: UserSearch()) {
-                    Text("Find Connections".uppercased())
-                        .asPrimaryButton()
+        GeometryReader { geometry in
+            ScrollView(.vertical) {
+                VStack(alignment: .center, spacing: 24) {
+                    Spacer()
+                    
+                    Image("UpdateProfile")
+                    
+                    Text("No connections")
+                        .defaultStyle(size: 24, opacity: 1.0)
+                    
+                    Text("Let's find some people for you to connect with.")
+                        .defaultStyle(size: 16, opacity: 0.7)
+                        .multilineTextAlignment(.center)
+                    
+                    NavigationLink(destination: UserSearch()) {
+                        Text("Find Connections".uppercased())
+                            .asPrimaryButton()
+                    }
+                    
+                    Spacer()
+                    Spacer()
                 }
-                
-                Spacer()
-                Spacer()
+                .padding()
+                .frame(width: geometry.size.width)
+                .frame(minHeight: geometry.size.height)
             }
-            .padding()
-        }.padding()
+        }
     }
     
     var connectionsView: some View {

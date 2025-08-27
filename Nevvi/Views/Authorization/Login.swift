@@ -160,7 +160,6 @@ struct Login: View {
                             .font(.headline)
                             .foregroundColor(.white)
                             .padding(.vertical, 16)
-                            .disabled(self.loginDisabled)
                             .background(
                                 RoundedRectangle(cornerRadius: 24)
                                     .foregroundColor(ColorConstants.primary)
@@ -168,6 +167,7 @@ struct Login: View {
                             )
                         })
                         .padding([.bottom], 16)
+                        .disabled(self.loginDisabled)
                         
                         Spacer()
                         Spacer()

@@ -3,6 +3,9 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "closure #2 in NotificationSettings.notifyOutOfSync.getter:NotificationSettings.swift">
+      </ContextState>
+      <ContextState
          contextName = "closure #1 in closure #1 in ContactStore.syncContacts(connections:dryRun:callback:):ContactStore.swift">
          <PersistentStrings>
             <PersistentString
@@ -11,21 +14,32 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "closure #1 in closure #1 in NSURLSession.execute&lt;&#x3c4;_0_0&gt;(request:completion:):URLSessionExtensions.swift">
-         <PersistentStrings>
-            <PersistentString
-               value = "String(decoding: data, as: UTF8.self)">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "closure #2 in closure #1 in ContactStore.loadContacts():ContactStore.swift">
       </ContextState>
       <ContextState
-         contextName = "closure #2 in NotificationSettings.notifyOutOfSync.getter:NotificationSettings.swift">
+         contextName = "closure #1 in ContactStore.loadContacts():ContactStore.swift">
       </ContextState>
       <ContextState
          contextName = "closure #1 in NotificationSettings.notifyOutOfSync.getter:NotificationSettings.swift">
          <PersistentStrings>
             <PersistentString
                value = "self.accountStore.deviceSettings.notifyOutOfSync">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in NSURLSession.execute&lt;Nevvi.ContactStore.ContactSearchResponse&gt;(request:completion:):URLSessionExtensions.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "String(data: data, encoding: .utf8)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in closure #1 in NSURLSession.execute&lt;&#x3c4;_0_0&gt;(request:completion:):URLSessionExtensions.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "String(decoding: data, as: UTF8.self)">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

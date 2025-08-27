@@ -22,7 +22,11 @@ struct ConnectionGroupList: View {
             
     var body: some View {
         VStack(alignment: .center) {
-            if self.connectionGroupsStore.groupsCount == 0 {
+            if self.creatingGroup {
+                creatingView
+            } else if self.connectionGroupsStore.loading {
+                loadingView
+            } else if self.connectionGroupsStore.groupsCount == 0 {
                 noGroupsView
             } else {
                 groupsView
@@ -59,22 +63,37 @@ struct ConnectionGroupList: View {
         .padding([.vertical], 20)
     }
     
+    var creatingView: some View {
+        VStack {
+            Spacer()
+            LoadingView(loadingText: "Creating group...")
+            Spacer()
+            Spacer()
+        }
+    }
+    
+    var loadingView: some View {
+        VStack {
+            Spacer()
+            LoadingView(loadingText: "Loading groups...")
+            Spacer()
+            Spacer()
+        }
+    }
+    
     var noGroupsView: some View {
         VStack {
             Spacer()
             HStack(alignment: .center) {
-                if self.connectionGroupsStore.loading {
-                    ProgressView()
-                } else {
-                    VStack(alignment: .center, spacing: 24) {
-                        Image("UpdateProfile")
-                        
-                        Text("No connection groups")
-                            .defaultStyle(size: 24, opacity: 1.0)
-                    }
-                    .padding()
+                VStack(alignment: .center, spacing: 24) {
+                    Image("UpdateProfile")
+                    
+                    Text("No connection groups")
+                        .defaultStyle(size: 24, opacity: 1.0)
                 }
+                .padding()
             }
+            Spacer()
             Spacer()
             newGroupButton
         }
@@ -108,7 +127,7 @@ struct ConnectionGroupList: View {
                                 .padding()
                         }.padding([.leading, .trailing, .bottom])
                     }
-                    .redacted(when: self.connectionGroupsStore.loading || self.connectionGroupsStore.deleting, redactionType: .customPlaceholder)
+                    .redacted(when: self.connectionGroupsStore.loading || self.connectionGroupsStore.deleting || self.connectionGroupsStore.creating, redactionType: .customPlaceholder)
                 }
             }
             
@@ -132,8 +151,7 @@ struct ConnectionGroupList: View {
             self.showDeleteAlert = false
         }, secondaryButton: .cancel() {
             self.showDeleteAlert = false
-        }
-        )
+        })
     }
     
     var newGroupSheet: some View {
@@ -203,19 +221,19 @@ struct ConnectionGroupList: View {
                         switch result {
                         case .success(let newGroup):
                             if self.newGroupConnections.isEmpty {
+                                self.connectionGroupsStore.load()
                                 self.creatingGroup = false
                                 self.newGroupName = ""
                                 self.newGroupConnections = []
-                                self.connectionGroupsStore.load()
                             } else {
                                 // TODO - bulk add members to group
                                 self.newGroupConnections.forEach { connection in
                                     self.connectionGroupsStore.addToGroup(groupId: newGroup.id, userId: connection.id) { _ in
                                         if connection == self.newGroupConnections.last {
+                                            self.connectionGroupsStore.load()
                                             self.creatingGroup = false
                                             self.newGroupName = ""
                                             self.newGroupConnections = []
-                                            self.connectionGroupsStore.load()
                                         }
                                     }
                                 }

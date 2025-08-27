@@ -13,18 +13,18 @@ struct User: Hashable, Codable {
     var id: String
     var firstName: String?
     var lastName: String?
-    var deviceId: String?
+    var bio: String?
     var email: String?
     var emailConfirmed: Bool?
     var phoneNumber: String
     var phoneNumberConfirmed: Bool
-    var birthday: Date?
     var onboardingCompleted: Bool
-    var blockedUsers: [String]
+    var deviceId: String?
     var address: Address
     var mailingAddress: Address
+    var birthday: Date?
+    var blockedUsers: [String]
     var permissionGroups: [PermissionGroup]
     var profileImage: String
     var deviceSettings: DeviceSettings
-    var bio: String?
 }

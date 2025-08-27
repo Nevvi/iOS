@@ -11,7 +11,10 @@ class ConnectionGroupsStore : ObservableObject {
     var authorization: Authorization? = nil
     
     @Published var deleting: Bool = false
+    @Published var creating: Bool = false
     @Published var loading: Bool = false
+    @Published var adding: Bool = false
+    @Published var removing: Bool = false
     
     @Published var groups: [ConnectionGroup] = []
     @Published var groupsCount: Int = 0
@@ -76,7 +79,7 @@ class ConnectionGroupsStore : ObservableObject {
     
     func create(name: String, callback: @escaping (Result<ConnectionGroup, Error>) -> Void) {
         do {
-            self.loading = true
+            self.creating = true
             let idToken: String? = self.authorization?.idToken
             let request = CreateGroupRequest(name: name)
             URLSession.shared.postData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<ConnectionGroup, Error>) in
@@ -87,10 +90,11 @@ class ConnectionGroupsStore : ObservableObject {
                     self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
-                self.loading = false
+                self.creating = false
             }
         } catch(let error) {
             self.error = GenericError(error.localizedDescription)
+            self.creating = false
             callback(.failure(error))
         }
     }
@@ -111,13 +115,14 @@ class ConnectionGroupsStore : ObservableObject {
             }
         } catch(let error) {
             self.error = GenericError(error.localizedDescription)
+            self.deleting = false
             callback(.failure(error))
         }
     }
     
     func addToGroup(groupId: String, userId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
-            self.loading = true
+            self.adding = true
             let idToken: String? = self.authorization?.idToken
             let request = AddToGroupRequest(userId: userId)
             URLSession.shared.postData(for: try self.groupConnectionsUrl(groupId: groupId), for: request, for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
@@ -128,17 +133,18 @@ class ConnectionGroupsStore : ObservableObject {
                     self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
-                self.loading = false
+                self.adding = false
             }
         } catch(let error) {
             self.error = GenericError(error.localizedDescription)
+            self.adding = false
             callback(.failure(error))
         }
     }
     
     func removeFromGroup(groupId: String, userId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
-            self.loading = true
+            self.removing = true
             let idToken: String? = self.authorization?.idToken
             let request = RemoveFromGroupRequest(userId: userId)
             URLSession.shared.deleteData(for: try self.groupConnectionsUrl(groupId: groupId), for: request, for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
@@ -149,10 +155,11 @@ class ConnectionGroupsStore : ObservableObject {
                     self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
-                self.loading = false
+                self.removing = false
             }
         } catch(let error) {
             self.error = GenericError(error.localizedDescription)
+            self.removing = false
             callback(.failure(error))
         }
     }

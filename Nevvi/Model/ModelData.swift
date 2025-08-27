@@ -12,6 +12,7 @@ final class ModelData: ObservableObject {
     @Published var connectionResponse: ConnectionResponse = load("connectionResponse.json")
     @Published var connection: Connection = load("connectionData.json")
     @Published var user: User = load("userData.json")
+    @Published var usersResponse: ConnectionResponse = load("usersResponse.json")
     @Published var requests: [ConnectionRequest] = load("requestsData.json")
     @Published var groups: [ConnectionGroup] = load("connectionGroups.json")
 }

@@ -91,7 +91,7 @@ struct ConnectionRequestList: View {
             ForEach(self.connectionsStore.requests, id: \.requestingUserId) { request in
                 ActionableConnectionRequestRow(request: request)
             }
-            .redacted(when: self.connectionsStore.deletingRequest || self.connectionsStore.loadingRequests, redactionType: .customPlaceholder)
+            .redacted(when: self.connectionsStore.deletingRequest || self.connectionsStore.loadingRequests || self.connectionsStore.confirmingRequest, redactionType: .customPlaceholder)
         }
     }
     
@@ -130,9 +130,9 @@ struct ConnectionRequestList: View {
 
 struct ConnectionRequestList_Previews: PreviewProvider {
     static let modelData = ModelData()
-    static let suggestionsStore = ConnectionSuggestionStore(users: modelData.connectionResponse.users)
+    static let suggestionsStore = ConnectionSuggestionStore(users: [])
     static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
-                                                   requests: modelData.requests,
+                                                   requests: [],
                                                    blockedUsers: modelData.connectionResponse.users)
     
     static var previews: some View {

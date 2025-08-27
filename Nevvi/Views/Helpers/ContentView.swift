@@ -20,62 +20,63 @@ struct ContentView: View {
     @EnvironmentObject var contactStore: ContactStore
 
     var body: some View {
-        if (!accountStore.id.isEmpty) {
-            if (accountStore.onboardingCompleted) {
-                TabView {
-                    ConnectionList()
-                        .tabItem() {
-                            Label("Connections", systemImage: "person.3.sequence.fill")
+        VStack {
+            if (!accountStore.id.isEmpty) {
+                if (accountStore.onboardingCompleted) {
+                    TabView {
+                        ConnectionList()
+                            .tabItem() {
+                                Label("Connections", systemImage: "person.3.sequence.fill")
+                            }
+                        
+                        ConnectionRequestList()
+                            .tabItem() {
+                                Label("Requests", systemImage: "plus.circle.fill")
+                            }
+                        
+                        //                    NotificationList()
+                        //                        .tabItem() {
+                        //                            Label("Notification", systemImage: "bell")
+                        //                        }
+                        
+                        PersonalInformation()
+                            .tabItem() {
+                                Label("Profile", systemImage: "person.circle.fill")
+                            }
+                        
+                        Settings()
+                            .tabItem() {
+                                Label("Settings", systemImage: "gearshape.fill")
+                            }
+                    }
+                    .onChange(of: scenePhase) { newPhase in
+                        if newPhase == .active {
+                            /// TODO - re-entering from maps goes back to wrong view because of this
+                            self.reload()
                         }
-                    
-                    ConnectionRequestList()
-                        .tabItem() {
-                            Label("Requests", systemImage: "plus.circle.fill")
-                        }
-                    
-//                    NotificationList()
-//                        .tabItem() {
-//                            Label("Notification", systemImage: "bell")
-//                        }
-                    
-                    PersonalInformation()
-                        .tabItem() {
-                            Label("Profile", systemImage: "person.circle.fill")
-                        }
-                    
-                    Settings()
-                        .tabItem() {
-                            Label("Settings", systemImage: "gearshape.fill")
-                        }
-                }
-                .errorAlert(error: self.$accountStore.error)
-                .errorAlert(error: self.$connectionStore.error)
-                .errorAlert(error: self.$connectionsStore.error)
-                .errorAlert(error: self.$connectionGroupStore.error)
-                .errorAlert(error: self.$connectionGroupsStore.error)
-                .errorAlert(error: self.$usersStore.error)
-                .errorAlert(error: self.$suggestionsStore.error)
-                .errorAlert(error: self.$contactStore.error)
-                .onChange(of: scenePhase) { newPhase in
-                    if newPhase == .active {
-                        /// TODO - re-entering from maps goes back to wrong view because of this
-                        self.reload()
-                    } 
-                }
-                .onOpenURL { incomingURL in
-                    /// Responds to any URLs opened with our app. In this case, the URLs defined inside the URL Types section.
-                    print("App was opened via URL: \(incomingURL)")
-                    handleIncomingURL(incomingURL)
+                    }
+                    .onOpenURL { incomingURL in
+                        /// Responds to any URLs opened with our app. In this case, the URLs defined inside the URL Types section.
+                        print("App was opened via URL: \(incomingURL)")
+                        handleIncomingURL(incomingURL)
+                    }
+                } else {
+                    OnboardingCarousel()
                 }
             } else {
-                OnboardingCarousel()
-            }
-        } else {
-            /// TODO - better loading view
-            ProgressView().onAppear {
-                self.reload()
+                LoadingView(loadingText: "Fetching your profile...").onAppear {
+                    self.reload()
+                }
             }
         }
+        .errorAlert(error: self.$accountStore.error)
+        .errorAlert(error: self.$connectionStore.error)
+        .errorAlert(error: self.$connectionsStore.error)
+        .errorAlert(error: self.$connectionGroupStore.error)
+        .errorAlert(error: self.$connectionGroupsStore.error)
+        .errorAlert(error: self.$usersStore.error)
+        .errorAlert(error: self.$suggestionsStore.error)
+        .errorAlert(error: self.$contactStore.error)
     }
     
     func reload() {

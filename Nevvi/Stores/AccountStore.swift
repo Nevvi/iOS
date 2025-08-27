@@ -192,7 +192,7 @@ class AccountStore: ObservableObject {
                                        bio: self.bio != "" ? self.bio : nil,
                                        address: self.address.toModel(),
                                        mailingAddress: self.mailingAddress.toModel(),
-                                       birthday: self.birthday != Date() ? self.birthday.yyyyMMdd() : nil,
+                                       birthday: self.birthday.yyyyMMdd() != Date().yyyyMMdd() ? self.birthday.yyyyMMdd() : nil,
                                        email: self.email != "" ? self.email : nil,
                                        deviceId: self.deviceId,
                                        permissionGroups: self.permissionGroups,

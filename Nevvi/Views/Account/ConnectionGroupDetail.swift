@@ -77,10 +77,12 @@ struct ConnectionGroupDetail: View {
             )
                         
             VStack(alignment: .trailing, spacing: 0) {
-                if self.connectionGroupStore.loading || self.connectionGroupStore.connectionCount == 0 {
-                    Spacer()
+                if self.connectionGroupStore.exporting {
+                    exportingView
+                } else if self.connectionGroupStore.loading {
+                    loadingView
+                } else if (self.connectionGroupStore.connectionCount == 0) {
                     noConnectionsView
-                    Spacer()
                 } else {
                     connectionsView
                 }
@@ -100,20 +102,35 @@ struct ConnectionGroupDetail: View {
         }
     }
     
-    var noConnectionsView: some View {
-        HStack(alignment: .center) {
-            if self.connectionGroupStore.loadingConnections {
-                ProgressView()
-            } else {
-                VStack(alignment: .center, spacing: 24) {
-                    Image("UpdateProfile")
-                    
-                    Text("No connections")
-                        .defaultStyle(size: 24, opacity: 1.0)
-                }
-                .padding()
-            }
+    var exportingView: some View {
+        VStack {
+            Spacer()
+            LoadingView(loadingText: "Exporting connections...")
+            Spacer()
+            Spacer()
         }
+    }
+    
+    var loadingView: some View {
+        VStack {
+            Spacer()
+            LoadingView(loadingText: "Loading connections...")
+            Spacer()
+            Spacer()
+        }
+    }
+    
+    var noConnectionsView: some View {
+        VStack(alignment: .center, spacing: 24) {
+            Spacer()
+            Image("UpdateProfile")
+            
+            Text("No connections")
+                .defaultStyle(size: 24, opacity: 1.0)
+            Spacer()
+            Spacer()
+        }
+        .padding()
     }
     
     var connectionsView: some View {

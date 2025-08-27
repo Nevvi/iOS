@@ -51,6 +51,16 @@ struct Settings: View {
                     }.padding(.vertical, 10)
                     
                     NavigationLink {
+                        InviteUsers()
+                    } label: {
+                        HStack {
+                            Image(systemName: "person.badge.plus")
+                                .settingsButtonStyle()
+                            Text("Invite users")
+                        }
+                    }.padding(.vertical, 10)
+                    
+                    NavigationLink {
                         BlockedUserList()
                     } label: {
                         HStack {
@@ -140,6 +150,7 @@ struct Settings: View {
                             switch res {
                             case .success(_):
                                 print("Logged out!")
+                                self.accountStore.reset()
                             case .failure(_):
                                 print("Failed to log out!")
                             }
@@ -215,6 +226,13 @@ struct Settings_Previews: PreviewProvider {
     static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
     static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users)
     static let connectionStore = ConnectionStore()
+    static let contactStore = ContactStore(contactsOnNevvi: [], contactsNotOnNevvi: [
+        ContactStore.ContactInfo(firstName: "John", lastName: "Doe", phoneNumber: "6129631237"),
+        ContactStore.ContactInfo(firstName: "Jane", lastName: "Doe", phoneNumber: "6129631238"),
+    ])
+    static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
+                                                   requests: modelData.requests,
+                                                   blockedUsers: [])
     
     static var previews: some View {
         Settings()
@@ -224,5 +242,7 @@ struct Settings_Previews: PreviewProvider {
             .environmentObject(connectionGroupsStore)
             .environmentObject(AuthorizationStore())
             .environmentObject(NotificationStore())
+            .environmentObject(contactStore)
+            .environmentObject(connectionsStore)
     }
 }

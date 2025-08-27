@@ -104,37 +104,41 @@ struct NevviApp: App {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
             
-            VStack(alignment: .center) {
-                Image("AppLogo")
-                    .frame(width: 68, height: 68)
-                    .padding([.top], 80)
+            VStack(spacing: 20) {
+                Image(systemName: "arrow.down.circle.fill")
+                    .font(.system(size: 60))
+                    .foregroundColor(.blue)
                 
-                Spacer()
-
-                VStack(alignment: .center, spacing: 6) {
-                    Text("Oh no...")
-                        .defaultStyle(size: 36, opacity: 1.0)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                        .padding(.bottom)
-                    
-                    Text("This version of Nevvi is not supported anymore. Please update to the latest version.")
-                        .defaultStyle(size: 26, opacity: 0.7)
-                        .fontWeight(.semibold)
-                        .multilineTextAlignment(.center)
+                Text("Update Required")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                
+                Text("A new version of Nevvi is available. Please update to continue using the latest features.")
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+                
+                Button("Update Now") {
+                    openAppStore()
                 }
-                
-                Spacer()
+                .buttonStyle(.bordered)
             }
-            .padding([.leading, .trailing])
+            .padding()
             .interactiveDismissDisabled()
+        }
+    }
+        
+    private func openAppStore() {
+        guard let url = URL(string: "https://apps.apple.com/us/app/nevvi/id1669915435") else { return }
+        
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
         }
     }
     
     func checkVersion() {
         self.authStore.getMinAppVersion { version in
             let bundleVersion = Bundle.main.releaseVersionNumber!
-            if Bundle.main.releaseVersionNumber! < version {
+            if Bundle.main.releaseVersionNumber!.isVersionLessThan(version) {
                 print("Forcing update to min version \(version)")
                 print("Current version \(Bundle.main.releaseVersionNumber!) \(Bundle.main.buildVersionNumber!)")
                 self.forceUpdate = true

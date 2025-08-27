@@ -9,12 +9,31 @@ import Contacts
 
 class ContactStore: ObservableObject {
     var authorization: Authorization? = nil
-    var phoneNumbers: [String] = []
     
     @Published var loading: Bool = false
     @Published var error: Swift.Error?
     
+    @Published var contactsOnNevvi: [Connection] = []
+    @Published var contactsNotOnNevvi: [ContactInfo] = []
+    
+    init() {
+        
+    }
+    
+    init(contactsOnNevvi: [Connection] = [], contactsNotOnNevvi: [ContactInfo] = []) {
+        self.contactsOnNevvi = contactsOnNevvi
+        self.contactsNotOnNevvi = contactsNotOnNevvi
+    }
+    
     private var CNLabelMail = "mail"
+    
+    private func contactSearchUrl() throws -> URL {
+        if (self.authorization == nil) {
+            throw GenericError("Not logged in")
+        }
+        
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/search/contacts")!
+    }
     
     private func connectionUrl(connectionId: String) throws -> URL {
         if (self.authorization == nil) {
@@ -40,22 +59,22 @@ class ContactStore: ObservableObject {
         return authStatus == .notDetermined
     }
     
-    func tryRequestAccess() -> Bool {
+    func tryRequestAccess(callback: @escaping (Result<Void, Error>) -> Void) {
         let authStatus = CNContactStore.authorizationStatus(for: .contacts)
         switch authStatus {
         case .authorized:
-            return true
+            callback(.success(()))
         case .notDetermined:
             let store = CNContactStore()
             store.requestAccess(for: .contacts) { success, error in
                 if !success {
-                    print("Not authorized to access contacts. Error = \(String(describing: error))")
+                    callback(.failure(GenericError("Not authorized to access contacts. Error = \(String(describing: error))")))
+                } else {
+                    callback(.success(()))
                 }
             }
-            return true
         default:
-            print("Failed to request contact access because auth status is \(authStatus)")
-            return false;
+            callback(.failure(GenericError("Failed to request contact access because auth status is \(authStatus)")))
         }
     }
     
@@ -92,6 +111,70 @@ class ContactStore: ObservableObject {
             }
         } catch(let error) {
             callback(.failure(error))
+        }
+    }
+    
+    func loadContacts() {
+        self.loading = true
+        let store = CNContactStore()
+        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey] as [CNKeyDescriptor]
+        
+        var contacts: [CNContact] = []
+        let request = CNContactFetchRequest(keysToFetch: keysToFetch)
+        DispatchQueue.global().async {
+            do {
+                try store.enumerateContacts(with: request) { (contact, stop) in
+                    contacts.append(contact)
+                }
+                
+                let idToken: String? = self.authorization?.idToken
+                    
+                var phoneNumbers = Set<String>()
+                for contact in contacts {
+                    for phoneNumber in contact.phoneNumbers {
+                        phoneNumbers.insert(phoneNumber.value.stringValue)
+                    }
+                }
+                
+                if phoneNumbers.isEmpty {
+                    self.loading = false
+                    return
+                }
+                
+                let request = ContactSearchRequest(phoneNumbers: Array(phoneNumbers))
+                URLSession.shared.postData(for: try self.contactSearchUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<ContactSearchResponse, Error>) in
+                    switch result {
+                    case .success(let response):
+                        self.contactsOnNevvi = response.matching
+                        self.contactsNotOnNevvi = contacts.filter({ contact in
+                            response.missing.contains(where: { missingPhone in
+                                contact.phoneNumbers.contains { contactPhone in
+                                    contactPhone.value.stringValue == missingPhone
+                                }
+                            })
+                        }).map({ contact in
+                            var existingPhoneNumber = contact.phoneNumbers.first { (phoneNumber: CNLabeledValue<CNPhoneNumber>) in
+                                phoneNumber.label == CNLabelPhoneNumberMobile
+                            }
+                            if existingPhoneNumber == nil {
+                                existingPhoneNumber = contact.phoneNumbers.first
+                            }
+                            return ContactInfo(firstName: contact.givenName, lastName: contact.familyName, phoneNumber: existingPhoneNumber!.value.stringValue, image: contact.thumbnailImageData)
+                        }).sorted(by: {
+                            if $0.lastName == $1.lastName {
+                                return $0.firstName < $1.firstName
+                            }
+                            return $0.lastName < $1.lastName
+                        })
+                    case .failure(let error):
+                        self.error = error
+                    }
+                    self.loading = false
+                }
+            } catch(let error) {
+                self.error = error
+                self.loading = false
+            }
         }
     }
     
@@ -312,6 +395,14 @@ class ContactStore: ObservableObject {
         }
     }
     
+    func removeContactOnNevvi(contact: Connection) {
+        self.contactsOnNevvi = self.contactsOnNevvi.filter { $0 != contact }
+    }
+    
+    func removeContactNotOnNevvi(phoneNumber: String) {
+        self.contactsNotOnNevvi = self.contactsNotOnNevvi.filter { $0.phoneNumber != phoneNumber }
+    }
+    
     struct UpdateRequest: Encodable {
         var inSync: Bool
     }
@@ -337,4 +428,21 @@ class ContactStore: ObservableObject {
     struct SyncInfo {
         var updatedContacts: [ContactSyncInfo]
     }
+    
+    struct ContactSearchRequest: Encodable {
+        var phoneNumbers: [String]
+    }
+    
+    struct ContactSearchResponse: Decodable {
+        var matching: [Connection]
+        var missing: [String]
+    }
+    
+    struct ContactInfo {
+        var firstName: String
+        var lastName: String
+        var phoneNumber: String
+        var image: Data?
+    }
+    
 }

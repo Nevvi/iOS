@@ -8,18 +8,6 @@
 import Foundation
 import MapKit
 
-class AddressCoordinates : Identifiable {
-    var coordinates: MKCoordinateRegion
-    
-    init() {
-        self.coordinates = MKCoordinateRegion()
-    }
-    
-    init(coordinates: MKCoordinateRegion) {
-        self.coordinates = coordinates
-    }
-}
-
 class ConnectionStore : ObservableObject {
     var authorization: Authorization? = nil
         

@@ -17,7 +17,7 @@ struct UserSearch: View {
     var body: some View {
         VStack {
             HStack(alignment: .center, spacing: 4) {
-                TextField("Search", text: self.$nameFilter.text)
+                TextField("Search Nevvi users", text: self.$nameFilter.text)
                     .disableAutocorrection(true)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 15.5)
@@ -31,17 +31,21 @@ struct UserSearch: View {
                         .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.08), lineWidth: 1)
                     )
                 
-                Image(systemName: "xmark")
-                    .toolbarButtonStyle()
-                    .onTapGesture {
-                        self.nameFilter.text = ""
-                    }
+                if !self.nameFilter.text.isEmpty {
+                    Image(systemName: "xmark")
+                        .toolbarButtonStyle()
+                        .onTapGesture {
+                            self.nameFilter.text = ""
+                        }
+                }
             }
             .padding(12)
             
             if self.usersStore.userCount == 0 {
-                if (self.nameFilter.debouncedText.count < 3) {
-                    userSearchPrompt
+                if self.usersStore.loading {
+                    loadingUsersView
+                } else if (self.nameFilter.debouncedText.count < 3) {
+                    userPromptView
                 } else {
                     noUsersView
                 }
@@ -63,37 +67,47 @@ struct UserSearch: View {
         }
     }
     
-    var noUsersView: some View {
-        VStack {
+    var userPromptView: some View {
+        VStack(spacing: 12) {
             Spacer()
-            HStack(alignment: .center) {
-                if self.usersStore.loading {
-                    ProgressView()
-                } else {
-                    VStack(alignment: .center, spacing: 24) {
-                        Image("UpdateProfile")
-                        
-                        Text("No users found")
-                            .defaultStyle(size: 24, opacity: 1.0)
-                    }
-                    .padding()
-                }
-            }
+            Image(systemName: "info.circle")
+                .foregroundColor(.secondary)
+                .font(.title)
+            
+            Text("Enter at least 3 characters to search")
+                .font(.footnote)
+                .opacity(0.6)
+            Spacer()
             Spacer()
         }
     }
     
-    var userSearchPrompt: some View {
+    var loadingUsersView: some View {
         VStack {
-            Text("Enter at least 3 characters to search for other users")
-                .foregroundColor(.secondary)
-                .fontWeight(.light)
-                .font(.system(size: 18))
-                .multilineTextAlignment(.center)
-                .listRowSeparator(.hidden)
-            
             Spacer()
-        }.padding()
+            HStack(alignment: .center) {
+                LoadingView(loadingText: "Searching users...")
+            }
+            Spacer()
+            Spacer()
+        }
+    }
+    
+    var noUsersView: some View {
+        VStack {
+            Spacer()
+            HStack(alignment: .center) {
+                VStack(alignment: .center, spacing: 24) {
+                    Image("UpdateProfile")
+                    
+                    Text("No users found")
+                        .defaultStyle(size: 24, opacity: 1.0)
+                }
+                .padding()
+            }
+            Spacer()
+            Spacer()
+        }
     }
     
     var usersView: some View {
@@ -113,10 +127,12 @@ struct UserSearch: View {
 
 struct UserSearch_Previews: PreviewProvider {
     static let modelData = ModelData()
+    static let accountStore = AccountStore(user: modelData.user)
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
     
     static var previews: some View {
         UserSearch()
             .environmentObject(usersStore)
+            .environmentObject(accountStore)
     }
 }

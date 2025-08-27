@@ -213,7 +213,12 @@ struct ConnectionDetail: View {
                 editSheet
             }
         } else  {
-            ProgressView()
+            VStack {
+                Spacer()
+                LoadingView(loadingText: "Fetching connection details...")
+                Spacer()
+                Spacer()
+            }
         }
     }
     

@@ -1,23 +1,35 @@
 {
-    "id": "49259105-818b-4e85-881b-e12122c4d272",
+    "id": "74384478-f0c1-7059-097f-2555f8ff7a2c",
     "firstName": "Tyler",
     "lastName": "Standal",
-    "bio": "Founder - Nevvi",
-    "email": "tyler.cobb@nevvi.net",
+    "bio": null,
+    "email": "tyler.cobb+3@nevvi.net",
     "emailConfirmed": true,
-    "birthday": null,
     "phoneNumber": "+16129631237",
-    "phoneNumberConfirmed": false,
+    "phoneNumberConfirmed": true,
     "onboardingCompleted": true,
+    "deviceId": "97188EFE-101A-4133-8DB0-EBAE53682064",
     "address": {
-        "street": "114 W 86th Street",
-        "unit": "6C",
-        "city": "New York",
-        "state": "NY",
-        "zipCode": "10024"
+        "street": "1699 Lincoln Ave",
+        "unit": null,
+        "city": "St. Paul",
+        "state": "MN",
+        "zipCode": "55105"
     },
-    "mailingAddress": {},
-    "profileImage": "https://nevvi-user-images-dev.s3.amazonaws.com/Default_Profile_Picture.png",
+    "mailingAddress": {
+        "street": null,
+        "unit": null,
+        "city": null,
+        "state": null,
+        "zipCode": null
+    },
+    "deviceSettings": {
+        "autoSync": false,
+        "notifyOutOfSync": false,
+        "notifyBirthdays": false
+    },
+    "profileImage": "https://nevvi-user-images-dev.s3.amazonaws.com/users/74384478-f0c1-7059-097f-2555f8ff7a2c/images/IMG_3022762.png",
+    "birthday": "1994-04-08",
     "permissionGroups": [
         {
             "name": "All Info",
@@ -29,16 +41,16 @@
                 "email",
                 "phoneNumber"
             ]
+        },
+        {
+            "name": "Test",
+            "fields": [
+                "birthday",
+                "address"
+            ]
         }
     ],
     "blockedUsers": [],
-    "deviceSettings": {
-      "autoSync": false,
-      "notifyOutOfSync": true,
-      "notifyBirthdays": true
-    },
-    "createDate": "2022-12-07T14:20:03.144Z",
-    "createBy": "HARDCODED_FOR_NOW",
-    "updateDate": "2022-12-28T22:10:15.495Z",
-    "updateBy": "HARDCODED_FOR_NOW"
+    "createDate": "2025-06-29T00:53:33.649Z",
+    "updateDate": "2025-08-01T14:08:18.914042+00:00"
 }

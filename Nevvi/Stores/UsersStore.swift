@@ -10,6 +10,7 @@ import Foundation
 class UsersStore : ObservableObject {
     var authorization: Authorization? = nil
     
+    @Published var inviting: Bool = false
     @Published var requesting: Bool = false
     @Published var loading: Bool = false
     @Published var users: [Connection] = []
@@ -26,7 +27,7 @@ class UsersStore : ObservableObject {
         self.userCount = users.count
     }
     
-    private func url(nameFilter: String?, phoneNumbers: [String]?) throws -> URL {
+    private func url(nameFilter: String?) throws -> URL {
         if (self.authorization == nil) {
             throw GenericError("Not logged in")
         }
@@ -34,8 +35,6 @@ class UsersStore : ObservableObject {
         var url = "\(BuildConfiguration.shared.baseURL)/user/v1/users/search"
         if (nameFilter != nil) {
             url = "\(url)?name=\(nameFilter!)"
-        } else if (phoneNumbers != nil) {
-            url = "\(url)?phoneNumbers=\(phoneNumbers!.joined(separator: ","))"
         }
         
         let urlString = url.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
@@ -51,6 +50,15 @@ class UsersStore : ObservableObject {
         return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/requests")!
     }
     
+    private func inviteUrl() throws -> URL {
+        if (self.authorization == nil) {
+            throw GenericError("Not logged in")
+        }
+        
+        let userId: String? = self.authorization?.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/invite".urlEncoded()!)!
+    }
+    
     func searchByName(nameFilter: String) {
         do {
             if (nameFilter.count < 3) {
@@ -59,22 +67,7 @@ class UsersStore : ObservableObject {
                 return
             }
             
-            self.search(url: try self.url(nameFilter: nameFilter, phoneNumbers: nil))
-        } catch(let error) {
-            self.error = GenericError(error.localizedDescription)
-            self.loading = false
-        }
-    }
-    
-    func searchByPhoneNumbers(phoneNumbers: [String]) {
-        do {
-            if (phoneNumbers.count <= 0) {
-                self.users = []
-                self.userCount = 0
-                return
-            }
-            
-            self.search(url: try self.url(nameFilter: nil, phoneNumbers: phoneNumbers))
+            self.search(url: try self.url(nameFilter: nameFilter))
         } catch(let error) {
             self.error = GenericError(error.localizedDescription)
             self.loading = false
@@ -118,6 +111,28 @@ class UsersStore : ObservableObject {
         }
     }
     
+    func inviteConnection(phoneNumber: String, groupName: String, callback: @escaping (Result<Bool, Error>) -> Void) {
+        do {
+            self.inviting = true
+            let idToken: String? = self.authorization?.idToken
+            let request = NewConnectionInvite(phoneNumber: phoneNumber, permissionGroupName: groupName)
+            URLSession.shared.postData(for: try self.inviteUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<ConnectionInviteResponse, Error>) in
+                switch result {
+                case .success(_):
+                    callback(.success(true))
+                case .failure(let error):
+                    self.error = GenericError(error.localizedDescription)
+                    callback(.failure(error))
+                }
+                self.inviting = false
+            }
+        } catch(let error) {
+            self.error = GenericError(error.localizedDescription)
+            callback(.failure(error))
+            self.inviting = false
+        }
+    }
+    
     func removeUser(user: Connection) {
         self.users = self.users.filter { $0 != user }
         
@@ -135,7 +150,16 @@ class UsersStore : ObservableObject {
         var permissionGroupName: String
     }
     
+    struct NewConnectionInvite: Encodable {
+        var phoneNumber: String
+        var permissionGroupName: String
+    }
+    
     struct ConnectionRequestResponse: Decodable {
+        
+    }
+    
+    struct ConnectionInviteResponse: Decodable {
         
     }
 }

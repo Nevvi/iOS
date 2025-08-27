@@ -44,4 +44,40 @@ extension String {
         
         return chunks.joined(separator: " ")
     }
+    
+    func urlEncoded() -> String? {
+        guard let encodedString = self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+            return nil
+        }
+        
+        return encodedString.replacingOccurrences(of: "+", with: "%2B")
+    }
+    
+    func compareVersion(to other: String) -> ComparisonResult {
+        let components1 = self.split(separator: ".").compactMap { Int($0) }
+        let components2 = other.split(separator: ".").compactMap { Int($0) }
+        
+        let maxCount = max(components1.count, components2.count)
+        
+        for i in 0..<maxCount {
+            let v1 = i < components1.count ? components1[i] : 0
+            let v2 = i < components2.count ? components2[i] : 0
+            
+            if v1 < v2 {
+                return .orderedAscending
+            } else if v1 > v2 {
+                return .orderedDescending
+            }
+        }
+        
+        return .orderedSame
+    }
+    
+    func isVersionLessThan(_ other: String) -> Bool {
+        return self.compareVersion(to: other) == .orderedAscending
+    }
+    
+    func isVersionGreaterThan(_ other: String) -> Bool {
+        return self.compareVersion(to: other) == .orderedDescending
+    }
 }

@@ -249,15 +249,14 @@ struct CreateAccount: View {
             .padding([.bottom], 16)
             
             HStack {
-                Text("By creating an account you agree to our")
-                    .defaultStyle(size: 14, opacity: 0.5)
-                
-                Text("Privacy Policy")
-                    .foregroundColor(ColorConstants.primary)
-                    .defaultStyle(size: 14, opacity: 0.5)
-                    .onTapGesture {
-                        showPrivacySheet = true
-                    }
+                Text(privacyText)
+                .font(.footnote)
+                .foregroundColor(.secondary)
+                .environment(\.openURL, OpenURLAction { _ in
+                    showPrivacySheet = true
+                    return .handled
+                })
+
             }
             
             Spacer()
@@ -280,6 +279,17 @@ struct CreateAccount: View {
             PrivacySettings()
                 .presentationDetents([.large])
         }
+    }
+    
+    private var privacyText: AttributedString {
+        var text = AttributedString("By creating an account, you agree to our Privacy Policy")
+        
+        if let range = text.range(of: "Privacy Policy") {
+            text[range].link = URL(string: "privacy://policy") // Dummy URL
+            text[range].foregroundColor = .blue
+        }
+        
+        return text
     }
     
     var confirmationCodeView: some View {

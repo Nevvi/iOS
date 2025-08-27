@@ -13,6 +13,8 @@ import MapKit
 struct AddressSearch: View {
     @State private var address = AddressViewModel()
     @State private var enterManually: Bool = false
+    @State private var hasCoordinates: Bool = false
+    @State private var coordinates: AddressCoordinates = AddressCoordinates()
     
     private var callback: (AddressViewModel) -> Void
     
@@ -34,6 +36,7 @@ struct AddressSearch: View {
 
             if let c = coordinateK {
                 let location = CLLocation(latitude: c.latitude, longitude: c.longitude)
+                
                 CLGeocoder().reverseGeocodeLocation(location) { placemarks, error in
                     guard let placemark = placemarks?.first else {
                         let errorString = error?.localizedDescription ?? "Unexpected Error"
@@ -50,6 +53,8 @@ struct AddressSearch: View {
                     self.address.unit = "" // make the user enter the unit manually
                     
                     addressSearchStore.searchTerm = self.address.street
+                    
+                    self.tryUpdatePin()
                 }
             }
         }
@@ -78,8 +83,11 @@ struct AddressSearch: View {
                 }
                 
                 TextField("111 Hollywood Ave", text: self.enterManually ? self.$address.street : self.$addressSearchStore.searchTerm)
-                    .padding(10)
-                    .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                    .font(.system(size: 16, weight: .regular))
+                    .padding(14)
+                    .background(Color.white)
+                    .cornerRadius(12)
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(ColorConstants.secondary, lineWidth: 1))
                     .textInputAutocapitalization(.never)
                     .disableAutocorrection(true)
             }
@@ -113,8 +121,11 @@ struct AddressSearch: View {
                             .font(.system(size: 14))
     
                         TextField("Apt 1A", text: self.$address.unit)
-                            .padding(10)
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                            .font(.system(size: 16, weight: .regular))
+                            .padding(14)
+                            .background(Color.white)
+                            .cornerRadius(12)
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(ColorConstants.secondary, lineWidth: 1))
                             .textInputAutocapitalization(.never)
                             .disableAutocorrection(true)
                     }
@@ -128,8 +139,11 @@ struct AddressSearch: View {
                             .font(.system(size: 14))
     
                         TextField("Hollywood", text: self.$address.city)
-                            .padding(10)
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                            .font(.system(size: 16, weight: .regular))
+                            .padding(14)
+                            .background(Color.white)
+                            .cornerRadius(12)
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(ColorConstants.secondary, lineWidth: 1))
                             .textInputAutocapitalization(.never)
                             .disableAutocorrection(true)
                     }
@@ -145,8 +159,11 @@ struct AddressSearch: View {
                             .font(.system(size: 14))
     
                         TextField("CA", text: self.$address.state)
-                            .padding(10)
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                            .font(.system(size: 16, weight: .regular))
+                            .padding(14)
+                            .background(Color.white)
+                            .cornerRadius(12)
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(ColorConstants.secondary, lineWidth: 1))
                             .textInputAutocapitalization(.never)
                             .disableAutocorrection(true)
                     }
@@ -160,13 +177,25 @@ struct AddressSearch: View {
                             .font(.system(size: 14))
     
                         TextField("Zip Code", text: self.$address.zipCode)
-                            .padding(10)
-                            .overlay(RoundedRectangle(cornerRadius: 10.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
+                            .font(.system(size: 16, weight: .regular))
+                            .padding(14)
+                            .background(Color.white)
+                            .cornerRadius(12)
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(ColorConstants.secondary, lineWidth: 1))
                             .textInputAutocapitalization(.never)
                             .disableAutocorrection(true)
                     }
                     .padding([.leading, .trailing])
                     .padding([.bottom], 8)
+                }
+                
+                if (self.hasCoordinates && !self.enterManually) {
+                    Map(coordinateRegion: self.$coordinates.coordinates,
+                        interactionModes: [.zoom], annotationItems: [self.coordinates],
+                        annotationContent: { location in
+                        MapPin(coordinate: CLLocationCoordinate2D(latitude: location.coordinates.center.latitude, longitude: location.coordinates.center.longitude), tint: .red)
+                    })
+                    .padding()
                 }
                 
                 Spacer()
@@ -191,6 +220,34 @@ struct AddressSearch: View {
         .padding()
         .onAppear {
             self.addressSearchStore.searchTerm = self.address.street
+            self.tryUpdatePin()
+        }
+    }
+    
+    private func tryUpdatePin() {
+        let addressString = self.address.toString()
+        if (addressString == "") {
+            return
+        }
+        
+        let geoCoder = CLGeocoder()
+        geoCoder.geocodeAddressString(addressString) { (placemarks, error) in
+            guard let placemarks = placemarks,
+            let coordinate = placemarks.first?.location?.coordinate else {
+                print("no coordinates for address \(addressString)")
+                self.coordinates = AddressCoordinates()
+                self.hasCoordinates = false
+                return
+            }
+            
+            print("got coordinates for address \(addressString) - \(coordinate)")
+            var location = MKCoordinateRegion()
+            location.center.latitude = coordinate.latitude
+            location.center.longitude = coordinate.longitude
+            location.span.latitudeDelta = 0.01
+            location.span.longitudeDelta = 0.01
+            self.coordinates = AddressCoordinates(coordinates: location)
+            self.hasCoordinates = true
         }
     }
 }

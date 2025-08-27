@@ -11,7 +11,7 @@ import SwiftUI
 extension Text {
     func navigationHeader() -> some View {
         return self
-            .font(.system(size: 30, weight: .semibold))
+            .font(.system(size: 30, weight: .regular))
             .foregroundColor(Color(red: 0.12, green: 0.19, blue: 0.29))
             .frame(maxWidth: .infinity, alignment: .topLeading)
     }
@@ -36,7 +36,7 @@ extension Text {
     
     func personalInfoLabel() -> some View {
         return self
-            .font(Font.custom("SF Pro", size: 12).weight(.medium))
+            .font(.system(size: 12, weight: .medium))
             .multilineTextAlignment(.center)
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.4))
     }
@@ -56,22 +56,26 @@ extension Text {
         return self.defaultStyle(size: nil, opacity: nil)
     }
     
+    func defaultStyle(size: CGFloat?) -> some View {
+        return self.defaultStyle(size: size, opacity: 1.0, weight: .regular)
+    }
+    
     func defaultStyle(size: CGFloat?, opacity: CGFloat?) -> some View {
-        return self.defaultStyle(size: size, opacity: opacity, weight: .semibold)
+        return self.defaultStyle(size: size, opacity: opacity, weight: .regular)
     }
     
     func defaultStyle(size: CGFloat?, opacity: CGFloat?, weight: Font.Weight?) -> some View {
         let finalSize = size ?? 24
         let finalOpacity = opacity ?? 1.0
-        let finalWeight = weight ?? .semibold
+        let finalWeight = weight ?? .regular
         return self
-            .font(Font.custom("SF Pro", size: finalSize).weight(finalWeight))
+            .font(.system(size: finalSize, weight: finalWeight))
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
     }
     
     func asSelectedGroupFilter() -> some View {
         self
-            .font(Font.custom("SF Pro", size: 14).weight(.bold))
+            .font(.system(size: 14, weight: .bold))
             .kerning(0.2)
             .foregroundColor(.white)
             .padding(.horizontal, 12)
@@ -87,7 +91,7 @@ extension Text {
     
     func asGroupFilter() -> some View {
         self
-            .font(Font.custom("SF Pro", size: 14).weight(.bold))
+            .font(.system(size: 14, weight: .bold))
             .kerning(0.2)
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.7))
             .padding(.horizontal, 12)
@@ -103,7 +107,7 @@ extension Text {
     
     func asPermissionGroupBadge(bgColor: Color) -> some View {
         self
-            .font(Font.custom("SF Pro", size: 9).weight(.semibold))
+            .font(.system(size: 9, weight: .regular))
             .foregroundColor(Color(red: 0.09, green: 0.15, blue: 0.39))
             .padding(.horizontal, 6)
             .padding(.vertical, 3)
@@ -129,7 +133,7 @@ extension Text {
         let finalColor = color ?? Color(red: 0, green: 0.6, blue: 1)
         let finalBgColor = bgColor ?? Color(red: 0, green: 0.6, blue: 1).opacity(0.14)
         return self
-            .font(Font.custom("SF Pro", size: finalSize).weight(.medium))
+            .font(.system(size: finalSize, weight: .medium))
             .foregroundColor(finalColor)
             .padding(.horizontal, 10)
             .padding(.vertical, 4)
@@ -174,7 +178,7 @@ extension Text {
 extension TextField {
     func authStyle() -> some View {
         return self
-            .font(Font.custom("SF Pro", size: 16).weight(.semibold))
+            .font(.system(size: 16, weight: .regular))
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.7))
             .textInputAutocapitalization(.never)
             .disableAutocorrection(true)
@@ -195,7 +199,7 @@ extension TextField {
         let finalVPadding = vPadding ?? 12.0
         
         return self
-            .font(Font.custom("SF Pro", size: finalSize).weight(.semibold))
+            .font(.system(size: finalSize, weight: .regular))
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
             .padding(.horizontal, finalHPadding)
             .padding(.vertical, finalVPadding)
@@ -210,25 +214,18 @@ extension TextField {
     
     func onboardingStyle() -> some View {
         return self
-            .font(Font.custom("SF Pro", size: 24).weight(.semibold))
-            .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(1.0))
-            .padding(.horizontal, 22)
-            .disableAutocorrection(true)
-            .padding(.vertical, 16)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .font(.system(size: 16, weight: .regular))
+            .padding(14)
+            .background(Color.white)
             .cornerRadius(12)
-            .overlay(
-                RoundedRectangle(cornerRadius: 40)
-                    .inset(by: 0.5)
-                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.12), lineWidth: 1)
-            )
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.3), lineWidth: 1))
     }
     
     func bioStyle(size: CGFloat?, opacity: CGFloat?) -> some View {
         let finalSize = size ?? 24
         let finalOpacity = opacity ?? 1.0
         return self
-            .font(Font.custom("SF Pro", size: finalSize).weight(.semibold))
+            .font(.system(size: finalSize, weight: .regular))
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
             .textInputAutocapitalization(.never)
             .disableAutocorrection(true)
