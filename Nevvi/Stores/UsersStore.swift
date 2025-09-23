@@ -46,8 +46,8 @@ class UsersStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/requests")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connections/requests")!
     }
     
     private func inviteUrl() throws -> URL {
@@ -55,8 +55,8 @@ class UsersStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/invite".urlEncoded()!)!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/invite".urlEncoded()!)!
     }
     
     func searchByName(nameFilter: String) {
@@ -75,9 +75,14 @@ class UsersStore : ObservableObject {
     }
     
     private func search(url: URL) {
+        guard let authorization = self.authorization else {
+            self.error = GenericError("Not logged in")
+            self.loading = false
+            return
+        }
+        
         self.loading = true
-        let idToken: String? = self.authorization?.idToken
-        URLSession.shared.fetchData(for: url, for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+        URLSession.shared.fetchData(for: url, with: authorization) { (result: Result<ConnectionResponse, Error>) in
             switch result {
             case .success(let response):
                 self.users = response.users
@@ -91,10 +96,17 @@ class UsersStore : ObservableObject {
     
     func requestConnection(userId: String, groupName: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.requesting = false
+                return
+            }
+            
             self.requesting = true
-            let idToken: String? = self.authorization?.idToken
             let request = NewConnectionRequest(otherUserId: userId, permissionGroupName: groupName)
-            URLSession.shared.postData(for: try self.requestUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<ConnectionRequestResponse, Error>) in
+            URLSession.shared.postData(for: try self.requestUrl(), for: request, with: authorization) { (result: Result<ConnectionRequestResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))
@@ -113,10 +125,17 @@ class UsersStore : ObservableObject {
     
     func inviteConnection(phoneNumber: String, groupName: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.inviting = false
+                return
+            }
+            
             self.inviting = true
-            let idToken: String? = self.authorization?.idToken
             let request = NewConnectionInvite(phoneNumber: phoneNumber, permissionGroupName: groupName)
-            URLSession.shared.postData(for: try self.inviteUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<ConnectionInviteResponse, Error>) in
+            URLSession.shared.postData(for: try self.inviteUrl(), for: request, with: authorization) { (result: Result<ConnectionInviteResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))

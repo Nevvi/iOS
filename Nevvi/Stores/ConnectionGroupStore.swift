@@ -44,8 +44,8 @@ class ConnectionGroupStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups/\(groupId)?skip=\(self.skip)&limit=\(self.limit)")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connection-groups/\(groupId)?skip=\(self.skip)&limit=\(self.limit)")!
     }
     
     private func groupConnectionsUrl() throws -> URL {
@@ -53,8 +53,8 @@ class ConnectionGroupStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        let url = "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups/\(self.id)/connections?skip=\(self.skip)&limit=\(self.limit)"
+        let userId: String = self.authorization!.id
+        let url = "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connection-groups/\(self.id)/connections?skip=\(self.skip)&limit=\(self.limit)"
         
         return URL(string: url)!
     }
@@ -64,8 +64,8 @@ class ConnectionGroupStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups/\(self.id)/export")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connection-groups/\(self.id)/export")!
     }
     
     func load(group: ConnectionGroup) {
@@ -77,9 +77,15 @@ class ConnectionGroupStore : ObservableObject {
     
     func loadConnections() {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                self.loadingConnections = false
+                return
+            }
+            
             self.loadingConnections = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.groupConnectionsUrl(), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+            URLSession.shared.fetchData(for: try self.groupConnectionsUrl(), with: authorization) { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     self.connections = response.users
@@ -106,11 +112,17 @@ class ConnectionGroupStore : ObservableObject {
         }
         
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                self.loadingPage = false
+                return
+            }
+            
             self.loadingPage = true
-            let idToken: String? = self.authorization?.idToken
             self.skip = self.skip + self.limit
             
-            URLSession.shared.fetchData(for: try self.groupConnectionsUrl(), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+            URLSession.shared.fetchData(for: try self.groupConnectionsUrl(), with: authorization) { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     // When loading a page we want to append to the list, not overwrite it
@@ -135,10 +147,17 @@ class ConnectionGroupStore : ObservableObject {
     
     func addToGroup(userId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.loading = false
+                return
+            }
+            
             self.loading = true
-            let idToken: String? = self.authorization?.idToken
             let request = AddToGroupRequest(userId: userId)
-            URLSession.shared.postData(for: try self.groupConnectionsUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
+            URLSession.shared.postData(for: try self.groupConnectionsUrl(), for: request, with: authorization) { (result: Result<EmptyResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))
@@ -157,10 +176,17 @@ class ConnectionGroupStore : ObservableObject {
     
     func removeFromGroup(userId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.deleting = false
+                return
+            }
+            
             self.deleting = true
-            let idToken: String? = self.authorization?.idToken
             let request = RemoveFromGroupRequest(userId: userId)
-            URLSession.shared.deleteData(for: try self.groupConnectionsUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
+            URLSession.shared.deleteData(for: try self.groupConnectionsUrl(), for: request, with: authorization) { (result: Result<EmptyResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))
@@ -179,9 +205,16 @@ class ConnectionGroupStore : ObservableObject {
     
     func exportGroupData(callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.exporting = false
+                return
+            }
+            
             self.exporting = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.postData(for: try self.groupExportUrl(), for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
+            URLSession.shared.postData(for: try self.groupExportUrl(), with: authorization) { (result: Result<EmptyResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))

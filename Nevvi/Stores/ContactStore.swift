@@ -40,8 +40,8 @@ class ContactStore: ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/\(connectionId)")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connections/\(connectionId)")!
     }
     
     func hasAccess() -> Bool {
@@ -80,10 +80,17 @@ class ContactStore: ObservableObject {
     
     func updateConnection(connectionId: String, callback: @escaping (Result<Connection, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.loading = false
+                return
+            }
+            
             self.loading = true
-            let idToken: String? = self.authorization?.idToken
             let request = UpdateRequest(inSync: true)
-            URLSession.shared.patchData(for: try self.connectionUrl(connectionId: connectionId), for: request, for: "Bearer \(idToken!)") { (result: Result<Connection, Error>) in
+            URLSession.shared.patchData(for: try self.connectionUrl(connectionId: connectionId), for: request, with: authorization) { (result: Result<Connection, Error>) in
                 switch result {
                 case .success(let connection):
                     callback(.success(connection))
@@ -100,8 +107,14 @@ class ContactStore: ObservableObject {
     
     func getConnection(connectionId: String, callback: @escaping (Result<Connection, Error>) -> Void) {
         do {
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.connectionUrl(connectionId: connectionId), for: "Bearer \(idToken!)") { (result: Result<Connection, Error>) in
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                return
+            }
+            
+            URLSession.shared.fetchData(for: try self.connectionUrl(connectionId: connectionId), with: authorization) { (result: Result<Connection, Error>) in
                 switch result {
                 case .success(let detail):
                     callback(.success(detail))
@@ -115,6 +128,13 @@ class ContactStore: ObservableObject {
     }
     
     func loadContacts() {
+        guard let authorization = self.authorization else {
+            let error = GenericError("Not logged in")
+            self.error = error
+            self.loading = false
+            return
+        }
+        
         self.loading = true
         let store = CNContactStore()
         let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey, CNContactThumbnailImageDataKey] as [CNKeyDescriptor]
@@ -126,8 +146,6 @@ class ContactStore: ObservableObject {
                 try store.enumerateContacts(with: request) { (contact, stop) in
                     contacts.append(contact)
                 }
-                
-                let idToken: String? = self.authorization?.idToken
                     
                 var phoneNumbers = Set<String>()
                 for contact in contacts {
@@ -142,7 +160,7 @@ class ContactStore: ObservableObject {
                 }
                 
                 let request = ContactSearchRequest(phoneNumbers: Array(phoneNumbers))
-                URLSession.shared.postData(for: try self.contactSearchUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<ContactSearchResponse, Error>) in
+                URLSession.shared.postData(for: try self.contactSearchUrl(), for: request, with: authorization) { (result: Result<ContactSearchResponse, Error>) in
                     switch result {
                     case .success(let response):
                         self.contactsOnNevvi = response.matching

@@ -35,8 +35,8 @@ class ConnectionGroupsStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connection-groups")!
     }
     
     private func groupUrl(groupId: String) throws -> URL {
@@ -44,8 +44,8 @@ class ConnectionGroupsStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups/\(groupId)")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connection-groups/\(groupId)")!
     }
     
     private func groupConnectionsUrl(groupId: String) throws -> URL {
@@ -53,15 +53,21 @@ class ConnectionGroupsStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connection-groups/\(groupId)/connections")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connection-groups/\(groupId)/connections")!
     }
     
     func load() {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                self.loading = false
+                return
+            }
+            
             self.loading = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.url(), for: "Bearer \(idToken!)") { (result: Result<[ConnectionGroup], Error>) in
+            URLSession.shared.fetchData(for: try self.url(), with: authorization) { (result: Result<[ConnectionGroup], Error>) in
                 switch result {
                 case .success(let groups):
                     self.groups = groups
@@ -79,10 +85,17 @@ class ConnectionGroupsStore : ObservableObject {
     
     func create(name: String, callback: @escaping (Result<ConnectionGroup, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.creating = false
+                return
+            }
+            
             self.creating = true
-            let idToken: String? = self.authorization?.idToken
             let request = CreateGroupRequest(name: name)
-            URLSession.shared.postData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<ConnectionGroup, Error>) in
+            URLSession.shared.postData(for: try self.url(), for: request, with: authorization) { (result: Result<ConnectionGroup, Error>) in
                 switch result {
                 case .success(let group):
                     callback(.success(group))
@@ -101,9 +114,16 @@ class ConnectionGroupsStore : ObservableObject {
     
     func delete(groupId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.deleting = false
+                return
+            }
+            
             self.deleting = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.deleteData(for: try self.groupUrl(groupId: groupId), for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
+            URLSession.shared.deleteData(for: try self.groupUrl(groupId: groupId), with: authorization) { (result: Result<EmptyResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))
@@ -122,10 +142,17 @@ class ConnectionGroupsStore : ObservableObject {
     
     func addToGroup(groupId: String, userId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.adding = false
+                return
+            }
+            
             self.adding = true
-            let idToken: String? = self.authorization?.idToken
             let request = AddToGroupRequest(userId: userId)
-            URLSession.shared.postData(for: try self.groupConnectionsUrl(groupId: groupId), for: request, for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
+            URLSession.shared.postData(for: try self.groupConnectionsUrl(groupId: groupId), for: request, with: authorization) { (result: Result<EmptyResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))
@@ -144,10 +171,17 @@ class ConnectionGroupsStore : ObservableObject {
     
     func removeFromGroup(groupId: String, userId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.removing = false
+                return
+            }
+            
             self.removing = true
-            let idToken: String? = self.authorization?.idToken
             let request = RemoveFromGroupRequest(userId: userId)
-            URLSession.shared.deleteData(for: try self.groupConnectionsUrl(groupId: groupId), for: request, for: "Bearer \(idToken!)") { (result: Result<EmptyResponse, Error>) in
+            URLSession.shared.deleteData(for: try self.groupConnectionsUrl(groupId: groupId), for: request, with: authorization) { (result: Result<EmptyResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))

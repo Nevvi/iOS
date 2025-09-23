@@ -30,8 +30,8 @@ class NotificationStore: ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/notification/v1/users/\(userId!)/notifications")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/notification/v1/users/\(userId)/notifications")!
     }
     
     private func tokenUrl() throws -> URL {
@@ -39,8 +39,8 @@ class NotificationStore: ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/notification/v1/users/\(userId!)/notifications/token")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/notification/v1/users/\(userId)/notifications/token")!
     }
     
     func checkRequestAccess() -> Void {
@@ -55,10 +55,16 @@ class NotificationStore: ObservableObject {
     
     func updateToken(token: String) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                self.saving = false
+                return
+            }
+            
             self.saving = true
-            let idToken: String? = self.authorization?.idToken
             let request = UpdateTokenRequest(token: token)
-            URLSession.shared.postData(for: try self.tokenUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<UpdateTokenResponse, Error>) in
+            URLSession.shared.postData(for: try self.tokenUrl(), for: request, with: authorization) { (result: Result<UpdateTokenResponse, Error>) in
                 switch result {
                 case .success(_):
                     self.token = token

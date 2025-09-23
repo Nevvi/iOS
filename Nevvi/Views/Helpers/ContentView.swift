@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import AlertToast
 
 struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     
     @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var authStore: AuthorizationStore
     @EnvironmentObject var connectionStore: ConnectionStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
@@ -77,6 +79,9 @@ struct ContentView: View {
         .errorAlert(error: self.$usersStore.error)
         .errorAlert(error: self.$suggestionsStore.error)
         .errorAlert(error: self.$contactStore.error)
+        .toast(isPresenting: $authStore.showToast) {
+            AlertToast(displayMode: .banner(.slide), type: authStore.toastType, title: authStore.toastText)
+        }
     }
     
     func reload() {

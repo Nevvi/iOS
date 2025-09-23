@@ -154,6 +154,7 @@ struct CreateAccount: View {
                 
                 if self.hidePassword {
                     SecureField("Password", text: self.$password)
+                        .submitLabel(.done)
                     
                     Spacer()
                     
@@ -165,6 +166,7 @@ struct CreateAccount: View {
                         }
                 } else  {
                     TextField("Password", text: self.$password)
+                        .submitLabel(.done)
                     
                     Spacer()
                     

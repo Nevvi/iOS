@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import LocalAuthentication
+import AlertToast
 
 class AuthorizationStore: ObservableObject {
     
@@ -19,6 +20,56 @@ class AuthorizationStore: ObservableObject {
     @Published var confirming: Bool = false
     @Published var sendingResetCode: Bool = false
     @Published var resettingPassword: Bool = false
+    
+    // Toast properties
+    @Published var showToast: Bool = false
+    @Published var toastText: String = ""
+    @Published var toastType: AlertToast.AlertType = .error(Color.red)
+    
+    // Debouncing for toast messages
+    private var toastWorkItem: DispatchWorkItem?
+    
+    /// Shows a toast message with debouncing to prevent multiple parallel calls
+    /// - Parameters:
+    ///   - message: The message to display in the toast
+    ///   - type: The type of toast (defaults to error)
+    ///   - duration: How long to show the toast before auto-dismissing (defaults to 3 seconds)
+    func showToast(message: String, type: AlertToast.AlertType = .error(Color.red), duration: TimeInterval = 3.0) {
+        // Cancel any existing toast work item to prevent multiple toasts
+        toastWorkItem?.cancel()
+        
+        // Always update on main thread since these are @Published properties
+        DispatchQueue.main.async {
+            self.toastText = message
+            self.toastType = type
+            self.showToast = true
+        }
+        
+        // Create new work item to auto-dismiss the toast
+        let workItem = DispatchWorkItem {
+            DispatchQueue.main.async {
+                self.showToast = false
+            }
+        }
+        
+        toastWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: workItem)
+    }
+    
+    /// Convenience method for showing error toasts
+    func showErrorToast(message: String) {
+        showToast(message: message, type: .error(Color.red))
+    }
+    
+    /// Convenience method for showing success toasts
+    func showSuccessToast(message: String) {
+        showToast(message: message, type: .complete(Color.green))
+    }
+    
+    /// Convenience method for showing warning toasts
+    func showWarningToast(message: String) {
+        showToast(message: message, type: .systemImage("exclamationmark.triangle", Color.orange))
+    }
     
     enum BiometricType {
         case none
@@ -176,16 +227,8 @@ class AuthorizationStore: ObservableObject {
         guard let authorization = self.authorization else { return }
         
         if authorization.isExpired {
-            // TODO refresh instead
-            print("Tokens are expired. Logging out.")
-            self.logout { result in
-                switch result {
-                case .success:
-                    print("Logged out")
-                case .failure:
-                    print("Failed to log out")
-                }
-            }
+            print("Tokens are expired. Calling onAuthorizationFailed.")
+            authorization.onAuthorizationFailed?()
         }
     }
     
@@ -199,6 +242,15 @@ class AuthorizationStore: ObservableObject {
                 case .success(let response):
                     do {
                         let authorization = try Authorization(idToken: response.idToken, accessToken: response.accessToken, refreshToken: response.refreshToken, id: response.id)
+
+                        // Set up the logout callback
+                        authorization.onAuthorizationFailed = {
+                            Task { @MainActor in
+                                print("Session expired - logging out gracefully")
+                                self.showWarningToast(message: "Session expired... please log in again")
+                                self.authorization = nil
+                            }
+                        }
                         self.authorization = authorization
                         callback(.success(self.authorization!))
                     } catch {

@@ -52,11 +52,41 @@ extension URLSession {
         execute(request: request, completion: completion)
     }
     
+    func fetchData<T: Decodable>(for url: URL, with authorization: Authorization, completion: @escaping (Result<T, Error>) -> Void) {
+        guard let token = authorization.getValidToken() else {
+            // Token is expired, onAuthorizationFailed already called
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        execute(request: request, authorization: authorization, completion: completion)
+    }
+    
     func fetchData<T: Decodable>(for url: URL, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue(authToken, forHTTPHeaderField: "Authorization")
         execute(request: request, completion: completion)
+    }
+    
+    func postData<T: Decodable>(for url: URL, for body: Encodable, with authorization: Authorization, completion: @escaping (Result<T, Error>) -> Void) {
+        guard let token = authorization.getValidToken() else {
+            // Token is expired, onAuthorizationFailed already called
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        do {
+            request.httpMethod = "POST"
+            request.httpBody = try JSONEncoder().encode(body)
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } catch(let error) {
+            completion(.failure(error))
+            return
+        }
+        execute(request: request, authorization: authorization, completion: completion)
     }
     
     func postData<T: Decodable>(for url: URL, for body: Encodable, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
@@ -70,6 +100,18 @@ extension URLSession {
         }
             
         execute(request: request, completion: completion)
+    }
+    
+    func postData<T: Decodable>(for url: URL, with authorization: Authorization, completion: @escaping (Result<T, Error>) -> Void) {
+        guard let token = authorization.getValidToken() else {
+            // Token is expired, onAuthorizationFailed already called
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        execute(request: request, authorization: authorization, completion: completion)
     }
     
     func postData<T: Decodable>(for url: URL, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
@@ -101,6 +143,24 @@ extension URLSession {
         execute(request: request, completion: completion)
     }
     
+    func patchData<T: Decodable>(for url: URL, for body: Encodable, with authorization: Authorization, completion: @escaping (Result<T, Error>) -> Void) {
+        guard let token = authorization.getValidToken() else {
+            // Token is expired, onAuthorizationFailed already called
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        do {
+            request.httpMethod = "PATCH"
+            request.httpBody = try JSONEncoder().encode(body)
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } catch(let error) {
+            completion(.failure(error))
+            return
+        }
+        execute(request: request, authorization: authorization, completion: completion)
+    }
+    
     func patchData<T: Decodable>(for url: URL, for body: Encodable, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
         var request = URLRequest(url: url)
         do {
@@ -114,6 +174,18 @@ extension URLSession {
         execute(request: request, completion: completion)
     }
     
+    func deleteData<T: Decodable>(for url: URL, with authorization: Authorization, completion: @escaping (Result<T, Error>) -> Void) {
+        guard let token = authorization.getValidToken() else {
+            // Token is expired, onAuthorizationFailed already called
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        execute(request: request, authorization: authorization, completion: completion)
+    }
+    
     func deleteData<T: Decodable>(for url: URL, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
@@ -122,17 +194,39 @@ extension URLSession {
         execute(request: request, completion: completion)
     }
     
-    func deleteData<T: Decodable>(for url: URL, for body: Encodable, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
+    func deleteData<T: Decodable>(for url: URL, for body: Encodable, with authorization: Authorization, completion: @escaping (Result<T, Error>) -> Void) {
+        guard let token = authorization.getValidToken() else {
+            // Token is expired, onAuthorizationFailed already called
+            return
+        }
+        
         var request = URLRequest(url: url)
         do {
             request.httpMethod = "DELETE"
             request.httpBody = try JSONEncoder().encode(body)
-            request.setValue(authToken, forHTTPHeaderField: "Authorization")
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         } catch(let error) {
             completion(.failure(error))
+            return
         }
+        execute(request: request, authorization: authorization, completion: completion)
+    }
+    
+    func postImage<T: Decodable>(for url: URL, for image: UIImage, with authorization: Authorization, completion: @escaping (Result<T, Error>) -> Void) {
+        guard let token = authorization.getValidToken() else {
+            // Token is expired, onAuthorizationFailed already called
+            return
+        }
+        
+        let request = MultipartFormDataRequest(url: url)
+        let smallerImage = resizeImage(image: image, newWidth: 200)
+        let fileName = "IMG_\(Int.random(in: 1000000..<10000000)).png"
+        request.addDataField(named: "file", data: smallerImage.pngData()!, mimeType: "image/png", fileName: fileName)
+        
+        var urlRequest = request.asURLRequest()
+        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        execute(request: request, completion: completion)
+        self.execute(request: urlRequest, authorization: authorization, completion: completion)
     }
     
     func postImage<T: Decodable>(for url: URL, for image: UIImage, for authToken: String, completion: @escaping (Result<T, Error>) -> Void) {
@@ -156,6 +250,48 @@ extension URLSession {
                 }
                 
                 let httpResponse = response as? HTTPURLResponse
+                
+                if let data = data {
+                    do {
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "yyyy-MM-dd"
+                        let decoder = JSONDecoder()
+                        decoder.dateDecodingStrategy = .formatted(dateFormatter)
+                        
+                        if (httpResponse != nil && httpResponse!.statusCode >= 400) {
+                            let error = try decoder.decode(String.self, from: data)
+                            completion(.failure(HttpError.parse(statusCode: httpResponse!.statusCode, error: error)))
+                            return
+                        } else {
+                            let object = try decoder.decode(T.self, from: data)
+                            completion(.success(object))
+                        }
+                    } catch let decoderError {
+                        completion(.failure(decoderError))
+                    }
+                } else if (httpResponse != nil && httpResponse!.statusCode >= 400) {
+                    completion(.failure(HttpError.parse(statusCode: httpResponse!.statusCode, error: nil)))
+                }
+            }
+        }.resume()
+    }
+    
+    func execute<T: Decodable>(request: URLRequest, authorization: Authorization, completion: @escaping (Result<T, Error>) -> Void) {
+        self.dataTask(with: request) { (data, response, error) in
+            DispatchQueue.main.async{
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                let httpResponse = response as? HTTPURLResponse
+                
+                // Check for 401/403 errors and call onAuthorizationFailed
+                if let httpResponse = httpResponse, (httpResponse.statusCode == 401 || httpResponse.statusCode == 403) {
+                    print("Received \(httpResponse.statusCode) error - calling onAuthorizationFailed")
+                    authorization.onAuthorizationFailed?()
+                    return
+                }
                 
                 if let data = data {
                     do {

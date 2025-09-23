@@ -42,7 +42,7 @@ struct NotificationSettings: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                VStack {
+                VStack(alignment: .leading) {
                     HStack {
                         Image(systemName: "bell")
                             .settingsButtonStyle()
@@ -59,7 +59,7 @@ struct NotificationSettings: View {
                 
                 Divider()
                 
-                VStack {
+                VStack(alignment: .leading) {
                     HStack {
                         Image(systemName: "exclamationmark.arrow.triangle.2.circlepath")
                             .settingsButtonStyle()
@@ -77,7 +77,7 @@ struct NotificationSettings: View {
                         .settingsStyle()
                 }
                 
-                VStack {
+                VStack(alignment: .leading) {
                     HStack {
                         Image(systemName: "birthday.cake")
                             .settingsButtonStyle()

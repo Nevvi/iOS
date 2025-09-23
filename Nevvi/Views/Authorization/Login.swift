@@ -98,6 +98,7 @@ struct Login: View {
                             
                             if self.hidePassword {
                                 SecureField("Password", text: self.$password)
+                                    .submitLabel(.done)
                                 
                                 Spacer()
                                 
@@ -109,6 +110,7 @@ struct Login: View {
                                     }
                             } else  {
                                 TextField("Password", text: self.$password)
+                                    .submitLabel(.done)
                                 
                                 Spacer()
                                 
@@ -197,6 +199,9 @@ struct Login: View {
                 }
                 .toast(isPresenting: $showToast){
                     AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: self.toastText)
+                }
+                .toast(isPresenting: $authStore.showToast) {
+                    AlertToast(displayMode: .banner(.slide), type: authStore.toastType, title: authStore.toastText)
                 }
                 .onTapGesture {
                     self.hideKeyboard()

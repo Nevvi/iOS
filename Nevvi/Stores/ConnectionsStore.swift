@@ -55,8 +55,8 @@ class ConnectionsStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        var urlString = "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections?skip=\(self.skip)&limit=\(self.limit)"
+        let userId: String = self.authorization!.id
+        var urlString = "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connections?skip=\(self.skip)&limit=\(self.limit)"
         
         if self.nameFilter != nil && self.nameFilter!.count > 0 {
             urlString = "\(urlString)&name=\(self.nameFilter!)"
@@ -78,8 +78,8 @@ class ConnectionsStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/requests/pending")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connections/requests/pending")!
     }
     
     private func deleteRequestUrl() throws -> URL {
@@ -87,8 +87,8 @@ class ConnectionsStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/requests/deny")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connections/requests/deny")!
     }
     
     private func confirmRequestUrl() throws -> URL {
@@ -96,8 +96,8 @@ class ConnectionsStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/requests/confirm")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connections/requests/confirm")!
     }
     
     private func rejectedUsersUrl() throws -> URL {
@@ -105,8 +105,8 @@ class ConnectionsStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/rejected")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connections/rejected")!
     }
     
     func load() {
@@ -115,8 +115,14 @@ class ConnectionsStore : ObservableObject {
     
     func load(nameFilter: String?, permissionGroup: String?) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                self.loading = false
+                return
+            }
+            
             self.loading = true
-            let idToken: String? = self.authorization?.idToken
             
             // When a search param changes always reset the skip amount back to 0
             if self.nameFilter != nameFilter || self.permissionGroup != permissionGroup {
@@ -126,7 +132,7 @@ class ConnectionsStore : ObservableObject {
             self.nameFilter = nameFilter
             self.permissionGroup = permissionGroup
             
-            URLSession.shared.fetchData(for: try self.url(inSync: nil), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+            URLSession.shared.fetchData(for: try self.url(inSync: nil), with: authorization) { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     self.connections = response.users
@@ -152,11 +158,17 @@ class ConnectionsStore : ObservableObject {
         }
         
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                self.loadingPage = false
+                return
+            }
+            
             self.loadingPage = true
-            let idToken: String? = self.authorization?.idToken
             self.skip = self.skip + self.limit
             
-            URLSession.shared.fetchData(for: try self.url(inSync: nil), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+            URLSession.shared.fetchData(for: try self.url(inSync: nil), with: authorization) { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     // When loading a page we want to append to the list, not overwrite it
@@ -174,13 +186,17 @@ class ConnectionsStore : ObservableObject {
     
     func loadOutOfSync(callback: @escaping (Result<ConnectionResponse, Error>) -> Void) {
         do {
-            let idToken: String? = self.authorization?.idToken
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                callback(.failure(error))
+                return
+            }
             
             self.nameFilter = nil
             self.permissionGroup = nil
             self.skip = 0
             
-            URLSession.shared.fetchData(for: try self.url(inSync: false), for: "Bearer \(idToken!)") { (result: Result<ConnectionResponse, Error>) in
+            URLSession.shared.fetchData(for: try self.url(inSync: false), with: authorization) { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     self.outOfSyncCount = response.count
@@ -196,9 +212,15 @@ class ConnectionsStore : ObservableObject {
     
     func loadRejectedUsers() {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                self.loadingBlockerUsers = false
+                return
+            }
+            
             self.loadingBlockerUsers = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.rejectedUsersUrl(), for: "Bearer \(idToken!)") { (result: Result<[Connection], Error>) in
+            URLSession.shared.fetchData(for: try self.rejectedUsersUrl(), with: authorization) { (result: Result<[Connection], Error>) in
                 switch result {
                 case .success(let users):
                     self.blockedUsers = users
@@ -216,9 +238,15 @@ class ConnectionsStore : ObservableObject {
     
     func loadRequests() {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                self.loadingRequests = false
+                return
+            }
+            
             self.loadingRequests = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.requestsUrl(), for: "Bearer \(idToken!)") { (result: Result<[ConnectionRequest], Error>) in
+            URLSession.shared.fetchData(for: try self.requestsUrl(), with: authorization) { (result: Result<[ConnectionRequest], Error>) in
                 switch result {
                 case .success(let requests):
                     self.requests = requests
@@ -236,10 +264,17 @@ class ConnectionsStore : ObservableObject {
     
     func denyRequest(otherUserId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.deletingRequest = false
+                return
+            }
+            
             self.deletingRequest = true
-            let idToken: String? = self.authorization?.idToken
             let request = DenyRequest(otherUserId: otherUserId)
-            URLSession.shared.postData(for: try self.deleteRequestUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<DeleteResponse, Error>) in
+            URLSession.shared.postData(for: try self.deleteRequestUrl(), for: request, with: authorization) { (result: Result<DeleteResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))
@@ -257,10 +292,17 @@ class ConnectionsStore : ObservableObject {
     
     func confirmRequest(otherUserId: String, permissionGroup: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.confirmingRequest = false
+                return
+            }
+            
             self.confirmingRequest = true
-            let idToken: String? = self.authorization?.idToken
             let request = ConfirmRequest(otherUserId: otherUserId, permissionGroupName: permissionGroup)
-            URLSession.shared.postData(for: try self.confirmRequestUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<ConfirmResponse, Error>) in
+            URLSession.shared.postData(for: try self.confirmRequestUrl(), for: request, with: authorization) { (result: Result<ConfirmResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))
