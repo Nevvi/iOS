@@ -8,34 +8,27 @@
 import Foundation
 import JWTDecode
 
-class Authorization {
+class Authorization: ObservableObject, Equatable {
     private var idTokenJwt: JWT
     private var accessTokenJwt: JWT
     private var refreshToken: String
     
+    // Callback for when authorization fails and user needs to log out
+    var onAuthorizationFailed: (() -> Void)?
+    
     var idToken: String {
-        if idTokenJwt.expired {
-            // TODO - refresh tokens on the fly
-            // self.refresh()
-        }
-        
         return idTokenJwt.string
     }
     
     var accessToken: String {
-        if !accessTokenJwt.expired {
-            // TODO - refresh tokens on the fly
-            // self.refresh()
-        }
-        
         return accessTokenJwt.string
     }
     
-    var isExpired : Bool {
-        return idTokenJwt.expired || accessTokenJwt.expired
+    var isExpired: Bool {
+        return idTokenJwt.expired
     }
     
-    var id: String
+    let id: String
 
     init(idToken: String, accessToken: String, refreshToken: String, id: String) throws {
         self.id = id
@@ -44,38 +37,33 @@ class Authorization {
         self.refreshToken = refreshToken
     }
     
-    private func refreshUrl() throws -> URL {
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/refreshLogin")!
+    func getValidToken() -> String? {
+        if isExpired {
+            print("Tokens are expired - calling onAuthorizationFailed")
+            onAuthorizationFailed?()
+            return nil
+        }
+        return idToken
     }
     
-    private func refresh() -> Void {
-        do {
-            print("Refreshing tokens")
-                        
-            var request = URLRequest(url: try refreshUrl())
-            request.httpMethod = "POST"
-            request.setValue(refreshToken, forHTTPHeaderField: "RefreshToken")
-            
-            // TODO - how to do this while blocking?
-            URLSession.shared.execute(request: request) { (result: Result<RefreshResponse, Error>) in
-                switch result {
-                case .success(let response):
-                    do {
-                        self.idTokenJwt = try decode(jwt: response.idToken)
-                        self.accessTokenJwt = try decode(jwt: response.accessToken)
-                        print("Done refreshing tokens")
-                    } catch {
-                        // TODO - go back to login page
-                        print("Failed to decode refreshed JWT: \(error.localizedDescription)")
-                    }
-                case .failure(let error):
-                    print(error)
-                    // TODO - go back to login page
-                }
-            }
-        } catch(let error) {
-            print(error)
-            // TODO - go back to login page
+    // MARK: - Equatable
+    static func == (lhs: Authorization, rhs: Authorization) -> Bool {
+        return lhs.id == rhs.id && 
+               lhs.idToken == rhs.idToken && 
+               lhs.accessToken == rhs.accessToken
+    }
+}
+
+enum AuthorizationError: Error, LocalizedError, Equatable {
+    case tokenExpired
+    case sessionEnded
+    
+    var errorDescription: String? {
+        switch self {
+        case .tokenExpired:
+            return "Session expired. Please log in again."
+        case .sessionEnded:
+            return nil // Don't show error message for graceful logout
         }
     }
 }

@@ -178,6 +178,7 @@ extension Text {
 extension TextField {
     func authStyle() -> some View {
         return self
+            .submitLabel(.done)
             .font(.system(size: 16, weight: .regular))
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.7))
             .textInputAutocapitalization(.never)
@@ -199,6 +200,7 @@ extension TextField {
         let finalVPadding = vPadding ?? 12.0
         
         return self
+            .submitLabel(.done)
             .font(.system(size: finalSize, weight: .regular))
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
             .padding(.horizontal, finalHPadding)
@@ -214,6 +216,7 @@ extension TextField {
     
     func onboardingStyle() -> some View {
         return self
+            .submitLabel(.done)
             .font(.system(size: 16, weight: .regular))
             .padding(14)
             .background(Color.white)
@@ -225,6 +228,7 @@ extension TextField {
         let finalSize = size ?? 24
         let finalOpacity = opacity ?? 1.0
         return self
+            .submitLabel(.done)
             .font(.system(size: finalSize, weight: .regular))
             .foregroundColor(Color(red: 0, green: 0.07, blue: 0.17).opacity(finalOpacity))
             .textInputAutocapitalization(.never)

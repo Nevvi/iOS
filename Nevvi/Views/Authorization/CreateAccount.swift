@@ -68,18 +68,14 @@ struct CreateAccount: View {
     var resendCodeDisabled: Bool {
         self.username.isEmpty || self.authStore.confirming || self.authStore.loggingIn || self.authStore.sendingResetCode
     }
-    
-    private var callback: (Authorization) -> Void
-    
-    init(authStore: AuthorizationStore, callback: @escaping (Authorization) -> Void) {
+        
+    init(authStore: AuthorizationStore) {
         self.authStore = authStore
-        self.callback = callback
         self.showConfirmationCode = false
     }
     
-    init(authStore: AuthorizationStore, callback: @escaping (Authorization) -> Void, showConfirmationCode: Bool) {
+    init(authStore: AuthorizationStore, showConfirmationCode: Bool) {
         self.authStore = authStore
-        self.callback = callback
         self.showConfirmationCode = showConfirmationCode
     }
       
@@ -154,6 +150,7 @@ struct CreateAccount: View {
                 
                 if self.hidePassword {
                     SecureField("Password", text: self.$password)
+                        .submitLabel(.done)
                     
                     Spacer()
                     
@@ -165,6 +162,7 @@ struct CreateAccount: View {
                         }
                 } else  {
                     TextField("Password", text: self.$password)
+                        .submitLabel(.done)
                     
                     Spacer()
                     
@@ -436,9 +434,8 @@ struct CreateAccount: View {
     func signIn() {
         self.authStore.login(username: username, password: password) { (result: Result<Authorization, AuthorizationStore.AuthorizationError>) in
             switch result {
-            case .success(let authorization):
+            case .success(_):
                 KeychainStore.saveCredentials(Credentials(username: username, password: password))
-                self.callback(authorization)
                 
                 // set this to false after successful signin so that we don't go back to create account page
                 self.showConfirmationCode = false
@@ -453,8 +450,6 @@ struct CreateAccount: View {
 
 struct CreateAccount_Previews: PreviewProvider {
     static var previews: some View {
-        CreateAccount(authStore: AuthorizationStore(), callback: { authorization in
-            print(authorization)
-        }, showConfirmationCode: false)
+        CreateAccount(authStore: AuthorizationStore(), showConfirmationCode: false)
     }
 }

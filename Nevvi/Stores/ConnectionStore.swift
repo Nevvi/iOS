@@ -9,7 +9,21 @@ import Foundation
 import MapKit
 
 class ConnectionStore : ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states
+                loading = false
+                saving = false
+                deleting = false
+                error = nil
+                
+                // Reset connection data using the existing reset method
+                reset()
+            }
+        }
+    }
         
     @Published var id: String = ""
     @Published var firstName: String = ""
@@ -99,16 +113,23 @@ class ConnectionStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/connections/\(connectionId)")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/connections/\(connectionId)")!
     }
     
     func load(connectionId: String, callback: @escaping (Result<Connection, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.loading = false
+                return
+            }
+            
             self.loading = true
             self.reset()
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.url(connectionId: connectionId), for: "Bearer \(idToken!)") { (result: Result<Connection, Error>) in
+            URLSession.shared.fetchData(for: try self.url(connectionId: connectionId), with: authorization) { (result: Result<Connection, Error>) in
                 switch result {
                 case .success(let connection):
                     self.update(connection: connection)
@@ -128,9 +149,16 @@ class ConnectionStore : ObservableObject {
     
     func delete(connectionId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.deleting = false
+                return
+            }
+            
             self.deleting = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.deleteData(for: try self.url(connectionId: connectionId), for: "Bearer \(idToken!)") { (result: Result<DeleteResponse, Error>) in
+            URLSession.shared.deleteData(for: try self.url(connectionId: connectionId), with: authorization) { (result: Result<DeleteResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))
@@ -148,10 +176,17 @@ class ConnectionStore : ObservableObject {
     
     func update(callback: @escaping (Result<Connection, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.saving = false
+                return
+            }
+            
             self.saving = true
-            let idToken: String? = self.authorization?.idToken
             let request = UpdateRequest(permissionGroupName: self.permissionGroup)
-            URLSession.shared.patchData(for: try self.url(connectionId: self.id), for: request, for: "Bearer \(idToken!)") { (result: Result<Connection, Error>) in
+            URLSession.shared.patchData(for: try self.url(connectionId: self.id), for: request, with: authorization) { (result: Result<Connection, Error>) in
                 switch result {
                 case .success(let connection):
                     self.update(connection: connection)

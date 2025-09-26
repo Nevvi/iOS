@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import AlertToast
 
 struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     
     @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var authStore: AuthorizationStore
     @EnvironmentObject var connectionStore: ConnectionStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
@@ -51,8 +53,8 @@ struct ContentView: View {
                     }
                     .onChange(of: scenePhase) { newPhase in
                         if newPhase == .active {
-                            /// TODO - re-entering from maps goes back to wrong view because of this
-                            self.reload()
+                            /// App became active - individual stores can handle refreshing if needed
+                            /// The authorization check in NevviApp will handle token refresh
                         }
                     }
                     .onOpenURL { incomingURL in
@@ -64,9 +66,8 @@ struct ContentView: View {
                     OnboardingCarousel()
                 }
             } else {
-                LoadingView(loadingText: "Fetching your profile...").onAppear {
-                    self.reload()
-                }
+                // Show loading when account data isn't available yet
+                LoadingView(loadingText: "Fetching your profile...")
             }
         }
         .errorAlert(error: self.$accountStore.error)
@@ -77,16 +78,9 @@ struct ContentView: View {
         .errorAlert(error: self.$usersStore.error)
         .errorAlert(error: self.$suggestionsStore.error)
         .errorAlert(error: self.$contactStore.error)
-    }
-    
-    func reload() {
-        self.accountStore.load()
-        self.connectionsStore.load()
-        self.connectionsStore.loadRequests()
-        self.connectionsStore.loadRejectedUsers()
-        self.connectionsStore.loadOutOfSync { _ in }
-        self.connectionGroupsStore.load()
-        self.suggestionsStore.loadSuggestions()
+        .toast(isPresenting: $authStore.showToast, duration: 5.0) {
+            AlertToast(displayMode: .hud, type: authStore.toastType, title: authStore.toastText)
+        }
     }
     
     /// Handles the incoming URL and performs validations before acknowledging.
