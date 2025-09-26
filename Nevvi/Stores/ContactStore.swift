@@ -8,7 +8,20 @@
 import Contacts
 
 class ContactStore: ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states
+                loading = false
+                error = nil
+                
+                // Clear all contact data
+                contactsOnNevvi = []
+                contactsNotOnNevvi = []
+            }
+        }
+    }
     
     @Published var loading: Bool = false
     @Published var error: Swift.Error?

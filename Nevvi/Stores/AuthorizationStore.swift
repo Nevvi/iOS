@@ -33,8 +33,8 @@ class AuthorizationStore: ObservableObject {
     /// - Parameters:
     ///   - message: The message to display in the toast
     ///   - type: The type of toast (defaults to error)
-    ///   - duration: How long to show the toast before auto-dismissing (defaults to 3 seconds)
-    func showToast(message: String, type: AlertToast.AlertType = .error(Color.red), duration: TimeInterval = 3.0) {
+    ///   - duration: How long to show the toast before auto-dismissing (defaults to 5 seconds)
+    func showToast(message: String, type: AlertToast.AlertType = .error(Color.red), duration: TimeInterval = 5.0) {
         // Cancel any existing toast work item to prevent multiple toasts
         toastWorkItem?.cancel()
         
@@ -252,7 +252,7 @@ class AuthorizationStore: ObservableObject {
                             }
                         }
                         self.authorization = authorization
-                        callback(.success(self.authorization!))
+                        callback(.success(authorization))
                     } catch {
                         print("Failed to parse login response")
                         callback(.failure(AuthorizationError.unknown))

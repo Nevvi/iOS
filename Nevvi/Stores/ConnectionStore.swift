@@ -9,7 +9,21 @@ import Foundation
 import MapKit
 
 class ConnectionStore : ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states
+                loading = false
+                saving = false
+                deleting = false
+                error = nil
+                
+                // Reset connection data using the existing reset method
+                reset()
+            }
+        }
+    }
         
     @Published var id: String = ""
     @Published var firstName: String = ""

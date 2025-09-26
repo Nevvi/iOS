@@ -10,7 +10,28 @@ import UIKit
 import SwiftUI
 
 class AccountStore: ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states immediately on main thread
+                DispatchQueue.main.async {
+                    self.loading = false
+                    self.saving = false
+                    self.savingImage = false
+                    self.error = nil
+                    
+                    // Clear all user data
+                    self.reset()
+                }
+            } else if oldValue == nil && authorization != nil {
+                // Authorization was set for the first time (login), load user data
+                DispatchQueue.main.async {
+                    self.load()
+                }
+            }
+        }
+    }
     
     @Published var loading: Bool = false
     @Published var saving: Bool = false

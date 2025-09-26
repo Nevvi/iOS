@@ -8,7 +8,23 @@
 import Foundation
 
 class UsersStore : ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states
+                inviting = false
+                requesting = false
+                loading = false
+                error = nil
+                
+                // Clear all data
+                users = []
+                userCount = 0
+            }
+            // Note: UsersStore is for search, so we don't auto-load data on login
+        }
+    }
     
     @Published var inviting: Bool = false
     @Published var requesting: Bool = false

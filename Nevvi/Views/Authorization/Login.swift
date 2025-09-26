@@ -24,12 +24,9 @@ struct Login: View {
     var loginDisabled: Bool {
         self.username.isEmpty || self.password.isEmpty || self.authStore.loggingIn || self.authStore.sendingResetCode
     }
-    
-    private var callback: (Authorization) -> Void
-    
-    init(authStore: AuthorizationStore, callback: @escaping (Authorization) -> Void) {
+        
+    init(authStore: AuthorizationStore) {
         self.authStore = authStore
-        self.callback = callback
     }
       
     var body: some View {
@@ -98,7 +95,6 @@ struct Login: View {
                             
                             if self.hidePassword {
                                 SecureField("Password", text: self.$password)
-                                    .submitLabel(.done)
                                 
                                 Spacer()
                                 
@@ -110,7 +106,6 @@ struct Login: View {
                                     }
                             } else  {
                                 TextField("Password", text: self.$password)
-                                    .submitLabel(.done)
                                 
                                 Spacer()
                                 
@@ -179,7 +174,7 @@ struct Login: View {
                                 .defaultStyle(size: 16, opacity: 0.5)
                             
                             NavigationLink {
-                                CreateAccount(authStore: self.authStore, callback: self.callback)
+                                CreateAccount(authStore: self.authStore)
                             } label: {
                                 Text("Create an account")
                                     .foregroundColor(ColorConstants.primary)
@@ -200,8 +195,8 @@ struct Login: View {
                 .toast(isPresenting: $showToast){
                     AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: self.toastText)
                 }
-                .toast(isPresenting: $authStore.showToast) {
-                    AlertToast(displayMode: .banner(.slide), type: authStore.toastType, title: authStore.toastText)
+                .toast(isPresenting: $authStore.showToast, duration: 5.0) {
+                    AlertToast(displayMode: .hud, type: authStore.toastType, title: authStore.toastText)
                 }
                 .onTapGesture {
                     self.hideKeyboard()
@@ -237,9 +232,8 @@ struct Login: View {
     func signIn() {
         self.authStore.login(username: self.username, password: password) { (result: Result<Authorization, AuthorizationStore.AuthorizationError>) in
             switch result {
-            case .success(let authorization):
+            case .success(_):
                 KeychainStore.saveCredentials(Credentials(username: self.username, password: password))
-                self.callback(authorization)
             case .failure(let error):
                 switch error {
                 case .passwordResetRequired:
@@ -265,8 +259,6 @@ struct Login: View {
 
 struct Login_Previews: PreviewProvider {
     static var previews: some View {
-        Login(authStore: AuthorizationStore()) { authorization in
-            print(authorization)
-        }
+        Login(authStore: AuthorizationStore())
     }
 }

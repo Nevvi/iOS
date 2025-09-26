@@ -8,7 +8,45 @@
 import Foundation
 
 class ConnectionsStore : ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states immediately on main thread
+                DispatchQueue.main.async {
+                    self.loading = false
+                    self.loadingPage = false
+                    self.loadingRequests = false
+                    self.loadingBlockerUsers = false
+                    self.confirmingRequest = false
+                    self.deletingRequest = false
+                    self.error = nil
+                    
+                    // Clear all data
+                    self.connections = []
+                    self.connectionCount = 0
+                    self.outOfSyncCount = 0
+                    self.requests = []
+                    self.requestCount = 0
+                    self.blockedUsers = []
+                    self.blockedUserCount = 0
+                    
+                    // Reset pagination
+                    self.skip = 0
+                    self.nameFilter = nil
+                    self.permissionGroup = nil
+                }
+            } else if oldValue == nil && authorization != nil {
+                // Authorization was set for the first time (login), load initial data
+                DispatchQueue.main.async {
+                    self.load()
+                    self.loadRequests()
+                    self.loadRejectedUsers()
+                    self.loadOutOfSync { _ in }
+                }
+            }
+        }
+    }
     
     private var nameFilter: String? = nil
     private var permissionGroup: String? = nil

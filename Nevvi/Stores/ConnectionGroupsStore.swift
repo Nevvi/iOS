@@ -8,7 +8,29 @@
 import Foundation
 
 class ConnectionGroupsStore : ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states
+                deleting = false
+                creating = false
+                loading = false
+                adding = false
+                removing = false
+                error = nil
+                
+                // Clear all data
+                groups = []
+                groupsCount = 0
+            } else if oldValue == nil && authorization != nil {
+                // Authorization was set for the first time (login), load initial data
+                DispatchQueue.main.async {
+                    self.load()
+                }
+            }
+        }
+    }
     
     @Published var deleting: Bool = false
     @Published var creating: Bool = false

@@ -8,7 +8,7 @@
 import Foundation
 import JWTDecode
 
-class Authorization: ObservableObject {
+class Authorization: ObservableObject, Equatable {
     private var idTokenJwt: JWT
     private var accessTokenJwt: JWT
     private var refreshToken: String
@@ -44,6 +44,13 @@ class Authorization: ObservableObject {
             return nil
         }
         return idToken
+    }
+    
+    // MARK: - Equatable
+    static func == (lhs: Authorization, rhs: Authorization) -> Bool {
+        return lhs.id == rhs.id && 
+               lhs.idToken == rhs.idToken && 
+               lhs.accessToken == rhs.accessToken
     }
 }
 

@@ -8,7 +8,26 @@
 import Foundation
 
 class ConnectionGroupStore : ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states
+                loading = false
+                loadingConnections = false
+                loadingPage = false
+                deleting = false
+                exporting = false
+                error = nil
+                
+                // Clear all data - but keep group info since it's set explicitly via load(group:)
+                connections = []
+                connectionCount = 0
+                skip = 0
+            }
+            // Note: ConnectionGroupStore loads data when load(group:) is called, not automatically
+        }
+    }
     
     // TODO - pagination not actually used yet so default to a high limit and just grab all connections right now (500 is max limit)
     private var skip: Int = 0

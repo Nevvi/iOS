@@ -8,7 +8,25 @@
 import Foundation
 
 class ConnectionSuggestionStore : ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states
+                loading = false
+                error = nil
+                
+                // Clear all data
+                users = []
+                userCount = 0
+            } else if oldValue == nil && authorization != nil {
+                // Authorization was set for the first time (login), load initial data
+                DispatchQueue.main.async {
+                    self.loadSuggestions()
+                }
+            }
+        }
+    }
     
     @Published var loading: Bool = false
     @Published var users: [Connection] = []

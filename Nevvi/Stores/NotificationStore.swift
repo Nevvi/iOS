@@ -10,7 +10,20 @@ import UIKit
 import SwiftUI
 
 class NotificationStore: ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states
+                loading = false
+                saving = false
+                error = nil
+                
+                // Clear notification token
+                token = ""
+            }
+        }
+    }
     
     // TODO - grab token from API on startup
     @Published var token: String = ""

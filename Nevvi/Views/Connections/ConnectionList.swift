@@ -94,7 +94,7 @@ struct ConnectionList: View {
         .toast(isPresenting: $showToast){
             AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Contacts synced!")
         }
-        .onAppear {
+        .onAppear {            
             if self.notificationStore.hasAccess {
                 self.updateMessagingToken()
             }
@@ -323,7 +323,7 @@ struct ConnectionList: View {
                                     }
                             }
                         }
-                        .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
+                        .redacted(when: self.connectionStore.deleting || self.connectionsStore.loading, redactionType: .customPlaceholder)
                         
                         if self.connectionsStore.loadingPage {
                             HStack(alignment: .center) {
