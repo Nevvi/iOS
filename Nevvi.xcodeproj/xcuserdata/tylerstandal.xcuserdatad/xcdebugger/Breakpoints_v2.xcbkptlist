@@ -158,8 +158,8 @@
             filePath = "Nevvi/Views/Authorization/Login.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "233"
-            endingLineNumber = "233"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
             landmarkName = "signIn()"
             landmarkType = "7">
          </BreakpointContent>
@@ -350,8 +350,8 @@
             filePath = "Nevvi/Views/Authorization/Login.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
+            startingLineNumber = "249"
+            endingLineNumber = "249"
             landmarkName = "signIn()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1148,9 +1148,9 @@
             filePath = "Nevvi/Views/Authorization/CreateAccount.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "405"
-            endingLineNumber = "405"
-            landmarkName = "createAccount()"
+            startingLineNumber = "403"
+            endingLineNumber = "403"
+            landmarkName = "confirmAccount()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1164,8 +1164,8 @@
             filePath = "Nevvi/Views/Authorization/CreateAccount.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "417"
-            endingLineNumber = "417"
+            startingLineNumber = "415"
+            endingLineNumber = "415"
             landmarkName = "confirmAccount()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1196,8 +1196,8 @@
             filePath = "Nevvi/Views/Authorization/Login.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "225"
-            endingLineNumber = "225"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
             landmarkName = "requestBiometricUnlock()"
             landmarkType = "7">
          </BreakpointContent>
@@ -1212,8 +1212,8 @@
             filePath = "Nevvi/Views/Authorization/Login.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "227"
-            endingLineNumber = "227"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
             landmarkName = "requestBiometricUnlock()"
             landmarkType = "7">
          </BreakpointContent>

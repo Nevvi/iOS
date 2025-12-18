@@ -44,6 +44,27 @@ struct ForgotPassword: View {
         !self.password.isEmpty && self.password.count >= 8
     }
     
+    var passwordRequirementsText: String {
+        var missing: [String] = []
+        
+        if !passwordContainsUppercase { missing.append("uppercase letter") }
+        if !passwordContainsLowercase { missing.append("lowercase letter") }
+        if !passwordContainsNumber { missing.append("number") }
+        if !passwordContainsSpecialChar { missing.append("special character") }
+        if !passwordMinimumLength { missing.append("8+ characters") }
+        
+        if missing.isEmpty {
+            return "Password requirements met ✓"
+        } else if missing.count == 1 {
+            return "Password needs: \(missing[0])"
+        } else if missing.count == 2 {
+            return "Password needs: \(missing[0]) and \(missing[1])"
+        } else {
+            let allButLast = missing.dropLast().joined(separator: ", ")
+            return "Password needs: \(allButLast), and \(missing.last!)"
+        }
+    }
+    
     var sendResetCodeDisabled: Bool {
         self.username.isEmpty || self.authStore.sendingResetCode
     }
@@ -87,12 +108,14 @@ struct ForgotPassword: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                 
-                VStack(alignment: .center, spacing: 20) {
+                VStack {
                     Image("AppLogo")
                         .frame(width: 68, height: 68)
-                        .padding([.top], 32)
-                        .padding([.bottom], 32)
-                    
+                        .padding([.top], 80)
+                    Spacer()
+                }
+                
+                VStack(alignment: .center, spacing: 20) {
                     if self.showConfirmationCode {
                         resetPasswordView
                     } else {
@@ -120,7 +143,7 @@ struct ForgotPassword: View {
     }
     
     var sendResetCodeView: some View {
-        VStack(spacing: 20) {
+        VStack(alignment: .center, spacing: 14) {
             Spacer()
             
             Text("Reset your password")
@@ -171,9 +194,6 @@ struct ForgotPassword: View {
             .disabled(self.authStore.sendingResetCode || self.username.isEmpty)
             .padding([.bottom], 16)
             
-            Spacer()
-            Spacer()
-            
             HStack {
                 Text("Enter Code")
                     .foregroundColor(ColorConstants.primary)
@@ -182,6 +202,8 @@ struct ForgotPassword: View {
                         self.showConfirmationCode = true
                     }
             }
+            
+            Spacer()
         }
         .padding(.horizontal, 24)
         .frame(width: Constants.Width, alignment: .top)
@@ -195,14 +217,14 @@ struct ForgotPassword: View {
     }
     
     var resetPasswordView: some View {
-        VStack(spacing: 12) {
+        VStack(alignment: .center, spacing: 14) {
+            Spacer()
+            
             Text("Reset your password")
                 .defaultStyle(size: 26, opacity: 0.7)
                 .multilineTextAlignment(.center)
-                .padding([.top], 16)
-            
-            Spacer()
-            
+                .padding([.vertical], 16)
+                        
             HStack(alignment: .center, spacing: 6) {
                 Image(systemName: "phone")
                     .frame(width: 24, height: 24)
@@ -278,45 +300,19 @@ struct ForgotPassword: View {
                 .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
             )
             
-            HStack {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Image(systemName: "checkmark.seal.fill")
-                        Text("Contains uppercase letter")
-                    }
-                    .foregroundColor(self.passwordContainsUppercase ? ColorConstants.primary : ColorConstants.secondary)
+            if !password.isEmpty {
+                HStack {
+                    Text(passwordRequirementsText)
+                        .font(.system(size: 12))
+                        .foregroundColor(ColorConstants.secondary)
+                        .multilineTextAlignment(.leading)
                     
-                    HStack {
-                        Image(systemName: "checkmark.seal.fill")
-                        Text("Contains lowercase letter")
-                    }
-                    .foregroundColor(self.passwordContainsLowercase ? ColorConstants.primary : ColorConstants.secondary)
-                    
-                    HStack {
-                        Image(systemName: "checkmark.seal.fill")
-                        Text("Contains special character")
-                    }
-                    .foregroundColor(self.passwordContainsSpecialChar ? ColorConstants.primary : ColorConstants.secondary)
-                    
-                    HStack {
-                        Image(systemName: "checkmark.seal.fill")
-                        Text("Contains number")
-                    }
-                    .foregroundColor(self.passwordContainsNumber ? ColorConstants.primary : ColorConstants.secondary)
-                    
-                    HStack {
-                        Image(systemName: "checkmark.seal.fill")
-                        Text("Contains at least 8 characters")
-                    }
-                    .foregroundColor(self.passwordMinimumLength ? ColorConstants.primary : ColorConstants.secondary)
+                    Spacer()
                 }
-                .fontWeight(.regular)
-                .font(.system(size: 14))
-                
-                Spacer()
+                .padding(.horizontal, 18)
+                .padding(.bottom, 16)
+                .transition(.opacity.combined(with: .move(edge: .top)))
             }
-            .padding([.leading], 18)
-            .padding([.bottom], 32)
                         
             Button(action: self.resetPassword, label: {
                 HStack {
@@ -338,10 +334,7 @@ struct ForgotPassword: View {
                 .opacity(self.resetPasswordDisabled ? 0.5 : 1.0)
             })
             .disabled(self.resetPasswordDisabled)
-            .padding([.bottom], 16)
-            
-            Spacer()
-            Spacer()
+            .padding([.vertical], 16)
             
             HStack {
                 Text("Send Code")
@@ -351,7 +344,10 @@ struct ForgotPassword: View {
                         self.showConfirmationCode = false
                     }
             }
+            
+            Spacer()
         }
+        .animation(.easeInOut(duration: 0.2), value: password.isEmpty)
         .disabled(self.authStore.signingUp)
     }
     
