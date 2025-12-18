@@ -12,6 +12,7 @@ struct ConnectionInviteRow: View {
     @EnvironmentObject var usersStore: UsersStore
     
     var requestCallback: () -> Void
+    @Binding var selectedReason: InviteReason
         
     @State var user: ContactStore.ContactInfo!
     @State var loading: Bool = false
@@ -71,14 +72,30 @@ struct ConnectionInviteRow: View {
     var inviteUserSheet: some View {
         DynamicSheet(
             ZStack {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 6) {
                     Text("Select permission group")
-                        .font(.title)
+                        .font(.title2)
                         .fontWeight(.light)
                         .padding([.leading, .trailing, .top])
-                        .padding([.bottom], 6)
                     
                     PermissionGroupPicker(selectedGroup: $selectedPermissionGroup)
+                    
+                    Text("Invite reason")
+                        .font(.title2)
+                        .fontWeight(.light)
+                        .padding([.leading, .trailing])
+                    
+                    Picker("Invite Reason", selection: $selectedReason) {
+                        ForEach(InviteReason.allCases, id: \.self) { reason in
+                            Text(reason.displayName).tag(reason)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .padding([.leading, .trailing])
+                    .onAppear {
+                        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(ColorConstants.primary)
+                        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+                    }
                     
                     Spacer()
                     
@@ -105,7 +122,7 @@ struct ConnectionInviteRow: View {
     
     func inviteUser() {
         self.loading = true
-        self.usersStore.inviteConnection(phoneNumber: self.user.phoneNumber, groupName: self.selectedPermissionGroup) { (result: Result<Bool, Error>) in
+        self.usersStore.inviteConnection(phoneNumber: self.user.phoneNumber, groupName: self.selectedPermissionGroup, reason: self.selectedReason.rawValue) { (result: Result<Bool, Error>) in
             switch result {
             case .success(_):
                 withAnimation(Animation.spring().speed(0.75)) {
@@ -127,7 +144,11 @@ struct ConnectionInviteRow_Preview: PreviewProvider {
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
     
     static var previews: some View {
-        ConnectionInviteRow(requestCallback: {}, user: ContactStore.ContactInfo(firstName: "John", lastName: "Doe", phoneNumber: "6129631237"))
-            .environmentObject(usersStore)
+        ConnectionInviteRow(
+            requestCallback: {}, 
+            selectedReason: .constant(.other),
+            user: ContactStore.ContactInfo(firstName: "John", lastName: "Doe", phoneNumber: "6129631237")
+        )
+        .environmentObject(usersStore)
     }
 }

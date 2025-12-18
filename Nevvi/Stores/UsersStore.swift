@@ -111,11 +111,11 @@ class UsersStore : ObservableObject {
         }
     }
     
-    func inviteConnection(phoneNumber: String, groupName: String, callback: @escaping (Result<Bool, Error>) -> Void) {
+    func inviteConnection(phoneNumber: String, groupName: String, reason: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
             self.inviting = true
             let idToken: String? = self.authorization?.idToken
-            let request = NewConnectionInvite(phoneNumber: phoneNumber, permissionGroupName: groupName)
+            let request = NewConnectionInvite(phoneNumber: phoneNumber, permissionGroupName: groupName, reason: reason)
             URLSession.shared.postData(for: try self.inviteUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<ConnectionInviteResponse, Error>) in
                 switch result {
                 case .success(_):
@@ -153,6 +153,7 @@ class UsersStore : ObservableObject {
     struct NewConnectionInvite: Encodable {
         var phoneNumber: String
         var permissionGroupName: String
+        var reason: String
     }
     
     struct ConnectionRequestResponse: Decodable {

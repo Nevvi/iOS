@@ -133,20 +133,6 @@ struct Login: View {
                                 .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
                         )
                         
-                        NavigationLink {
-                            ForgotPassword(authStore: self.authStore, callback: { username, password in
-                                self.username = username
-                                self.password = password
-                                self.toastText = "Password reset!"
-                                self.showToast = true
-                            })
-                        } label: {
-                            Text("Forget Password?")
-                                .foregroundColor(ColorConstants.primary)
-                                .defaultStyle(size: 16, opacity: 0.5)
-                        }
-                        .padding([.top])
-                        
                         Button(action: self.signIn, label: {
                             HStack {
                                 Text("Log In".uppercased())
@@ -167,6 +153,20 @@ struct Login: View {
                         })
                         .padding([.bottom], 16)
                         .disabled(self.loginDisabled)
+                        
+                        NavigationLink {
+                            ForgotPassword(authStore: self.authStore, callback: { username, password in
+                                self.username = username
+                                self.password = password
+                                self.toastText = "Password reset!"
+                                self.showToast = true
+                            })
+                        } label: {
+                            Text("Forget Password?")
+                                .foregroundColor(ColorConstants.primary)
+                                .defaultStyle(size: 16, opacity: 0.5)
+                        }
+                        .padding([.top])
                         
                         HStack {
                             Text("No account?")
