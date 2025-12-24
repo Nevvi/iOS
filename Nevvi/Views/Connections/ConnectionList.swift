@@ -19,6 +19,7 @@ struct ConnectionList: View {
     @EnvironmentObject var contactStore: ContactStore
     @EnvironmentObject var notificationStore: NotificationStore
     @EnvironmentObject var connectionStore: ConnectionStore
+    @EnvironmentObject var suggestionsStore: ConnectionSuggestionStore
     
     @State private var syncing: Bool = false
     @State private var showSyncConfirmation: Bool = false
@@ -32,8 +33,10 @@ struct ConnectionList: View {
     @StateObject var nameFilter = DebouncedText()
     @State var selectedGroup: String? = nil
     
+    @FocusState private var isSearchActive: Bool
+    
     private var noConnectionsExist: Bool {
-        return self.selectedGroup == nil && self.nameFilter.text.isEmpty && self.connectionsStore.connectionCount == 0 && !self.connectionsStore.loading
+        return self.selectedGroup == nil && self.connectionsStore.connectionCount == 0 && !self.connectionsStore.loading && !isSearchActive
     }
     
     private var syncAvailable: Bool {
@@ -43,42 +46,83 @@ struct ConnectionList: View {
     private var showSyncHelper: Bool {
         return self.syncAvailable && !hasSyncedBefore
     }
+    
+    private var notConnectedSuggestions: [Connection] {
+        self.suggestionsStore.users.filter {
+            $0.connected != nil && !$0.connected! &&
+            $0.requested != nil && !$0.requested!
+        }
+    }
+    
+    private var notConnectedUsers: [Connection] {
+        self.usersStore.users.filter {
+            $0.connected != nil && !$0.connected! &&
+            $0.requested != nil && !$0.requested!
+        }
+    }
         
     var body: some View {
         NavigationView {
-            VStack {
-                if self.notificationStore.canRequestAccess {
-                    requestNotificationsView
-                } else if self.contactStore.canRequestAccess() {
-                    requestContactsView
-                } else if noConnectionsExist {
-                    noConnectionsView
+            VStack(spacing: 0) {
+                searchBar
+                
+                if isSearchActive {
+                    searchView
                 } else {
-                    connectionsView
+                    browseContent
                 }
             }
-            .onChange(of: self.nameFilter.debouncedText) { text in
-                self.connectionsStore.load(nameFilter: text, permissionGroup: self.selectedGroup)
-            }
             .onChange(of: self.selectedGroup) { group in
-                self.connectionsStore.load(nameFilter: self.nameFilter.text, permissionGroup: group)
+                if !isSearchActive {
+                    self.connectionsStore.load(nameFilter: "", permissionGroup: group)
+                }
             }
             .refreshable {
-                self.connectionsStore.load(nameFilter: self.nameFilter.debouncedText, permissionGroup: self.selectedGroup)
-                self.connectionsStore.loadOutOfSync { _ in }
+                if !isSearchActive {
+                    self.connectionsStore.load(nameFilter: "", permissionGroup: self.selectedGroup)
+                    self.connectionsStore.loadOutOfSync { _ in }
+                }
             }
             .toolbar(content: {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    if self.syncAvailable {
-                        Text("Sync")
-                            .foregroundColor(ColorConstants.primary)
-                            .defaultStyle(size: 18, opacity: 1.0)
+                ToolbarItemGroup(placement: .topBarLeading) {
+                    if self.isSearchActive {
+                        Image(systemName: "chevron.left")
+                            .toolbarButtonStyle()
+                            .onTapGesture {
+                                isSearchActive = false
+                                nameFilter.text = ""
+                                // Clear search results
+                                connectionsStore.connections = []
+                                usersStore.users = []
+                                // Reload normal connections
+                                self.connectionsStore.load()
+                            }
+                    } else if self.syncAvailable {
+                        Image(systemName: "arrow.down.circle")
+                            .toolbarButtonStyle()
+                            .opacity(self.syncing ? 0.5 : 1.0)
+                            .disabled(syncing)
                             .onTapGesture {
                                 if !self.syncing {
                                     self.sync(dryRun: true)
                                 }
                             }
-                            .opacity(self.syncing ? 0.5 : 1.0)
+                    }
+                }
+                
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    NavigationLink(destination: ConnectionRequestList()) {
+                        ZStack {
+                            Image(systemName: "bell")
+                                .toolbarButtonStyle()
+                            
+                            if connectionsStore.requestCount > 0 {
+                                Circle()
+                                    .fill(Color.red)
+                                    .frame(width: 8, height: 8)
+                                    .offset(x: 8, y: -8)
+                            }
+                        }
                     }
                 }
             })
@@ -227,7 +271,9 @@ struct ConnectionList: View {
                         .defaultStyle(size: 16, opacity: 0.7)
                         .multilineTextAlignment(.center)
                     
-                    NavigationLink(destination: UserSearch()) {
+                    Button(action: {
+                        isSearchActive = true
+                    }) {
                         Text("Find Connections".uppercased())
                             .asPrimaryButton()
                     }
@@ -242,105 +288,7 @@ struct ConnectionList: View {
         }
     }
     
-    var connectionsView: some View {
-        VStack {
-            HStack(alignment: .center, spacing: 4) {
-                TextField("Search", text: self.$nameFilter.text)
-                    .disableAutocorrection(true)
-                    .padding(16)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(.white)
-                    .cornerRadius(40)
-                    .shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 4)
-                    .overlay(
-                      RoundedRectangle(cornerRadius: 40)
-                        .inset(by: 0.5)
-                        .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.08), lineWidth: 1)
-                    )
-            }
-            .padding(.horizontal, 14)
-            .padding(.top, 8)
-            .padding(.bottom, 4)
-            
-            Divider()
-            
-            ScrollView(.vertical) {
-                VStack {
-                    ScrollView(.horizontal) {
-                        HStack(spacing: 6) {
-                            ForEach(self.accountStore.permissionGroups, id: \.name) { group in
-                                if group.name.uppercased() == self.selectedGroup?.uppercased() {
-                                    Text(group.name.uppercased())
-                                        .asSelectedGroupFilter()
-                                        .opacity(self.connectionsStore.loading ? 0.7 : 1.0)
-                                        .onTapGesture {
-                                            if !self.connectionsStore.loading {
-                                                self.selectedGroup = nil
-                                            }
-                                        }
-                                } else {
-                                    Text(group.name.uppercased())
-                                        .asGroupFilter()
-                                        .opacity(self.connectionsStore.loading ? 0.7 : 1.0)
-                                        .onTapGesture {
-                                            if !self.connectionsStore.loading {
-                                                self.selectedGroup = group.name
-                                            }
-                                        }
-                                }
-                            }
-                        }
-                        .padding(.vertical, 4)
-                        .padding(.horizontal, 20)
-                    }
-                    
-                    
-                    LazyVStack(alignment: .leading, spacing: 0) {
-                        HStack {
-                            Text("Total Members (\(self.connectionsStore.connectionCount))")
-                                .defaultStyle(size: 14, opacity: 0.4)
-                                .padding(.horizontal, 20)
-                                .padding(.vertical, 6)
-                            
-                            Spacer()
-                        }
-                        
-                        ForEach(self.connectionsStore.connections) { connection in
-                            NavigationLink {
-                                NavigationLazyView(
-                                    ConnectionDetail()
-                                        .onAppear {
-                                            loadConnection(connectionId: connection.id)
-                                        }
-                                )
-                            } label: {
-                                ConnectionRow(connection: connection)
-                                    .onAppear {
-                                        let isLast = connection == self.connectionsStore.connections.last
-                                        if isLast && self.connectionsStore.hasNextPage() && !self.connectionsStore.loadingPage {
-                                            self.connectionsStore.loadNextPage()
-                                        }
-                                    }
-                            }
-                        }
-                        .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
-                        
-                        if self.connectionsStore.loadingPage {
-                            HStack(alignment: .center) {
-                                Spacer()
-                                ProgressView()
-                                Spacer()
-                            }
-                            .padding(.vertical)
-                        }
-                    }
-                    
-                    Spacer()
-                }
-            }
-        }
-        .disableAutocorrection(true)
-    }
+
     
     var contactUpdatesSheet: some View {
         VStack {
@@ -456,6 +404,143 @@ struct ConnectionList: View {
         }
     }
     
+    var searchBar: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.gray)
+                    .font(.system(size: 16))
+                
+                TextField("Search connections or find new people", text: $nameFilter.text)
+                    .focused($isSearchActive)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .font(.system(size: 16))
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                
+                if !nameFilter.text.isEmpty {
+                    Button(action: {
+                        nameFilter.text = ""
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 16))
+                    }
+                } else if isSearchActive && (connectionsStore.loading || usersStore.loading) {
+                    ProgressView()
+                        .scaleEffect(0.7)
+                        .tint(.gray)
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(10)
+            .padding(.horizontal, 14)
+            .padding(.top, 8)
+            
+            Divider()
+                .padding(.vertical)
+        }
+        .background(Color(.systemBackground))
+    }
+    
+    // MARK: - Browse Content (Default State)
+    var browseContent: some View {
+        VStack {
+//            if self.notificationStore.canRequestAccess {
+//                requestNotificationsView
+//            } else if self.contactStore.canRequestAccess() {
+//                requestContactsView
+//            } else if noConnectionsExist {
+//                noConnectionsView
+//            } else {
+                connectionsListView
+//            }
+        }
+    }
+    
+    // MARK: - Connections List View (Renamed from connectionsView)
+    var connectionsListView: some View {
+        VStack {
+            ScrollView(.vertical) {
+                VStack {
+                    ScrollView(.horizontal) {
+                        HStack(spacing: 6) {
+                            ForEach(self.accountStore.permissionGroups, id: \.name) { group in
+                                if group.name.uppercased() == self.selectedGroup?.uppercased() {
+                                    Text(group.name.uppercased())
+                                        .asSelectedGroupFilter()
+                                        .opacity(self.connectionsStore.loading ? 0.7 : 1.0)
+                                        .onTapGesture {
+                                            if !self.connectionsStore.loading {
+                                                self.selectedGroup = nil
+                                            }
+                                        }
+                                } else {
+                                    Text(group.name.uppercased())
+                                        .asGroupFilter()
+                                        .opacity(self.connectionsStore.loading ? 0.7 : 1.0)
+                                        .onTapGesture {
+                                            if !self.connectionsStore.loading {
+                                                self.selectedGroup = group.name
+                                            }
+                                        }
+                                }
+                            }
+                        }
+                        .padding(.vertical, 4)
+                        .padding(.horizontal, 20)
+                    }
+                    
+                    
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            Text("Total Members (\(self.connectionsStore.connectionCount))")
+                                .defaultStyle(size: 14, opacity: 0.4)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 6)
+                            
+                            Spacer()
+                        }
+                        
+                        ForEach(self.connectionsStore.connections) { connection in
+                            NavigationLink {
+                                NavigationLazyView(
+                                    ConnectionDetail()
+                                        .onAppear {
+                                            loadConnection(connectionId: connection.id)
+                                        }
+                                )
+                            } label: {
+                                ConnectionRow(connection: connection)
+                                    .onAppear {
+                                        let isLast = connection == self.connectionsStore.connections.last
+                                        if isLast && self.connectionsStore.hasNextPage() && !self.connectionsStore.loadingPage {
+                                            self.connectionsStore.loadNextPage()
+                                        }
+                                    }
+                            }
+                        }
+                        .redacted(when: self.connectionsStore.loading || self.connectionStore.deleting, redactionType: .customPlaceholder)
+                        
+                        if self.connectionsStore.loadingPage {
+                            HStack(alignment: .center) {
+                                Spacer()
+                                ProgressView()
+                                Spacer()
+                            }
+                            .padding(.vertical)
+                        }
+                    }
+                    
+                    Spacer()
+                }
+            }
+        }
+        .disableAutocorrection(true)
+    }
+    
     func loadConnection(connectionId: String) {
         self.connectionStore.load(connectionId: connectionId) { (result: Result<Connection, Error>) in
             switch result {
@@ -512,6 +597,269 @@ struct ConnectionList: View {
             }
         }
     }
+    
+    var searchView: some View {
+        VStack(spacing: 0) {
+            if nameFilter.text.count < 3 && !self.usersStore.loading {
+                searchEmptyState
+            } else {
+                searchResults
+            }
+        }
+        .onChange(of: nameFilter.debouncedText) { newValue in
+            performSearch()
+        }
+        .refreshable {
+            if !self.nameFilter.debouncedText.isEmpty {
+                self.suggestionsStore.loadSuggestions()
+            } else {
+                self.performSearch()
+            }
+        }
+    }
+    
+    private func performSearch() {
+        connectionsStore.load(nameFilter: nameFilter.debouncedText, permissionGroup: nil)
+        usersStore.searchByName(nameFilter: nameFilter.debouncedText)
+    }
+    
+    var searchEmptyState: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                // Recent Searches Section (stubbed for now)
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Recent Searches")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        Spacer()
+                    }
+                    .padding(.horizontal, 16)
+                    
+                    VStack(spacing: 8) {
+                        RecentSearchRow(searchTerm: "John Smith", subtitle: "2 results")
+                            .onTapGesture {
+                                self.nameFilter.text = "John Smith"
+                            }
+                        RecentSearchRow(searchTerm: "Alex", subtitle: "8 results")
+                            .onTapGesture {
+                                self.nameFilter.text = "Alex"
+                            }
+                        RecentSearchRow(searchTerm: "Joh", subtitle: "12 results")
+                            .onTapGesture {
+                                self.nameFilter.text = "Joh"
+                            }
+                    }
+                }
+                
+                // Suggested Connections Section
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack {
+                        Text("Suggested Connections")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                        Spacer()
+                        if suggestionsStore.loading {
+                            ProgressView()
+                                .scaleEffect(0.7)
+                        } else {
+                            Text("\(notConnectedSuggestions.count)")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    
+                    if notConnectedSuggestions.count > 0 {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 12) {
+                                ForEach(notConnectedSuggestions.prefix(5)) { user in
+                                    SuggestedConnectionCard(user: user) {
+                                        showToast = true
+                                        suggestionsStore.loadSuggestions()
+                                    }
+                                }
+                                .redacted(when: suggestionsStore.loading, redactionType: .customPlaceholder)
+                            }
+                            .padding(.horizontal, 16)
+                        }
+                    }
+                }
+                
+                Spacer(minLength: 100)
+            }
+        }
+    }
+    
+    var searchResults: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                // No Results State
+                if connectionsStore.connections.isEmpty && usersStore.users.isEmpty && !connectionsStore.loading && !usersStore.loading {
+                    VStack(spacing: 16) {
+                        Image(systemName: "person.2.slash")
+                            .font(.system(size: 50))
+                            .foregroundColor(.gray.opacity(0.6))
+                        
+                        VStack(spacing: 8) {
+                            Text("No results found")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                            
+                            Text("Try adjusting your search terms")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 40)
+                } else {
+                    VStack(alignment: .leading, spacing: 12) {
+                        // Connections section
+                        if self.connectionsStore.loading || !self.connectionsStore.connections.isEmpty {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Your Connections")
+                                        .font(.headline)
+                                        .fontWeight(.semibold)
+                                    Text("People you're already connected with")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Text("\(connectionsStore.connectionCount)")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.horizontal, 16)
+                        }
+                        
+                        if !self.connectionsStore.connections.isEmpty {
+                            VStack(spacing: 0) {
+                                ForEach(connectionsStore.connections.prefix(5)) { connection in
+                                    NavigationLink {
+                                        NavigationLazyView(
+                                            ConnectionDetail()
+                                                .onAppear {
+                                                    loadConnection(connectionId: connection.id)
+                                                }
+                                        )
+                                    } label: {
+                                        ConnectionRow(connection: connection)
+                                    }
+                                }
+                                .redacted(when: self.connectionsStore.loading, redactionType: .customPlaceholder)
+                            }
+                        }
+                        
+                        if connectionsStore.connectionCount > 5 {
+                            Button(action: {
+                                // TODO: Navigate to full connection results
+                            }) {
+                                HStack {
+                                    Text("See all \(connectionsStore.connections.count) connection results")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.blue)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundColor(.blue)
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                                .background(Color.blue.opacity(0.05))
+                            }
+                        }
+                        
+                        // New People Section
+                        if self.usersStore.loading || !notConnectedUsers.isEmpty {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("New People")
+                                        .font(.headline)
+                                        .fontWeight(.semibold)
+                                    Text("People you can connect with")
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                                Spacer()
+                                Text("\(notConnectedUsers.count)")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.horizontal, 16)
+                        }
+                        
+                        if !notConnectedUsers.isEmpty {
+                            VStack(spacing: 0) {
+                                ForEach(notConnectedUsers.prefix(10)) { user in
+                                    NewConnectionRequestRow(requestCallback: {
+                                        showToast = true
+                                        usersStore.removeUser(user: user)
+                                    }, user: user)
+                                }
+                                .redacted(when: self.usersStore.loading, redactionType: .customPlaceholder)
+                            }
+                        }
+                                
+                        if usersStore.userCount > 10 {
+                            Button(action: {
+                                // TODO: Navigate to full user results
+                            }) {
+                                HStack {
+                                    Text("See all \(usersStore.users.count) people results")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                        .foregroundColor(.blue)
+                                    Spacer()
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption)
+                                        .foregroundColor(.blue)
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                                .background(Color.blue.opacity(0.05))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct RecentSearchRow: View {
+    let searchTerm: String
+    let subtitle: String
+    
+    var body: some View {
+        HStack {
+            Image(systemName: "clock")
+                .foregroundColor(.gray)
+                .font(.system(size: 16))
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(searchTerm)
+                    .font(.subheadline)
+                    .foregroundColor(.primary)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            Image(systemName: "arrow.up.left")
+                .foregroundColor(.gray)
+                .font(.system(size: 14))
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+    }
 }
 
 struct ConnectionList_Previews: PreviewProvider {
@@ -524,6 +872,7 @@ struct ConnectionList_Previews: PreviewProvider {
     static let contactStore = ContactStore()
     static let notificationStore = NotificationStore()
     static let accountStore = AccountStore(user: modelData.user)
+    static let suggestionsStore = ConnectionSuggestionStore(users: modelData.connectionResponse.users)
     
     /**
      @State private var contactUpdates: [ContactStore.ContactSyncInfo] = [
@@ -564,5 +913,6 @@ struct ConnectionList_Previews: PreviewProvider {
             .environmentObject(accountStore)
             .environmentObject(connectionStore)
             .environmentObject(notificationStore)
+            .environmentObject(suggestionsStore)
     }
 }

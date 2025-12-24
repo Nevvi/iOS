@@ -11,25 +11,27 @@ struct GroupSettings: View {
     @State var tabSelectedValue = 0
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Picker("", selection: self.$tabSelectedValue) {
-                Text("Permissions".uppercased()).tag(0)
-                Text("Connections".uppercased()).tag(1)
+        NavigationView {
+            VStack(alignment: .leading, spacing: 12) {
+                Picker("", selection: self.$tabSelectedValue) {
+                    Text("Permissions".uppercased()).tag(0)
+                    Text("Connections".uppercased()).tag(1)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 16)
+                
+                TabView(selection: $tabSelectedValue) {
+                    PermissionGroupList().tag(0)
+                    
+                    ConnectionGroupList().tag(1)
+                }
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .animation(.easeIn, value: tabSelectedValue)
             }
-            .pickerStyle(.segmented)
-            .padding(.horizontal, 16)
-            .padding(.vertical, 16)
-
-            TabView(selection: $tabSelectedValue) {
-                PermissionGroupList().tag(0)
-
-                ConnectionGroupList().tag(1)
-            }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .animation(.easeIn, value: tabSelectedValue)
+            .navigationTitle("Groups")
+            .navigationBarTitleDisplayMode(.inline)
         }
-        .navigationTitle("Groups")
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

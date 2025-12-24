@@ -21,25 +21,29 @@ struct ConnectionGroupList: View {
     @State private var showDeleteAlert: Bool = false
             
     var body: some View {
-        VStack(alignment: .center) {
-            if self.creatingGroup {
-                creatingView
-            } else if self.connectionGroupsStore.loading {
-                loadingView
-            } else if self.connectionGroupsStore.groupsCount == 0 {
-                noGroupsView
-            } else {
-                groupsView
+        NavigationView {
+            VStack(alignment: .center) {
+                if self.creatingGroup {
+                    creatingView
+                } else if self.connectionGroupsStore.loading {
+                    loadingView
+                } else if self.connectionGroupsStore.groupsCount == 0 {
+                    noGroupsView
+                } else {
+                    groupsView
+                }
             }
-        }
-        .refreshable {
-            self.connectionGroupsStore.load()
-        }
-        .sheet(isPresented: self.$showGroupForm) {
-            newGroupSheet
-        }
-        .alert(isPresented: self.$showDeleteAlert) {
-            deleteAlert
+            .refreshable {
+                self.connectionGroupsStore.load()
+            }
+            .sheet(isPresented: self.$showGroupForm) {
+                newGroupSheet
+            }
+            .alert(isPresented: self.$showDeleteAlert) {
+                deleteAlert
+            }
+            .navigationTitle("Connection Groups")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
     

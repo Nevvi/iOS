@@ -28,17 +28,13 @@ struct ContentView: View {
                             .tabItem() {
                                 Label("Connections", systemImage: "person.3.sequence.fill")
                             }
+                            .badge(connectionsStore.requestCount)
                         
-                        ConnectionRequestList()
+                        ConnectionGroupList()
                             .tabItem() {
-                                Label("Requests", systemImage: "plus.circle.fill")
+                                Label("Groups", systemImage: "person.2")
                             }
-                        
-                        //                    NotificationList()
-                        //                        .tabItem() {
-                        //                            Label("Notification", systemImage: "bell")
-                        //                        }
-                        
+
                         PersonalInformation()
                             .tabItem() {
                                 Label("Profile", systemImage: "person.circle.fill")
@@ -105,6 +101,8 @@ struct ContentView: View {
         }
     }
 }
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static let modelData = ModelData()
