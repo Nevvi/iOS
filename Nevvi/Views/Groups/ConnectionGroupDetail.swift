@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ConnectionGroupDetail: View {
     @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var connectionStore: ConnectionStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var connectionGroupStore: ConnectionGroupStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
@@ -18,6 +19,7 @@ struct ConnectionGroupDetail: View {
     @State private var showAddUsers: Bool = false
     @State private var savingUsers: Bool = false
     @State private var newGroupConnections: [Connection] = []
+    @State private var searchText: String = ""
     
     private var possibleConnections: [Connection] {
         return self.connectionsStore.connections.filter { connection in
@@ -42,6 +44,8 @@ struct ConnectionGroupDetail: View {
                 Menu {
                     Button {
                         self.connectionsStore.load(nameFilter: nil, permissionGroup: nil)
+                        self.searchText = ""
+                        self.newGroupConnections = []
                         self.showAddUsers = true
                     } label: {
                         Label("Add Members", systemImage: "plus.circle")
@@ -138,7 +142,16 @@ struct ConnectionGroupDetail: View {
             ScrollView(.vertical) {
                 VStack(alignment: .trailing, spacing: 0) {
                     ForEach(self.connectionGroupStore.connections) { connection in
-                        GroupConnectionRow(connection: connection, connectionGroupStore: self.connectionGroupStore)
+                        NavigationLink {
+                            NavigationLazyView(
+                                ConnectionDetail()
+                                    .onAppear {
+                                        loadConnection(connectionId: connection.id)
+                                    }
+                            )
+                        } label: {
+                            GroupConnectionRow(connection: connection, connectionGroupStore: self.connectionGroupStore)
+                        }
                     }
                     .redacted(when: self.connectionGroupStore.loadingConnections || self.connectionGroupStore.deleting, redactionType: .customPlaceholder)
                 }
@@ -148,101 +161,299 @@ struct ConnectionGroupDetail: View {
     }
     
     var addUsersSheet: some View {
-        VStack {
-            HStack {
+        VStack(spacing: 0) {
+            // Header
+            VStack(alignment: .leading, spacing: 24) {
                 Text("Add Members")
-                    .fontWeight(.light)
-                    .padding([.top, .bottom], 6)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.top, 8)
                 
-                Spacer()
-            }
-            .padding([.horizontal], 18)
-                
-            ScrollView {
-                VStack(spacing: 0) {
-                    ForEach(self.possibleConnections) { connection in
-                        ZStack(alignment: .trailing) {
-                            ConnectionRow(connection: connection)
+                VStack(alignment: .leading, spacing: 16) {
+                    // Search field
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Search Connections")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.secondary)
+                            
+                            TextField("Search by name", text: self.$searchText)
+                                .textFieldStyle(.plain)
+                                .font(.body)
+                                .textInputAutocapitalization(.never)
+                                .disableAutocorrection(true)
+                                .disabled(self.savingUsers)
+                                .submitLabel(.search)
+                                .onSubmit {
+                                    // Trigger search when user hits return
+                                    if !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                        self.connectionsStore.load(nameFilter: searchText, permissionGroup: nil)
+                                    }
+                                }
+                            
+                            if !searchText.isEmpty {
+                                Button(action: {
+                                    searchText = ""
+                                    // Reload all connections when clearing search
+                                    self.connectionsStore.load(nameFilter: nil, permissionGroup: nil)
+                                }) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundColor(.secondary)
+                                }
+                                .padding(.trailing, 12)
+                            }
+                        }
+                        .opacity(self.savingUsers ? 0.6 : 1.0)
+                    }
+                    
+                    Divider()
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text("Available Connections")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.primary)
                             
                             Spacer()
                             
-                            if self.isConnectionSelected(connection: connection) {
-                                Image(systemName: "checkmark")
-                                    .toolbarButtonStyle(bgColor: ColorConstants.primary)
-                                    .foregroundColor(.white)
-                                    .opacity(self.savingUsers ? 0.5 : 1.0)
-                                    .padding(.trailing)
-                                    .onTapGesture {
+                            if !self.newGroupConnections.isEmpty {
+                                Text("\(self.newGroupConnections.count) selected")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, 20)
+            
+            // Content area
+            if self.connectionsStore.loading {
+                // Loading state
+                VStack {
+                    Spacer()
+                    LoadingView(loadingText: "Searching connections...")
+                    Spacer()
+                }
+                .frame(minHeight: 200)
+            } else if self.possibleConnections.isEmpty && !searchText.isEmpty {
+                // No search results
+                VStack(spacing: 20) {
+                    Spacer()
+                    
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 60))
+                        .foregroundColor(.secondary.opacity(0.6))
+                    
+                    VStack(spacing: 8) {
+                        Text("No Results Found")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        
+                        Text("No connections found for '\(searchText)'. Try a different search term or check spelling.")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                    }
+                    
+                    Spacer()
+                    Spacer()
+                }
+            } else if self.possibleConnections.isEmpty && searchText.isEmpty {
+                // Empty state - all connections added
+                VStack(spacing: 20) {
+                    Spacer()
+                    
+                    Image(systemName: "person.3.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.secondary.opacity(0.6))
+                    
+                    VStack(spacing: 8) {
+                        Text("All Connections Added")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        
+                        Text("All your connections are already members of this group")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                    }
+                    
+                    Spacer()
+                    Spacer()
+                }
+            } else {
+                // Connections list
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        ForEach(self.possibleConnections) { connection in
+                            ZStack(alignment: .trailing) {
+                                ConnectionRow(connection: connection)
+                                
+                                Spacer()
+                                
+                                if self.isConnectionSelected(connection: connection) {
+                                    Button(action: {
                                         if !savingUsers {
                                             self.newGroupConnections.removeAll(where: { newConnection in newConnection == connection
                                             })
                                         }
+                                    }) {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .font(.title2)
+                                            .foregroundColor(ColorConstants.primary)
+                                            .background(
+                                                Circle()
+                                                    .fill(Color.white)
+                                                    .frame(width: 22, height: 22)
+                                            )
                                     }
-                            } else {
-                                Image(systemName: "plus")
-                                    .toolbarButtonStyle()
+                                    .disabled(self.savingUsers)
                                     .opacity(self.savingUsers ? 0.5 : 1.0)
-                                    .padding(.trailing)
-                                    .onTapGesture {
+                                    .padding(.trailing, 16)
+                                } else {
+                                    Button(action: {
                                         if !savingUsers {
                                             self.newGroupConnections.append(connection)
                                         }
+                                    }) {
+                                        Image(systemName: "plus.circle")
+                                            .font(.title2)
+                                            .foregroundColor(.secondary)
                                     }
+                                    .disabled(self.savingUsers)
+                                    .opacity(self.savingUsers ? 0.5 : 1.0)
+                                    .padding(.trailing, 16)
+                                }
                             }
+                            .background(
+                                RoundedRectangle(cornerRadius: 0)
+                                    .fill(self.isConnectionSelected(connection: connection) ? ColorConstants.primary.opacity(0.1) : Color.clear)
+                            )
                         }
                     }
+                    .padding(.vertical, 8)
                 }
+                .background(Color(.systemGroupedBackground))
             }
             
-            HStack {
-                Button {
-                    if self.newGroupConnections.isEmpty {
-                        self.newGroupConnections = []
-                        self.connectionGroupsStore.load()
-                        self.showAddUsers = false
-                        return
+            Spacer()
+            
+            // Bottom action area
+            VStack(spacing: 16) {
+                Divider()
+                
+                VStack(spacing: 12) {
+                    // Summary text
+                    if !self.newGroupConnections.isEmpty {
+                        Text("Adding \(self.newGroupConnections.count) member\(self.newGroupConnections.count == 1 ? "" : "s") to group")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                     }
                     
-                    // TODO - bulk add members to group
-                    self.savingUsers = true
-                    self.newGroupConnections.forEach { connection in
-                        self.connectionGroupStore.addToGroup(userId: connection.id) { _ in
-                            if connection == self.newGroupConnections.last {
+                    HStack(spacing: 12) {
+                        // Cancel button
+                        Button {
+                            self.showAddUsers = false
+                            self.newGroupConnections = []
+                        } label: {
+                            Text("Cancel")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .font(.body)
+                                .foregroundColor(ColorConstants.primary)
+                                .padding(.vertical, 16)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .strokeBorder(ColorConstants.primary, lineWidth: 1.5)
+                                        .background(Color.clear)
+                                )
+                        }
+                        .disabled(self.savingUsers)
+                        
+                        // Add/Done button
+                        Button {
+                            if self.newGroupConnections.isEmpty {
                                 self.newGroupConnections = []
                                 self.connectionGroupsStore.load()
-                                self.connectionGroupStore.loadConnections()
                                 self.showAddUsers = false
-                                self.savingUsers = false
+                                return
                             }
+                            
+                            // TODO - bulk add members to group
+                            self.savingUsers = true
+                            self.newGroupConnections.forEach { connection in
+                                self.connectionGroupStore.addToGroup(userId: connection.id) { _ in
+                                    if connection == self.newGroupConnections.last {
+                                        self.newGroupConnections = []
+                                        self.connectionGroupsStore.load()
+                                        self.connectionGroupStore.loadConnections()
+                                        self.showAddUsers = false
+                                        self.savingUsers = false
+                                    }
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                if self.savingUsers {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                        .scaleEffect(0.8)
+                                }
+                                
+                                Text(self.savingUsers ? "Adding..." : self.possibleConnections.isEmpty ? "Done" : "Add Members")
+                                    .fontWeight(.semibold)
+                                    .font(.body)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(ColorConstants.primary)
+                                    .shadow(color: ColorConstants.primary.opacity(0.3), radius: 4, x: 0, y: 2)
+                            )
+                            .opacity(self.savingUsers ? 0.6 : 1.0)
                         }
+                        .disabled(self.savingUsers)
                     }
-                } label: {
-                    Text("Update".uppercased())
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 24)
-                                .foregroundColor(ColorConstants.primary)
-                        )
-                        .opacity(self.savingUsers ? 0.5 : 1.0)
                 }
-                .disabled(self.savingUsers)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 8)
             }
-            .padding([.horizontal], 18)
         }
-        .padding([.vertical], 12)
+        .background(Color(.systemGroupedBackground))
     }
     
     func isConnectionSelected(connection: Connection) -> Bool {
         return self.newGroupConnections.contains(connection)
     }
+    
+    func loadConnection(connectionId: String) {
+        self.connectionStore.load(connectionId: connectionId) { (result: Result<Connection, Error>) in
+            switch result {
+            case .success(_):
+                print("Got connection \(connectionId)")
+            case .failure(let error):
+                print("Something bad happened", error)
+            }
+        }
+    }
 }
 
 struct ConnectionGroupDetail_Previews: PreviewProvider {
     static let modelData = ModelData()
+    static let connectionStore = ConnectionStore()
     static let accountStore = AccountStore(user: modelData.user)
     static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: [])
     static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
@@ -253,6 +464,7 @@ struct ConnectionGroupDetail_Previews: PreviewProvider {
     static var previews: some View {
         ConnectionGroupDetail()
             .environmentObject(accountStore)
+            .environmentObject(connectionStore)
             .environmentObject(connectionsStore)
             .environmentObject(connectionGroupStore)
             .environmentObject(connectionGroupsStore)

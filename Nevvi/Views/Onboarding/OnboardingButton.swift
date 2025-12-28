@@ -50,6 +50,12 @@ struct OnboardingButton: View {
                     .foregroundColor(ColorConstants.primary)
             )
         })
+        .background(
+            RoundedRectangle(cornerRadius: 30)
+                .fill(.ultraThinMaterial)
+                .shadow(radius: 10)
+        )
+        .padding()
     }
     
     var secondaryButton: some View {
@@ -69,6 +75,12 @@ struct OnboardingButton: View {
                     .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
             )
         })
+        .background(
+            RoundedRectangle(cornerRadius: 30)
+                .fill(.ultraThinMaterial)
+                .shadow(radius: 10)
+        )
+        .padding()
     }
 }
 

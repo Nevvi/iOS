@@ -21,6 +21,8 @@ struct ConnectionList: View {
     @EnvironmentObject var connectionStore: ConnectionStore
     @EnvironmentObject var suggestionsStore: ConnectionSuggestionStore
     
+    @StateObject private var recentSearchesManager = RecentSearchesManager()
+    
     @State private var syncing: Bool = false
     @State private var showSyncConfirmation: Bool = false
     
@@ -29,11 +31,14 @@ struct ConnectionList: View {
     @State private var showContactUpdates: Bool = false
     
     @State private var showToast: Bool = false
+    @State private var toastText: String = ""
     
-    @StateObject var nameFilter = DebouncedText()
+    @State private var searchText: String = ""
+    @State private var searchedText: String = ""
     @State var selectedGroup: String? = nil
     
-    @FocusState private var isSearchActive: Bool
+    @FocusState private var isTextFieldFocused: Bool
+    @State private var isSearchActive: Bool = false
     
     private var noConnectionsExist: Bool {
         return self.selectedGroup == nil && self.connectionsStore.connectionCount == 0 && !self.connectionsStore.loading && !isSearchActive
@@ -74,12 +79,12 @@ struct ConnectionList: View {
             }
             .onChange(of: self.selectedGroup) { group in
                 if !isSearchActive {
-                    self.connectionsStore.load(nameFilter: "", permissionGroup: group)
+                    self.connectionsStore.load(nameFilter: nil, permissionGroup: group)
                 }
             }
             .refreshable {
                 if !isSearchActive {
-                    self.connectionsStore.load(nameFilter: "", permissionGroup: self.selectedGroup)
+                    self.connectionsStore.load(nameFilter: nil, permissionGroup: self.selectedGroup)
                     self.connectionsStore.loadOutOfSync { _ in }
                 }
             }
@@ -90,11 +95,8 @@ struct ConnectionList: View {
                             .toolbarButtonStyle()
                             .onTapGesture {
                                 isSearchActive = false
-                                nameFilter.text = ""
-                                // Clear search results
-                                connectionsStore.connections = []
-                                usersStore.users = []
-                                // Reload normal connections
+                                isTextFieldFocused = false
+                                self.resetSearch()
                                 self.connectionsStore.load()
                             }
                     } else if self.syncAvailable {
@@ -136,7 +138,7 @@ struct ConnectionList: View {
             syncHelperSheet
         })
         .toast(isPresenting: $showToast){
-            AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Contacts synced!")
+            AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: self.toastText)
         }
         .onAppear {
             if self.notificationStore.hasAccess {
@@ -273,6 +275,7 @@ struct ConnectionList: View {
                     
                     Button(action: {
                         isSearchActive = true
+                        isTextFieldFocused = true
                     }) {
                         Text("Find Connections".uppercased())
                             .asPrimaryButton()
@@ -411,25 +414,30 @@ struct ConnectionList: View {
                     .foregroundColor(.gray)
                     .font(.system(size: 16))
                 
-                TextField("Search connections or find new people", text: $nameFilter.text)
-                    .focused($isSearchActive)
+                TextField("Search connections or find new people", text: $searchText)
+                    .focused($isTextFieldFocused)
                     .textFieldStyle(PlainTextFieldStyle())
                     .font(.system(size: 16))
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
+                    .onChange(of: isTextFieldFocused) { focused in
+                        if focused {
+                            isSearchActive = true
+                        }
+                    }
+                    .submitLabel(.search)
+                    .onSubmit {
+                        self.performSearch()
+                    }
                 
-                if !nameFilter.text.isEmpty {
+                if !searchText.isEmpty {
                     Button(action: {
-                        nameFilter.text = ""
+                        self.resetSearch()
                     }) {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(.gray)
                             .font(.system(size: 16))
                     }
-                } else if isSearchActive && (connectionsStore.loading || usersStore.loading) {
-                    ProgressView()
-                        .scaleEffect(0.7)
-                        .tint(.gray)
                 }
             }
             .padding(.horizontal, 16)
@@ -448,15 +456,15 @@ struct ConnectionList: View {
     // MARK: - Browse Content (Default State)
     var browseContent: some View {
         VStack {
-//            if self.notificationStore.canRequestAccess {
-//                requestNotificationsView
-//            } else if self.contactStore.canRequestAccess() {
-//                requestContactsView
-//            } else if noConnectionsExist {
-//                noConnectionsView
-//            } else {
+            if self.notificationStore.canRequestAccess {
+                requestNotificationsView
+            } else if self.contactStore.canRequestAccess() {
+                requestContactsView
+            } else if noConnectionsExist {
+                noConnectionsView
+            } else {
                 connectionsListView
-//            }
+            }
         }
     }
     
@@ -575,6 +583,7 @@ struct ConnectionList: View {
                             UIApplication.shared.applicationIconBadgeNumber = 0
                             self.contactsToSyncCount = 0
                             self.connectionsStore.loadOutOfSync { _ in }
+                            self.toastText = "Contacts synced!"
                             self.showToast = true
                         } else if self.contactUpdates.count > 0 {
                             self.contactsToSyncCount = self.contactUpdates.count
@@ -600,17 +609,21 @@ struct ConnectionList: View {
     
     var searchView: some View {
         VStack(spacing: 0) {
-            if nameFilter.text.count < 3 && !self.usersStore.loading {
+            if self.usersStore.loading || self.connectionsStore.loading {
+                VStack(alignment: .center) {
+                    Spacer()
+                    LoadingView(loadingText: "Searching...")
+                        .padding(.bottom, 48)
+                    Spacer()
+                }
+            } else if self.searchedText.isEmpty {
                 searchEmptyState
             } else {
                 searchResults
             }
         }
-        .onChange(of: nameFilter.debouncedText) { newValue in
-            performSearch()
-        }
         .refreshable {
-            if !self.nameFilter.debouncedText.isEmpty {
+            if !self.searchedText.isEmpty {
                 self.suggestionsStore.loadSuggestions()
             } else {
                 self.performSearch()
@@ -619,36 +632,49 @@ struct ConnectionList: View {
     }
     
     private func performSearch() {
-        connectionsStore.load(nameFilter: nameFilter.debouncedText, permissionGroup: nil)
-        usersStore.searchByName(nameFilter: nameFilter.debouncedText)
+        connectionsStore.load(nameFilter: searchText, permissionGroup: nil)
+        usersStore.searchByName(nameFilter: searchText)
+        self.searchedText = self.searchText
+        recentSearchesManager.addRecentSearch(searchText)
+    }
+    
+    private func resetSearch() {
+        self.searchText = ""
+        self.searchedText = ""
+        self.usersStore.users = []
+        self.usersStore.userCount = 0
+        self.connectionsStore.connections = []
+        self.connectionsStore.connectionCount = 0
     }
     
     var searchEmptyState: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                // Recent Searches Section (stubbed for now)
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        Text("Recent Searches")
-                            .font(.headline)
-                            .fontWeight(.semibold)
-                        Spacer()
-                    }
-                    .padding(.horizontal, 16)
-                    
-                    VStack(spacing: 8) {
-                        RecentSearchRow(searchTerm: "John Smith", subtitle: "2 results")
-                            .onTapGesture {
-                                self.nameFilter.text = "John Smith"
+                // Recent Searches Section
+                if !recentSearchesManager.recentSearches.isEmpty {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Text("Recent Searches")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                            Spacer()
+                            Button("Clear") {
+                                recentSearchesManager.clearRecentSearches()
                             }
-                        RecentSearchRow(searchTerm: "Alex", subtitle: "8 results")
-                            .onTapGesture {
-                                self.nameFilter.text = "Alex"
+                            .font(.caption)
+                            .foregroundColor(.blue)
+                        }
+                        .padding(.horizontal, 16)
+                        
+                        VStack(spacing: 8) {
+                            ForEach(recentSearchesManager.recentSearches) { search in
+                                RecentSearchRow(searchTerm: search.searchTerm, subtitle: "Recent search")
+                                    .onTapGesture {
+                                        self.searchText = search.searchTerm
+                                        self.performSearch()
+                                    }
                             }
-                        RecentSearchRow(searchTerm: "Joh", subtitle: "12 results")
-                            .onTapGesture {
-                                self.nameFilter.text = "Joh"
-                            }
+                        }
                     }
                 }
                 
@@ -676,6 +702,7 @@ struct ConnectionList: View {
                             HStack(spacing: 12) {
                                 ForEach(notConnectedSuggestions.prefix(5)) { user in
                                     SuggestedConnectionCard(user: user) {
+                                        self.toastText = "Request sent!"
                                         showToast = true
                                         suggestionsStore.loadSuggestions()
                                     }
@@ -696,7 +723,7 @@ struct ConnectionList: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 // No Results State
-                if connectionsStore.connections.isEmpty && usersStore.users.isEmpty && !connectionsStore.loading && !usersStore.loading {
+                if connectionsStore.connections.isEmpty && usersStore.users.isEmpty {
                     VStack(spacing: 16) {
                         Image(systemName: "person.2.slash")
                             .font(.system(size: 50))
@@ -717,7 +744,7 @@ struct ConnectionList: View {
                 } else {
                     VStack(alignment: .leading, spacing: 12) {
                         // Connections section
-                        if self.connectionsStore.loading || !self.connectionsStore.connections.isEmpty {
+                        if !self.connectionsStore.connections.isEmpty {
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text("Your Connections")
@@ -750,7 +777,6 @@ struct ConnectionList: View {
                                         ConnectionRow(connection: connection)
                                     }
                                 }
-                                .redacted(when: self.connectionsStore.loading, redactionType: .customPlaceholder)
                             }
                         }
                         
@@ -775,7 +801,7 @@ struct ConnectionList: View {
                         }
                         
                         // New People Section
-                        if self.usersStore.loading || !notConnectedUsers.isEmpty {
+                        if !notConnectedUsers.isEmpty {
                             HStack {
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text("New People")
@@ -798,11 +824,11 @@ struct ConnectionList: View {
                             VStack(spacing: 0) {
                                 ForEach(notConnectedUsers.prefix(10)) { user in
                                     NewConnectionRequestRow(requestCallback: {
+                                        self.toastText = "Request sent!"
                                         showToast = true
                                         usersStore.removeUser(user: user)
                                     }, user: user)
                                 }
-                                .redacted(when: self.usersStore.loading, redactionType: .customPlaceholder)
                             }
                         }
                                 

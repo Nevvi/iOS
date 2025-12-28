@@ -115,12 +115,6 @@ class ConnectionsStore : ObservableObject {
     
     func load(nameFilter: String?, permissionGroup: String?) {
         do {
-            if (nameFilter != nil && nameFilter!.count < 3) {
-                self.connections = []
-                self.connectionCount = 0
-                return
-            }
-            
             self.loading = true
             let idToken: String? = self.authorization?.idToken
             

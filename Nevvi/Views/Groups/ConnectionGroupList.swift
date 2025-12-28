@@ -16,9 +16,14 @@ struct ConnectionGroupList: View {
     @State private var newGroupConnections: [Connection] = []
     @State private var showGroupForm: Bool = false
     @State private var creatingGroup: Bool = false
+    @State private var searchText: String = ""
     
     @State private var groupToDelete: String = ""
     @State private var showDeleteAlert: Bool = false
+    
+    private var filteredConnections: [Connection] {
+        return self.connectionsStore.connections
+    }
             
     var body: some View {
         NavigationView {
@@ -159,114 +164,317 @@ struct ConnectionGroupList: View {
     }
     
     var newGroupSheet: some View {
-        VStack {
-            TextField("Group Name", text: self.$newGroupName)
-                .padding()
-                .overlay(RoundedRectangle(cornerRadius: 16.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                .textInputAutocapitalization(.never)
-                .disableAutocorrection(true)
-                .padding([.top, .horizontal])
-                .disabled(self.creatingGroup)
-            
-            Divider().padding(.vertical)
-            
-            Spacer()
-            
-            HStack {
-                Text("Add Members")
-                    .fontWeight(.light)
-                    .padding([.top, .bottom], 6)
+        VStack(spacing: 0) {
+            // Header
+            VStack(alignment: .leading, spacing: 24) {
+                Text("Create New Group")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.top, 8)
                 
-                Spacer()
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Group Name")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    
+                    TextField("Enter group name", text: self.$newGroupName)
+                        .textFieldStyle(.plain)
+                        .font(.body)
+                        .textInputAutocapitalization(.words)
+                        .disableAutocorrection(false)
+                        .disabled(self.creatingGroup)
+                        .opacity(self.creatingGroup ? 0.6 : 1.0)
+                }
             }
-            .padding([.horizontal], 18)
+            .padding(.horizontal, 20)
+            
+            Divider()
+                .padding(.vertical, 16)
+            
+            // Members Section
+            VStack(alignment: .leading, spacing: 16) {
+                // Search field
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Search Connections")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                        .padding(.horizontal, 20)
+                    
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                            .foregroundColor(.secondary)
+                        
+                        TextField("Search by name", text: self.$searchText)
+                            .textFieldStyle(.plain)
+                            .font(.body)
+                            .textInputAutocapitalization(.never)
+                            .disableAutocorrection(true)
+                            .disabled(self.creatingGroup)
+                            .submitLabel(.search)
+                            .onSubmit {
+                                // Trigger search when user hits return
+                                if !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                    self.connectionsStore.load(nameFilter: searchText, permissionGroup: nil)
+                                }
+                            }
+                        
+                        if !searchText.isEmpty {
+                            Button(action: {
+                                searchText = ""
+                                // Reload all connections when clearing search
+                                self.connectionsStore.load(nameFilter: nil, permissionGroup: nil)
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.trailing, 12)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .opacity(self.creatingGroup ? 0.6 : 1.0)
+                }
                 
-            ScrollView {
-                VStack(spacing: 0) {
-                    ForEach(self.connectionsStore.connections) { connection in
-                        ZStack(alignment: .trailing) {
-                            ConnectionRow(connection: connection)
-                            
-                            Spacer()
-                            
-                            if self.isConnectionSelected(connection: connection) {
-                                Image(systemName: "checkmark")
-                                    .toolbarButtonStyle(bgColor: ColorConstants.primary)
-                                    .foregroundColor(.white)
-                                    .opacity(self.creatingGroup ? 0.5 : 1.0)
-                                    .padding(.trailing)
-                                    .onTapGesture {
+                Divider()
+                
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Text("Add Members")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        
+                        Spacer()
+                        
+                        if !self.newGroupConnections.isEmpty {
+                            Text("\(self.newGroupConnections.count) selected")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                }
+            }
+            
+            if self.connectionsStore.loading {
+                VStack {
+                    Spacer()
+                    LoadingView(loadingText: "Searching connections...")
+                    Spacer()
+                }
+                .frame(minHeight: 200)
+            } else if self.filteredConnections.isEmpty && !searchText.isEmpty {
+                // No search results
+                VStack(spacing: 20) {
+                    Spacer()
+                    
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 60))
+                        .foregroundColor(.secondary.opacity(0.6))
+                    
+                    VStack(spacing: 8) {
+                        Text("No Results Found")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        
+                        Text("No connections found for '\(searchText)'. Try a different search term or check spelling.")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                    }
+                    
+                    Spacer()
+                    Spacer()
+                }
+            } else if self.filteredConnections.isEmpty && searchText.isEmpty {
+                // Empty state - no connections
+                VStack(spacing: 20) {
+                    Spacer()
+                    
+                    Image(systemName: "person.3.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.secondary.opacity(0.6))
+                    
+                    VStack(spacing: 8) {
+                        Text("No Connections")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        
+                        Text("Add some connections to include them in groups")
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 40)
+                    }
+                    
+                    Spacer()
+                    Spacer()
+                }
+            } else {
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        ForEach(self.filteredConnections) { connection in
+                            ZStack(alignment: .trailing) {
+                                ConnectionRow(connection: connection)
+                                
+                                Spacer()
+                                
+                                if self.isConnectionSelected(connection: connection) {
+                                    Button(action: {
                                         if !creatingGroup {
                                             self.newGroupConnections.removeAll(where: { newConnection in newConnection == connection
                                             })
                                         }
+                                    }) {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .font(.title2)
+                                            .foregroundColor(ColorConstants.primary)
+                                            .background(
+                                                Circle()
+                                                    .fill(Color.white)
+                                                    .frame(width: 22, height: 22)
+                                            )
                                     }
-                            } else {
-                                Image(systemName: "plus")
-                                    .toolbarButtonStyle()
+                                    .disabled(self.creatingGroup)
                                     .opacity(self.creatingGroup ? 0.5 : 1.0)
-                                    .padding(.trailing)
-                                    .onTapGesture {
+                                    .padding(.trailing, 16)
+                                } else {
+                                    Button(action: {
                                         if !creatingGroup {
                                             self.newGroupConnections.append(connection)
                                         }
+                                    }) {
+                                        Image(systemName: "plus.circle")
+                                            .font(.title2)
+                                            .foregroundColor(.secondary)
                                     }
-                            }
-                        }
-                    }
-                }
-            }
-            
-            HStack {
-                Button {
-                    self.creatingGroup = true
-                    self.showGroupForm = false
-                    self.connectionGroupsStore.create(name: self.newGroupName) { (result: Result<ConnectionGroup, Error>) in
-                        switch result {
-                        case .success(let newGroup):
-                            if self.newGroupConnections.isEmpty {
-                                self.connectionGroupsStore.load()
-                                self.creatingGroup = false
-                                self.newGroupName = ""
-                                self.newGroupConnections = []
-                            } else {
-                                // TODO - bulk add members to group
-                                self.newGroupConnections.forEach { connection in
-                                    self.connectionGroupsStore.addToGroup(groupId: newGroup.id, userId: connection.id) { _ in
-                                        if connection == self.newGroupConnections.last {
-                                            self.connectionGroupsStore.load()
-                                            self.creatingGroup = false
-                                            self.newGroupName = ""
-                                            self.newGroupConnections = []
-                                        }
-                                    }
+                                    .disabled(self.creatingGroup)
+                                    .opacity(self.creatingGroup ? 0.5 : 1.0)
+                                    .padding(.trailing, 16)
                                 }
                             }
-                        case .failure(let error):
-                            print("Something bad happened", error)
-                            self.creatingGroup = false
-                            self.newGroupName = ""
-                            self.newGroupConnections = []
+                            .background(
+                                RoundedRectangle(cornerRadius: 0)
+                                    .fill(self.isConnectionSelected(connection: connection) ? ColorConstants.primary.opacity(0.1) : Color.clear)
+                            )
                         }
                     }
-                } label: {
-                    Text("Save".uppercased())
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 24)
-                                .foregroundColor(ColorConstants.primary)
-                        )
-                        .opacity(self.newGroupName.isEmpty || self.creatingGroup ? 0.5 : 1.0)
+                    .padding(.vertical, 8)
                 }
-                .disabled(self.newGroupName.isEmpty || self.creatingGroup)
+                .background(Color(.systemGroupedBackground))
             }
-            .padding([.horizontal], 18)
+            
+            Spacer()
+            
+            // Bottom action area
+            VStack(spacing: 16) {
+                Divider()
+                
+                VStack(spacing: 12) {
+                    // Summary text
+                    if !self.newGroupConnections.isEmpty {
+                        Text("Creating group with \(self.newGroupConnections.count) member\(self.newGroupConnections.count == 1 ? "" : "s")")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    HStack(spacing: 12) {
+                        // Cancel button
+                        Button {
+                            self.showGroupForm = false
+                            self.newGroupName = ""
+                            self.newGroupConnections = []
+                            self.searchText = ""
+                        } label: {
+                            Text("Cancel")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .font(.body)
+                                .foregroundColor(ColorConstants.primary)
+                                .padding(.vertical, 16)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .strokeBorder(ColorConstants.primary, lineWidth: 1.5)
+                                        .background(Color.clear)
+                                )
+                        }
+                        .disabled(self.creatingGroup)
+                        
+                        // Create button
+                        Button {
+                            self.creatingGroup = true
+                            self.showGroupForm = false
+                            self.connectionGroupsStore.create(name: self.newGroupName) { (result: Result<ConnectionGroup, Error>) in
+                                switch result {
+                                case .success(let newGroup):
+                                    if self.newGroupConnections.isEmpty {
+                                        self.connectionGroupsStore.load()
+                                        self.creatingGroup = false
+                                        self.newGroupName = ""
+                                        self.newGroupConnections = []
+                                        self.searchText = ""
+                                    } else {
+                                        // TODO - bulk add members to group
+                                        self.newGroupConnections.forEach { connection in
+                                            self.connectionGroupsStore.addToGroup(groupId: newGroup.id, userId: connection.id) { _ in
+                                                if connection == self.newGroupConnections.last {
+                                                    self.connectionGroupsStore.load()
+                                                    self.creatingGroup = false
+                                                    self.newGroupName = ""
+                                                    self.newGroupConnections = []
+                                                    self.searchText = ""
+                                                }
+                                            }
+                                        }
+                                    }
+                                case .failure(let error):
+                                    print("Something bad happened", error)
+                                    self.creatingGroup = false
+                                    self.newGroupName = ""
+                                    self.newGroupConnections = []
+                                    self.searchText = ""
+                                }
+                            }
+                        } label: {
+                            HStack {
+                                if self.creatingGroup {
+                                    ProgressView()
+                                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                        .scaleEffect(0.8)
+                                }
+                                
+                                Text(self.creatingGroup ? "Creating..." : "Create Group")
+                                    .fontWeight(.semibold)
+                                    .font(.body)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(ColorConstants.primary)
+                                    .shadow(color: ColorConstants.primary.opacity(0.3), radius: 4, x: 0, y: 2)
+                            )
+                            .opacity(self.newGroupName.isEmpty || self.creatingGroup ? 0.6 : 1.0)
+                        }
+                        .disabled(self.newGroupName.isEmpty || self.creatingGroup)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 8)
+            }
         }
-        .padding([.vertical], 12)
+        .background(Color(.systemGroupedBackground))
+        .onAppear {
+            self.connectionsStore.load(nameFilter: nil, permissionGroup: nil)
+            self.searchText = ""
+            self.newGroupConnections = []
+        }
     }
     
     func isConnectionSelected(connection: Connection) -> Bool {

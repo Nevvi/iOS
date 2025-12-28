@@ -36,114 +36,118 @@ struct OnboardingProfile: View {
                     .frame(width: geometry.size.width, height: geometry.size.height)
                     .clipped()
                     .ignoresSafeArea(.all, edges: .horizontal)
-                
-                VStack(alignment: .center, spacing: 12) {
-                    Image("AppLogo")
-                        .frame(width: 68, height: 68)
-                        .padding([.top], 80)
-                    
-                    Text("Let's create your profile!")
-                        .defaultStyle(size: 30)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                    
-                    Text("How do you want to appear to others on Nevvi?")
-                        .defaultStyle(size: 16)
-                        .multilineTextAlignment(.center)
-                        .padding([.bottom, .leading, .trailing])
-                    
-                    HStack(spacing: 16) {
-                        Spacer()
-                        ProfileImageSelector(height: 73, width: 73)
-                        VStack(alignment: .leading) {
-                            Text("Upload your profile picture").defaultStyle(size: 16, opacity: 0.7)
-                                .fontWeight(.regular)
-                            Text("(Optional)").defaultStyle(size: 16, opacity: 0.7)
-                                .fontWeight(.regular)
-                        }
-                        Spacer()
-                    }
-                    .padding(.bottom)
-                    
-                    VStack {
-                        HStack {
-                            Text("Name").defaultStyle(size: 16, opacity: 0.7)
-                                .fontWeight(.regular)
-                            Spacer()
-                            Text("Required").defaultStyle(size: 16, opacity: 0.7)
-                                .fontWeight(.light)
-                        }
+            }
+            
+            VStack {
+                ScrollView {
+                    VStack(alignment: .center, spacing: 12) {
+                        Image("AppLogo")
+                            .frame(width: 68, height: 68)
+                            .padding([.top], geometry.size.height * 0.08)
+                            .padding(.bottom)
                         
-                        HStack {
-                            TextField("First", text: self.$accountStore.firstName)
-                                .onboardingStyle()
-                            
-                            TextField("Last", text: self.$accountStore.lastName)
-                                .onboardingStyle()
-                        }
-                    }
-                    
-                    VStack {
-                        HStack {
-                            Text("Address").defaultStyle(size: 16, opacity: 0.7)
-                                .fontWeight(.regular)
-                            Spacer()
-                            Text("Optional").defaultStyle(size: 16, opacity: 0.7)
-                                .fontWeight(.light)
-                        }
+                        Text("Let's create your profile!")
+                            .defaultStyle(size: 30)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
                         
-                        Text(self.accountStore.address.isEmpty ? "Enter your address" : self.accountStore.address.toString())
-                            .font(.system(size: 16, weight: self.accountStore.address.isEmpty ? .ultraLight : .regular))
-                            .padding(16)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.white)
-                            .cornerRadius(12)
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.3), lineWidth: 1))
-                            .onTapGesture {
-                                self.showAddressSearch = true
+                        Text("How do you want to appear to others?")
+                            .defaultStyle(size: 14)
+                            .multilineTextAlignment(.center)
+                            .padding([.bottom, .leading, .trailing])
+                        
+                        HStack(spacing: 16) {
+                            Spacer()
+                            ProfileImageSelector(height: 73, width: 73)
+                            VStack(alignment: .leading) {
+                                Text("Upload your profile picture").defaultStyle(size: 16, opacity: 0.7)
+                                    .fontWeight(.regular)
+                                Text("(Optional)").defaultStyle(size: 16, opacity: 0.7)
+                                    .fontWeight(.regular)
                             }
-                    }
-                    
-                    VStack {
-                        HStack {
-                            Text("Birthday").defaultStyle(size: 16, opacity: 0.7)
-                                .fontWeight(.regular)
                             Spacer()
-                            Text("Optional").defaultStyle(size: 16, opacity: 0.7)
-                                .fontWeight(.light)
+                        }
+                        .padding(.bottom)
+                        
+                        VStack {
+                            HStack {
+                                Text("Name").defaultStyle(size: 16, opacity: 0.7)
+                                    .fontWeight(.regular)
+                                Spacer()
+                                Text("Required").defaultStyle(size: 16, opacity: 0.7)
+                                    .fontWeight(.light)
+                            }
+                            
+                            HStack {
+                                TextField("First", text: self.$accountStore.firstName)
+                                    .onboardingStyle()
+                                
+                                TextField("Last", text: self.$accountStore.lastName)
+                                    .onboardingStyle()
+                            }
                         }
                         
-                        ZStack {
-                            Text(self.isBirthdayEmpty ? "MM / DD / YYYY" : self.accountStore.birthday.toString())
-                                .font(.system(size: 16, weight: self.isBirthdayEmpty ? .ultraLight : .regular))
+                        VStack {
+                            HStack {
+                                Text("Address").defaultStyle(size: 16, opacity: 0.7)
+                                    .fontWeight(.regular)
+                                Spacer()
+                                Text("Optional").defaultStyle(size: 16, opacity: 0.7)
+                                    .fontWeight(.light)
+                            }
+                            
+                            Text(self.accountStore.address.isEmpty ? "Enter your address" : self.accountStore.address.toString())
+                                .font(.system(size: 16, weight: self.accountStore.address.isEmpty ? .ultraLight : .regular))
                                 .padding(16)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .background(Color.white)
                                 .cornerRadius(12)
                                 .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.3), lineWidth: 1))
                                 .onTapGesture {
-                                    self.showBirthdayPicker = true
+                                    self.showAddressSearch = true
                                 }
-                            
+                        }
+                        
+                        VStack {
                             HStack {
+                                Text("Birthday").defaultStyle(size: 16, opacity: 0.7)
+                                    .fontWeight(.regular)
                                 Spacer()
-                                Image(systemName: "calendar")
-                                    .foregroundColor(Color.gray.opacity(0.7))
-                                    .padding(.trailing, 16)
+                                Text("Optional").defaultStyle(size: 16, opacity: 0.7)
+                                    .fontWeight(.light)
                             }
+                            
+                            ZStack {
+                                Text(self.isBirthdayEmpty ? "MM / DD / YYYY" : self.accountStore.birthday.toString())
+                                    .font(.system(size: 16, weight: self.isBirthdayEmpty ? .ultraLight : .regular))
+                                    .padding(16)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .background(Color.white)
+                                    .cornerRadius(12)
+                                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.3), lineWidth: 1))
+                                    .onTapGesture {
+                                        self.showBirthdayPicker = true
+                                    }
+                                
+                                HStack {
+                                    Spacer()
+                                    Image(systemName: "calendar")
+                                        .foregroundColor(Color.gray.opacity(0.7))
+                                        .padding(.trailing, 16)
+                                }
+                            }.padding(.top, 1)
                         }
                     }
-                    
-                    Spacer()
-                    
-                    OnboardingButton(text: "Continue", action: self.primaryAction)
-                        .disabled(self.isButtonDisabled)
-                        .opacity(self.isButtonDisabled ? 0.5 : 1.0)
+                    .padding([.leading, .trailing])
                 }
-                .padding([.top, .leading, .trailing])
+             
+                Spacer()
+                
+                OnboardingButton(text: "Continue", action: self.primaryAction)
+                    .disabled(self.isButtonDisabled)
+                    .opacity(self.isButtonDisabled ? 0.5 : 1.0)
             }
         }
-        .edgesIgnoringSafeArea([.top])
         .sheet(isPresented: self.$showBirthdayPicker) {
             datePickerSheet
         }
@@ -153,6 +157,7 @@ struct OnboardingProfile: View {
                 self.showAddressSearch = false
             }).presentationDetents([.large])
         }
+        .edgesIgnoringSafeArea([.top])
     }
     
     var datePickerSheet: some View {

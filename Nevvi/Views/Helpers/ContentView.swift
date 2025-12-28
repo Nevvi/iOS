@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     
+    @EnvironmentObject var authorizationStore: AuthorizationStore
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var connectionStore: ConnectionStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
@@ -76,6 +77,10 @@ struct ContentView: View {
     }
     
     func reload() {
+        if (self.authorizationStore.authorization == nil) {
+            return
+        }
+        
         self.accountStore.load()
         self.connectionsStore.load()
         self.connectionsStore.loadRequests()

@@ -60,13 +60,7 @@ class UsersStore : ObservableObject {
     }
     
     func searchByName(nameFilter: String) {
-        do {
-            if (nameFilter.count < 3) {
-                self.users = []
-                self.userCount = 0
-                return
-            }
-            
+        do {            
             self.search(url: try self.url(nameFilter: nameFilter))
         } catch(let error) {
             self.error = GenericError(error.localizedDescription)

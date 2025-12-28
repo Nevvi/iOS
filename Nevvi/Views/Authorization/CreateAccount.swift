@@ -239,8 +239,13 @@ struct CreateAccount: View {
                 HStack {
                     Text("Create Account".uppercased())
                     
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 14))
+                    if self.authStore.signingUp {
+                        ProgressView()
+                            .tint(.white)
+                    } else {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14))
+                    }
                 }
                 .fontWeight(.bold)
                 .frame(maxWidth: .infinity)
@@ -250,7 +255,7 @@ struct CreateAccount: View {
                 .background(
                     RoundedRectangle(cornerRadius: 24)
                         .foregroundColor(ColorConstants.primary)
-                        .opacity(self.authStore.loggingIn ? 0.5 : 1.0)
+                        .opacity(self.authStore.signingUp ? 0.5 : 1.0)
                 )
             })
             .opacity(self.createAccountDisabled ? 0.5 : 1.0)
@@ -349,8 +354,13 @@ struct CreateAccount: View {
                 HStack {
                     Text("Confirm Account".uppercased())
                     
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 14))
+                    if self.authStore.confirming || self.authStore.loggingIn {
+                        ProgressView()
+                            .tint(.white)
+                    } else {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14))
+                    }
                 }
                 .fontWeight(.bold)
                 .frame(maxWidth: .infinity)
@@ -360,7 +370,7 @@ struct CreateAccount: View {
                 .background(
                     RoundedRectangle(cornerRadius: 24)
                         .foregroundColor(ColorConstants.primary)
-                        .opacity(self.authStore.loggingIn ? 0.5 : 1.0)
+                        .opacity(self.authStore.confirming ? 0.5 : 1.0)
                 )
                 .opacity(self.confirmAccountDisabled ? 0.5 : 1.0)
                 .disabled(self.confirmAccountDisabled)

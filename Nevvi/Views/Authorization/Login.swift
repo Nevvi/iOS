@@ -137,8 +137,13 @@ struct Login: View {
                             HStack {
                                 Text("Log In".uppercased())
                                 
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 14))
+                                if self.authStore.loggingIn {
+                                    ProgressView()
+                                        .tint(.white)
+                                } else {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 14))
+                                }
                             }
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity)
