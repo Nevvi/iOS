@@ -8,7 +8,25 @@
 import Foundation
 
 class ConnectionSuggestionStore : ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states
+                loading = false
+                error = nil
+                
+                // Clear all data
+                users = []
+                userCount = 0
+            } else if oldValue == nil && authorization != nil {
+                // Authorization was set for the first time (login), load initial data
+                DispatchQueue.main.async {
+                    self.loadSuggestions()
+                }
+            }
+        }
+    }
     
     @Published var loading: Bool = false
     @Published var users: [Connection] = []
@@ -30,8 +48,8 @@ class ConnectionSuggestionStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/suggestions")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/suggestions")!
     }
     
     private func ignoreSuggestionUrl(suggestionId: String) throws -> URL {
@@ -39,16 +57,22 @@ class ConnectionSuggestionStore : ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/suggestions/\(suggestionId)")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/suggestions/\(suggestionId)")!
     }
 
     func loadSuggestions() {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                self.loading = false
+                return
+            }
+            
             self.loading = true
-            let idToken: String? = self.authorization?.idToken
 
-            URLSession.shared.fetchData(for: try getSuggestionsUrl(), for: "Bearer \(idToken!)") { (result: Result<[Connection], Error>) in
+            URLSession.shared.fetchData(for: try getSuggestionsUrl(), with: authorization) { (result: Result<[Connection], Error>) in
                 switch result {
                 case .success(let response):
                     self.users = response
@@ -66,9 +90,16 @@ class ConnectionSuggestionStore : ObservableObject {
     
     func ignoreSuggestion(suggestionId: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.loading = false
+                return
+            }
+            
             self.loading = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.deleteData(for: try ignoreSuggestionUrl(suggestionId: suggestionId), for: "Bearer \(idToken!)") { (result: Result<IgnoreSuggestionResponse, Error>) in
+            URLSession.shared.deleteData(for: try ignoreSuggestionUrl(suggestionId: suggestionId), with: authorization) { (result: Result<IgnoreSuggestionResponse, Error>) in
                 switch result {
                 case .success(let response):
                     self.users = self.users.filter { $0.id != suggestionId }

@@ -53,10 +53,12 @@ struct OnboardingSuccess: View {
         let request = AccountStore.PatchRequest(onboardingCompleted: true)
         self.accountStore.update(request: request) { _ in
             // Connections and requests could've changed during onboarding so fetch them before going into the app
-            self.connectionsStore.load()
-            self.connectionsStore.loadRequests()
-            self.primaryClick()
-            self.saving = false
+            DispatchQueue.main.async {
+                self.connectionsStore.load()
+                self.connectionsStore.loadRequests()
+                self.primaryClick()
+                self.saving = false
+            }
         }
     }
 }

@@ -10,7 +10,28 @@ import UIKit
 import SwiftUI
 
 class AccountStore: ObservableObject {
-    var authorization: Authorization? = nil
+    @Published var authorization: Authorization? = nil {
+        didSet {
+            // Reset all state when authorization changes to prevent stale data issues
+            if authorization == nil {
+                // Reset loading states immediately on main thread
+                DispatchQueue.main.async {
+                    self.loading = false
+                    self.saving = false
+                    self.savingImage = false
+                    self.error = nil
+                    
+                    // Clear all user data
+                    self.reset()
+                }
+            } else if oldValue == nil && authorization != nil {
+                // Authorization was set for the first time (login), load user data
+                DispatchQueue.main.async {
+                    self.load()
+                }
+            }
+        }
+    }
     
     @Published var loading: Bool = false
     @Published var saving: Bool = false
@@ -113,8 +134,8 @@ class AccountStore: ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)")!
     }
     
     private func imageUrl() throws -> URL {
@@ -122,8 +143,8 @@ class AccountStore: ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId!)/image")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/user/v1/users/\(userId)/image")!
     }
     
     private func verifyEmailUrl() throws -> URL {
@@ -131,8 +152,8 @@ class AccountStore: ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/users/\(userId!)/sendCode?attribute=email")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/users/\(userId)/sendCode?attribute=email")!
     }
     
     private func confirmEmailUrl(code: String) throws -> URL {
@@ -140,15 +161,21 @@ class AccountStore: ObservableObject {
             throw GenericError("Not logged in")
         }
         
-        let userId: String? = self.authorization?.id
-        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/users/\(userId!)/confirmCode?attribute=email&code=\(code)")!
+        let userId: String = self.authorization!.id
+        return URL(string: "\(BuildConfiguration.shared.baseURL)/authentication/v1/users/\(userId)/confirmCode?attribute=email&code=\(code)")!
     }
     
     func load() {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                self.loading = false
+                return
+            }
+            
             self.loading = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.fetchData(for: try self.url(), for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
+            URLSession.shared.fetchData(for: try self.url(), with: authorization) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
                     self.update(user: user)
@@ -185,8 +212,15 @@ class AccountStore: ObservableObject {
     
     func save(callback: @escaping (Result<User, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.saving = false
+                return
+            }
+            
             self.saving = true
-            let idToken: String? = self.authorization?.idToken
             
             let request = PatchRequest(firstName: self.firstName != "" ? self.firstName : nil,
                                        lastName: self.lastName != "" ? self.lastName : nil,
@@ -199,7 +233,7 @@ class AccountStore: ObservableObject {
                                        permissionGroups: self.permissionGroups,
                                        deviceSettings: self.deviceSettings.toModel())
             
-            URLSession.shared.patchData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
+            URLSession.shared.patchData(for: try self.url(), for: request, with: authorization) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
                     self.update(user: user)
@@ -219,9 +253,16 @@ class AccountStore: ObservableObject {
     
     func update(request: PatchRequest, callback: @escaping (Result<User, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.saving = false
+                return
+            }
+            
             self.saving = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.patchData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
+            URLSession.shared.patchData(for: try self.url(), for: request, with: authorization) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
                     self.update(user: user)
@@ -241,10 +282,17 @@ class AccountStore: ObservableObject {
     
     func completeOnboarding(callback: @escaping (Result<User, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.saving = false
+                return
+            }
+            
             self.saving = true
-            let idToken: String? = self.authorization?.idToken
             let request = CompleteOnboardingRequest(onboardingCompleted: true)
-            URLSession.shared.patchData(for: try self.url(), for: request, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
+            URLSession.shared.patchData(for: try self.url(), for: request, with: authorization) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
                     self.update(user: user)
@@ -264,9 +312,16 @@ class AccountStore: ObservableObject {
     
     func uploadImage(image: UIImage, callback: @escaping (Result<User, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.savingImage = false
+                return
+            }
+            
             self.savingImage = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.postImage(for: try self.imageUrl(), for: image, for: "Bearer \(idToken!)") { (result: Result<User, Error>) in
+            URLSession.shared.postImage(for: try self.imageUrl(), for: image, with: authorization) { (result: Result<User, Error>) in
                 switch result {
                 case .success(let user):
                     self.updateImage(user: user)
@@ -286,10 +341,16 @@ class AccountStore: ObservableObject {
     
     func verifyEmail(callback: @escaping (Result<VerifyResponse, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.saving = false
+                return
+            }
+            
             self.saving = true
-            let idToken: String? = self.authorization?.idToken
-            let accessToken: String? = self.authorization?.accessToken
-            URLSession.shared.postData(for: try self.verifyEmailUrl(), for: "Bearer \(idToken!)", for: accessToken!) { (result: Result<VerifyResponse, Error>) in
+            URLSession.shared.postData(for: try self.verifyEmailUrl(), for: "Bearer \(authorization.idToken)", for: authorization.accessToken) { (result: Result<VerifyResponse, Error>) in
                 switch result {
                 case .success(let response):
                     callback(.success(response))
@@ -308,10 +369,16 @@ class AccountStore: ObservableObject {
     
     func confirmEmail(code: String, callback: @escaping (Result<ConfirmResponse, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.saving = false
+                return
+            }
+            
             self.saving = true
-            let idToken: String? = self.authorization?.idToken
-            let accessToken: String? = self.authorization?.accessToken
-            URLSession.shared.postData(for: try self.confirmEmailUrl(code: code), for: "Bearer \(idToken!)", for: accessToken!) { (result: Result<ConfirmResponse, Error>) in
+            URLSession.shared.postData(for: try self.confirmEmailUrl(code: code), for: "Bearer \(authorization.idToken)", for: authorization.accessToken) { (result: Result<ConfirmResponse, Error>) in
                 switch result {
                 case .success(let response):
                     callback(.success(response))
@@ -348,9 +415,16 @@ class AccountStore: ObservableObject {
     
     func delete(callback: @escaping (Result<String, Error>) -> Void) {
         do {
+            guard let authorization = self.authorization else {
+                let error = GenericError("Not logged in")
+                self.error = error
+                callback(.failure(error))
+                self.loading = false
+                return
+            }
+            
             self.loading = true
-            let idToken: String? = self.authorization?.idToken
-            URLSession.shared.deleteData(for: try self.url(), for: "Bearer \(idToken!)") { (result: Result<DeleteResponse, Error>) in
+            URLSession.shared.deleteData(for: try self.url(), with: authorization) { (result: Result<DeleteResponse, Error>) in
                 switch result {
                 case .success(let response):
                     callback(.success(response.message))

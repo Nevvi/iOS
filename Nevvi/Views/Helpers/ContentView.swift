@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import AlertToast
 
 struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     
     @EnvironmentObject var authorizationStore: AuthorizationStore
     @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var authStore: AuthorizationStore
     @EnvironmentObject var connectionStore: ConnectionStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
@@ -48,8 +50,8 @@ struct ContentView: View {
                     }
                     .onChange(of: scenePhase) { newPhase in
                         if newPhase == .active {
-                            /// TODO - re-entering from maps goes back to wrong view because of this
-                            self.reload()
+                            /// App became active - individual stores can handle refreshing if needed
+                            /// The authorization check in NevviApp will handle token refresh
                         }
                     }
                     .onOpenURL { incomingURL in
@@ -61,9 +63,8 @@ struct ContentView: View {
                     OnboardingCarousel()
                 }
             } else {
-                LoadingView(loadingText: "Fetching your profile...").onAppear {
-                    self.reload()
-                }
+                // Show loading when account data isn't available yet
+                LoadingView(loadingText: "Fetching your profile...")
             }
         }
         .errorAlert(error: self.$accountStore.error)

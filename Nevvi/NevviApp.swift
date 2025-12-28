@@ -47,6 +47,29 @@ struct NevviApp: App {
     
     @State private var forceUpdate = false
     
+    private func setAllStoreAuthorizations(_ auth: Authorization) {
+        self.accountStore.authorization = auth
+        self.connectionStore.authorization = auth
+        self.connectionsStore.authorization = auth
+        self.connectionSuggestionStore.authorization = auth
+        self.connectionGroupStore.authorization = auth
+        self.connectionGroupsStore.authorization = auth
+        self.usersStore.authorization = auth
+        self.contactStore.authorization = auth
+        self.notificationStore.authorization = auth
+    }
+    
+    private func clearAllStoreAuthorizations() {
+        self.accountStore.authorization = nil
+        self.connectionStore.authorization = nil
+        self.connectionsStore.authorization = nil
+        self.connectionSuggestionStore.authorization = nil
+        self.connectionGroupStore.authorization = nil
+        self.connectionGroupsStore.authorization = nil
+        self.usersStore.authorization = nil
+        self.contactStore.authorization = nil
+        self.notificationStore.authorization = nil
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -76,24 +99,22 @@ struct NevviApp: App {
                     }
                     .navigationViewStyle(.stack)
             } else {
-                Login(authStore: authStore) { (auth: Authorization) in
-                    // hacky way of restoring auth on login
-                    self.accountStore.authorization = auth
-                    self.connectionStore.authorization = auth
-                    self.connectionsStore.authorization = auth
-                    self.connectionSuggestionStore.authorization = auth
-                    self.connectionGroupStore.authorization = auth
-                    self.connectionGroupsStore.authorization = auth
-                    self.usersStore.authorization = auth
-                    self.contactStore.authorization = auth
-                    self.notificationStore.authorization = auth
-                }
-                .environment(\.sizeCategory, .medium)
-                .onAppear(perform: self.checkVersion)
-                .sheet(isPresented: self.$forceUpdate) {
-                    self.forceUpdateView
-                }
-                .navigationViewStyle(.stack)
+                Login(authStore: authStore)
+                    .environment(\.sizeCategory, .medium)
+                    .onAppear(perform: self.checkVersion)
+                    .sheet(isPresented: self.$forceUpdate) {
+                        self.forceUpdateView
+                    }
+                    .navigationViewStyle(.stack)
+            }
+        }
+        .onChange(of: authStore.authorization) { authorization in
+            if authorization != nil {
+                // Set authorization on all stores when main auth is set (login)
+                self.setAllStoreAuthorizations(authorization!)
+            } else {
+                // Clear authorization from all stores when main auth is cleared (logout/expiration)
+                self.clearAllStoreAuthorizations()
             }
         }
     }

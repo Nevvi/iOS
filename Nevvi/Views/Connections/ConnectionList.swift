@@ -140,7 +140,7 @@ struct ConnectionList: View {
         .toast(isPresenting: $showToast){
             AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: self.toastText)
         }
-        .onAppear {
+        .onAppear {            
             if self.notificationStore.hasAccess {
                 self.updateMessagingToken()
             }

@@ -212,7 +212,6 @@ struct ConnectionDetail: View {
                 Spacer()
                 LoadingView(loadingText: "Fetching connection details...")
                 Spacer()
-                Spacer()
             }
         }
     }

@@ -10,7 +10,7 @@ import SwiftUI
 
 extension Image {
     func toolbarButtonStyle() -> some View {
-        self.toolbarButtonStyle(bgColor: Color(red: 0, green: 0.07, blue: 0.17).opacity(0.03))
+        self.toolbarButtonStyle(bgColor: self.adaptiveBackgroundColor)
     }
     
     func toolbarButtonStyle(bgColor: Color) -> some View {
@@ -50,6 +50,15 @@ extension Image {
             }
             .modifier(ConditionalCornerRadiusModifier())
             .padding(.trailing, 8)
+    }
+    
+    // Helper to get appropriate background color based on iOS version
+    private var adaptiveBackgroundColor: Color {
+        if #available(iOS 26.0, *) {
+            return .clear
+        } else {
+            return Color(red: 0, green: 0.07, blue: 0.17).opacity(0.03)
+        }
     }
 }
 
