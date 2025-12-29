@@ -50,6 +50,27 @@ struct CreateAccount: View {
         !self.password.isEmpty && self.password.count >= 8
     }
     
+    var passwordRequirementsText: String {
+        var missing: [String] = []
+        
+        if !passwordContainsUppercase { missing.append("uppercase letter") }
+        if !passwordContainsLowercase { missing.append("lowercase letter") }
+        if !passwordContainsNumber { missing.append("number") }
+        if !passwordContainsSpecialChar { missing.append("special character") }
+        if !passwordMinimumLength { missing.append("8+ characters") }
+        
+        if missing.isEmpty {
+            return "Password requirements met ✓"
+        } else if missing.count == 1 {
+            return "Password needs: \(missing[0])"
+        } else if missing.count == 2 {
+            return "Password needs: \(missing[0]) and \(missing[1])"
+        } else {
+            let allButLast = missing.dropLast().joined(separator: ", ")
+            return "Password needs: \(allButLast), and \(missing.last!)"
+        }
+    }
+    
     var createAccountDisabled: Bool {
         self.username.isEmpty ||
         self.password.isEmpty ||
@@ -86,11 +107,14 @@ struct CreateAccount: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                 
-                VStack(alignment: .center, spacing: 20) {
+                VStack {
                     Image("AppLogo")
                         .frame(width: 68, height: 68)
                         .padding([.top], 80)
-                                      
+                    Spacer()
+                }
+                
+                VStack(alignment: .center, spacing: 20) {
                     if self.showConfirmationCode {
                         confirmationCodeView
                     } else {
@@ -117,14 +141,14 @@ struct CreateAccount: View {
     }
     
     var createAccountView: some View {
-        VStack(spacing: 12) {
+        VStack(alignment: .center, spacing: 14) {
+            Spacer()
+            
             Text("Create free Nevvi account")
                 .defaultStyle(size: 26, opacity: 0.7)
                 .multilineTextAlignment(.center)
-                .padding([.top], 16)
-            
-            Spacer()
-            
+                .padding([.vertical], 16)
+                        
             HStack(alignment: .center, spacing: 6) {
                 Image(systemName: "phone")
                     .frame(width: 24, height: 24)
@@ -184,67 +208,19 @@ struct CreateAccount: View {
                 .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
             )
             
-            HStack {
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Image(systemName: "checkmark.seal.fill")
-                        Text("Contains uppercase letter")
-                    }
-                    .foregroundColor(self.passwordContainsUppercase ? ColorConstants.primary : ColorConstants.secondary)
-                    
-                    HStack {
-                        Image(systemName: "checkmark.seal.fill")
-                        Text("Contains lowercase letter")
-                    }
-                    .foregroundColor(self.passwordContainsLowercase ? ColorConstants.primary : ColorConstants.secondary)
-                    
-                    HStack {
-                        Image(systemName: "checkmark.seal.fill")
-                        Text("Contains special character")
-                    }
-                    .foregroundColor(self.passwordContainsSpecialChar ? ColorConstants.primary : ColorConstants.secondary)
-                    
-                    HStack {
-                        Image(systemName: "checkmark.seal.fill")
-                        Text("Contains number")
-                    }
-                    .foregroundColor(self.passwordContainsNumber ? ColorConstants.primary : ColorConstants.secondary)
-                    
-                    HStack {
-                        Image(systemName: "checkmark.seal.fill")
-                        Text("Contains at least 8 characters")
-                    }
-                    .foregroundColor(self.passwordMinimumLength ? ColorConstants.primary : ColorConstants.secondary)
-                }
-                .fontWeight(.regular)
-                .font(.system(size: 14))
-                
-                Spacer()
-            }
-            .padding([.leading], 18)
-            .padding([.bottom], 32)
-            
-            Button(action: self.createAccount, label: {
+            if !password.isEmpty {
                 HStack {
-                    Text("Create Account".uppercased())
+                    Text(passwordRequirementsText)
+                        .font(.system(size: 12))
+                        .foregroundColor(ColorConstants.secondary)
+                        .multilineTextAlignment(.leading)
                     
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 14))
+                    Spacer()
                 }
-                .fontWeight(.bold)
-                .frame(maxWidth: .infinity)
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding(.vertical, 16)
-                .background(
-                    RoundedRectangle(cornerRadius: 24)
-                        .foregroundColor(ColorConstants.primary)
-                        .opacity(self.authStore.loggingIn ? 0.5 : 1.0)
-                )
-            })
-            .opacity(self.createAccountDisabled ? 0.5 : 1.0)
-            .disabled(self.createAccountDisabled)
-            .padding([.bottom], 16)
+                .padding(.horizontal, 18)
+                .padding(.bottom, 16)
+                .transition(.opacity.combined(with: .move(edge: .top)))
+            }
             
             HStack {
                 Text(privacyText)
@@ -254,11 +230,35 @@ struct CreateAccount: View {
                     showPrivacySheet = true
                     return .handled
                 })
-
             }
+            .padding(.top)
             
-            Spacer()
-            Spacer()
+            Button(action: self.createAccount, label: {
+                HStack {
+                    Text("Create Account".uppercased())
+                    
+                    if self.authStore.signingUp {
+                        ProgressView()
+                            .tint(.white)
+                    } else {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14))
+                    }
+                }
+                .fontWeight(.bold)
+                .frame(maxWidth: .infinity)
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding(.vertical, 16)
+                .background(
+                    RoundedRectangle(cornerRadius: 24)
+                        .foregroundColor(ColorConstants.primary)
+                        .opacity(self.authStore.signingUp ? 0.5 : 1.0)
+                )
+            })
+            .opacity(self.createAccountDisabled ? 0.5 : 1.0)
+            .disabled(self.createAccountDisabled)
+            .padding([.bottom], 16)
                         
             HStack {
                 Text("Need to confirm an account?")
@@ -271,7 +271,10 @@ struct CreateAccount: View {
                         self.showConfirmationCode = true
                     }
             }
+            
+            Spacer()
         }
+        .animation(.easeInOut(duration: 0.2), value: password.isEmpty)
         .disabled(self.authStore.signingUp)
         .sheet(isPresented: self.$showPrivacySheet) {
             PrivacySettings()
@@ -291,7 +294,7 @@ struct CreateAccount: View {
     }
     
     var confirmationCodeView: some View {
-        VStack(spacing: 12) {
+        VStack(alignment: .center, spacing: 14) {
             Spacer()
             
             Text("Confirm your Nevvi account")
@@ -312,9 +315,9 @@ struct CreateAccount: View {
             .background(.white)
             .cornerRadius(40)
             .overlay(
-              RoundedRectangle(cornerRadius: 40)
-                .inset(by: 0.5)
-                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 40)
+                    .inset(by: 0.5)
+                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
             )
             
             HStack(alignment: .center, spacing: 6) {
@@ -330,17 +333,32 @@ struct CreateAccount: View {
             .background(.white)
             .cornerRadius(40)
             .overlay(
-              RoundedRectangle(cornerRadius: 40)
-                .inset(by: 0.5)
-                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 40)
+                    .inset(by: 0.5)
+                    .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
             )
+            
+            Text("Resend Confirmation Code")
+                .foregroundColor(ColorConstants.primary)
+                .defaultStyle(size: 16, opacity: 0.5)
+                .opacity(self.resendCodeDisabled ? 0.5 : 1.0)
+                .disabled(self.resendCodeDisabled)
+                .padding(.top)
+                .onTapGesture {
+                    self.resendCode()
+                }
                         
             Button(action: self.confirmAccount, label: {
                 HStack {
                     Text("Confirm Account".uppercased())
                     
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 14))
+                    if self.authStore.confirming || self.authStore.loggingIn {
+                        ProgressView()
+                            .tint(.white)
+                    } else {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14))
+                    }
                 }
                 .fontWeight(.bold)
                 .frame(maxWidth: .infinity)
@@ -350,25 +368,13 @@ struct CreateAccount: View {
                 .background(
                     RoundedRectangle(cornerRadius: 24)
                         .foregroundColor(ColorConstants.primary)
-                        .opacity(self.authStore.loggingIn ? 0.5 : 1.0)
+                        .opacity(self.authStore.confirming ? 0.5 : 1.0)
                 )
                 .opacity(self.confirmAccountDisabled ? 0.5 : 1.0)
                 .disabled(self.confirmAccountDisabled)
             })
             .padding([.bottom], 16)
-            
-            Text("Resend Confirmation Code")
-                .foregroundColor(ColorConstants.primary)
-                .defaultStyle(size: 16, opacity: 0.5)
-                .opacity(self.resendCodeDisabled ? 0.5 : 1.0)
-                .disabled(self.resendCodeDisabled)
-                .onTapGesture {
-                    self.resendCode()
-                }
-            
-            Spacer()
-            Spacer()
-                        
+
             HStack {
                 Text("Need to create an account?")
                     .defaultStyle(size: 16, opacity: 0.5)
@@ -380,6 +386,8 @@ struct CreateAccount: View {
                         self.showConfirmationCode = false
                     }
             }
+            
+            Spacer()
         }.disabled(self.authStore.confirming)
     }
     

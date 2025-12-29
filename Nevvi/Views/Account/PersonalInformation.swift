@@ -142,7 +142,7 @@ struct PersonalInformation: View {
 //                        .padding(.trailing, -8)
 //                }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
                     NavigationLink(destination: PersonalInformationEdit()) {
                         Image(systemName: "square.and.pencil")
                             .toolbarButtonStyle()

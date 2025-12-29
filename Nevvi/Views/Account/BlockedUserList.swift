@@ -42,11 +42,13 @@ struct BlockedUserList: View {
             }
         }
         .toolbar(content: {
-            Image(systemName: "info.circle")
-                .padding([.trailing])
-                .onTapGesture {
-                    self.showInfo.toggle()
-                }
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Image(systemName: "info.circle")
+                    .toolbarButtonStyle()
+                    .onTapGesture {
+                        self.showInfo.toggle()
+                    }
+            }
         })
         .navigationTitle("Blocked Users")
         .navigationBarTitleDisplayMode(.inline)

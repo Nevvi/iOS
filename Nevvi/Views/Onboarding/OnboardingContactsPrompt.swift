@@ -25,47 +25,46 @@ struct OnboardingContactsPrompt: View {
     
     var contactsPrompt: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) {
-                Image("ContactDiscoveryPrompt")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: geometry.size.width, height: geometry.size.height * 0.55)
-                    .clipped()
-                    .ignoresSafeArea(.all, edges: .horizontal)
-                
-                VStack(spacing: 10) {
-                    Text("Find people you know")
-                        .defaultStyle(size: 30)
-                        .fontWeight(.bold)
+            ScrollView {
+                VStack(spacing: 0) {
+                    Image("ContactDiscoveryPrompt")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geometry.size.width, height: geometry.size.height * 0.63)
+                        .clipped()
+                        .ignoresSafeArea(.all, edges: .horizontal)
+                        .padding(.bottom)
                     
-                    Text("See which of your contacts are already using Nevvi so you can instantly connect.")
-                        .defaultStyle(size: 16)
-                        .multilineTextAlignment(.center)
-                    
-                    VStack(spacing: 6) {
-                        Image(systemName: "checkmark.shield.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(.green)
+                    VStack(spacing: 10) {
+                        Text("Find people you know")
+                            .defaultStyle(size: 30)
+                            .fontWeight(.bold)
                         
-                        Text("We need access to all your contacts just to find potential matches. We never store your contact list or share that information.")
-                            .defaultStyle(size: 14)
-                            .fontWeight(.light)
+                        Text("See which of your contacts are already using Nevvi so you can instantly connect.")
+                            .defaultStyle(size: 16)
                             .multilineTextAlignment(.center)
+                        
+                        VStack(spacing: 6) {
+                            Image(systemName: "checkmark.shield.fill")
+                                .font(.system(size: 24))
+                                .foregroundColor(.green)
+                            
+                            Text("We need access to all your contacts just to find potential matches. We never store your contact list or share that information.")
+                                .defaultStyle(size: 14)
+                                .fontWeight(.light)
+                                .multilineTextAlignment(.center)
+                        }
+                        .padding()
+                        .background(Color(UIColor(hexString: "#E8FAF4")))
+                        .cornerRadius(16)
+                        .padding([.leading, .trailing, .bottom])
                     }
-                    .padding()
-                    .background(Color(UIColor(hexString: "#E8FAF4")))
-                    .cornerRadius(16)
                     .padding([.leading, .trailing])
                     
-                    Spacer()
-                    
-                    VStack {
-                        OnboardingButton(text: "I'll Add People Manually", primary: false, action: self.primaryClick)
-                        OnboardingButton(text: "Find My Contacts", action: self.requestAccess)
-                    }
+                    OnboardingButton(text: "I'll Add People Manually", primary: false, action: self.primaryClick)
+                        .padding(.bottom, -16)
+                    OnboardingButton(text: "Find My Contacts", action: self.requestAccess)
                 }
-                .padding(.top, 8)
-                .padding([.leading, .trailing])
             }
             .edgesIgnoringSafeArea(.top)
         }

@@ -24,6 +24,26 @@ struct AddressSearch: View {
         self.address = address
         self.callback = callback
     }
+    
+    // MARK: - Helper Views
+    private func styledTextField(_ title: String, placeholder: String, text: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.system(size: 15, weight: .medium))
+                .foregroundColor(.primary)
+            
+            TextField(placeholder, text: text)
+                .font(.system(size: 16, weight: .regular))
+                .padding(16)
+                .background(Color(.systemBackground))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color(.systemGray4), lineWidth: 1.5)
+                )
+                .textInputAutocapitalization(.never)
+                .disableAutocorrection(true)
+        }
+    }
 
     func reverseGeo(location: MKLocalSearchCompletion) {
         let searchRequest = MKLocalSearch.Request(completion: location)
@@ -60,167 +80,142 @@ struct AddressSearch: View {
         }
     }
 
-    @State private var btnHover = false
-    @State private var isBtnActive = false
-
     var body: some View {
-        VStack(spacing: 0) {
-            VStack(alignment: .leading) {
-                HStack {
-                    Text("Address")
-                        .foregroundColor(.secondary)
-                        .fontWeight(.light)
-                        .font(.system(size: 14))
+        ScrollView {
+            VStack(spacing: 24) {
+                // MARK: - Address Input Section
+                VStack(alignment: .leading, spacing: 16) {
+                    HStack {
+                        Text("Address")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.primary)
+                    }
                     
-                    Toggle(isOn: self.$enterManually) {
-                        Text("Manual Entry")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                              
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Street Address")
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundColor(.primary)
+                        
+                        TextField("111 Hollywood Ave", text: $addressSearchStore.searchTerm)
+                            .font(.system(size: 16, weight: .regular))
+                            .padding(16)
+                            .background(Color(.systemBackground))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color(.systemGray4), lineWidth: 1.5)
+                            )
+                            .textInputAutocapitalization(.never)
+                            .disableAutocorrection(true)
                     }
                 }
                 
-                TextField("111 Hollywood Ave", text: self.enterManually ? self.$address.street : self.$addressSearchStore.searchTerm)
-                    .font(.system(size: 16, weight: .regular))
-                    .padding(14)
-                    .background(Color.white)
-                    .cornerRadius(12)
-                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(ColorConstants.secondary, lineWidth: 1))
-                    .textInputAutocapitalization(.never)
-                    .disableAutocorrection(true)
-            }
-            .padding()
-            
-            if self.address.street != addressSearchStore.searchTerm && !self.enterManually {
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        ForEach(addressSearchStore.locationResults, id: \.self) { location in
-                            Button {
-                                reverseGeo(location: location)
-                            } label: {
-                                VStack(alignment: .leading) {
-                                    Text(location.title)
-                                    Text(location.subtitle)
-                                        .font(.system(.caption))
+                // MARK: - Search Suggestions
+                if address.street != addressSearchStore.searchTerm {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Suggestions")
+                            .font(.system(size: 15, weight: .medium))
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, 4)
+                        
+                        VStack(spacing: 6) {
+                            ForEach(addressSearchStore.locationResults, id: \.self) { location in
+                                Button(action: {
+                                    reverseGeo(location: location)
+                                }) {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(location.title)
+                                            .font(.system(size: 15, weight: .medium))
+                                            .foregroundColor(.primary)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                        
+                                        Text(location.subtitle)
+                                            .font(.system(size: 13))
+                                            .foregroundColor(.secondary)
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                    }
+                                    .padding(12)
+                                    .background(Color(.systemGray6))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(Color(.systemGray4), lineWidth: 0.5)
+                                    )
                                 }
+                                .buttonStyle(PlainButtonStyle())
                             }
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding([.leading])
-                            .padding([.bottom], 5)
                         }
                     }
-                }
-            } else {
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("Address Two")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
-    
-                        TextField("Apt 1A", text: self.$address.unit)
-                            .font(.system(size: 16, weight: .regular))
-                            .padding(14)
-                            .background(Color.white)
-                            .cornerRadius(12)
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(ColorConstants.secondary, lineWidth: 1))
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
+                } else {
+                    // MARK: - Address Details Section
+                    VStack(alignment: .leading, spacing: 16) {
+                        // Unit and City Row
+                        HStack(spacing: 16) {
+                            styledTextField("Unit/Apartment", placeholder: "Apt 1A", text: $address.unit)
+                                .frame(maxWidth: 120)
+                            
+                            styledTextField("City", placeholder: "Hollywood", text: $address.city)
+                        }
+                        
+                        // State and ZIP Row
+                        HStack(spacing: 16) {
+                            styledTextField("State", placeholder: "CA", text: $address.state)
+                                .frame(maxWidth: 120)
+                            
+                            styledTextField("ZIP Code", placeholder: "90210", text: $address.zipCode)
+                                .frame(maxWidth: 120)
+                            
+                            Spacer()
+                        }
                     }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
-    
-                    VStack(alignment: .leading) {
-                        Text("City")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
-    
-                        TextField("Hollywood", text: self.$address.city)
-                            .font(.system(size: 16, weight: .regular))
-                            .padding(14)
-                            .background(Color.white)
-                            .cornerRadius(12)
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(ColorConstants.secondary, lineWidth: 1))
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
+                    
+                    // MARK: - Map Preview Section
+                    if hasCoordinates {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Location Preview")
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundColor(.primary)
+                            
+                            Map(coordinateRegion: $coordinates.coordinates,
+                                interactionModes: [.zoom], 
+                                annotationItems: [coordinates]) { location in
+                                MapPin(coordinate: CLLocationCoordinate2D(
+                                    latitude: location.coordinates.center.latitude, 
+                                    longitude: location.coordinates.center.longitude
+                                ), tint: .red)
+                            }
+                            .frame(height: 200)
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color(.systemGray4), lineWidth: 1)
+                            )
+                        }
                     }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
-                }
-    
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("State")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
-    
-                        TextField("CA", text: self.$address.state)
-                            .font(.system(size: 16, weight: .regular))
-                            .padding(14)
-                            .background(Color.white)
-                            .cornerRadius(12)
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(ColorConstants.secondary, lineWidth: 1))
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
+                    
+                    // MARK: - Confirm Button
+                    VStack(spacing: 0) {
+                        Button(action: {
+                            callback(address)
+                        }) {
+                            Text("Confirm Address")
+                                .font(.system(size: 17, weight: .semibold))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity, minHeight: 52)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .foregroundColor(ColorConstants.primary)
+                                )
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .padding(.top, 24)
                     }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
-    
-                    VStack(alignment: .leading) {
-                        Text("Zip Code")
-                            .foregroundColor(.secondary)
-                            .fontWeight(.light)
-                            .font(.system(size: 14))
-    
-                        TextField("Zip Code", text: self.$address.zipCode)
-                            .font(.system(size: 16, weight: .regular))
-                            .padding(14)
-                            .background(Color.white)
-                            .cornerRadius(12)
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(ColorConstants.secondary, lineWidth: 1))
-                            .textInputAutocapitalization(.never)
-                            .disableAutocorrection(true)
-                    }
-                    .padding([.leading, .trailing])
-                    .padding([.bottom], 8)
                 }
-                
-                if (self.hasCoordinates && !self.enterManually) {
-                    Map(coordinateRegion: self.$coordinates.coordinates,
-                        interactionModes: [.zoom], annotationItems: [self.coordinates],
-                        annotationContent: { location in
-                        MapPin(coordinate: CLLocationCoordinate2D(latitude: location.coordinates.center.latitude, longitude: location.coordinates.center.longitude), tint: .red)
-                    })
-                    .padding()
-                }
-                
-                Spacer()
-                
-                Button(action: {
-                    self.callback(self.address)
-                }, label: {
-                    Text("Confirm")
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.vertical, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 24)
-                                .foregroundColor(ColorConstants.primary)
-                        )
-                })
-                .padding([.top], 20)
             }
+            .padding(20)
         }
-        .padding()
+        .background(Color(.systemBackground))
         .onAppear {
-            self.addressSearchStore.searchTerm = self.address.street
-            self.tryUpdatePin()
+            addressSearchStore.searchTerm = address.street
+            tryUpdatePin()
         }
     }
     

@@ -230,7 +230,16 @@ struct PersonalInformationEdit: View {
         })
         .navigationBarBackButtonHidden(true)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarItems(leading: cancelButton)
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .topBarLeading) {
+                Image(systemName: "chevron.left")
+                    .toolbarButtonStyle()
+                    .onTapGesture {
+                        self.accountStore.resetChanges()
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+            }
+        })
         .toolbar(content: {
             if self.canSave {
                 updateAccountButton
@@ -263,16 +272,6 @@ struct PersonalInformationEdit: View {
         .clipped()
         .shadow(color: Color(red: 0.06, green: 0.4, blue: 0.64)
             .opacity(0.16), radius: 30, x: 0, y: 4)
-    }
-    
-    
-    var cancelButton : some View { Button(action: {
-        self.accountStore.resetChanges()
-        self.presentationMode.wrappedValue.dismiss()
-        }) {
-            Text("Back")
-                .foregroundColor(.gray)
-        }
     }
     
     var datePickerSheet: some View {

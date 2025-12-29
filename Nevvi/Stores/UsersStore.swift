@@ -76,13 +76,7 @@ class UsersStore : ObservableObject {
     }
     
     func searchByName(nameFilter: String) {
-        do {
-            if (nameFilter.count < 3) {
-                self.users = []
-                self.userCount = 0
-                return
-            }
-            
+        do {            
             self.search(url: try self.url(nameFilter: nameFilter))
         } catch(let error) {
             self.error = GenericError(error.localizedDescription)
@@ -139,7 +133,7 @@ class UsersStore : ObservableObject {
         }
     }
     
-    func inviteConnection(phoneNumber: String, groupName: String, callback: @escaping (Result<Bool, Error>) -> Void) {
+    func inviteConnection(phoneNumber: String, groupName: String, reason: String, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
             guard let authorization = self.authorization else {
                 let error = GenericError("Not logged in")
@@ -150,8 +144,9 @@ class UsersStore : ObservableObject {
             }
             
             self.inviting = true
-            let request = NewConnectionInvite(phoneNumber: phoneNumber, permissionGroupName: groupName)
-            URLSession.shared.postData(for: try self.inviteUrl(), for: request, with: authorization) { (result: Result<ConnectionInviteResponse, Error>) in
+            let idToken: String? = self.authorization?.idToken
+            let request = NewConnectionInvite(phoneNumber: phoneNumber, permissionGroupName: groupName, reason: reason)
+            URLSession.shared.postData(for: try self.inviteUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<ConnectionInviteResponse, Error>) in
                 switch result {
                 case .success(_):
                     callback(.success(true))
@@ -188,6 +183,7 @@ class UsersStore : ObservableObject {
     struct NewConnectionInvite: Encodable {
         var phoneNumber: String
         var permissionGroupName: String
+        var reason: String
     }
     
     struct ConnectionRequestResponse: Decodable {

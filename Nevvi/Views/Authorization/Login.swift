@@ -49,16 +49,19 @@ struct Login: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                     
-                    VStack(alignment: .center, spacing: 20) {
+                    VStack {
                         Image("AppLogo")
                             .frame(width: 68, height: 68)
                             .padding([.top], 80)
-                        
+                        Spacer()
+                    }
+                    
+                    VStack(alignment: .center, spacing: 14) {
                         Spacer()
                         
                         Text("Log in to your account")
                             .defaultStyle(size: 26, opacity: 0.7)
-                            .padding([.bottom], 16)
+                            .padding([.vertical], 16)
                         
                         HStack(alignment: .center, spacing: 6) {
                             Image(systemName: "phone")
@@ -127,30 +130,17 @@ struct Login: View {
                                 .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.2), lineWidth: 1)
                         )
                         
-                        HStack {
-                            NavigationLink {
-                                ForgotPassword(authStore: self.authStore, callback: { username, password in
-                                    self.username = username
-                                    self.password = password
-                                    self.toastText = "Password reset!"
-                                    self.showToast = true
-                                })
-                            } label: {
-                                Text("Forget Password?")
-                                    .font(Font.custom("SF Pro Text", size: 14).weight(.medium)
-                                    )
-                                    .foregroundColor(Color(red: 0, green: 0.6, blue: 1))
-                            }
-                            
-                            Spacer()
-                        }
-                        
                         Button(action: self.signIn, label: {
                             HStack {
                                 Text("Log In".uppercased())
                                 
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 14))
+                                if self.authStore.loggingIn {
+                                    ProgressView()
+                                        .tint(.white)
+                                } else {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 14))
+                                }
                             }
                             .fontWeight(.bold)
                             .frame(maxWidth: .infinity)
@@ -166,8 +156,19 @@ struct Login: View {
                         .padding([.bottom], 16)
                         .disabled(self.loginDisabled)
                         
-                        Spacer()
-                        Spacer()
+                        NavigationLink {
+                            ForgotPassword(authStore: self.authStore, callback: { username, password in
+                                self.username = username
+                                self.password = password
+                                self.toastText = "Password reset!"
+                                self.showToast = true
+                            })
+                        } label: {
+                            Text("Forget Password?")
+                                .foregroundColor(ColorConstants.primary)
+                                .defaultStyle(size: 16, opacity: 0.5)
+                        }
+                        .padding([.top])
                         
                         HStack {
                             Text("No account?")
@@ -181,9 +182,10 @@ struct Login: View {
                                     .defaultStyle(size: 16, opacity: 0.5)
                             }
                         }
+                        
+                        Spacer()
                     }
                     .padding(.horizontal, 24)
-                    .padding(.bottom, 48)
                     .frame(width: Constants.Width, alignment: .top)
                 }
                 .edgesIgnoringSafeArea(.top)

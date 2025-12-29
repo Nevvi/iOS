@@ -66,7 +66,6 @@ struct OnboardingCarousel: View {
 
                 }
             }
-            .padding(.top, 16)
         }
     }
 }

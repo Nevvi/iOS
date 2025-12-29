@@ -16,28 +16,29 @@ struct OnboardingConnectionGroups: View {
                 ZStack {
                     VideoBackground(videoName: "connection_groups_demo", videoExtension: "mp4")
                 }
-                .frame(height: geometry.size.height / 1.65)
+                .frame(width: geometry.size.width, height: geometry.size.height * 0.63)
                 .clipped()
                 .ignoresSafeArea(.all, edges: .horizontal)
+                .padding(.bottom)
                 
-                VStack(spacing: 10) {
-                    Text("Create groups for different occasions")
-                        .defaultStyle(size: 30)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                        .padding([.top, .leading, .trailing])
-                    
-                    Text("Planning a wedding or sending holiday cards? Get everyone's current info in one click.")
-                        .defaultStyle(size: 16)
-                        .multilineTextAlignment(.center)
-                        .padding([.leading, .trailing], 32)
-                    
-                    Spacer()
+                ZStack(alignment: .bottom) {
+                    VStack(spacing: 10) {
+                        Text("Create groups for different occasions")
+                            .defaultStyle(size: 30)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                            .padding([.leading, .trailing])
+                        
+                        Text("Planning a wedding or sending holiday cards? Get everyone's current info in one click.")
+                            .defaultStyle(size: 14)
+                            .multilineTextAlignment(.center)
+                            .padding([.leading, .trailing], 32)
+                        
+                        Spacer()
+                    }
                     
                     OnboardingButton(text: "Let's set this up", action: self.primaryClick)
-                        .padding([.leading, .trailing])
                 }
-                .frame(height: geometry.size.height - (geometry.size.height / 1.65))
             }
         }
         .edgesIgnoringSafeArea(.top)

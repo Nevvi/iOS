@@ -41,12 +41,12 @@ struct Settings: View {
 //                    }.padding(.vertical, 10)
                     
                     NavigationLink {
-                        GroupSettings()
+                        PermissionGroupList()
                     } label: {
                         HStack {
-                            Image(systemName: "person.2")
+                            Image(systemName: "lock")
                                 .settingsButtonStyle()
-                            Text("Permissions & Groups")
+                            Text("Permission Groups")
                         }
                     }.padding(.vertical, 10)
                     

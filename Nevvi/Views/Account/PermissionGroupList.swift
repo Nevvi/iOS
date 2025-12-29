@@ -59,15 +59,32 @@ struct PermissionGroupList: View {
     }
     
     var newPermissionGroupSheet: some View {
-        VStack {
-            TextField("Group Name", text: self.$newGroupName)
-                .padding()
-                .overlay(RoundedRectangle(cornerRadius: 16.0).strokeBorder(Color.secondary, style: StrokeStyle(lineWidth: 1.0)))
-                .textInputAutocapitalization(.never)
-                .disableAutocorrection(true)
-                .padding([.top])
-            
-            Divider().padding(.vertical)
+        VStack(spacing: 0) {
+            // Header
+            VStack(alignment: .leading, spacing: 24) {
+                Text("Create New Group")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.top, 8)
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Group Name")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                    
+                    TextField("Enter group name", text: self.$newGroupName)
+                        .textFieldStyle(.plain)
+                        .font(.body)
+                        .textInputAutocapitalization(.words)
+                        .disableAutocorrection(false)
+                        .disabled(self.accountStore.saving)
+                        .opacity(self.accountStore.saving ? 0.6 : 1.0)
+                }
+            }
+
+            Divider()
+                .padding(.vertical, 16)
             
             VStack(alignment: .leading) {
                 Text("Permission to view")

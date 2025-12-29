@@ -193,12 +193,7 @@ struct ConnectionDetail: View {
             .background(ColorConstants.background)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    Image(systemName: "square.and.arrow.up")
-//                        .toolbarButtonStyle()
-//                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .topBarTrailing) {
                     Image(systemName: "square.and.pencil")
                         .toolbarButtonStyle()
                         .onTapGesture {

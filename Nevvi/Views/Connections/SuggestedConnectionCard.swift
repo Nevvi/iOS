@@ -1,52 +1,82 @@
 //
-//  ConnectionRequest.swift
+//  SuggestedConnectionCard.swift
 //  Nevvi
 //
-//  Created by Tyler Cobb on 12/31/22.
+//  Created by Tyler Cobb on 12/22/24.
 //
 
 import SwiftUI
 import NukeUI
 
-struct NewConnectionRequestRow: View {
+struct SuggestedConnectionCard: View {
     @EnvironmentObject var usersStore: UsersStore
+    @EnvironmentObject var suggestionsStore: ConnectionSuggestionStore
+    @EnvironmentObject var accountStore: AccountStore
     
+    var user: Connection
     var requestCallback: () -> Void
-        
-    @State var user: Connection
-    @State var loading: Bool = false
-    @State var showSheet: Bool = false
-    @State private var animate = false
-    @State var selectedPermissionGroup: String = "All Info"
     
-    var showConnectButton: Bool {
-        if (user.connected != nil && user.connected!) {
-            return false
-        }
-        
-        if (user.requested != nil && user.requested!) {
-            return false
-        }
-        
-        return true
-    }
+    @State private var loading: Bool = false
+    @State private var showSheet: Bool = false
+    @State private var selectedPermissionGroup: String = "All Info"
     
     var body: some View {
-        ZStack(alignment: .trailing) {
-            ConnectionRow(connection: self.user)
-            
-            Spacer()
-            
-            if showConnectButton {
-                Image(systemName: "plus")
-                    .toolbarButtonStyle()
-                    .onTapGesture {
-                        self.showSheet = true
-                    }
-                    .padding()
+        VStack(spacing: 8) {
+            // Profile Image
+            LazyImage(url: URL(string: user.profileImage)) { state in
+                if let image = state.image {
+                    image
+                        .resizingMode(.aspectFill)
+                } else {
+                    Rectangle()
+                        .fill(Color.gray.opacity(0.3))
+                }
             }
+            .frame(width: 60, height: 60)
+            .clipShape(Circle())
+            
+            // Name
+            VStack(spacing: 2) {
+                Text(user.firstName)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .lineLimit(1)
+                
+                if !user.lastName.isEmpty {
+                    Text(user.lastName)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
+            }
+            
+            // Connect Button
+            Button(action: {
+                showSheet = true
+            }) {
+                Text("Connect")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(Color.blue)
+                    )
+            }
+            .opacity(loading ? 0.5 : 1.0)
+            .disabled(loading)
         }
-        .sheet(isPresented: self.$showSheet) {
+        .frame(width: 90)
+        .padding(12)
+        .background(Color.white)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+        )
+        .cornerRadius(12)
+        .sheet(isPresented: $showSheet) {
             requestConnectionSheet
         }
     }
@@ -115,30 +145,35 @@ struct NewConnectionRequestRow: View {
     }
     
     func requestConnection() {
-        self.loading = true
-        self.usersStore.requestConnection(userId: self.user.id, groupName: self.selectedPermissionGroup) { (result: Result<Bool, Error>) in
+        loading = true
+        usersStore.requestConnection(userId: user.id, groupName: selectedPermissionGroup) { result in
             switch result {
             case .success(_):
-                withAnimation(Animation.spring().speed(0.75)) {
-                    animate = true
-                    self.requestCallback()
-                }
+                requestCallback()
             case .failure(let error):
-                print("Something bad happened", error)
+                print("Failed to request connection: \(error)")
             }
-            self.loading = false
-            self.showSheet = false
+            loading = false
+            showSheet = false
         }
     }
-    
 }
 
-struct ConnectionRequest_Previews: PreviewProvider {
+struct SuggestedConnectionCard_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
+    static let suggestionsStore = ConnectionSuggestionStore(users: modelData.connectionResponse.users)
+    static let accountStore = AccountStore(user: modelData.user)
     
     static var previews: some View {
-        NewConnectionRequestRow(requestCallback: {},user: modelData.connectionResponse.users[0])
-            .environmentObject(usersStore)
+        SuggestedConnectionCard(
+            user: modelData.connectionResponse.users[0],
+            requestCallback: {}
+        )
+        .environmentObject(usersStore)
+        .environmentObject(suggestionsStore)
+        .environmentObject(accountStore)
+        .previewLayout(.sizeThatFits)
+        .padding()
     }
 }

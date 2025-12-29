@@ -84,7 +84,6 @@
 		04B9496D2960979E00703523 /* ConnectionsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9496C2960979D00703523 /* ConnectionsStore.swift */; };
 		04B94970296098AA00703523 /* ConnectionsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B9496F296098AA00703523 /* ConnectionsResponse.swift */; };
 		04B949722960992E00703523 /* connectionResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 04B949712960992E00703523 /* connectionResponse.json */; };
-		04B949742960A4E500703523 /* UserSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949732960A4E500703523 /* UserSearch.swift */; };
 		04B949762960A94A00703523 /* UsersStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949752960A94A00703523 /* UsersStore.swift */; };
 		04B949782960AF9B00703523 /* DebouncedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949772960AF9B00703523 /* DebouncedText.swift */; };
 		04B9497A2960B3E900703523 /* NewConnectionRequestRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04B949792960B3E900703523 /* NewConnectionRequestRow.swift */; };
@@ -99,6 +98,8 @@
 		27582E6A2E1859C800095399 /* OnboardingSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27582E692E1859C800095399 /* OnboardingSuccess.swift */; };
 		27582E6C2E19515100095399 /* OnboardingContactsPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27582E6B2E19515100095399 /* OnboardingContactsPrompt.swift */; };
 		27582E702E1AC86D00095399 /* usersResponse.json in Resources */ = {isa = PBXBuildFile; fileRef = 27582E6F2E1AC86D00095399 /* usersResponse.json */; };
+		275B13B12EFEC3A300FBCA7A /* RecentSearchesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275B13B02EFEC39E00FBCA7A /* RecentSearchesManager.swift */; };
+		275B13B72F0220AD00FBCA7A /* ConnectionSearchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275B13B62F0220AD00FBCA7A /* ConnectionSearchResults.swift */; };
 		277D25152B55A23000D1D717 /* NotificationList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25142B55A23000D1D717 /* NotificationList.swift */; };
 		277D25172B55A96400D1D717 /* PermissionGroupRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277D25162B55A96400D1D717 /* PermissionGroupRow.swift */; };
 		277D251A2B55ADF000D1D717 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 277D25192B55ADF000D1D717 /* WrappingHStack */; };
@@ -126,7 +127,6 @@
 		277E95BC2B6FB8C400A3C433 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BB2B6FB8C400A3C433 /* Popup.swift */; };
 		277E95BE2B701FF700A3C433 /* BindingExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BD2B701FF700A3C433 /* BindingExtensions.swift */; };
 		277E95C22B8104D800A3C433 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95C12B8104D800A3C433 /* AppSettings.swift */; };
-		2799F79A2C14744B00940D73 /* ConnectionSuggestionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2799F7992C14744B00940D73 /* ConnectionSuggestionRow.swift */; };
 		279EF1982E47783C0019AEA9 /* ConnectionInviteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279EF1972E47783C0019AEA9 /* ConnectionInviteRow.swift */; };
 		279EF19A2E4A09F30019AEA9 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279EF1992E4A09F30019AEA9 /* LoadingView.swift */; };
 		27BBC3B32B8BE3C8003B77A5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 27BBC3B22B8BE3C8003B77A5 /* FirebaseAnalytics */; };
@@ -156,6 +156,7 @@
 		27BBC3EF2B8BE4D4003B77A5 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 27BBC3EE2B8BE4D4003B77A5 /* FirebaseStorage */; };
 		27BBC3F12B8BE4D4003B77A5 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 27BBC3F02B8BE4D4003B77A5 /* FirebaseStorageCombine-Community */; };
 		27D9969D2D0F41B1009B1B8F /* OnboardingProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9969C2D0F41B1009B1B8F /* OnboardingProfile.swift */; };
+		27DE14C92EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE14C82EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift */; };
 		27F4704C2E51EB080056259E /* InviteUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F4704B2E51EB080056259E /* InviteUsers.swift */; };
 /* End PBXBuildFile section */
 
@@ -235,7 +236,6 @@
 		04B9496C2960979D00703523 /* ConnectionsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsStore.swift; sourceTree = "<group>"; };
 		04B9496F296098AA00703523 /* ConnectionsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsResponse.swift; sourceTree = "<group>"; };
 		04B949712960992E00703523 /* connectionResponse.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = connectionResponse.json; sourceTree = "<group>"; };
-		04B949732960A4E500703523 /* UserSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSearch.swift; sourceTree = "<group>"; };
 		04B949752960A94A00703523 /* UsersStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersStore.swift; sourceTree = "<group>"; };
 		04B949772960AF9B00703523 /* DebouncedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebouncedText.swift; sourceTree = "<group>"; };
 		04B949792960B3E900703523 /* NewConnectionRequestRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConnectionRequestRow.swift; sourceTree = "<group>"; };
@@ -248,6 +248,8 @@
 		27582E692E1859C800095399 /* OnboardingSuccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingSuccess.swift; sourceTree = "<group>"; };
 		27582E6B2E19515100095399 /* OnboardingContactsPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingContactsPrompt.swift; sourceTree = "<group>"; };
 		27582E6F2E1AC86D00095399 /* usersResponse.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = usersResponse.json; sourceTree = "<group>"; };
+		275B13B02EFEC39E00FBCA7A /* RecentSearchesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchesManager.swift; sourceTree = "<group>"; };
+		275B13B62F0220AD00FBCA7A /* ConnectionSearchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSearchResults.swift; sourceTree = "<group>"; };
 		277D25142B55A23000D1D717 /* NotificationList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationList.swift; sourceTree = "<group>"; };
 		277D25162B55A96400D1D717 /* PermissionGroupRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionGroupRow.swift; sourceTree = "<group>"; };
 		277D251B2B55B39F00D1D717 /* CharacterExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterExtensions.swift; sourceTree = "<group>"; };
@@ -274,10 +276,10 @@
 		277E95BB2B6FB8C400A3C433 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 		277E95BD2B701FF700A3C433 /* BindingExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExtensions.swift; sourceTree = "<group>"; };
 		277E95C12B8104D800A3C433 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
-		2799F7992C14744B00940D73 /* ConnectionSuggestionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionSuggestionRow.swift; sourceTree = "<group>"; };
 		279EF1972E47783C0019AEA9 /* ConnectionInviteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionInviteRow.swift; sourceTree = "<group>"; };
 		279EF1992E4A09F30019AEA9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		27D9969C2D0F41B1009B1B8F /* OnboardingProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingProfile.swift; sourceTree = "<group>"; };
+		27DE14C82EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedConnectionCard.swift; sourceTree = "<group>"; };
 		27F4704B2E51EB080056259E /* InviteUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteUsers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -432,6 +434,7 @@
 		04B9490A295DEA8700703523 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				275B13AD2EFC10F500FBCA7A /* Groups */,
 				277D25132B55A20C00D1D717 /* Notifications */,
 				04B94959295F385D00703523 /* Onboarding */,
 				04B94932295DFF7700703523 /* Authorization */,
@@ -458,6 +461,7 @@
 		04B9490C295DEA9E00703523 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				275B13B02EFEC39E00FBCA7A /* RecentSearchesManager.swift */,
 				277D25272B55F4E300D1D717 /* FieldPermissionGroupPicker.swift */,
 				04B948FD295DEA5C00703523 /* ContentView.swift */,
 				04B94966295F972500703523 /* ImagePicker.swift */,
@@ -485,11 +489,11 @@
 				04B94919295DEBCE00703523 /* ConnectionList.swift */,
 				04B9491B295DEBE600703523 /* ConnectionDetail.swift */,
 				04B9491D295DEBF700703523 /* ConnectionRow.swift */,
-				04B949732960A4E500703523 /* UserSearch.swift */,
 				04B949792960B3E900703523 /* NewConnectionRequestRow.swift */,
 				04038E162960CDE500D3C7AC /* ConnectionRequestList.swift */,
 				04038E1C2960D16300D3C7AC /* ActionableConnectionRequestRow.swift */,
-				2799F7992C14744B00940D73 /* ConnectionSuggestionRow.swift */,
+				27DE14C82EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift */,
+				275B13B62F0220AD00FBCA7A /* ConnectionSearchResults.swift */,
 			);
 			path = Connections;
 			sourceTree = "<group>";
@@ -527,17 +531,12 @@
 				0431437C2969B3F50094D7E0 /* AddressSearch.swift */,
 				04314396297438D70094D7E0 /* PermissionGroupList.swift */,
 				277D25162B55A96400D1D717 /* PermissionGroupRow.swift */,
-				277D25392B5E9D5300D1D717 /* GroupSettings.swift */,
 				277D253D2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift */,
 				277D25472B67E05C00D1D717 /* NotificationSettings.swift */,
 				277D25492B686FD500D1D717 /* FrequentlyAskedQuestionList.swift */,
 				277D254B2B687C5E00D1D717 /* FrequentlyAskedQuestion.swift */,
 				277D254D2B69490700D1D717 /* PrivacySettings.swift */,
 				277E95C12B8104D800A3C433 /* AppSettings.swift */,
-				04314388296B65220094D7E0 /* ConnectionGroupList.swift */,
-				0431438C296B6E020094D7E0 /* ConnectionGroupRow.swift */,
-				04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */,
-				277D253B2B5F4D7500D1D717 /* GroupConnectionRow.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -617,6 +616,18 @@
 				04314386296B64A50094D7E0 /* ConnectionGroup.swift */,
 			);
 			path = Connection;
+			sourceTree = "<group>";
+		};
+		275B13AD2EFC10F500FBCA7A /* Groups */ = {
+			isa = PBXGroup;
+			children = (
+				04314392296CCD010094D7E0 /* ConnectionGroupDetail.swift */,
+				0431438C296B6E020094D7E0 /* ConnectionGroupRow.swift */,
+				04314388296B65220094D7E0 /* ConnectionGroupList.swift */,
+				277D25392B5E9D5300D1D717 /* GroupSettings.swift */,
+				277D253B2B5F4D7500D1D717 /* GroupConnectionRow.swift */,
+			);
+			path = Groups;
 			sourceTree = "<group>";
 		};
 		277D25132B55A20C00D1D717 /* Notifications */ = {
@@ -773,6 +784,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				275B13B12EFEC3A300FBCA7A /* RecentSearchesManager.swift in Sources */,
 				04B94922295DEDAF00703523 /* PermissionGroup.swift in Sources */,
 				277D251C2B55B39F00D1D717 /* CharacterExtensions.swift in Sources */,
 				277D25342B5BED4700D1D717 /* OnboardingButton.swift in Sources */,
@@ -817,7 +829,6 @@
 				277D254A2B686FD500D1D717 /* FrequentlyAskedQuestionList.swift in Sources */,
 				277D253E2B63DA4F00D1D717 /* ActionablePermissionGroupRow.swift in Sources */,
 				277D25222B55C21F00D1D717 /* PermissionGroupPicker.swift in Sources */,
-				2799F79A2C14744B00940D73 /* ConnectionSuggestionRow.swift in Sources */,
 				04314387296B64A50094D7E0 /* ConnectionGroup.swift in Sources */,
 				277D253A2B5E9D5300D1D717 /* GroupSettings.swift in Sources */,
 				04B94947295E57C500703523 /* UIApplicationExtensions.swift in Sources */,
@@ -848,6 +859,7 @@
 				04B9491E295DEBF700703523 /* ConnectionRow.swift in Sources */,
 				27582E682E171B7B00095399 /* AddressCoordinates.swift in Sources */,
 				04B94967295F972500703523 /* ImagePicker.swift in Sources */,
+				27DE14C92EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift in Sources */,
 				041413062978D7C1008A35DA /* DeviceSettings.swift in Sources */,
 				04038E252961EF3900D3C7AC /* RefreshableView.swift in Sources */,
 				04B158582987FA2300846FDB /* NotificationStore.swift in Sources */,
@@ -862,9 +874,9 @@
 				27582E622E1613BB00095399 /* VideoBackground.swift in Sources */,
 				277D25302B58B00800D1D717 /* PersonalInformation.swift in Sources */,
 				04314395297087210094D7E0 /* ConnectionGroupStore.swift in Sources */,
-				04B949742960A4E500703523 /* UserSearch.swift in Sources */,
 				27F4704C2E51EB080056259E /* InviteUsers.swift in Sources */,
 				27D9969D2D0F41B1009B1B8F /* OnboardingProfile.swift in Sources */,
+				275B13B72F0220AD00FBCA7A /* ConnectionSearchResults.swift in Sources */,
 				04B9491A295DEBCE00703523 /* ConnectionList.swift in Sources */,
 				04038E34296667CA00D3C7AC /* BlockedUserList.swift in Sources */,
 				04B9497A2960B3E900703523 /* NewConnectionRequestRow.swift in Sources */,
@@ -953,7 +965,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -973,7 +985,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.12;
+				MARKETING_VERSION = 1.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1046,7 +1058,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1066,7 +1078,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.12;
+				MARKETING_VERSION = 1.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1200,7 +1212,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1220,7 +1232,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.12;
+				MARKETING_VERSION = 1.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1239,7 +1251,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1259,7 +1271,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.12;
+				MARKETING_VERSION = 1.14;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

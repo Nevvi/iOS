@@ -11,6 +11,7 @@ import AlertToast
 struct ContentView: View {
     @Environment(\.scenePhase) var scenePhase
     
+    @EnvironmentObject var authorizationStore: AuthorizationStore
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var authStore: AuthorizationStore
     @EnvironmentObject var connectionStore: ConnectionStore
@@ -30,17 +31,13 @@ struct ContentView: View {
                             .tabItem() {
                                 Label("Connections", systemImage: "person.3.sequence.fill")
                             }
+                            .badge(connectionsStore.requestCount)
                         
-                        ConnectionRequestList()
+                        ConnectionGroupList()
                             .tabItem() {
-                                Label("Requests", systemImage: "plus.circle.fill")
+                                Label("Groups", systemImage: "person.2")
                             }
-                        
-                        //                    NotificationList()
-                        //                        .tabItem() {
-                        //                            Label("Notification", systemImage: "bell")
-                        //                        }
-                        
+
                         PersonalInformation()
                             .tabItem() {
                                 Label("Profile", systemImage: "person.circle.fill")
@@ -78,9 +75,20 @@ struct ContentView: View {
         .errorAlert(error: self.$usersStore.error)
         .errorAlert(error: self.$suggestionsStore.error)
         .errorAlert(error: self.$contactStore.error)
-        .toast(isPresenting: $authStore.showToast, duration: 5.0) {
-            AlertToast(displayMode: .hud, type: authStore.toastType, title: authStore.toastText)
+    }
+    
+    func reload() {
+        if (self.authorizationStore.authorization == nil) {
+            return
         }
+        
+        self.accountStore.load()
+        self.connectionsStore.load()
+        self.connectionsStore.loadRequests()
+        self.connectionsStore.loadRejectedUsers()
+        self.connectionsStore.loadOutOfSync { _ in }
+        self.connectionGroupsStore.load()
+        self.suggestionsStore.loadSuggestions()
     }
     
     /// Handles the incoming URL and performs validations before acknowledging.
@@ -99,6 +107,8 @@ struct ContentView: View {
         }
     }
 }
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static let modelData = ModelData()

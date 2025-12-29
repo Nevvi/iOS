@@ -16,28 +16,28 @@ struct OnboardingIntro: View {
                 ZStack {
                     VideoBackground(videoName: "nevvi_intro", videoExtension: "mp4")
                 }
-                .frame(height: geometry.size.height / 1.65)
+                .frame(width: geometry.size.width, height: geometry.size.height * 0.62) // anything more and text gets cutoff on SE
                 .clipped()
                 .ignoresSafeArea(.all, edges: .horizontal)
                 
-                VStack(spacing: 10) {
-                    Text("Never ask for an address twice")
-                        .defaultStyle(size: 30)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                        .padding([.top, .leading, .trailing])
-                    
-                    Text("When a connection updates their address you will have instant access to the latest information.")
-                        .defaultStyle(size: 16)
-                        .multilineTextAlignment(.center)
-                        .padding([.leading, .trailing], 32)
-                    
-                    Spacer()
+                ZStack(alignment: .bottom) {
+                    VStack(spacing: 14) {
+                        Text("Never ask for an address twice")
+                            .defaultStyle(size: 32)
+                            .fontWeight(.bold)
+                            .multilineTextAlignment(.center)
+                            .padding([.leading, .trailing])
+                        
+                        Text("When a connection updates their address you will have instant access to the latest information.")
+                            .defaultStyle(size: 16)
+                            .multilineTextAlignment(.center)
+                            .padding([.leading, .trailing], 32)
+                        
+                        Spacer()
+                    }
                     
                     OnboardingButton(text: "Get Started", action: self.primaryClick)
-                        .padding([.leading, .trailing])
                 }
-                .frame(height: geometry.size.height - (geometry.size.height / 1.65))
             }
         }
         .edgesIgnoringSafeArea(.top)

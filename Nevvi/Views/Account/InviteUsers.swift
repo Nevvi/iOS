@@ -9,11 +9,26 @@ import AlertToast
 import SwiftUI
 import WrappingHStack
 
+enum InviteReason: String, CaseIterable {
+    case wedding = "WEDDING"
+    case holidayCards = "HOLIDAY_CARDS"
+    case other = "OTHER"
+    
+    var displayName: String {
+        switch self {
+        case .wedding: return "Wedding"
+        case .holidayCards: return "Holiday Cards"
+        case .other: return "Other"
+        }
+    }
+}
+
 struct InviteUsers: View {
     @EnvironmentObject var contactStore: ContactStore
     @State private var toastText: String = ""
     @State private var showToast: Bool = false
     @StateObject var nameFilter = DebouncedText()
+    @State private var selectedReason: InviteReason = .other
     
     private var inviteUsers: [ContactStore.ContactInfo] {
         return self.contactStore.contactsNotOnNevvi.filter { contact in
@@ -153,11 +168,15 @@ struct InviteUsers: View {
                 .padding(.bottom, 4)
                 
                 ForEach(self.inviteUsers, id: \.phoneNumber) { contact in
-                    ConnectionInviteRow(requestCallback: {
-                        self.toastText = "Invite sent!"
-                        self.showToast = true
-                        self.contactStore.removeContactNotOnNevvi(phoneNumber: contact.phoneNumber)
-                    }, user: contact)
+                    ConnectionInviteRow(
+                        requestCallback: {
+                            self.toastText = "Invite sent!"
+                            self.showToast = true
+                            self.contactStore.removeContactNotOnNevvi(phoneNumber: contact.phoneNumber)
+                        },
+                        selectedReason: self.$selectedReason,
+                        user: contact
+                    )
                 }
                 .redacted(when: self.contactStore.loading, redactionType: .customPlaceholder)
             }

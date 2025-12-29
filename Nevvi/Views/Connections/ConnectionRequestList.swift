@@ -22,13 +22,11 @@ struct ConnectionRequestList: View {
     @State private var showToast: Bool = false
         
     var body: some View {
-        NavigationView {
-            VStack {
-                connectionRequestsView
-            }
-            .navigationTitle("New Connections")
-            .navigationBarTitleDisplayMode(.inline)
+        VStack {
+            connectionRequestsView
         }
+        .navigationTitle("New Connections")
+        .navigationBarTitleDisplayMode(.inline)
         .toast(isPresenting: $showToast){
             AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: "Request sent!")
         }
@@ -36,7 +34,7 @@ struct ConnectionRequestList: View {
     
     var connectionRequestsView: some View {
         VStack {
-            if self.connectionsStore.requestCount == 0 && self.notConnectedUsers.count == 0 {
+            if self.connectionsStore.requestCount == 0 {
                 GeometryReader { geometry in
                     ScrollView(.vertical) {
                         noRequestsView
@@ -47,10 +45,6 @@ struct ConnectionRequestList: View {
             } else {
                 ScrollView {
                     requestsView
-                    
-                    if self.notConnectedUsers.count > 0 {
-                        suggestionsView
-                    }
                 }.padding(.top)
             }
         }
@@ -58,17 +52,6 @@ struct ConnectionRequestList: View {
             self.connectionsStore.loadRequests()
             self.suggestionsStore.loadSuggestions()
         }
-        .toolbar(content: {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink(destination: UserSearch()) {
-                    Image(systemName: "plus.magnifyingglass")
-                        .toolbarButtonStyle()
-                }
-                
-                // TODO
-//                    Image(systemName: "qrcode.viewfinder").toolbarButtonStyle()
-            }
-        })
     }
     
     var noRequestsView: some View {
@@ -78,7 +61,7 @@ struct ConnectionRequestList: View {
             Text("No connection requests")
                 .defaultStyle(size: 24, opacity: 1.0)
             
-            Text("When someone wants to connect we'll let you know!")
+            Text("When someone wants to connect with you, their request will appear here!")
                 .defaultStyle(size: 16, opacity: 0.7)
                 .multilineTextAlignment(.center)
         }
@@ -92,38 +75,6 @@ struct ConnectionRequestList: View {
                 ActionableConnectionRequestRow(request: request)
             }
             .redacted(when: self.connectionsStore.deletingRequest || self.connectionsStore.loadingRequests || self.connectionsStore.confirmingRequest, redactionType: .customPlaceholder)
-        }
-    }
-    
-    var suggestionsView: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .center) {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Found new members")
-                        .defaultStyle(size: 20, opacity: 1.0)
-                    
-                    Text("based on your connections")
-                        .defaultStyle(size: 14, opacity: 0.5)
-                }
-                .padding(0)
-                .frame(width: 257, alignment: .topLeading)
-                
-                Spacer()
-                
-                Text("\(self.notConnectedUsers.count) \(self.notConnectedUsers.count == 1 ? "person" : "people")")
-                    .defaultStyle(size: 14, opacity: 0.7)
-            }
-            .padding(.horizontal, 16)
-            .padding(.top, 12)
-            .padding(.bottom, 4)
-            
-            ForEach(self.notConnectedUsers) { user in
-                ConnectionSuggestionRow(requestCallback: {
-                    self.showToast = true
-                    self.suggestionsStore.loadSuggestions()
-                }, user: user)
-            }
-            .redacted(when: self.suggestionsStore.loading || self.connectionsStore.loadingRequests, redactionType: .customPlaceholder)
         }
     }
 }
