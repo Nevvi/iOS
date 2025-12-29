@@ -107,7 +107,6 @@ class AccountStore: ObservableObject {
     }
     
     func reset() {
-        print("RESETING ACCOUNT")
         self.user = nil
         
         self.id = ""
