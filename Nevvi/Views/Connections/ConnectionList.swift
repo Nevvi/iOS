@@ -69,12 +69,18 @@ struct ConnectionList: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                searchBar
-                
-                if isSearchActive {
-                    searchView
+                if self.notificationStore.canRequestAccess {
+                    requestNotificationsView
+                } else if self.contactStore.canRequestAccess() {
+                    requestContactsView
                 } else {
-                    browseContent
+                    searchBar
+                    
+                    if isSearchActive {
+                        searchView
+                    } else {
+                        browseContent
+                    }
                 }
             }
             .onChange(of: self.selectedGroup) { group in
@@ -453,14 +459,9 @@ struct ConnectionList: View {
         .background(Color(.systemBackground))
     }
     
-    // MARK: - Browse Content (Default State)
     var browseContent: some View {
         VStack {
-            if self.notificationStore.canRequestAccess {
-                requestNotificationsView
-            } else if self.contactStore.canRequestAccess() {
-                requestContactsView
-            } else if noConnectionsExist {
+            if noConnectionsExist {
                 noConnectionsView
             } else {
                 connectionsListView
@@ -468,7 +469,6 @@ struct ConnectionList: View {
         }
     }
     
-    // MARK: - Connections List View (Renamed from connectionsView)
     var connectionsListView: some View {
         VStack {
             ScrollView(.vertical) {
@@ -700,7 +700,7 @@ struct ConnectionList: View {
                     if notConnectedSuggestions.count > 0 {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
-                                ForEach(notConnectedSuggestions.prefix(5)) { user in
+                                ForEach(notConnectedSuggestions.prefix(8)) { user in
                                     SuggestedConnectionCard(user: user) {
                                         self.toastText = "Request sent!"
                                         showToast = true
@@ -765,7 +765,7 @@ struct ConnectionList: View {
                         
                         if !self.connectionsStore.connections.isEmpty {
                             VStack(spacing: 0) {
-                                ForEach(connectionsStore.connections.prefix(5)) { connection in
+                                ForEach(connectionsStore.connections.prefix(3)) { connection in
                                     NavigationLink {
                                         NavigationLazyView(
                                             ConnectionDetail()
@@ -780,10 +780,10 @@ struct ConnectionList: View {
                             }
                         }
                         
-                        if connectionsStore.connectionCount > 5 {
-                            Button(action: {
-                                // TODO: Navigate to full connection results
-                            }) {
+                        if connectionsStore.connectionCount > 3 {
+                            NavigationLink {
+                                ConnectionSearchResults()
+                            } label: {
                                 HStack {
                                     Text("See all \(connectionsStore.connections.count) connection results")
                                         .font(.subheadline)
@@ -829,26 +829,6 @@ struct ConnectionList: View {
                                         usersStore.removeUser(user: user)
                                     }, user: user)
                                 }
-                            }
-                        }
-                                
-                        if usersStore.userCount > 10 {
-                            Button(action: {
-                                // TODO: Navigate to full user results
-                            }) {
-                                HStack {
-                                    Text("See all \(usersStore.users.count) people results")
-                                        .font(.subheadline)
-                                        .fontWeight(.medium)
-                                        .foregroundColor(.blue)
-                                    Spacer()
-                                    Image(systemName: "chevron.right")
-                                        .font(.caption)
-                                        .foregroundColor(.blue)
-                                }
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 12)
-                                .background(Color.blue.opacity(0.05))
                             }
                         }
                     }
