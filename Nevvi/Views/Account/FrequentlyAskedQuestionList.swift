@@ -17,15 +17,15 @@ struct FrequentlyAskedQuestionList: View {
     @State var questions: [QuestionResponse] = [
         QuestionResponse(
             question: "Who can see my information?",
-            response: "You are not only in charge of WHO can see your data, but WHAT each person can see as well. You can create new permission groups on the settings page to restrict what information some users see."
+            response: "You are not only in charge of who can see your data, but what each person can see as well. You can create new permission groups on the settings page to restrict what information some users see."
         ),
         QuestionResponse(
             question: "Why does Nevvi need access to my contacts?",
-            response: "By giving Nevvi access to your contacts, we give you the option to sync all updated connection information to your phone's contact book."
+            response: "By giving Nevvi access to your contacts, we give you the option to sync all updated connection information to your phone's contact book. We also use your contacts to give you the ability to invite users to join Nevvi."
         ),
         QuestionResponse(
             question: "How do I find new connections?",
-            response: "There are 2 easy ways to find connections. First, on the New Connections screen we automatically suggest connections we found in your contact book. Second, you can search for connections by name."
+            response: "On the Connections tab when you search for users we will show you both users you are already connected with and users you can request to connect with. The search tab will also show you recommended connections based on your network."
         ),
         QuestionResponse(
             question: "Can I modify or remove a connection?",

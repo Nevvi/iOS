@@ -45,7 +45,7 @@ struct ContentView: View {
                         
                         Settings()
                             .tabItem() {
-                                Label("Settings", systemImage: "gearshape.fill")
+                                Label("More", systemImage: "line.3.horizontal")
                             }
                     }
                     .onChange(of: scenePhase) { newPhase in

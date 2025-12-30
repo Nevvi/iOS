@@ -41,7 +41,6 @@ struct GroupConnectionRow: View {
             self.connectionGroupStore.removeFromGroup(userId: self.connection.id) { (result: Result<Bool, Error>) in
                 switch result {
                 case.success(_):
-                    self.connectionGroupsStore.load()
                     self.connectionGroupStore.loadConnections()
                 case .failure(let error):
                     print("Something bad happened", error)

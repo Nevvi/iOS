@@ -36,7 +36,7 @@ struct ConnectionGroupDetail: View {
                     
                     Text("Members (\(self.connectionGroupStore.connectionCount))")
                         .defaultStyle(size: 16, opacity: 0.6)
-                        .redacted(when: self.connectionGroupStore.loadingConnections || self.connectionGroupStore.deleting, redactionType: .customPlaceholder)
+                        .redacted(when: self.connectionGroupStore.loading || self.connectionGroupStore.deleting || self.connectionGroupStore.saving, redactionType: .customPlaceholder)
                 }
                 
                 Spacer()
@@ -83,7 +83,7 @@ struct ConnectionGroupDetail: View {
             VStack(alignment: .trailing, spacing: 0) {
                 if self.connectionGroupStore.exporting {
                     exportingView
-                } else if self.connectionGroupStore.loading {
+                } else if self.connectionGroupStore.loading || self.connectionGroupStore.saving {
                     loadingView
                 } else if (self.connectionGroupStore.connectionCount == 0) {
                     noConnectionsView
@@ -153,7 +153,7 @@ struct ConnectionGroupDetail: View {
                             GroupConnectionRow(connection: connection, connectionGroupStore: self.connectionGroupStore)
                         }
                     }
-                    .redacted(when: self.connectionGroupStore.loadingConnections || self.connectionGroupStore.deleting, redactionType: .customPlaceholder)
+                    .redacted(when: self.connectionGroupStore.loading || self.connectionGroupStore.deleting || self.connectionGroupStore.saving, redactionType: .customPlaceholder)
                 }
                 .frame(maxWidth: .infinity, alignment: .topTrailing)
             }
@@ -385,7 +385,6 @@ struct ConnectionGroupDetail: View {
                         Button {
                             if self.newGroupConnections.isEmpty {
                                 self.newGroupConnections = []
-                                self.connectionGroupsStore.load()
                                 self.showAddUsers = false
                                 return
                             }
@@ -396,7 +395,6 @@ struct ConnectionGroupDetail: View {
                                 self.connectionGroupStore.addToGroup(userId: connection.id) { _ in
                                     if connection == self.newGroupConnections.last {
                                         self.newGroupConnections = []
-                                        self.connectionGroupsStore.load()
                                         self.connectionGroupStore.loadConnections()
                                         self.showAddUsers = false
                                         self.savingUsers = false

@@ -14,8 +14,7 @@ class ConnectionGroupStore : ObservableObject {
             if authorization == nil {
                 // Reset loading states
                 loading = false
-                loadingConnections = false
-                loadingPage = false
+                saving = false
                 deleting = false
                 exporting = false
                 error = nil
@@ -34,8 +33,7 @@ class ConnectionGroupStore : ObservableObject {
     private var limit: Int = 500
     
     @Published var loading: Bool = false
-    @Published var loadingPage: Bool = false
-    @Published var loadingConnections: Bool = false
+    @Published var saving: Bool = false
     @Published var deleting: Bool = false
     @Published var exporting: Bool = false
     
@@ -99,11 +97,11 @@ class ConnectionGroupStore : ObservableObject {
             guard let authorization = self.authorization else {
                 let error = GenericError("Not logged in")
                 self.error = error
-                self.loadingConnections = false
+                self.loading = false
                 return
             }
             
-            self.loadingConnections = true
+            self.loading = true
             URLSession.shared.fetchData(for: try self.groupConnectionsUrl(), with: authorization) { (result: Result<ConnectionResponse, Error>) in
                 switch result {
                 case .success(let response):
@@ -112,49 +110,16 @@ class ConnectionGroupStore : ObservableObject {
                 case .failure(let error):
                     self.error = GenericError(error.localizedDescription)
                 }
-                self.loadingConnections = false
+                self.loading = false
             }
         } catch(let error) {
             self.error = GenericError(error.localizedDescription)
-            self.loadingConnections = false
+            self.loading = false
         }
     }
     
     func hasNextPage() -> Bool {
         return self.connections.count < self.connectionCount
-    }
-    
-    /// TODO - not actually called yet as it would break other business logic
-    func loadNextPage() {
-        if !self.hasNextPage() {
-            return
-        }
-        
-        do {
-            guard let authorization = self.authorization else {
-                let error = GenericError("Not logged in")
-                self.error = error
-                self.loadingPage = false
-                return
-            }
-            
-            self.loadingPage = true
-            self.skip = self.skip + self.limit
-            
-            URLSession.shared.fetchData(for: try self.groupConnectionsUrl(), with: authorization) { (result: Result<ConnectionResponse, Error>) in
-                switch result {
-                case .success(let response):
-                    // When loading a page we want to append to the list, not overwrite it
-                    self.connections.append(contentsOf: response.users)
-                case .failure(let error):
-                    self.error = GenericError(error.localizedDescription)
-                }
-                self.loadingPage = false
-            }
-        } catch(let error) {
-            self.loadingPage = false
-            self.error = GenericError(error.localizedDescription)
-        }
     }
     
     func isConnectionInGroup(connection: Connection) -> Bool {
@@ -170,11 +135,11 @@ class ConnectionGroupStore : ObservableObject {
                 let error = GenericError("Not logged in")
                 self.error = error
                 callback(.failure(error))
-                self.loading = false
+                self.saving = false
                 return
             }
             
-            self.loading = true
+            self.saving = true
             let request = AddToGroupRequest(userId: userId)
             URLSession.shared.postData(for: try self.groupConnectionsUrl(), for: request, with: authorization) { (result: Result<EmptyResponse, Error>) in
                 switch result {
@@ -184,12 +149,12 @@ class ConnectionGroupStore : ObservableObject {
                     self.error = GenericError(error.localizedDescription)
                     callback(.failure(error))
                 }
-                self.loading = false
+                self.saving = false
             }
         } catch(let error) {
             self.error = GenericError(error.localizedDescription)
             callback(.failure(error))
-            self.loading = false
+            self.saving = false
         }
     }
     

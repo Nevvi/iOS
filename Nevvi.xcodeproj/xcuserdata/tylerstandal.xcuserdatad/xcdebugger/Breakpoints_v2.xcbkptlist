@@ -512,8 +512,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "201"
             endingLineNumber = "201"
-            landmarkName = "AccountStore"
-            landmarkType = "3">
+            landmarkName = "save()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -750,9 +750,9 @@
             filePath = "Nevvi/Stores/ConnectionGroupStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
-            landmarkName = "load(group:)"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
+            landmarkName = "groupConnectionsUrl()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -766,9 +766,9 @@
             filePath = "Nevvi/Stores/ConnectionGroupStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "loadConnections()"
+            startingLineNumber = "78"
+            endingLineNumber = "78"
+            landmarkName = "groupConnectionsUrl()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -782,9 +782,9 @@
             filePath = "Nevvi/Stores/ConnectionGroupStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "88"
-            endingLineNumber = "88"
-            landmarkName = "loadConnections()"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
+            landmarkName = "groupExportUrl()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -798,9 +798,9 @@
             filePath = "Nevvi/Stores/ConnectionGroupStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "85"
-            endingLineNumber = "85"
-            landmarkName = "loadConnections()"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
+            landmarkName = "groupExportUrl()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -814,9 +814,9 @@
             filePath = "Nevvi/Stores/ConnectionGroupStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
-            landmarkName = "groupConnectionsUrl()"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
+            landmarkName = "init(group:connections:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -832,7 +832,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "90"
             endingLineNumber = "90"
-            landmarkName = "create(name:callback:)"
+            landmarkName = "load()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1374,8 +1374,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "141"
             endingLineNumber = "141"
-            landmarkName = "checkVersion()"
-            landmarkType = "7">
+            landmarkName = "forceUpdateView"
+            landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
