@@ -37,9 +37,9 @@ struct PermissionGroupPicker: View {
             
             Text(groupName.uppercased())
         }
-        .fontWeight(.medium)
-        .padding([.leading, .trailing], 16)
-        .padding([.top, .bottom], 14)
+        .fontWeight(.regular)
+        .padding([.leading, .trailing], 14)
+        .padding([.top, .bottom], 12)
         .foregroundColor(textColor)
         .background(backgroundColor)
         .cornerRadius(30)

@@ -1470,7 +1470,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "96"
             endingLineNumber = "96"
-            landmarkName = "requestConnection(userId:groupName:callback:)"
+            landmarkName = "search(url:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1486,7 +1486,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "94"
             endingLineNumber = "94"
-            landmarkName = "requestConnection(userId:groupName:callback:)"
+            landmarkName = "search(url:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2046,8 +2046,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "77"
             endingLineNumber = "77"
-            landmarkName = "search(url:)"
-            landmarkType = "7">
+            landmarkName = "UsersStore"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2062,7 +2062,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "80"
             endingLineNumber = "80"
-            landmarkName = "search(url:)"
+            landmarkName = "searchByName(nameFilter:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2078,7 +2078,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "74"
             endingLineNumber = "74"
-            landmarkName = "search(url:)"
+            landmarkName = "inviteUrl()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2142,7 +2142,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "131"
             endingLineNumber = "131"
-            landmarkName = "removeUser(user:)"
+            landmarkName = "requestConnection(userId:groupName:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2190,7 +2190,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "91"
             endingLineNumber = "91"
-            landmarkName = "requestConnection(userId:groupName:callback:)"
+            landmarkName = "search(url:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2206,7 +2206,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "88"
             endingLineNumber = "88"
-            landmarkName = "requestConnection(userId:groupName:callback:)"
+            landmarkName = "search(url:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

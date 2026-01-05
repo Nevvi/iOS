@@ -10,14 +10,16 @@ import NukeUI
 
 struct ConnectionInviteRow: View {
     @EnvironmentObject var usersStore: UsersStore
+    @EnvironmentObject var messagingStore: MessagingStore
     
     var requestCallback: () -> Void
     @Binding var selectedReason: InviteReason
-        
     @State var user: ContactStore.ContactInfo!
-    @State var loading: Bool = false
+
     @State var showSheet: Bool = false
-    @State private var animate = false
+    @State var showText: Bool = false
+    @State var animate: Bool = false
+    @State var inviting: Bool = false
     @State var selectedPermissionGroup: String = "All Info"
     
     var body: some View {
@@ -29,7 +31,7 @@ struct ConnectionInviteRow: View {
                     .frame(width: 63, height: 63)
                     .cornerRadius(63)
             } else {
-                Image(systemName: "person.circle.fill") // Placeholder if no image
+                Image(systemName: "person.circle.fill")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 63, height: 63)
@@ -64,8 +66,28 @@ struct ConnectionInviteRow: View {
                 .inset(by: 0.5)
                 .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.04), lineWidth: 1)
         )
-        .sheet(isPresented: self.$showSheet) {
+        .sheet(isPresented: $showSheet) {
             inviteUserSheet
+        }
+        .sheet(isPresented: $showText) {
+            MessageComposeView(
+                isPresented: $showText,
+                recipients: [self.user.phoneNumber],
+                body: self.selectedReason.inviteText,
+                completion: { result in
+                    switch result {
+                    case .sent:
+                        print("Message Sent")
+                        self.inviteUser()
+                    case .cancelled:
+                        print("Message Cancelled")
+                    case .failed:
+                        print("Message Failed")
+                    @unknown default:
+                        fatalError()
+                    }
+                }
+            )
         }
     }
     
@@ -91,7 +113,7 @@ struct ConnectionInviteRow: View {
                         }
                     }
                     .pickerStyle(.segmented)
-                    .padding([.leading, .trailing])
+                    .padding()
                     .onAppear {
                         UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(ColorConstants.primary)
                         UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
@@ -99,20 +121,29 @@ struct ConnectionInviteRow: View {
                     
                     Spacer()
                     
-                    Button(action: self.inviteUser) {
-                        Text("Invite User")
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity)
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding(.vertical, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 24)
-                                    .foregroundColor(ColorConstants.primary)
-                            )
-                            .opacity(self.loading ? 0.5 : 1.0)
+                    Button(action: {
+                        self.showText = true
+                        self.showSheet = false
+                    }) {
+                        HStack(alignment: .center) {
+                            Text("Invite User")
+                                .fontWeight(.bold)
+                                .font(.headline)
+                            
+                            if self.inviting {
+                                ProgressView().tint(.white)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .foregroundColor(.white)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24)
+                                .foregroundColor(ColorConstants.primary)
+                        )
+                        .opacity(self.inviting ? 0.5 : 1.0)
                     }
-                    .disabled(self.loading)
+                    .disabled(self.inviting)
                     .padding()
                     .padding([.top], 12)
                 }.padding(4)
@@ -121,8 +152,8 @@ struct ConnectionInviteRow: View {
     }
     
     func inviteUser() {
-        self.loading = true
-        self.usersStore.inviteConnection(phoneNumber: self.user.phoneNumber, groupName: self.selectedPermissionGroup, reason: self.selectedReason.rawValue) { (result: Result<Bool, Error>) in
+        self.inviting = true
+        self.usersStore.inviteConnection(phoneNumber: self.user.phoneNumber, groupName: self.selectedPermissionGroup) { (result: Result<Bool, Error>) in
             switch result {
             case .success(_):
                 withAnimation(Animation.spring().speed(0.75)) {
@@ -132,7 +163,7 @@ struct ConnectionInviteRow: View {
             case .failure(let error):
                 print("Something bad happened", error)
             }
-            self.loading = false
+            self.inviting = false
             self.showSheet = false
         }
     }
@@ -141,6 +172,8 @@ struct ConnectionInviteRow: View {
 
 struct ConnectionInviteRow_Preview: PreviewProvider {
     static let modelData = ModelData()
+    static let messagingStore = MessagingStore()
+    static let accountStore = AccountStore(user: modelData.user)
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
     
     static var previews: some View {
@@ -149,6 +182,8 @@ struct ConnectionInviteRow_Preview: PreviewProvider {
             selectedReason: .constant(.other),
             user: ContactStore.ContactInfo(firstName: "John", lastName: "Doe", phoneNumber: "6129631237")
         )
+        .environmentObject(messagingStore)
+        .environmentObject(accountStore)
         .environmentObject(usersStore)
     }
 }

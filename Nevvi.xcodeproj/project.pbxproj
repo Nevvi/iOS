@@ -156,6 +156,7 @@
 		27BBC3EF2B8BE4D4003B77A5 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 27BBC3EE2B8BE4D4003B77A5 /* FirebaseStorage */; };
 		27BBC3F12B8BE4D4003B77A5 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 27BBC3F02B8BE4D4003B77A5 /* FirebaseStorageCombine-Community */; };
 		27D9969D2D0F41B1009B1B8F /* OnboardingProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9969C2D0F41B1009B1B8F /* OnboardingProfile.swift */; };
+		27DBD4532F0A09F6002EB303 /* MessageComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBD4522F0A09F6002EB303 /* MessageComposeView.swift */; };
 		27DE14C92EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE14C82EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift */; };
 		27F4704C2E51EB080056259E /* InviteUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F4704B2E51EB080056259E /* InviteUsers.swift */; };
 /* End PBXBuildFile section */
@@ -279,6 +280,7 @@
 		279EF1972E47783C0019AEA9 /* ConnectionInviteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionInviteRow.swift; sourceTree = "<group>"; };
 		279EF1992E4A09F30019AEA9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		27D9969C2D0F41B1009B1B8F /* OnboardingProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingProfile.swift; sourceTree = "<group>"; };
+		27DBD4522F0A09F6002EB303 /* MessageComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageComposeView.swift; sourceTree = "<group>"; };
 		27DE14C82EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedConnectionCard.swift; sourceTree = "<group>"; };
 		27F4704B2E51EB080056259E /* InviteUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteUsers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -479,6 +481,7 @@
 				27582E612E1613BB00095399 /* VideoBackground.swift */,
 				27582E672E171B7B00095399 /* AddressCoordinates.swift */,
 				279EF1992E4A09F30019AEA9 /* LoadingView.swift */,
+				27DBD4522F0A09F6002EB303 /* MessageComposeView.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -857,6 +860,7 @@
 				04B9491C295DEBE600703523 /* ConnectionDetail.swift in Sources */,
 				04038E272961F25000D3C7AC /* DateExtensions.swift in Sources */,
 				04B9491E295DEBF700703523 /* ConnectionRow.swift in Sources */,
+				27DBD4532F0A09F6002EB303 /* MessageComposeView.swift in Sources */,
 				27582E682E171B7B00095399 /* AddressCoordinates.swift in Sources */,
 				04B94967295F972500703523 /* ImagePicker.swift in Sources */,
 				27DE14C92EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift in Sources */,
@@ -965,7 +969,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -985,7 +989,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.14;
+				MARKETING_VERSION = 1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1058,7 +1062,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1078,7 +1082,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.14;
+				MARKETING_VERSION = 1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1212,7 +1216,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1232,7 +1236,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.14;
+				MARKETING_VERSION = 1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1251,7 +1255,7 @@
 				CODE_SIGN_ENTITLEMENTS = Nevvi/Nevvi.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Nevvi/Preview Content\"";
 				DEVELOPMENT_TEAM = 496RH4SCJ6;
 				ENABLE_PREVIEWS = YES;
@@ -1271,7 +1275,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.14;
+				MARKETING_VERSION = 1.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.nevvi.Nevvi;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

@@ -21,6 +21,29 @@ enum InviteReason: String, CaseIterable {
         case .other: return "Other"
         }
     }
+    
+    var inviteText: String {
+        switch self {
+        case .wedding: return """
+                Hey! We're collecting addresses for wedding invites using an app called Nevvi. It saves your address so that I only have to bug you once. Would you mind signing up and adding yours?
+                
+                iPhone app: https://apps.apple.com/us/app/nevvi/id1669915435
+                Web: https://nevvi.net
+                """
+        case .holidayCards: return """
+                Hey! We're collecting addresses for holiday cards using an app called Nevvi. It saves your address so that I don't have to bug you again next year. Would you mind signing up and adding yours?
+                
+                iPhone app: https://apps.apple.com/us/app/nevvi/id1669915435
+                Web: https://nevvi.net
+                """
+        case .other: return """
+                Hey! Join me on Nevvi where you never have to ask for an address twice. You enter your information once and it stays updated with anyone you're connected to. 
+                
+                iPhone: https://apps.apple.com/us/app/nevvi/id1669915435
+                Web: https://nevvi.net
+                """
+        }
+    }
 }
 
 struct InviteUsers: View {
@@ -29,6 +52,7 @@ struct InviteUsers: View {
     @State private var showToast: Bool = false
     @StateObject var nameFilter = DebouncedText()
     @State private var selectedReason: InviteReason = .other
+    @State private var inviteText: String = InviteReason.other.inviteText
     
     private var inviteUsers: [ContactStore.ContactInfo] {
         return self.contactStore.contactsNotOnNevvi.filter { contact in
