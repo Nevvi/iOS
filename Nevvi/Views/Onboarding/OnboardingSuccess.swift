@@ -54,6 +54,7 @@ struct OnboardingSuccess: View {
         self.accountStore.update(request: request) { _ in
             // Connections and requests could've changed during onboarding so fetch them before going into the app
             DispatchQueue.main.async {
+                // This causes a strange issue on the connection list where it stays redacted til manual refresh
                 self.connectionsStore.load()
                 self.connectionsStore.loadRequests()
                 self.primaryClick()

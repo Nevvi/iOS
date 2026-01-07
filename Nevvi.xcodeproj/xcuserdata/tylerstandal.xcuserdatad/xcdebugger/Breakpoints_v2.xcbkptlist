@@ -128,8 +128,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "54"
             endingLineNumber = "54"
-            landmarkName = "url(inSync:)"
-            landmarkType = "7">
+            landmarkName = "ConnectionsStore"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -430,9 +430,9 @@
             filePath = "Nevvi/Stores/ConnectionsStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
-            landmarkName = "loadOutOfSync(callback:)"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
+            landmarkName = "load(nameFilter:permissionGroup:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -446,9 +446,9 @@
             filePath = "Nevvi/Stores/ConnectionsStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "183"
-            endingLineNumber = "183"
-            landmarkName = "loadOutOfSync(callback:)"
+            startingLineNumber = "184"
+            endingLineNumber = "184"
+            landmarkName = "load(nameFilter:permissionGroup:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -640,7 +640,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "150"
             endingLineNumber = "150"
-            landmarkName = "loadNextPage()"
+            landmarkName = "load()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -656,8 +656,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "73"
             endingLineNumber = "73"
-            landmarkName = "url(inSync:)"
-            landmarkType = "7">
+            landmarkName = "ConnectionsStore"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -670,9 +670,9 @@
             filePath = "Nevvi/Stores/ConnectionsStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "163"
-            endingLineNumber = "163"
-            landmarkName = "loadNextPage()"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
+            landmarkName = "load(nameFilter:permissionGroup:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -702,9 +702,9 @@
             filePath = "Nevvi/Stores/ConnectionsStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "165"
-            endingLineNumber = "165"
-            landmarkName = "loadNextPage()"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
+            landmarkName = "load(nameFilter:permissionGroup:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -720,7 +720,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "133"
             endingLineNumber = "133"
-            landmarkName = "load(nameFilter:permissionGroup:)"
+            landmarkName = "confirmRequestUrl()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -734,9 +734,9 @@
             filePath = "Nevvi/Stores/ConnectionsStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "159"
-            endingLineNumber = "159"
-            landmarkName = "loadNextPage()"
+            startingLineNumber = "160"
+            endingLineNumber = "160"
+            landmarkName = "load(nameFilter:permissionGroup:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

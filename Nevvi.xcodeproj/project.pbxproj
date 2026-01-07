@@ -157,6 +157,7 @@
 		27BBC3F12B8BE4D4003B77A5 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 27BBC3F02B8BE4D4003B77A5 /* FirebaseStorageCombine-Community */; };
 		27D9969D2D0F41B1009B1B8F /* OnboardingProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D9969C2D0F41B1009B1B8F /* OnboardingProfile.swift */; };
 		27DBD4532F0A09F6002EB303 /* MessageComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBD4522F0A09F6002EB303 /* MessageComposeView.swift */; };
+		27DCFF0E2F0DEC940050A634 /* OnboardingReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DCFF0D2F0DEC940050A634 /* OnboardingReason.swift */; };
 		27DE14C92EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE14C82EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift */; };
 		27F4704C2E51EB080056259E /* InviteUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F4704B2E51EB080056259E /* InviteUsers.swift */; };
 /* End PBXBuildFile section */
@@ -281,6 +282,7 @@
 		279EF1992E4A09F30019AEA9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		27D9969C2D0F41B1009B1B8F /* OnboardingProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingProfile.swift; sourceTree = "<group>"; };
 		27DBD4522F0A09F6002EB303 /* MessageComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageComposeView.swift; sourceTree = "<group>"; };
+		27DCFF0D2F0DEC940050A634 /* OnboardingReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingReason.swift; sourceTree = "<group>"; };
 		27DE14C82EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedConnectionCard.swift; sourceTree = "<group>"; };
 		27F4704B2E51EB080056259E /* InviteUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteUsers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -599,6 +601,7 @@
 				04B9495A295F386E00703523 /* OnboardingIntro.swift */,
 				04B94960295F3FD100703523 /* OnboardingPermissionGroups.swift */,
 				27582E652E16BE0200095399 /* OnboardingConnectionGroups.swift */,
+				27DCFF0D2F0DEC940050A634 /* OnboardingReason.swift */,
 				27D9969C2D0F41B1009B1B8F /* OnboardingProfile.swift */,
 				27582E6B2E19515100095399 /* OnboardingContactsPrompt.swift */,
 				27582E692E1859C800095399 /* OnboardingSuccess.swift */,
@@ -813,6 +816,7 @@
 				04B9494E295E718A00703523 /* Credentials.swift in Sources */,
 				277D252C2B55F8E900D1D717 /* CheckboxToggleStyle.swift in Sources */,
 				04038E3829679FEF00D3C7AC /* Settings.swift in Sources */,
+				27DCFF0E2F0DEC940050A634 /* OnboardingReason.swift in Sources */,
 				04B94912295DEAFC00703523 /* CircleImage.swift in Sources */,
 				279EF19A2E4A09F30019AEA9 /* LoadingView.swift in Sources */,
 				0431437D2969B3F50094D7E0 /* AddressSearch.swift in Sources */,
