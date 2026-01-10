@@ -153,7 +153,6 @@ class ConnectionsStore : ObservableObject {
     
     func load(nameFilter: String?, permissionGroup: String?) {
         do {
-            print("LOADING CONNECTIONS")
             guard let authorization = self.authorization else {
                 let error = GenericError("Not logged in")
                 self.error = error

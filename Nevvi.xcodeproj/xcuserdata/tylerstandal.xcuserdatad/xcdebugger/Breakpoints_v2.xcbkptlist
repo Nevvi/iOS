@@ -32,7 +32,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "195"
             endingLineNumber = "195"
-            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkName = "loadContacts()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -400,7 +400,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "191"
             endingLineNumber = "191"
-            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkName = "loadContacts()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -416,7 +416,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "188"
             endingLineNumber = "188"
-            landmarkName = "syncContacts(connections:dryRun:callback:)"
+            landmarkName = "loadContacts()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -430,8 +430,8 @@
             filePath = "Nevvi/Stores/ConnectionsStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
+            startingLineNumber = "186"
+            endingLineNumber = "186"
             landmarkName = "load(nameFilter:permissionGroup:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -446,8 +446,8 @@
             filePath = "Nevvi/Stores/ConnectionsStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "184"
-            endingLineNumber = "184"
+            startingLineNumber = "183"
+            endingLineNumber = "183"
             landmarkName = "load(nameFilter:permissionGroup:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -496,7 +496,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "48"
             endingLineNumber = "48"
-            landmarkName = "loadSuggestions()"
+            landmarkName = "getSuggestionsUrl()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -592,7 +592,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "61"
             endingLineNumber = "61"
-            landmarkName = "updateToken(token:)"
+            landmarkName = "checkRequestAccess()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -670,8 +670,8 @@
             filePath = "Nevvi/Stores/ConnectionsStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
             landmarkName = "load(nameFilter:permissionGroup:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -702,8 +702,8 @@
             filePath = "Nevvi/Stores/ConnectionsStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "166"
-            endingLineNumber = "166"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
             landmarkName = "load(nameFilter:permissionGroup:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -734,8 +734,8 @@
             filePath = "Nevvi/Stores/ConnectionsStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "160"
-            endingLineNumber = "160"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
             landmarkName = "load(nameFilter:permissionGroup:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -768,8 +768,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "78"
             endingLineNumber = "78"
-            landmarkName = "groupConnectionsUrl()"
-            landmarkType = "7">
+            landmarkName = "ConnectionGroupStore"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -880,7 +880,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "69"
             endingLineNumber = "69"
-            landmarkName = "ignoreSuggestion(suggestionId:callback:)"
+            landmarkName = "loadSuggestions()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -942,7 +942,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "75"
             endingLineNumber = "75"
-            landmarkName = "ignoreSuggestion(suggestionId:callback:)"
+            landmarkName = "loadSuggestions()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -958,7 +958,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "74"
             endingLineNumber = "74"
-            landmarkName = "ignoreSuggestion(suggestionId:callback:)"
+            landmarkName = "loadSuggestions()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -974,7 +974,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "78"
             endingLineNumber = "78"
-            landmarkName = "ignoreSuggestion(suggestionId:callback:)"
+            landmarkName = "loadSuggestions()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1582,7 +1582,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "85"
             endingLineNumber = "85"
-            landmarkName = "updateConnection(connectionId:callback:)"
+            landmarkName = "tryRequestAccess(callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1598,7 +1598,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "89"
             endingLineNumber = "89"
-            landmarkName = "updateConnection(connectionId:callback:)"
+            landmarkName = "tryRequestAccess(callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1614,7 +1614,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "91"
             endingLineNumber = "91"
-            landmarkName = "updateConnection(connectionId:callback:)"
+            landmarkName = "tryRequestAccess(callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1710,8 +1710,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "43"
             endingLineNumber = "43"
-            landmarkName = "update(connection:)"
-            landmarkType = "7">
+            landmarkName = "ConnectionStore"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1726,7 +1726,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "154"
             endingLineNumber = "154"
-            landmarkName = "update(callback:)"
+            landmarkName = "delete(connectionId:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1774,8 +1774,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "54"
             endingLineNumber = "54"
-            landmarkName = "loadSuggestions()"
-            landmarkType = "7">
+            landmarkName = "ConnectionSuggestionStore"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1790,7 +1790,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "57"
             endingLineNumber = "57"
-            landmarkName = "loadSuggestions()"
+            landmarkName = "ignoreSuggestionUrl(suggestionId:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1806,7 +1806,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "62"
             endingLineNumber = "62"
-            landmarkName = "loadSuggestions()"
+            landmarkName = "ignoreSuggestionUrl(suggestionId:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1822,7 +1822,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "51"
             endingLineNumber = "51"
-            landmarkName = "loadSuggestions()"
+            landmarkName = "getSuggestionsUrl()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1838,7 +1838,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "55"
             endingLineNumber = "55"
-            landmarkName = "loadSuggestions()"
+            landmarkName = "ignoreSuggestionUrl(suggestionId:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2094,7 +2094,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "129"
             endingLineNumber = "129"
-            landmarkName = "loadContacts()"
+            landmarkName = "getConnection(connectionId:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2110,7 +2110,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "126"
             endingLineNumber = "126"
-            landmarkName = "loadContacts()"
+            landmarkName = "getConnection(connectionId:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2302,7 +2302,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "139"
             endingLineNumber = "139"
-            landmarkName = "loadContacts()"
+            landmarkName = "getConnection(connectionId:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2318,7 +2318,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "49"
             endingLineNumber = "49"
-            landmarkName = "hasAccess()"
+            landmarkName = "contactSearchUrl()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -2366,7 +2366,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "124"
             endingLineNumber = "124"
-            landmarkName = "loadContacts()"
+            landmarkName = "getConnection(connectionId:callback:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

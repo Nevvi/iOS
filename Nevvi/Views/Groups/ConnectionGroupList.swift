@@ -38,9 +38,6 @@ struct ConnectionGroupList: View {
                     groupsView
                 }
             }
-            .onAppear {
-                self.connectionGroupsStore.load()
-            }
             .refreshable {
                 self.connectionGroupsStore.load()
             }

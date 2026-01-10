@@ -77,20 +77,6 @@ struct ContentView: View {
         .errorAlert(error: self.$contactStore.error)
     }
     
-    func reload() {
-        if (self.authorizationStore.authorization == nil) {
-            return
-        }
-        
-        self.accountStore.load()
-        self.connectionsStore.load()
-        self.connectionsStore.loadRequests()
-        self.connectionsStore.loadRejectedUsers()
-        self.connectionsStore.loadOutOfSync { _ in }
-        self.connectionGroupsStore.load()
-        self.suggestionsStore.loadSuggestions()
-    }
-    
     /// Handles the incoming URL and performs validations before acknowledging.
     private func handleIncomingURL(_ url: URL) {
         guard url.scheme == "nevvi" else {

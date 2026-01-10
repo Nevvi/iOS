@@ -155,7 +155,7 @@ struct OnboardingReason: View {
                             .fontWeight(.semibold)
                             .multilineTextAlignment(.center)
                         
-                        (Text("We've created a connection group called ")
+                        (Text("We'll create a connection group called ")
                             .fontWeight(.light)
                         + Text("Wedding")
                             .fontWeight(.semibold)
@@ -185,10 +185,11 @@ struct OnboardingReason: View {
                     }
                 }
                 
-                OnboardingButton(text: "Continue") {
+                OnboardingButton(text: "Continue", loading: self.connectionGroupsStore.creating) {
                     self.connectionGroupsStore.create(name: "Wedding") { (result: Result<ConnectionGroup, Error>) in
                         switch result {
                         case .success(_):
+                            self.connectionGroupsStore.load()
                             self.primaryClick()
                         case .failure(let error):
                             print("Something bad happened", error)
@@ -228,7 +229,7 @@ struct OnboardingReason: View {
                             .fontWeight(.bold)
                             .multilineTextAlignment(.center)
                         
-                        (Text("We've created a connection group called ")
+                        (Text("We'll create a connection group called ")
                             .fontWeight(.light)
                         + Text("Holiday Cards")
                             .fontWeight(.semibold)
@@ -258,10 +259,11 @@ struct OnboardingReason: View {
                     }
                 }
                 
-                OnboardingButton(text: "Continue") {
+                OnboardingButton(text: "Continue", loading: self.connectionGroupsStore.creating) {
                     self.connectionGroupsStore.create(name: "Holiday Cards") { (result: Result<ConnectionGroup, Error>) in
                         switch result {
                         case .success(_):
+                            self.connectionGroupsStore.load()
                             self.primaryClick()
                         case .failure(let error):
                             print("Something bad happened", error)

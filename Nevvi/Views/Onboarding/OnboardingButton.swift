@@ -11,15 +11,23 @@ struct OnboardingButton: View {
     private var text: String
     private var primary: Bool
     private var action: () -> Void
+    private var loading: Bool = false
     
     init(text: String, action: @escaping () -> Void) {
-        self.text = text
-        self.primary = true
-        self.action = action
+        self.init(text: text, loading: false, action: action)
+    }
+    
+    init(text: String, loading: Bool, action: @escaping () -> Void) {
+        self.init(text: text, loading: loading, primary: true, action: action)
     }
     
     init(text: String, primary: Bool, action: @escaping () -> Void) {
+        self.init(text: text, loading: false, primary: primary, action: action)
+    }
+    
+    init(text: String, loading: Bool, primary: Bool, action: @escaping () -> Void) {
         self.text = text
+        self.loading = loading
         self.primary = primary
         self.action = action
     }
@@ -37,8 +45,12 @@ struct OnboardingButton: View {
             HStack {
                 Text(text.uppercased())
                 
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14))
+                if self.loading {
+                    ProgressView().tint(.white)
+                } else {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 14))
+                }
             }
             .fontWeight(.bold)
             .frame(maxWidth: .infinity)

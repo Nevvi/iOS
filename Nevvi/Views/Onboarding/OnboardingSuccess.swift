@@ -39,7 +39,7 @@ struct OnboardingSuccess: View {
                 
                 Spacer()
                                 
-                OnboardingButton(text: "Explore the app", action: self.primaryAction)
+                OnboardingButton(text: "Explore the app", loading: self.saving, action: self.primaryAction)
                     .disabled(self.saving)
                     .opacity(self.saving ? 0.5 : 1.0)
             }
@@ -54,7 +54,7 @@ struct OnboardingSuccess: View {
         self.accountStore.update(request: request) { _ in
             // Connections and requests could've changed during onboarding so fetch them before going into the app
             DispatchQueue.main.async {
-                // This causes a strange issue on the connection list where it stays redacted til manual refresh
+                // This causes a strange issue on the connection list where it stays redacted til manual refresh. Only impacts users that created connections during onboarding, which is rare.
                 self.connectionsStore.load()
                 self.connectionsStore.loadRequests()
                 self.primaryClick()
