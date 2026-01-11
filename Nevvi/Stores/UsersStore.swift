@@ -133,7 +133,7 @@ class UsersStore : ObservableObject {
         }
     }
     
-    func inviteConnection(phoneNumber: String, groupName: String, callback: @escaping (Result<Bool, Error>) -> Void) {
+    func inviteConnection(phoneNumber: String, permissionGroupName: String, connectionGroupIds: Set<String>, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
             guard let authorization = self.authorization else {
                 let error = GenericError("Not logged in")
@@ -145,7 +145,7 @@ class UsersStore : ObservableObject {
             
             self.inviting = true
             let idToken: String? = authorization.idToken
-            let request = NewConnectionInvite(phoneNumber: phoneNumber, permissionGroupName: groupName)
+            let request = NewConnectionInvite(phoneNumber: phoneNumber, permissionGroupName: permissionGroupName, connectionGroupIds: connectionGroupIds)
             URLSession.shared.postData(for: try self.inviteUrl(), for: request, for: "Bearer \(idToken!)") { (result: Result<ConnectionInviteResponse, Error>) in
                 switch result {
                 case .success(_):
@@ -183,6 +183,7 @@ class UsersStore : ObservableObject {
     struct NewConnectionInvite: Encodable {
         var phoneNumber: String
         var permissionGroupName: String
+        var connectionGroupIds: Set<String>
     }
     
     struct ConnectionRequestResponse: Decodable {

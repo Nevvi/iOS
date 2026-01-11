@@ -127,7 +127,6 @@
 		277E95BC2B6FB8C400A3C433 /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BB2B6FB8C400A3C433 /* Popup.swift */; };
 		277E95BE2B701FF700A3C433 /* BindingExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95BD2B701FF700A3C433 /* BindingExtensions.swift */; };
 		277E95C22B8104D800A3C433 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 277E95C12B8104D800A3C433 /* AppSettings.swift */; };
-		279EF1982E47783C0019AEA9 /* ConnectionInviteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279EF1972E47783C0019AEA9 /* ConnectionInviteRow.swift */; };
 		279EF19A2E4A09F30019AEA9 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 279EF1992E4A09F30019AEA9 /* LoadingView.swift */; };
 		27BBC3B32B8BE3C8003B77A5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 27BBC3B22B8BE3C8003B77A5 /* FirebaseAnalytics */; };
 		27BBC3B52B8BE3C8003B77A5 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = 27BBC3B42B8BE3C8003B77A5 /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -159,6 +158,7 @@
 		27DBD4532F0A09F6002EB303 /* MessageComposeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBD4522F0A09F6002EB303 /* MessageComposeView.swift */; };
 		27DCFF0E2F0DEC940050A634 /* OnboardingReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DCFF0D2F0DEC940050A634 /* OnboardingReason.swift */; };
 		27DE14C92EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE14C82EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift */; };
+		27E0B39F2F140C8E00BC3371 /* SelectableRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27E0B39E2F140C8E00BC3371 /* SelectableRow.swift */; };
 		27F4704C2E51EB080056259E /* InviteUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F4704B2E51EB080056259E /* InviteUsers.swift */; };
 /* End PBXBuildFile section */
 
@@ -278,12 +278,12 @@
 		277E95BB2B6FB8C400A3C433 /* Popup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 		277E95BD2B701FF700A3C433 /* BindingExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BindingExtensions.swift; sourceTree = "<group>"; };
 		277E95C12B8104D800A3C433 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
-		279EF1972E47783C0019AEA9 /* ConnectionInviteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionInviteRow.swift; sourceTree = "<group>"; };
 		279EF1992E4A09F30019AEA9 /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		27D9969C2D0F41B1009B1B8F /* OnboardingProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingProfile.swift; sourceTree = "<group>"; };
 		27DBD4522F0A09F6002EB303 /* MessageComposeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageComposeView.swift; sourceTree = "<group>"; };
 		27DCFF0D2F0DEC940050A634 /* OnboardingReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingReason.swift; sourceTree = "<group>"; };
 		27DE14C82EF9AAD5002AA6B6 /* SuggestedConnectionCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedConnectionCard.swift; sourceTree = "<group>"; };
+		27E0B39E2F140C8E00BC3371 /* SelectableRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableRow.swift; sourceTree = "<group>"; };
 		27F4704B2E51EB080056259E /* InviteUsers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InviteUsers.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -484,6 +484,7 @@
 				27582E672E171B7B00095399 /* AddressCoordinates.swift */,
 				279EF1992E4A09F30019AEA9 /* LoadingView.swift */,
 				27DBD4522F0A09F6002EB303 /* MessageComposeView.swift */,
+				27E0B39E2F140C8E00BC3371 /* SelectableRow.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -528,7 +529,6 @@
 			isa = PBXGroup;
 			children = (
 				27F4704B2E51EB080056259E /* InviteUsers.swift */,
-				279EF1972E47783C0019AEA9 /* ConnectionInviteRow.swift */,
 				277D252F2B58B00800D1D717 /* PersonalInformation.swift */,
 				04038E2A29660F2300D3C7AC /* PersonalInformationEdit.swift */,
 				04038E33296667CA00D3C7AC /* BlockedUserList.swift */,
@@ -824,7 +824,6 @@
 				04038E2D29662FFF00D3C7AC /* ViewExtensions.swift in Sources */,
 				27582E662E16BE0200095399 /* OnboardingConnectionGroups.swift in Sources */,
 				04B949762960A94A00703523 /* UsersStore.swift in Sources */,
-				279EF1982E47783C0019AEA9 /* ConnectionInviteRow.swift in Sources */,
 				0431438D296B6E020094D7E0 /* ConnectionGroupRow.swift in Sources */,
 				27582E6C2E19515100095399 /* OnboardingContactsPrompt.swift in Sources */,
 				04B94955295F2E8F00703523 /* OnboardingCarousel.swift in Sources */,
@@ -860,6 +859,7 @@
 				04B94920295DEDA100703523 /* Address.swift in Sources */,
 				277E95C22B8104D800A3C433 /* AppSettings.swift in Sources */,
 				277D252A2B55F84900D1D717 /* PermissionGroupToggle.swift in Sources */,
+				27E0B39F2F140C8E00BC3371 /* SelectableRow.swift in Sources */,
 				04B94939295E059300703523 /* UIColorExtensions.swift in Sources */,
 				04B9491C295DEBE600703523 /* ConnectionDetail.swift in Sources */,
 				04038E272961F25000D3C7AC /* DateExtensions.swift in Sources */,

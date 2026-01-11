@@ -48,11 +48,23 @@ enum InviteReason: String, CaseIterable {
 
 struct InviteUsers: View {
     @EnvironmentObject var contactStore: ContactStore
+    @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
+    @EnvironmentObject var usersStore: UsersStore
+    @EnvironmentObject var messagingStore: MessagingStore
+    @EnvironmentObject var accountStore: AccountStore
+    
     @State private var toastText: String = ""
     @State private var showToast: Bool = false
     @StateObject var nameFilter = DebouncedText()
+    
+    @State private var sheetUser: ContactStore.ContactInfo? = nil
+    @State private var selectedUser: ContactStore.ContactInfo? = nil
     @State private var selectedReason: InviteReason = .other
-    @State private var inviteText: String = InviteReason.other.inviteText
+    @State private var selectedPermissionGroup: String = "All Info"
+    @State private var selectedConnectionGroups: Set<String> = []
+    @State private var showText: Bool = false
+    @State private var animate: Bool = false
+    @State private var inviting: Bool = false
     
     private var inviteUsers: [ContactStore.ContactInfo] {
         return self.contactStore.contactsNotOnNevvi.filter { contact in
@@ -63,11 +75,11 @@ struct InviteUsers: View {
     
     var body: some View {
         VStack {
-            if !self.contactStore.hasAccess() {
-                requestContactsView
-            } else {
+//            if !self.contactStore.hasAccess() {
+//                requestContactsView
+//            } else {
                 contactAccessView
-            }
+//            }
         }
         .toast(isPresenting: $showToast){
             AlertToast(displayMode: .banner(.slide), type: .complete(Color.green), title: self.toastText)
@@ -76,6 +88,10 @@ struct InviteUsers: View {
             self.nameFilter.text = ""
             if self.contactStore.hasAccess() {
                 self.contactStore.loadContacts()
+            }
+            // Load connection groups for selection
+            if self.connectionGroupsStore.groups.isEmpty {
+                self.connectionGroupsStore.load()
             }
         }
         .navigationTitle("Invite")
@@ -192,15 +208,7 @@ struct InviteUsers: View {
                 .padding(.bottom, 4)
                 
                 ForEach(self.inviteUsers, id: \.phoneNumber) { contact in
-                    ConnectionInviteRow(
-                        requestCallback: {
-                            self.toastText = "Invite sent!"
-                            self.showToast = true
-                            self.contactStore.removeContactNotOnNevvi(phoneNumber: contact.phoneNumber)
-                        },
-                        selectedReason: self.$selectedReason,
-                        user: contact
-                    )
+                    inviteUserRow(user: contact)
                 }
                 .redacted(when: self.contactStore.loading, redactionType: .customPlaceholder)
             }
@@ -210,6 +218,225 @@ struct InviteUsers: View {
                 self.contactStore.loadContacts()
             }
         }
+        .sheet(item: self.$sheetUser, content: { user in
+            inviteUserSheet(user: user)
+        })
+        .sheet(isPresented: $showText) {
+            MessageComposeView(
+                isPresented: $showText,
+                recipients: [self.selectedUser!.phoneNumber],
+                body: self.selectedReason.inviteText,
+                completion: { result in
+                    switch result {
+                    case .sent:
+                        print("Message Sent")
+                        self.inviteUser()
+                    case .cancelled:
+                        print("Message Cancelled")
+                    case .failed:
+                        print("Message Failed")
+                    @unknown default:
+                        fatalError()
+                    }
+                }
+            )
+        }
+    }
+    
+    func inviteUserRow(user: ContactStore.ContactInfo) -> some View {
+        HStack(alignment: .center, spacing: 12) {
+            if let imageData = user.image {
+                Image(uiImage: UIImage(data: imageData)!)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 63, height: 63)
+                    .cornerRadius(63)
+            } else {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 63, height: 63)
+                    .cornerRadius(63)
+                    .foregroundColor(.gray)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text("\(user.firstName) \(user.lastName)")
+                    .defaultStyle(size: 18, opacity: 1.0)
+                
+                Text("\(user.phoneNumber)")
+                    .defaultStyle(size: 14, opacity: 0.7)
+                    .multilineTextAlignment(.leading)
+            }
+            
+            Spacer()
+            
+            Image(systemName: "plus")
+                .toolbarButtonStyle()
+                .onTapGesture {
+                    self.sheetUser = user
+                    self.selectedUser = user
+                }
+                .padding()
+        }
+        .padding(.vertical, 8)
+        .padding(.leading, 16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(
+            Rectangle()
+                .inset(by: 0.5)
+                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.04), lineWidth: 1)
+        )
+    }
+    
+    func inviteUserSheet(user: ContactStore.ContactInfo) -> some View {
+        VStack(spacing: 0) {
+            // Header
+            VStack(spacing: 20) {
+                HStack(spacing: 16) {
+                    if let imageData = user.image {
+                        Image(uiImage: UIImage(data: imageData)!)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 56, height: 56)
+                            .cornerRadius(28)
+                    } else {
+                        Image(systemName: "person.circle.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 56, height: 56)
+                            .cornerRadius(28)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("\(user.firstName) \(user.lastName)")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                        Text(user.phoneNumber)
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.horizontal, 24)
+                .padding(.top, 16)
+            }
+            
+            VStack(spacing: 28) {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Invite Reason")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Picker("Invite Reason", selection: $selectedReason) {
+                        ForEach(InviteReason.allCases, id: \.self) { reason in
+                            Text(reason.displayName).tag(reason)
+                        }
+                    }.pickerStyle(.segmented)
+                }
+                
+                // Permission Group Section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Permission Group")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Picker("Permission Group", selection: $selectedPermissionGroup) {
+                        ForEach(accountStore.permissionGroups, id: \.name) { group in
+                            Text(group.name).tag(group)
+                        }
+                    }.pickerStyle(.segmented)
+                }
+                
+                // Connection Groups Section
+                if !self.connectionGroupsStore.groups.isEmpty {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Text("Add to Groups")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                        }
+                        
+                        VStack(spacing: 12) {
+                            ForEach(self.connectionGroupsStore.groups) { group in
+                                SelectableRow(
+                                    title: group.name,
+                                    isSelected: selectedConnectionGroups.contains(group.id)
+                                ) {
+                                    if selectedConnectionGroups.contains(group.id) {
+                                        selectedConnectionGroups.remove(group.id)
+                                    } else {
+                                        selectedConnectionGroups.insert(group.id)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 24)
+            
+            Spacer()
+            
+            // Bottom Button
+            VStack(spacing: 0) {
+                Divider()
+                
+                Button(action: {
+                    self.sheetUser = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        self.showText = true
+                    }
+                }) {
+                    HStack {
+                        Text("Send Invitation")
+                            .fontWeight(.semibold)
+                            .font(.body)
+                        
+                        if self.inviting {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .scaleEffect(0.8)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(ColorConstants.primary)
+                    )
+                    .opacity(self.inviting ? 0.6 : 1.0)
+                }
+                .disabled(self.inviting)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 20)
+            }
+        }
+    }
+    
+    func inviteUser() {
+        self.inviting = true
+        
+        self.usersStore.inviteConnection(phoneNumber: self.selectedUser!.phoneNumber, permissionGroupName: self.selectedPermissionGroup, connectionGroupIds: self.selectedConnectionGroups) { (result: Result<Bool, Error>) in
+            switch result {
+            case .success(_):
+                withAnimation(Animation.spring().speed(0.75)) {
+                    animate = true
+                    self.toastText = "Invite sent!"
+                    self.showToast = true
+                    self.contactStore.removeContactNotOnNevvi(phoneNumber: self.selectedUser!.phoneNumber)
+                }
+            case .failure(let error):
+                print("Something bad happened", error)
+            }
+            self.inviting = false
+        }
     }
 }
 
@@ -217,11 +444,19 @@ struct InviteUsers_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let contactStore = ContactStore(contactsOnNevvi: [], contactsNotOnNevvi: [
         ContactStore.ContactInfo(firstName: "John", lastName: "Doe", phoneNumber: "6129631237"),
-        ContactStore.ContactInfo(firstName: "Jane", lastName: "Doe", phoneNumber: "6129631238"),
+        ContactStore.ContactInfo(firstName: "Jane", lastName: "Smith", phoneNumber: "6129631238"),
     ])
+    static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
+    static let messagingStore = MessagingStore()
+    static let accountStore = AccountStore(user: modelData.user)
+    static let usersStore = UsersStore(users: modelData.connectionResponse.users)
     
     static var previews: some View {
         InviteUsers()
             .environmentObject(contactStore)
+            .environmentObject(connectionGroupsStore)
+            .environmentObject(messagingStore)
+            .environmentObject(accountStore)
+            .environmentObject(usersStore)
     }
 }
