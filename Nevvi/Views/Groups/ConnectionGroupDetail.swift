@@ -17,6 +17,7 @@ struct ConnectionGroupDetail: View {
         
     @State private var showToast: Bool = false
     @State private var showAddUsers: Bool = false
+    @State private var showPendingInvites: Bool = false
     @State private var savingUsers: Bool = false
     @State private var newGroupConnections: [Connection] = []
     @State private var searchText: String = ""
@@ -49,6 +50,14 @@ struct ConnectionGroupDetail: View {
                         self.showAddUsers = true
                     } label: {
                         Label("Add Members", systemImage: "plus.circle")
+                    }
+                    
+                    if !self.connectionGroupStore.invites.isEmpty {
+                        Button {
+                            self.showPendingInvites = true
+                        } label: {
+                            Label("Pending Invites (\(self.connectionGroupStore.invites.count))", systemImage: "clock")
+                        }
                     }
                     
                     Button {
@@ -103,6 +112,9 @@ struct ConnectionGroupDetail: View {
         }
         .sheet(isPresented: self.$showAddUsers) {
             addUsersSheet
+        }
+        .sheet(isPresented: self.$showPendingInvites) {
+            pendingInvitesSheet
         }
     }
     
@@ -424,6 +436,112 @@ struct ConnectionGroupDetail: View {
                             .opacity(self.savingUsers ? 0.6 : 1.0)
                         }
                         .disabled(self.savingUsers)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 8)
+            }
+        }
+        .background(Color(.systemGroupedBackground))
+    }
+    
+    var pendingInvitesSheet: some View {
+        VStack(spacing: 0) {
+            HStack {
+                VStack(alignment: .leading, spacing: 24) {
+                    Text("Pending Invites")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .padding(.top, 8)
+                    
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Outstanding Invitations")
+                            .font(.headline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.primary)
+                        
+                        Text("\(self.connectionGroupStore.invites.count) pending invite\(self.connectionGroupStore.invites.count == 1 ? "" : "s")")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.horizontal, 20)
+                
+                Spacer()
+            }
+            
+            Divider()
+                .padding(.vertical, 16)
+        
+            // Invites list
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 0) {
+                    ForEach(self.connectionGroupStore.invites, id: \.self) { phoneNumber in
+                        HStack(spacing: 16) {
+                            Image(systemName: "phone")
+                                .font(.title2)
+                                .foregroundColor(.secondary)
+                                .frame(width: 24, height: 24)
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(phoneNumber)
+                                    .font(.body)
+                                    .fontWeight(.medium)
+                                
+                                Text("Invite sent")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            
+                            Spacer()
+                            
+//                            // TODO: Implement re-notify functionality
+//                            Button(action: {
+//                                print("Re-notify tapped for \(phoneNumber)")
+//                            }) {
+//                                Image(systemName: "bell")
+//                                    .font(.title3)
+//                                    .foregroundColor(ColorConstants.primary)
+//                                    .frame(width: 32, height: 32)
+//                                    .background(
+//                                        Circle()
+//                                            .fill(ColorConstants.primary.opacity(0.1))
+//                                    )
+//                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 16)
+                        .background(Color(.systemBackground))
+                        
+                        Divider()
+                            .padding(.leading, 60)
+                    }
+                }
+                .padding(.vertical, 8)
+            }
+            .background(Color(.systemGroupedBackground))
+            
+            Spacer()
+            
+            // Bottom action area
+            VStack(spacing: 16) {
+                Divider()
+                
+                HStack(spacing: 12) {
+                    Button {
+                        self.showPendingInvites = false
+                    } label: {
+                        Text("Done")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .font(.body)
+                            .foregroundColor(.white)
+                            .padding(.vertical, 16)
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(ColorConstants.primary)
+                                    .shadow(color: ColorConstants.primary.opacity(0.3), radius: 4, x: 0, y: 2)
+                            )
                     }
                 }
                 .padding(.horizontal, 20)

@@ -21,6 +21,7 @@ class ConnectionGroupStore : ObservableObject {
                 
                 // Clear all data - but keep group info since it's set explicitly via load(group:)
                 connections = []
+                invites = []
                 connectionCount = 0
                 skip = 0
             }
@@ -39,6 +40,7 @@ class ConnectionGroupStore : ObservableObject {
     
     @Published var id: String = ""
     @Published var name: String = ""
+    @Published var invites: [String] = []
     @Published var connections: [Connection] = []
     @Published var connectionCount: Int = 0
     
@@ -52,6 +54,7 @@ class ConnectionGroupStore : ObservableObject {
         self.id = group.id
         self.name = group.name
         self.connections = connections
+        self.invites = group.invites
         self.connectionCount = connections.count
         self.skip = 0
     }
@@ -88,6 +91,7 @@ class ConnectionGroupStore : ObservableObject {
     func load(group: ConnectionGroup) {
         self.id = group.id
         self.name = group.name
+        self.invites = group.invites
         self.skip = 0
         self.loadConnections()
     }

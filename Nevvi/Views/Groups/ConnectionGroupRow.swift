@@ -18,8 +18,19 @@ struct ConnectionGroupRow: View {
                     Text("\(connectionGroup.name)")
                         .defaultStyle(size: 20, opacity: 1.0)
                     
-                    Text("\(connectionGroup.connections.count) \(connectionGroup.connections.count == 1 ? "member" : "members")")
-                        .defaultStyle(size: 14, opacity: 0.4)
+                    HStack(spacing: 8) {
+                        Text("\(connectionGroup.connections.count) \(connectionGroup.connections.count == 1 ? "member" : "members")")
+                            .defaultStyle(size: 14, opacity: 0.4)
+                        
+                        if !connectionGroup.invites.isEmpty {
+                            Text("•")
+                                .defaultStyle(size: 14, opacity: 0.4)
+                            
+                            Text("\(connectionGroup.invites.count) pending")
+                                .defaultStyle(size: 14, opacity: 0.6)
+                                .foregroundColor(ColorConstants.primary)
+                        }
+                    }
                 }
                 .padding(0)
                 .frame(maxWidth: .infinity, alignment: .topLeading)

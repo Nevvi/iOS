@@ -94,19 +94,16 @@ struct NewConnectionRequestRow: View {
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    ScrollView {
-                        VStack(spacing: 12) {
-                            ForEach(self.accountStore.permissionGroups, id: \.name) { group in
-                                SelectableRow(
-                                    title: group.name,
-                                    isSelected: self.selectedPermissionGroup == group.name
-                                ) {
-                                    self.selectedPermissionGroup = group.name
-                                }
+                    VStack(spacing: 12) {
+                        ForEach(self.accountStore.permissionGroups, id: \.name) { group in
+                            SelectableRow(
+                                title: group.name,
+                                isSelected: self.selectedPermissionGroup == group.name
+                            ) {
+                                self.selectedPermissionGroup = group.name
                             }
                         }
                     }
-                    .frame(maxHeight: 250)
                 }
                 
                 // Connection Groups Section
@@ -118,23 +115,20 @@ struct NewConnectionRequestRow: View {
                                 .fontWeight(.semibold)
                         }
                         
-                        ScrollView {
-                            VStack(spacing: 12) {
-                                ForEach(self.connectionGroupsStore.groups) { group in
-                                    SelectableRow(
-                                        title: group.name,
-                                        isSelected: selectedConnectionGroups.contains(group.id)
-                                    ) {
-                                        if selectedConnectionGroups.contains(group.id) {
-                                            selectedConnectionGroups.remove(group.id)
-                                        } else {
-                                            selectedConnectionGroups.insert(group.id)
-                                        }
+                        VStack(spacing: 12) {
+                            ForEach(self.connectionGroupsStore.groups) { group in
+                                SelectableRow(
+                                    title: group.name,
+                                    isSelected: selectedConnectionGroups.contains(group.id)
+                                ) {
+                                    if selectedConnectionGroups.contains(group.id) {
+                                        selectedConnectionGroups.remove(group.id)
+                                    } else {
+                                        selectedConnectionGroups.insert(group.id)
                                     }
                                 }
                             }
                         }
-                        .frame(maxHeight: 250)
                     }
                 }
             }
