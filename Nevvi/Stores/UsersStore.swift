@@ -104,7 +104,7 @@ class UsersStore : ObservableObject {
         }
     }
     
-    func requestConnection(userId: String, groupName: String, callback: @escaping (Result<Bool, Error>) -> Void) {
+    func requestConnection(userId: String, groupName: String, connectionGroupIds: Set<String>, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
             guard let authorization = self.authorization else {
                 let error = GenericError("Not logged in")
@@ -115,7 +115,7 @@ class UsersStore : ObservableObject {
             }
             
             self.requesting = true
-            let request = NewConnectionRequest(otherUserId: userId, permissionGroupName: groupName)
+            let request = NewConnectionRequest(otherUserId: userId, permissionGroupName: groupName, connectionGroupIds: connectionGroupIds)
             URLSession.shared.postData(for: try self.requestUrl(), for: request, with: authorization) { (result: Result<ConnectionRequestResponse, Error>) in
                 switch result {
                 case .success(_):
@@ -178,6 +178,7 @@ class UsersStore : ObservableObject {
     struct NewConnectionRequest: Encodable {
         var otherUserId: String
         var permissionGroupName: String
+        var connectionGroupIds: Set<String>
     }
     
     struct NewConnectionInvite: Encodable {

@@ -48,6 +48,20 @@
                 "birthday",
                 "address"
             ]
+        },
+        {
+            "name": "Another Test",
+            "fields": [
+                "birthday",
+                "address"
+            ]
+        },
+        {
+            "name": "Third Test",
+            "fields": [
+                "birthday",
+                "address"
+            ]
         }
     ],
     "blockedUsers": [],
