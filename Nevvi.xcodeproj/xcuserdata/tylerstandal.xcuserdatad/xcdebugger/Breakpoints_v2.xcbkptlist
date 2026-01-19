@@ -898,36 +898,6 @@
             endingLineNumber = "153"
             landmarkName = "ignoreSuggestion()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "60390B61-048F-436A-A6EB-9D04A4634742 - 631c5cbbc45173ae"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Result&lt;Swift.Bool, Swift.Error&gt;) -&gt; () in Nevvi.ConnectionSuggestionRow.ignoreSuggestion() -&gt; ()"
-                  moduleName = "Nevvi.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tylerstandal/Desktop/Git/iOS/Nevvi/Views/Connections/ConnectionSuggestionRow.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "153"
-                  endingLineNumber = "153">
-               </Location>
-               <Location
-                  uuid = "60390B61-048F-436A-A6EB-9D04A4634742 - c794c7a2d2520dca"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 () -&gt; () in closure #1 (Swift.Result&lt;Swift.Bool, Swift.Error&gt;) -&gt; () in Nevvi.ConnectionSuggestionRow.ignoreSuggestion() -&gt; ()"
-                  moduleName = "Nevvi.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tylerstandal/Desktop/Git/iOS/Nevvi/Views/Connections/ConnectionSuggestionRow.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "154"
-                  endingLineNumber = "154">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

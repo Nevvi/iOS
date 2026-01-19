@@ -71,6 +71,7 @@ struct OnboardingCarousel: View {
                 }
             }
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
 
