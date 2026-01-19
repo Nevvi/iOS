@@ -27,7 +27,7 @@ struct ConnectionGroupRow: View {
                                 .defaultStyle(size: 14, opacity: 0.4)
                             
                             Text("\(connectionGroup.invites.count) pending")
-                                .defaultStyle(size: 14, opacity: 0.6)
+                                .defaultStyle(size: 14, opacity: 0.4)
                                 .foregroundColor(ColorConstants.primary)
                         }
                     }

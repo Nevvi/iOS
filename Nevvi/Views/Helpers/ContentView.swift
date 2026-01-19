@@ -112,6 +112,6 @@ struct ContentView_Previews: PreviewProvider {
         .environmentObject(ContactStore())
         .environmentObject(ConnectionSuggestionStore(users: modelData.connectionResponse.users))
         .environmentObject(ConnectionStore(connection: modelData.connection))
-        .environmentObject(ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users))
+        .environmentObject(ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users, invitedContacts: [ContactStore.ContactInfo(firstName: "John", lastName: "Doe", phoneNumber: "6129631237")]))
     }
 }

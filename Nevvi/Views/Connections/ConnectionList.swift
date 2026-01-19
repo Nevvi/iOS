@@ -275,18 +275,6 @@ struct ConnectionList: View {
                     Text("No connections")
                         .defaultStyle(size: 24, opacity: 1.0)
                     
-                    Text("Let's find some people for you to connect with.")
-                        .defaultStyle(size: 16, opacity: 0.7)
-                        .multilineTextAlignment(.center)
-                    
-                    Button(action: {
-                        isSearchActive = true
-                        isTextFieldFocused = true
-                    }) {
-                        Text("Find Connections".uppercased())
-                            .asPrimaryButton()
-                    }
-                    
                     Spacer()
                     Spacer()
                 }

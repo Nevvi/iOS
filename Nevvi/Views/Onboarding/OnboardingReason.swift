@@ -12,7 +12,7 @@ struct OnboardingReason: View {
     
     var primaryClick: () -> Void
     
-    @State private var selectedReason: String? = nil
+    @State private var selectedReason: String? = ""
     @State private var showDetailView: Bool = false
     
     private let reasons = [
@@ -172,13 +172,13 @@ struct OnboardingReason: View {
                                 .fontWeight(.semibold)
                                 .padding(.top, 8)
                             
-                            stepItem(number: 1, text: "Invite anyone going to the wedding without a Nevvi account to join (found on the ", highlightedText: "More", endText: " tab)")
+                            stepItem(number: 1, text: "Invite wedding guests without a Nevvi account to join (found on the ", highlightedText: "More", endText: " tab)")
                             
-                            stepItem(number: 2, text: "Add anyone with a Nevvi account to the ", highlightedText: "Wedding", endText: " connection group")
+                            stepItem(number: 2, text: "Request connection with Nevvi users and add them to the ", highlightedText: "Wedding", endText: " connection group")
                             
                             stepItem(number: 3, text: "Export the group information to CSV once all people have been added - this compiles everyone's most recent address into a single file for mailing")
                             
-                            stepItem(number: 4, text: "Once you're wedding is done you'll continue to have access to up-to-date information in the app")
+                            stepItem(number: 4, text: "After you're wedding  you'll continue to have access to up-to-date information in the app")
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 100) // Extra padding for floating button
@@ -248,11 +248,11 @@ struct OnboardingReason: View {
                             
                             stepItem(number: 1, text: "Invite anyone you want to send cards to without a Nevvi account to join (found on the ", highlightedText: "More", endText: " tab)")
                             
-                            stepItem(number: 2, text: "Add anyone with a Nevvi account to the ", highlightedText: "Holiday Cards", endText: " connection group")
+                            stepItem(number: 2, text: "Request connection with Nevvi users and add them to the ", highlightedText: "Holiday Cards", endText: " connection group")
                             
                             stepItem(number: 3, text: "Export the group information once all people have been added - this compiles everyone's most recent address into a single file for mailing")
                             
-                            stepItem(number: 4, text: "Once you've sent your cards in the mail you'll continue to have access to up-to-date information in the app")
+                            stepItem(number: 4, text: "After you've sent your cards in the mail you'll continue to have access to up-to-date connection information in the app")
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 100) // Extra padding for floating button

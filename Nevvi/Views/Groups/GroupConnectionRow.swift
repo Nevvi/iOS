@@ -59,7 +59,7 @@ struct GroupConnectionRow_Previews: PreviewProvider {
     
     static var connections = modelData.connectionResponse.users
     
-    static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users)
+    static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users, invitedContacts: [ContactStore.ContactInfo(firstName: "John", lastName: "Doe", phoneNumber: "6129631237")])
     
     static var previews: some View {
         Group {
