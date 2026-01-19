@@ -65,11 +65,11 @@ struct InviteUsers: View {
     
     var body: some View {
         VStack {
-            if !self.contactStore.hasAccess() {
-                requestContactsView
-            } else {
+//            if !self.contactStore.hasAccess() {
+//                requestContactsView
+//            } else {
                 contactAccessView
-            }
+//            }
         }
         .onAppear {
             self.nameFilter.text = ""
@@ -229,6 +229,7 @@ struct InviteUserRow: View {
     
     @State var user: ContactStore.ContactInfo
     
+    // For some reason these bindings only work when an invite is actually sent, not simply just changing the options in the pickers
     @Binding var selectedReason: InviteReason
     @Binding var selectedPermissionGroup: String
     @Binding var selectedConnectionGroups: Set<String>
@@ -403,7 +404,13 @@ struct InviteUserRow: View {
                         ForEach(InviteReason.allCases, id: \.self) { reason in
                             Text(reason.displayName).tag(reason)
                         }
-                    }.pickerStyle(.segmented)
+                    }
+                    .pickerStyle(.segmented)
+                    .accentColor(ColorConstants.primary)
+                    .onAppear {
+                        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(ColorConstants.primary)
+                        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+                    }
                 }
                 
                 // Permission Group Section
@@ -417,7 +424,13 @@ struct InviteUserRow: View {
                         ForEach(accountStore.permissionGroups, id: \.name) { group in
                             Text(group.name).tag(group.name)
                         }
-                    }.pickerStyle(.segmented)
+                    }
+                    .pickerStyle(.segmented)
+                    .accentColor(ColorConstants.primary)
+                    .onAppear {
+                        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(ColorConstants.primary)
+                        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
+                    }
                 }
                 
                 // Connection Groups Section
