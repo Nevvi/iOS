@@ -36,23 +36,27 @@ struct OnboardingCarousel: View {
                     self.index = 3
                 }).tabStyle(page: 2)
                 
+                OnboardingReason(primaryClick: {
+                    self.index = 4
+                }).tabStyle(page: 3)
+                
                 OnboardingProfile(primaryClick: {
                     if (self.contactStore.canRequestAccess() || self.contactStore.hasAccess()) {
                         print("Has or can request contact access")
-                        self.index = 4
+                        self.index = 5
                     } else {
                         print("Can't request contact access")
-                        self.index = 5
+                        self.index = 6
                     }
-                }).tabStyle(page: 3)
+                }).tabStyle(page: 4)
                 
                 OnboardingContactsPrompt(primaryClick: {
-                    self.index = 5
-                }).tabStyle(page: 4)
+                    self.index = 6
+                }).tabStyle(page: 5)
                 
                 OnboardingSuccess(primaryClick: {
                     print("Done onboarding!")
-                }).tabStyle(page: 5)
+                }).tabStyle(page: 6)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .edgesIgnoringSafeArea([.top])
@@ -67,6 +71,7 @@ struct OnboardingCarousel: View {
                 }
             }
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
 

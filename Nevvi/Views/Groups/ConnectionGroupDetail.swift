@@ -10,13 +10,16 @@ import SwiftUI
 
 struct ConnectionGroupDetail: View {
     @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var contactStore: ContactStore
     @EnvironmentObject var connectionStore: ConnectionStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
     @EnvironmentObject var connectionGroupStore: ConnectionGroupStore
     @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
+    @EnvironmentObject var messagingStore: MessagingStore
         
     @State private var showToast: Bool = false
     @State private var showAddUsers: Bool = false
+    @State private var showPendingInvites: Bool = false
     @State private var savingUsers: Bool = false
     @State private var newGroupConnections: [Connection] = []
     @State private var searchText: String = ""
@@ -34,9 +37,20 @@ struct ConnectionGroupDetail: View {
                     Text("\(self.connectionGroupStore.name)")
                         .defaultStyle(size: 20, opacity: 1.0)
                     
-                    Text("Members (\(self.connectionGroupStore.connectionCount))")
-                        .defaultStyle(size: 16, opacity: 0.6)
-                        .redacted(when: self.connectionGroupStore.loading || self.connectionGroupStore.deleting || self.connectionGroupStore.saving, redactionType: .customPlaceholder)
+                    HStack(spacing: 6) {
+                        Text("Members (\(self.connectionGroupStore.connectionCount))")
+                            .defaultStyle(size: 16, opacity: 0.6)
+                            .redacted(when: self.connectionGroupStore.loading || self.connectionGroupStore.deleting || self.connectionGroupStore.saving, redactionType: .customPlaceholder)
+                        
+                        if self.connectionGroupStore.invites.count > 0 {
+                            Text("•")
+                                .defaultStyle(size: 14, opacity: 0.4)
+                            
+                            Text("Pending (\(self.connectionGroupStore.invites.count))")
+                                .defaultStyle(size: 16, opacity: 0.6)
+                                .redacted(when: self.connectionGroupStore.loading || self.connectionGroupStore.deleting || self.connectionGroupStore.saving, redactionType: .customPlaceholder)
+                        }
+                    }
                 }
                 
                 Spacer()
@@ -49,6 +63,14 @@ struct ConnectionGroupDetail: View {
                         self.showAddUsers = true
                     } label: {
                         Label("Add Members", systemImage: "plus.circle")
+                    }
+                    
+                    if !self.connectionGroupStore.invites.isEmpty {
+                        Button {
+                            self.showPendingInvites = true
+                        } label: {
+                            Label("Pending Invites (\(self.connectionGroupStore.invites.count))", systemImage: "clock")
+                        }
                     }
                     
                     Button {
@@ -103,6 +125,9 @@ struct ConnectionGroupDetail: View {
         }
         .sheet(isPresented: self.$showAddUsers) {
             addUsersSheet
+        }
+        .sheet(isPresented: self.$showPendingInvites) {
+            pendingInvitesSheet
         }
     }
     
@@ -344,7 +369,6 @@ struct ConnectionGroupDetail: View {
                     }
                     .padding(.vertical, 8)
                 }
-                .background(Color(.systemGroupedBackground))
             }
             
             Spacer()
@@ -430,7 +454,80 @@ struct ConnectionGroupDetail: View {
                 .padding(.bottom, 8)
             }
         }
-        .background(Color(.systemGroupedBackground))
+    }
+    
+    var pendingInvitesSheet: some View {
+        VStack(spacing: 0) {
+            if self.connectionGroupStore.loadingInvites {
+                VStack {
+                    Spacer()
+                    LoadingView(loadingText: "Loading invites...")
+                    Spacer()
+                }
+            } else {
+                HStack {
+                    VStack(alignment: .leading, spacing: 24) {
+                        Text("Pending Invites")
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                            .padding(.top, 8)
+                        
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Outstanding Invitations")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.primary)
+                            
+                            Text("\(self.connectionGroupStore.invites.count) pending invite\(self.connectionGroupStore.invites.count == 1 ? "" : "s")")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    
+                    Spacer()
+                }
+                
+                Divider()
+                    .padding(.top, 16)
+                
+                // Invites list
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        ForEach(self.connectionGroupStore.invitedContacts, id: \.phoneNumber) { contact in
+                            InviteGroupUserRow(user: contact)
+                        }
+                    }
+                }
+                
+                Spacer()
+                
+                // Bottom action area
+                VStack(spacing: 16) {
+                    Divider()
+                    
+                    HStack(spacing: 12) {
+                        Button {
+                            self.showPendingInvites = false
+                        } label: {
+                            Text("Done")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .font(.body)
+                                .foregroundColor(.white)
+                                .padding(.vertical, 16)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(ColorConstants.primary)
+                                        .shadow(color: ColorConstants.primary.opacity(0.3), radius: 4, x: 0, y: 2)
+                                )
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 8)
+                }
+            }
+        }
     }
     
     func isConnectionSelected(connection: Connection) -> Bool {
@@ -449,11 +546,140 @@ struct ConnectionGroupDetail: View {
     }
 }
 
+struct InviteGroupUserRow: View {
+    @State private var reminded: Bool = false
+    @State private var reminding: Bool = false
+    @State private var showingStatusText: Bool = false
+    @State var user: ContactStore.ContactInfo
+    
+    @EnvironmentObject var connectionGroupStore: ConnectionGroupStore
+    
+    var body: some View {
+        HStack(alignment: .center, spacing: 12) {
+            if let imageData = user.image {
+                Image(uiImage: UIImage(data: imageData)!)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 63, height: 63)
+                    .cornerRadius(63)
+            } else {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 63, height: 63)
+                    .cornerRadius(63)
+                    .foregroundColor(.gray)
+            }
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text("\(user.firstName) \(user.lastName)")
+                    .defaultStyle(size: 18, opacity: 1.0)
+                
+                Text("\(user.phoneNumber)")
+                    .defaultStyle(size: 14, opacity: 0.7)
+                    .multilineTextAlignment(.leading)
+            }
+            
+            Spacer()
+            
+            VStack(spacing: 4) {
+                // Only allow reminder if they haven't been reminded in this session
+                if !self.reminded {
+                    Button(action: {
+                        self.reminding = true
+                        self.connectionGroupStore.remindInvite(contact: user) { (result: Result<Bool, Error>) in
+                            switch result {
+                            case .success(_):
+                                withAnimation(.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0)) {
+                                    self.reminded = true
+                                    self.showingStatusText = true
+                                }
+                                self.reminding = false
+                                
+                                // Hide the status text after 2 seconds
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        self.showingStatusText = false
+                                    }
+                                }
+                            case .failure(let error):
+                                print("Failed to reminder user", error)
+                                self.reminding = false
+                            }
+                        }
+                    }) {
+                        ZStack {
+                            Circle()
+                                .fill(ColorConstants.primary.opacity(0.1))
+                                .frame(width: 32, height: 32)
+                            
+                            if self.reminding {
+                                ProgressView()
+                                    .progressViewStyle(CircularProgressViewStyle(tint: ColorConstants.primary))
+                                    .scaleEffect(0.7)
+                            } else {
+                                Image(systemName: "bell")
+                                    .font(.title3)
+                                    .foregroundColor(ColorConstants.primary)
+                            }
+                        }
+                    }
+                    .padding(.trailing)
+                    .disabled(self.reminding)
+                } else {
+                    // Success state with animated checkmark
+                    ZStack {
+                        Circle()
+                            .fill(Color.green.opacity(0.1))
+                            .frame(width: 32, height: 32)
+                            .background(
+                                Circle()
+                                    .fill(Color.green.opacity(0.2))
+                                    .scaleEffect(reminded ? 1.0 : 0.8)
+                                    .animation(.spring(response: 0.6, dampingFraction: 0.6), value: reminded)
+                            )
+                        
+                        Image(systemName: "checkmark")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.green)
+                            .scaleEffect(reminded ? 1.0 : 0.3)
+                            .animation(.spring(response: 0.6, dampingFraction: 0.6).delay(0.1), value: reminded)
+                    }
+                    .padding(.trailing)
+                }
+                
+                // Status text that appears and fades
+                if self.showingStatusText {
+                    Text("Reminded")
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .foregroundColor(.green)
+                        .transition(.scale.combined(with: .opacity))
+                        .padding(.trailing)
+                }
+            }
+        }
+        .padding(.vertical, 8)
+        .padding(.leading, 16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .overlay(
+            Rectangle()
+                .inset(by: 0.5)
+                .stroke(Color(red: 0, green: 0.07, blue: 0.17).opacity(0.04), lineWidth: 1)
+        )
+    }
+}
+
 struct ConnectionGroupDetail_Previews: PreviewProvider {
     static let modelData = ModelData()
+    static let contactStore = ContactStore(contactsOnNevvi: [], contactsNotOnNevvi: [
+        ContactStore.ContactInfo(firstName: "John", lastName: "Doe", phoneNumber: "6129631237"),
+        ContactStore.ContactInfo(firstName: "Jane", lastName: "Smith", phoneNumber: "6129631238"),
+    ])
     static let connectionStore = ConnectionStore()
     static let accountStore = AccountStore(user: modelData.user)
-    static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: [])
+    static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: [], invitedContacts: [ContactStore.ContactInfo(firstName: "John", lastName: "Doe", phoneNumber: "6129631237"), ContactStore.ContactInfo(firstName: "Jane", lastName: "Doe", phoneNumber: "6129631238")])
     static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
     static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
                                                    requests: modelData.requests,
@@ -462,6 +688,7 @@ struct ConnectionGroupDetail_Previews: PreviewProvider {
     static var previews: some View {
         ConnectionGroupDetail()
             .environmentObject(accountStore)
+            .environmentObject(contactStore)
             .environmentObject(connectionStore)
             .environmentObject(connectionsStore)
             .environmentObject(connectionGroupStore)

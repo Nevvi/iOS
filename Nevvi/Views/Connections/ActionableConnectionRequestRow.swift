@@ -6,16 +6,20 @@
 //
 
 import SwiftUI
+import NukeUI
 
 struct ActionableConnectionRequestRow: View {
     @EnvironmentObject var accountStore: AccountStore
     @EnvironmentObject var connectionsStore: ConnectionsStore
+    @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
         
-    @State var loading: Bool = false
     @State var request: ConnectionRequest
-    @State var showSheet: Bool = false
-    @State var showDeleteAlert: Bool = false
-    @State var selectedPermissionGroup: String = "All Info"
+    
+    @State private var loading: Bool = false
+    @State private var showSheet: Bool = false
+    @State private var showDeleteAlert: Bool = false
+    @State private var selectedPermissionGroup: String = "All Info"
+    @State private var selectedConnectionGroups: Set<String> = []
     
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
@@ -83,51 +87,112 @@ struct ActionableConnectionRequestRow: View {
     }
     
     var approveSheet: some View {
-        DynamicSheet(
-            ZStack {
-                VStack(alignment: .leading) {
-                    Text("Select permission group")
-                        .font(.title)
-                        .fontWeight(.light)
-                        .padding([.leading, .trailing, .top])
-                        .padding([.bottom], 6)
+        VStack(spacing: 0) {
+            // Header
+            VStack(spacing: 20) {
+                HStack(spacing: 16) {
+                    LazyImage(url: URL(string: request.requesterImage)) { state in
+                        if let image = state.image {
+                            image.resizingMode(.aspectFill)
+                        } else {
+                            Circle().fill(Color.gray.opacity(0.3))
+                        }
+                    }
+                    .frame(width: 50, height: 50)
+                    .clipShape(Circle())
                     
-                    PermissionGroupPicker(selectedGroup: $selectedPermissionGroup)
+                    VStack(alignment: .leading) {
+                        Text("\(request.requesterFirstName) \(request.requesterLastName)")
+                            .font(.headline)
+                    }
                     
                     Spacer()
+                }
+                .padding(.horizontal, 24)
+                .padding(.top, 16)
+            }
+            
+            VStack(spacing: 28) {
+                // Permission Group Section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Permission Group")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    Button(action: {
-                        self.loading = true
-                        self.connectionsStore.confirmRequest(otherUserId: self.request.requestingUserId, permissionGroup: self.selectedPermissionGroup) { (result: Result<Bool, Error>) in
-                            switch result {
-                            case .success(_):
-                                self.connectionsStore.loadRequests()
-                                self.connectionsStore.load()
-                            case .failure(let error):
-                                print("Something bad happened", error)
+                    VStack(spacing: 12) {
+                        ForEach(self.accountStore.permissionGroups, id: \.name) { group in
+                            SelectableRow(
+                                title: group.name,
+                                isSelected: self.selectedPermissionGroup == group.name
+                            ) {
+                                self.selectedPermissionGroup = group.name
                             }
                         }
-                        self.loading = false
-                        self.showSheet = false
-                    }, label: {
-                        Text("ACCEPT")
-                            .fontWeight(.bold)
-                            .frame(maxWidth: .infinity)
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding(.vertical, 16)
-                            .background(
-                                RoundedRectangle(cornerRadius: 24)
-                                    .foregroundColor(ColorConstants.primary)
-                            )
-                            .opacity(self.loading ? 0.5 : 1.0)
-                    })
-                    .disabled(self.loading)
-                    .padding()
-                    .padding([.top], 12)
-                }.padding(4)
+                    }
+                }
+                
+                // Connection Groups Section
+                if !self.connectionGroupsStore.groups.isEmpty {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Text("Add to Groups")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                        }
+                        
+                        VStack(spacing: 12) {
+                            ForEach(self.connectionGroupsStore.groups) { group in
+                                SelectableRow(
+                                    title: group.name,
+                                    isSelected: selectedConnectionGroups.contains(group.id)
+                                ) {
+                                    if selectedConnectionGroups.contains(group.id) {
+                                        selectedConnectionGroups.remove(group.id)
+                                    } else {
+                                        selectedConnectionGroups.insert(group.id)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
-        )
+            .padding(.horizontal, 24)
+            .padding(.vertical, 24)
+            
+            Spacer()
+            
+            // Bottom Button
+            VStack(spacing: 0) {
+                Divider()
+                
+                Button(action: confirmConnection) {
+                    HStack {
+                        Text("Accept Request")
+                            .fontWeight(.semibold)
+                            .font(.body)
+                        
+                        if self.loading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .scaleEffect(0.8)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(ColorConstants.primary)
+                    )
+                    .opacity(self.loading ? 0.6 : 1.0)
+                }
+                .disabled(self.loading)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 20)
+            }
+        }
     }
     
     var deleteAlert: Alert {
@@ -146,6 +211,21 @@ struct ActionableConnectionRequestRow: View {
             self.showDeleteAlert = false
         })
     }
+    
+    func confirmConnection() {
+        loading = true
+        connectionsStore.confirmRequest(otherUserId: request.requestingUserId, permissionGroup: selectedPermissionGroup, connectionGroupIds: self.selectedConnectionGroups) { result in
+            switch result {
+            case .success(_):
+                self.connectionsStore.loadRequests()
+                self.connectionsStore.load()
+            case .failure(let error):
+                print("Something bad happened", error)
+            }
+            loading = false
+            showSheet = false
+        }
+    }
 }
 
 struct ActionableConnectionRequestRow_Previews: PreviewProvider {
@@ -154,10 +234,12 @@ struct ActionableConnectionRequestRow_Previews: PreviewProvider {
     static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
                                                    requests: modelData.requests,
                                                    blockedUsers: modelData.connectionResponse.users)
+    static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
     
     static var previews: some View {
         ActionableConnectionRequestRow(request: modelData.requests[0])
             .environmentObject(accountStore)
             .environmentObject(connectionsStore)
+            .environmentObject(connectionGroupsStore)
     }
 }

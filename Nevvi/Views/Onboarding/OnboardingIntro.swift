@@ -23,13 +23,13 @@ struct OnboardingIntro: View {
                 ZStack(alignment: .bottom) {
                     VStack(spacing: 14) {
                         Text("Never ask for an address twice")
-                            .defaultStyle(size: 32)
+                            .defaultStyle(size: 30)
                             .fontWeight(.bold)
                             .multilineTextAlignment(.center)
                             .padding([.leading, .trailing])
                         
                         Text("When a connection updates their address you will have instant access to the latest information.")
-                            .defaultStyle(size: 16)
+                            .defaultStyle(size: 14)
                             .multilineTextAlignment(.center)
                             .padding([.leading, .trailing], 32)
                         

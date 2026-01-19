@@ -143,7 +143,7 @@ struct OnboardingProfile: View {
              
                 Spacer()
                 
-                OnboardingButton(text: "Continue", action: self.primaryAction)
+                OnboardingButton(text: "Continue", loading: self.accountStore.saving, action: self.primaryAction)
                     .disabled(self.isButtonDisabled)
                     .opacity(self.isButtonDisabled ? 0.5 : 1.0)
             }

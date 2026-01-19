@@ -224,7 +224,7 @@ struct Settings_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let accountStore = AccountStore(user: modelData.user)
     static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
-    static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users)
+    
     static let connectionStore = ConnectionStore()
     static let contactStore = ContactStore(contactsOnNevvi: [], contactsNotOnNevvi: [
         ContactStore.ContactInfo(firstName: "John", lastName: "Doe", phoneNumber: "6129631237"),
@@ -238,7 +238,6 @@ struct Settings_Previews: PreviewProvider {
         Settings()
             .environmentObject(accountStore)
             .environmentObject(connectionStore)
-            .environmentObject(connectionGroupStore)
             .environmentObject(connectionGroupsStore)
             .environmentObject(AuthorizationStore())
             .environmentObject(NotificationStore())

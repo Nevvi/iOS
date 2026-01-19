@@ -42,6 +42,7 @@ struct AddressSearch: View {
                 )
                 .textInputAutocapitalization(.never)
                 .disableAutocorrection(true)
+                .submitLabel(.done)
         }
     }
 
@@ -106,6 +107,7 @@ struct AddressSearch: View {
                             )
                             .textInputAutocapitalization(.never)
                             .disableAutocorrection(true)
+                            .submitLabel(.done)
                     }
                 }
                 

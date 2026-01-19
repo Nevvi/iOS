@@ -328,7 +328,7 @@ class ConnectionsStore : ObservableObject {
         }
     }
     
-    func confirmRequest(otherUserId: String, permissionGroup: String, callback: @escaping (Result<Bool, Error>) -> Void) {
+    func confirmRequest(otherUserId: String, permissionGroup: String, connectionGroupIds: Set<String>, callback: @escaping (Result<Bool, Error>) -> Void) {
         do {
             guard let authorization = self.authorization else {
                 let error = GenericError("Not logged in")
@@ -339,7 +339,7 @@ class ConnectionsStore : ObservableObject {
             }
             
             self.confirmingRequest = true
-            let request = ConfirmRequest(otherUserId: otherUserId, permissionGroupName: permissionGroup)
+            let request = ConfirmRequest(otherUserId: otherUserId, permissionGroupName: permissionGroup, connectionGroupIds: connectionGroupIds)
             URLSession.shared.postData(for: try self.confirmRequestUrl(), for: request, with: authorization) { (result: Result<ConfirmResponse, Error>) in
                 switch result {
                 case .success(_):
@@ -363,6 +363,7 @@ class ConnectionsStore : ObservableObject {
     struct ConfirmRequest : Encodable {
         var otherUserId: String
         var permissionGroupName: String
+        var connectionGroupIds: Set<String>
     }
     
     struct DeleteResponse : Decodable {

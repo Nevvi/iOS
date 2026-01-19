@@ -27,6 +27,10 @@ class MessagingStore : NSObject, ObservableObject, MFMessageComposeViewControlle
     }
     
     func loadSms(recipient: String) -> Void {
+        self.loadSms(recipient: recipient, body: "")
+    }
+    
+    func loadSms(recipient: String, body: String) -> Void {
         self.textComposeVC = MFMessageComposeViewController()
         self.textComposeVC.messageComposeDelegate = self
         self.textComposeVC.recipients = [recipient]

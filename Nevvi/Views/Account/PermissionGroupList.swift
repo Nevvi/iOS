@@ -30,25 +30,6 @@ struct PermissionGroupList: View {
             }
             
             Spacer()
-            
-            HStack {
-                Button {
-                    self.showNewGroup = true
-                } label: {
-                    Text("New Permission Group".uppercased())
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 24)
-                                .foregroundColor(ColorConstants.primary)
-                        )
-                }
-            }
-            .padding([.horizontal], 16)
-            .padding([.vertical], 20)
         }
         .sheet(isPresented: self.$showNewGroup) {
             newPermissionGroupSheet
@@ -56,6 +37,15 @@ struct PermissionGroupList: View {
         .refreshable {
             self.accountStore.load()
         }
+        .toolbar(content: {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Image(systemName: "plus")
+                    .toolbarButtonStyle()
+                    .onTapGesture {
+                        self.showNewGroup = true
+                    }
+            }
+        })
     }
     
     var newPermissionGroupSheet: some View {

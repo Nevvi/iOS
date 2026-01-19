@@ -469,11 +469,15 @@ class ContactStore: ObservableObject {
         var missing: [String]
     }
     
-    struct ContactInfo {
+    struct ContactInfo : Identifiable {
         var firstName: String
         var lastName: String
         var phoneNumber: String
         var image: Data?
+        
+        var id: String {
+            phoneNumber
+        }
     }
     
 }

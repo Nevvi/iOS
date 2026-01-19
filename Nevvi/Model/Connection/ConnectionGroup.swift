@@ -12,4 +12,5 @@ struct ConnectionGroup: Hashable, Codable, Identifiable {
     var userId: String
     var name: String
     var connections: [String]
+    var invites: [String]
 }

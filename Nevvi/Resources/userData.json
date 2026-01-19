@@ -41,13 +41,6 @@
                 "email",
                 "phoneNumber"
             ]
-        },
-        {
-            "name": "Test",
-            "fields": [
-                "birthday",
-                "address"
-            ]
         }
     ],
     "blockedUsers": [],

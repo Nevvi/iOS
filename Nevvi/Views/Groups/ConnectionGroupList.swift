@@ -38,9 +38,6 @@ struct ConnectionGroupList: View {
                     groupsView
                 }
             }
-            .onAppear {
-                self.connectionGroupsStore.load()
-            }
             .refreshable {
                 self.connectionGroupsStore.load()
             }
@@ -50,29 +47,18 @@ struct ConnectionGroupList: View {
             .alert(isPresented: self.$showDeleteAlert) {
                 deleteAlert
             }
+            .toolbar(content: {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    Image(systemName: "plus")
+                        .toolbarButtonStyle()
+                        .onTapGesture {
+                            self.showGroupForm = true
+                        }
+                }
+            })
             .navigationTitle("Connection Groups")
             .navigationBarTitleDisplayMode(.inline)
         }
-    }
-    
-    var newGroupButton: some View {
-        HStack {
-            Button {
-                self.showGroupForm = true
-            } label: {
-                Text("New Connection Group".uppercased())
-                    .frame(maxWidth: .infinity)
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 24)
-                            .foregroundColor(ColorConstants.primary)
-                    )
-            }
-        }
-        .padding([.horizontal], 16)
-        .padding([.vertical], 20)
     }
     
     var creatingView: some View {
@@ -105,9 +91,9 @@ struct ConnectionGroupList: View {
                 }
                 .padding()
             }
+            
             Spacer()
             Spacer()
-            newGroupButton
         }
     }
     
@@ -145,8 +131,8 @@ struct ConnectionGroupList: View {
             
             Spacer()
             
-            newGroupButton
         }
+        .padding(.top)
     }
     
     var deleteAlert: Alert {
@@ -369,7 +355,6 @@ struct ConnectionGroupList: View {
                     }
                     .padding(.vertical, 8)
                 }
-                .background(Color(.systemGroupedBackground))
             }
             
             Spacer()
@@ -472,7 +457,6 @@ struct ConnectionGroupList: View {
                 .padding(.bottom, 8)
             }
         }
-        .background(Color(.systemGroupedBackground))
         .onAppear {
             self.connectionsStore.load(nameFilter: nil, permissionGroup: nil)
             self.searchText = ""
@@ -489,7 +473,7 @@ struct ConnectionGroupList_Previews: PreviewProvider {
     static let modelData = ModelData()
     static let accountStore = AccountStore(user: modelData.user)
     static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
-    static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users)
+    static let connectionGroupStore = ConnectionGroupStore(group: modelData.groups[0], connections: modelData.connectionResponse.users, invitedContacts: [ContactStore.ContactInfo(firstName: "John", lastName: "Doe", phoneNumber: "6129631237")])
     static let connectionsStore = ConnectionsStore(connections: modelData.connectionResponse.users,
                                                    requests: modelData.requests,
                                                    blockedUsers: modelData.connectionResponse.users)

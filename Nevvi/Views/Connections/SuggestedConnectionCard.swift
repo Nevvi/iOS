@@ -12,6 +12,7 @@ struct SuggestedConnectionCard: View {
     @EnvironmentObject var usersStore: UsersStore
     @EnvironmentObject var suggestionsStore: ConnectionSuggestionStore
     @EnvironmentObject var accountStore: AccountStore
+    @EnvironmentObject var connectionGroupsStore: ConnectionGroupsStore
     
     var user: Connection
     var requestCallback: () -> Void
@@ -19,6 +20,7 @@ struct SuggestedConnectionCard: View {
     @State private var loading: Bool = false
     @State private var showSheet: Bool = false
     @State private var selectedPermissionGroup: String = "All Info"
+    @State private var selectedConnectionGroups: Set<String> = []
     
     var body: some View {
         VStack(spacing: 8) {
@@ -82,10 +84,10 @@ struct SuggestedConnectionCard: View {
     }
     
     var requestConnectionSheet: some View {
-        DynamicSheet(
-            VStack(alignment: .leading, spacing: 20) {
-                // Header
-                HStack {
+        VStack(spacing: 0) {
+            // Header
+            VStack(spacing: 20) {
+                HStack(spacing: 16) {
                     LazyImage(url: URL(string: user.profileImage)) { state in
                         if let image = state.image {
                             image.resizingMode(.aspectFill)
@@ -109,44 +111,96 @@ struct SuggestedConnectionCard: View {
                     
                     Spacer()
                 }
-                .padding(.horizontal)
-                
-                // Permission Group Selection
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Select permission group")
-                        .font(.headline)
-                        .padding(.horizontal)
-                    
-                    PermissionGroupPicker(selectedGroup: $selectedPermissionGroup)
-                }
-                
-                Spacer()
-                
-                // Request Button
-                Button(action: requestConnection) {
-                    Text("Request Connection")
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity)
-                        .font(.headline)
-                        .foregroundColor(.white)
-                        .padding(.vertical, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 24)
-                                .foregroundColor(ColorConstants.primary)
-                        )
-                        .opacity(loading ? 0.5 : 1.0)
-                }
-                .disabled(loading)
-                .padding(.horizontal)
-                .padding(.bottom)
+                .padding(.horizontal, 24)
+                .padding(.top, 16)
             }
-            .padding(.top)
-        )
+            
+            VStack(spacing: 28) {
+                // Permission Group Section
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Permission Group")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    VStack(spacing: 12) {
+                        ForEach(self.accountStore.permissionGroups, id: \.name) { group in
+                            SelectableRow(
+                                title: group.name,
+                                isSelected: self.selectedPermissionGroup == group.name
+                            ) {
+                                self.selectedPermissionGroup = group.name
+                            }
+                        }
+                    }
+                }
+                
+                // Connection Groups Section
+                if !self.connectionGroupsStore.groups.isEmpty {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack {
+                            Text("Add to Groups")
+                                .font(.headline)
+                                .fontWeight(.semibold)
+                        }
+                        
+                        VStack(spacing: 12) {
+                            ForEach(self.connectionGroupsStore.groups) { group in
+                                SelectableRow(
+                                    title: group.name,
+                                    isSelected: selectedConnectionGroups.contains(group.id)
+                                ) {
+                                    if selectedConnectionGroups.contains(group.id) {
+                                        selectedConnectionGroups.remove(group.id)
+                                    } else {
+                                        selectedConnectionGroups.insert(group.id)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 24)
+            
+            Spacer()
+            
+            // Bottom Button
+            VStack(spacing: 0) {
+                Divider()
+                
+                Button(action: requestConnection) {
+                    HStack {
+                        Text("Request Connection")
+                            .fontWeight(.semibold)
+                            .font(.body)
+                        
+                        if self.loading {
+                            ProgressView()
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                                .scaleEffect(0.8)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .foregroundColor(.white)
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(ColorConstants.primary)
+                    )
+                    .opacity(self.loading ? 0.6 : 1.0)
+                }
+                .disabled(self.loading)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 20)
+            }
+        }
     }
     
     func requestConnection() {
         loading = true
-        usersStore.requestConnection(userId: user.id, groupName: selectedPermissionGroup) { result in
+        usersStore.requestConnection(userId: user.id, groupName: selectedPermissionGroup, connectionGroupIds: self.selectedConnectionGroups) { result in
             switch result {
             case .success(_):
                 requestCallback()
@@ -164,6 +218,7 @@ struct SuggestedConnectionCard_Previews: PreviewProvider {
     static let usersStore = UsersStore(users: modelData.connectionResponse.users)
     static let suggestionsStore = ConnectionSuggestionStore(users: modelData.connectionResponse.users)
     static let accountStore = AccountStore(user: modelData.user)
+    static let connectionGroupsStore = ConnectionGroupsStore(groups: modelData.groups)
     
     static var previews: some View {
         SuggestedConnectionCard(
@@ -173,6 +228,7 @@ struct SuggestedConnectionCard_Previews: PreviewProvider {
         .environmentObject(usersStore)
         .environmentObject(suggestionsStore)
         .environmentObject(accountStore)
+        .environmentObject(connectionGroupsStore)
         .previewLayout(.sizeThatFits)
         .padding()
     }

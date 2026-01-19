@@ -30,7 +30,7 @@ struct OnboardingContactsPrompt: View {
                     Image("ContactDiscoveryPrompt")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: geometry.size.width, height: geometry.size.height * 0.63)
+                        .frame(width: geometry.size.width, height: geometry.size.height * 0.60)
                         .clipped()
                         .ignoresSafeArea(.all, edges: .horizontal)
                         .padding(.bottom)
@@ -41,7 +41,7 @@ struct OnboardingContactsPrompt: View {
                             .fontWeight(.bold)
                         
                         Text("See which of your contacts are already using Nevvi so you can instantly connect.")
-                            .defaultStyle(size: 16)
+                            .defaultStyle(size: 14)
                             .multilineTextAlignment(.center)
                         
                         VStack(spacing: 6) {
@@ -50,7 +50,7 @@ struct OnboardingContactsPrompt: View {
                                 .foregroundColor(.green)
                             
                             Text("We need access to all your contacts just to find potential matches. We never store your contact list or share that information.")
-                                .defaultStyle(size: 14)
+                                .defaultStyle(size: 12)
                                 .fontWeight(.light)
                                 .multilineTextAlignment(.center)
                         }
